@@ -292,7 +292,7 @@ local figtingFunction = function()
     local preferMob =  utils.getNearestFightableMob(start_pos, settings.CampRange, preferedEnemyList)
 ---    print("prefereMob", preferMob)
     if preferMob ~= nil and mob.name ~= preferMob.name then
-        print("preferMob:", mob.name)
+--        print("preferMob:", mob.name)
         if iamLeader() then
             utils.targetByMobId(preferMob.id)
             coroutine.sleep(1)

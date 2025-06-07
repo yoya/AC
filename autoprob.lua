@@ -83,9 +83,7 @@ local sendCommandProbTable = {
         { 100, 600, 'input /ja デヴォーション <p2>', 0 },
     },
     BLM = {
-        { 200, 10, 'input /ma ストーン <t>', 2 },
-        { 200, 10, 'input /ma ファイア <t>', 2 },
-        { 200, 10, 'input /ma ブリザド <t>', 2 },
+         { 200, 10, 'input /ma ブリザド <t>', 2 },
 --        { 100, 10, 'input /ma ブリザドII <t>', 2 },
 --      { 100, 10, 'input /ma ブリザドIII <t>', 3 },
 --      { 100, 10, 'input /ma ブリザドIV <t>', 4 },
@@ -96,12 +94,15 @@ local sendCommandProbTable = {
 --        { 400, 10, 'input /ma サンダーIII <t>', 3 },
 --      { 200, 10, 'input /ma サンダーIV <t>', 4 },
 --        { 100, 10, 'input /ma サンダーV <t>', 5 },
---[[
+--
+        { 200, 10, 'input /ma ストーン <t>', 2 },
+        { 200, 10, 'input /ma ファイア <t>', 2 },
+        { 200, 10, 'input /ma ブリザド <t>', 2 },
         { 200,10, 'input /ma バイオ <t>', 2 },
         { 200,10, 'input /ma ドレイン <t>', 2 },
         { 200,10, 'input /ma スタン <t>', 2 },
-        { 200,10, 'input /ma ストーン <t>', 2 },
-        { 200,10, 'input /ma ブリザド <t>', 2 },
+        { 200,10, 'input /ma ディア <t>', 2 },
+        --[[
 ]]
         { 100, 10, 'input /ma ショックスパイク <me>', 5 },
      },          
