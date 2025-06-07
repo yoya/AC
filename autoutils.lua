@@ -132,14 +132,14 @@ local ignoreMobs = S{
     "Resolute Leafkin", -- ミッション「門」
 }
 M.getNearestFightableMob = function(pos, dist, preferMobs)
----    print("M.getNearestFightableMob", preferMobs);
----    M.printChat("getNearestFifhtableMob")
---- 距離(デフォルト20)以内だけ対象
+--    print("M.getNearestFightableMob", preferMobs);
+--    M.printChat("getNearestFifhtableMob")
+-- 距離(デフォルト20)以内だけ対象
     local mob = nil
     local mobArr = windower.ffxi.get_mob_array()
     for i, m in pairs(mobArr) do
         --- リンクすると status が 1になるので対象にする
----        print("preferMobs: " ..  m.name, "  c:", preferMobs:contains(m.name))
+--        print("preferMobs: " ..  m.name, "  c:", preferMobs:contains(m.name))
         if ( preferMobs == nil or preferMobs:contains(m.name)) and
             (m.status == 0 or m.status == 1) and m.spawn_type == 16 and
             (m.valid_target or m.target_index ~= 0) then
