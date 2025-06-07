@@ -150,10 +150,10 @@ M.getNearestFightableMob = function(pos, dist, preferMobs)
             d = math.sqrt(dx*dx + dy*dy)
             --- ‚‚³‚ª‚Wˆá‚¤‚Ì‚Í–³‹B
             if m.x ~= 0 and m.y ~= 0 and m.z ~= 0 and d < dist and math.abs(dz) < 1 then
----             if m.name == "Water Elemental" then
----                    printChat(i .. ": name:" .. m.name ..", dist:".. m.distance .. ", status:".. m.status ..", d:".. d)
----                printChat(m)
----             end
+--             if m.name == "Water Elemental" then
+--                    printChat(i .. ": name:" .. m.name ..", dist:".. m.distance .. ", status:".. m.status ..", d:".. d)
+--                printChat(m)
+--             end
                 if ignoreMobs:contains(m.name) == false then
 --                if m.name ~= "fep2" then 
                     mob = m
