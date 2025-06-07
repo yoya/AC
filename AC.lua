@@ -1,8 +1,8 @@
 
 --- このファイルは SJIS 保存
 _addon.author = 'Yoya'
-_addon.version = '1.0.8'
-_addon.commands = {'autoa', 'aa'}
+_addon.version = '1.0.0'
+_addon.commands = {'autocluster', 'ac'}
 
 require('functions')
 local socket = require('socket')
@@ -79,9 +79,9 @@ local preferedEnemyList = S{
     "Knotted Root", "Bedrock Crag", "Icy Palisade", -- コロナイズ
 }
 
-windower.send_command('bind ^d aa start')
-windower.send_command('bind !d aa stop')
-windower.send_command('bind ^f aa showmob')
+windower.send_command('bind ^d ac start')
+windower.send_command('bind !d ac stop')
+windower.send_command('bind ^f ac showmob')
 
 local utils = require 'autoutils'
 local iamLeader = utils.iamLeader
@@ -867,8 +867,8 @@ windower.register_event('addon command', function(command, command2)
             printChat("same name monster")
         end
     elseif command == 'help' then
-        windower.add_to_chat(17, 'AutoA  v' .. _addon.version .. 'commands:')
-        windower.add_to_chat(17, '//aa [options]')
+        windower.add_to_chat(17, 'AC (AccountCluster)  v' .. _addon.version .. 'commands:')
+        windower.add_to_chat(17, '//ac [options]')
         windower.add_to_chat(17, '    start           - Starts auto attack with ranged weapon')
         windower.add_to_chat(17, '    stop            - Stops auto attack with ranged weapon')
         windower.add_to_chat(17, '    ws              - Change weapon skill')
@@ -879,11 +879,11 @@ windower.register_event('addon command', function(command, command2)
         windower.add_to_chat(17, '    pos|info|nearest - Debug command')
         windower.add_to_chat(17, '    help            - Displays this help text')
         windower.add_to_chat(17, ' ')
-        windower.add_to_chat(17, 'AutoA will automate something.')
-        windower.add_to_chat(17, 'To start autoA without commands use the key:  Ctrl+D')
-        windower.add_to_chat(17, 'To stop autoA attacks in the same manner:  Atl+D')
+        windower.add_to_chat(17, 'AC will automate account cluster something.')
+        windower.add_to_chat(17, 'To start AC without commands use the key:  Ctrl+D')
+        windower.add_to_chat(17, 'To stop AC attacks in the same manner:  Atl+D')
     else
-        printChat("See aa help!!!")
+        printChat("See ac help!!!")
     end
 end)
 
