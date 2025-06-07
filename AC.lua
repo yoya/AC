@@ -2,7 +2,7 @@
 --- このファイルは SJIS 保存
 _addon.author = 'Yoya'
 _addon.version = '1.0.0'
-_addon.commands = {'autocluster', 'ac'}
+_addon.commands = {'accountcluster', 'ac'}
 
 require('functions')
 local socket = require('socket')
@@ -77,6 +77,7 @@ local preferedEnemyList = S{
     "Mourioche",  -- マンドラ
     "Apex Toad",  -- トード
     "Knotted Root", "Bedrock Crag", "Icy Palisade", -- コロナイズ
+    "Wretched Poroggo", "Water Elemental", "Devouring Mosquito", -- 醴泉島
 }
 
 windower.send_command('bind ^d ac start')
@@ -264,7 +265,10 @@ local notLeaderFunction = function()
     end
     if attack then
         windower.send_command('input /target <bt>')
-        windower.send_command('input /attack <bt>')
+        local mob = windower.ffxi.get_mob_by_target("bt")
+        if mob ~= nil and mob.hpp < 100 then
+            windower.send_command('input /attack <t>')
+        end
 --        turnToTarget("bt")
         ProbRecastTime = {}
     end

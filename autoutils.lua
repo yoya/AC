@@ -247,8 +247,6 @@ M.cureIfPartyHPisLow = function()
                     if hp < 300 and mainJob == "WHM" then
                         command = 'input /ja 女神の祝福 <me>'
                     elseif hp < 700 then
-                        command = 'input /ma ケアルV <'..t..'>' 
-                    elseif hp < 1000 then
                         command = 'input /ma ケアルIV <'..t..'>'                    
                     elseif hp < 1200 then
                         command = 'input /ma ケアルIII <'..t..'>'

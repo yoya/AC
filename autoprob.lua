@@ -83,13 +83,17 @@ local sendCommandProbTable = {
         { 100, 600, 'input /ja デヴォーション <p2>', 0 },
     },
     BLM = {
-        { 100, 10, 'input /ma ブリザドII <t>', 2 },
-        { 100, 10, 'input /ma ブリザドIII <t>', 3 },
+        { 200, 10, 'input /ma ストーン <t>', 2 },
+        { 200, 10, 'input /ma ファイア <t>', 2 },
+        { 200, 10, 'input /ma ブリザド <t>', 2 },
+--        { 100, 10, 'input /ma ブリザドII <t>', 2 },
+--      { 100, 10, 'input /ma ブリザドIII <t>', 3 },
 --      { 100, 10, 'input /ma ブリザドIV <t>', 4 },
 --      { 100, 10, 'input /ma ブリザドV <t>', 5 },
 --        { 100,10, 'input /ma サンダー <t>', 2 },
-        { 200,10, 'input /ma サンダーII <t>', 2 },
-        { 400, 10, 'input /ma サンダーIII <t>', 3 },
+        { 100,10, 'input /ma サンダー <t>', 2 },
+--        { 200,10, 'input /ma サンダーII <t>', 2 },
+--        { 400, 10, 'input /ma サンダーIII <t>', 3 },
 --      { 200, 10, 'input /ma サンダーIV <t>', 4 },
 --        { 100, 10, 'input /ma サンダーV <t>', 5 },
 --[[
@@ -306,7 +310,7 @@ local sendCommandProbTableSub = {
     WAR = {
         { 60, 300, 'input /ja ウォークライ <me>', 1 },
         { 60, 60, 'input /ja 挑発 <t>', 1 },
-        { 100, 300, 'input /ja バーサク <me>', 0 },
+--        { 100, 300, 'input /ja バーサク <me>', 0 },
         { 100, 300, 'input /ja アグレッサー <me>', 0 },
     },
     MNK = {
