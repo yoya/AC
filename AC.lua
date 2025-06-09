@@ -75,7 +75,7 @@ local preferedEnemyList = S{
     "Tyny Lycopodium",  -- アンバス
     --- テスト
     "Mourioche",  -- マンドラ
-    "Apex Toad",  -- トード
+--    "Apex Toad",  -- トード
     "Knotted Root", "Bedrock Crag", "Icy Palisade", -- コロナイズ
     "Wretched Poroggo", "Water Elemental", "Devouring Mosquito", -- 醴泉島
 }
@@ -391,6 +391,7 @@ local figtingFunction = function()
     else
         if player.item_level > 99 then
             local commprob = getSendCommandProbTable(mainJob, subJob, 1)
+--            printChat(commprob)
             sendCommandProb(commprob, settings.Period, ProbRecastTime)
         end
     end
@@ -839,10 +840,8 @@ windower.register_event('addon command', function(command, command2)
         printChat("distance to <t>:"..dist)
         printChat("current_sparks:"..current_sparks)
     elseif command == 'test' then
-  --      turnToPos(-320, -475, -335.4, -473.2)
---        coroutine.sleep(1)
-   --     windower.ffxi.run(true)
-        utils.rankInJob()
+        print("test command")
+        print("ジオバリア")
     elseif command == 'enterloop' then
         auto = true
         local i = 0
