@@ -40,13 +40,24 @@ function M.array_reverse(arr)
     return rev
 end
 
-function M.merge_tables(t1, t2)
+function M.merge_lists(t1, t2)
     local merged = {}
     for _, v in ipairs(t1) do
         table.insert(merged, v)
     end
     for _, v in ipairs(t2) do
         table.insert(merged, v)
+    end
+    return merged
+end
+
+function M.merge_tables(t1, t2)
+    local merged = {}
+    for k, v in pairs(t1) do
+        merged[k] = v
+    end
+    for k, v in pairs(t2) do
+        merged[k] = v
     end
     return merged
 end
