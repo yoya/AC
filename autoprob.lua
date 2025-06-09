@@ -5,6 +5,7 @@
 --- packets = require 'packets'
 
 utils = require 'autoutils'
+local merge_lists = utils.merge_lists
 local merge_tables = utils.merge_tables
 
 local M = {}
@@ -18,15 +19,15 @@ local SMN_summon_tail = "; wait 3; input /pet 神獣の攻撃 <t>"
 
 --- 通常の的
 ---local GEO_inde = "インデフューリー"
---local GEO_inde = "インデヘイスト"
---local GEO_geo = "ジオフレイル"  -- 防御down
+local GEO_inde = "インデヘイスト"
+local GEO_geo = "ジオフレイル"  -- 防御down
 local GEO_inde2 = "インデヒューリー" -- 攻撃力up
 local GEO_geo2 = "ジオトーパー" -- 回避down
 --- 格上の敵
 ---local GEO_inde = "インデプレサイス" --- 命中up
 --- 醴泉島かえる
-local GEO_inde = "インデリジェネ"
-local GEO_geo = "ジオバリア"  -- 防御down
+--local GEO_inde = "インデリジェネ"
+--local GEO_geo = "ジオバリア"  -- 防御down
 
 --- アンバス用
 --- local GEO_inde = "インデバリア" --- アンバス物防up
@@ -166,13 +167,13 @@ local sendCommandProbTable = {
         { 200, 60, 'input /ma 活力のエチュード <me>', 7 },
         { 200, 60, 'input /ma 戦士達のピーアンVI <me>', 7 },
 --[[
-        { 150, 120, 'input /ma 無敵の進撃マーチ <me>', 7 },
-        { 150, 120, 'input /ma 栄光の凱旋マーチ <me>', 7 },
-        { 150, 120, 'input /ma 猛者のメヌエットV <me>', 7 },
-        { 50, 180, 'input /ma 猛者のメヌエットIV <me>', 7 },
-        { 50, 180, 'input /ma 剣豪のマドリガル <me>', 7 },
-        { 50, 180, 'input /ma 怪力のエチュード <me>', 7 },
-        { 50, 180, 'input /ma 妙技のエチュード <me>', 7 },
+        { 150, 120/2, 'input /ma 無敵の進撃マーチ <me>', 7 },
+        { 200, 120/2, 'input /ma 栄光の凱旋マーチ <me>', 7 },
+        { 200, 120, 'input /ma 猛者のメヌエットV <me>', 7 },
+        { 50, 180/2, 'input /ma 猛者のメヌエットIV <me>', 7 },
+        { 100, 180/2, 'input /ma 剣豪のマドリガル <me>', 7 },
+        { 50, 180/2, 'input /ma 怪力のエチュード <me>', 7 },
+        { 100, 180/2, 'input /ma 妙技のエチュード <me>', 7 },
 ]]
 --        { 100, 60, 'input /ma 魔法のフィナーレ <t>', 7 },
 --        { 200, 120, 'input /ma 修羅のエレジー <t>', 7 },
@@ -363,9 +364,11 @@ local sendCommandProbTableSub = {
 
 M.getSendCommandProbTable = function(mainJob, subJob, rankInJob)
     local merged = {}
+    print("rankInJob", rankInJob)
     for job, commprob in pairs(sendCommandProbTable) do
         if job == mainJob or job == mainJob..'_'..rankInJob or job == "ALL" then
-            merged = merge_tables(merged, commprob)
+            merged = merge_lists(merged, commprob)
+            print(job, #merged)
         end
     end
     for job, commprob in pairs(sendCommandProbTableSub) do
