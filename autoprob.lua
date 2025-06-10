@@ -275,14 +275,17 @@ local sendCommandProbTable = {
         { 100, 120, 'input /ma ケアル <p1>', 3 },
         { 100, 120, 'input /ma ヘイスト <p2>', 3 },
         { 100, 30, 'input /ma サンダー <t>', 3},
---[[
         { 100, 30, 'input /ma サンダーII <t>', 3},
         { 100, 30, 'input /ma サンダーIII <t>', 3},
+--[[
         { 100, 30, 'input /ma サンダーIV <t>', 4},
 ]]
---        { 100, 30, 'input /ma ブリザドII <t>', 3},
---        { 100, 30, 'input /ma ブリザドIII <t>', 3},
+        { 100, 30, 'input /ma ブリザド <t>', 3},
+        { 100, 30, 'input /ma ブリザドII <t>', 3},
+        { 100, 30, 'input /ma ブリザドIII <t>', 3},
+--[[
 --        { 100, 30, 'input /ma ブリザドIV <t>', 4},
+]]
     },
     GEO_1 = {
         { 150, 300/3, 'input /ma '..GEO_geo..' <t>; wait 1; input /ja サークルエンリッチ <me>', 6 },
