@@ -77,7 +77,9 @@ local preferedEnemyList = S{
     "Mourioche",  -- マンドラ
 --    "Apex Toad",  -- トード
     "Knotted Root", "Bedrock Crag", "Icy Palisade", -- コロナイズ
-    "Wretched Poroggo", "Water Elemental", "Devouring Mosquito", -- 醴泉島
+    -- 醴泉島
+    "Wretched Poroggo", "Water Elemental", 
+    "Indomitable Faaz", "Devouring Mosquito", -- 醴泉島
 }
 
 windower.send_command('bind ^d ac start')
@@ -337,7 +339,8 @@ local figtingFunction = function()
         end
     end
     if isFar then
-        if dist > math.random(4,7)/2 then
+        --　戦闘中でないときは、WSやMAを自粛。フェイスが動かないので。
+        if dist > math.random(4,7)/2 or player.status == 0 then
             windower.ffxi.run(dx, dy)
             return
         else
