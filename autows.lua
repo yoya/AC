@@ -17,7 +17,7 @@ ws.weaponskill = 'flat'
 
 
 local preferWeaponSkill = {
-    'victory', 'shishin', 'tokon', 'tackle',-- 格闘
+    'victory', 'shishin', 'tokon', 'dragon', 'tackle',-- 格闘
     'manda', 'exen', 'rudra', 'evis',  'dance', 'shadow', -- 短剣
     'savage', 'chant', -- 片手剣
     'reso','ground', -- 両手剣
@@ -38,6 +38,7 @@ ws.weaponskillTable = {
     shishin = '四神円舞',
     victory = 'ビクトリースマイト',
     tokon = '闘魂旋風脚',
+    dragon = 'ドラゴンブロウ',
     -- 短剣
     manda = 'マンダリクスタッブ',
     rudra = 'ルドラストーム',
