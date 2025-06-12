@@ -252,16 +252,16 @@ M.cureIfPartyHPisLow = function()
             if member ~= nil and  member.mob ~= nil then
                 local hpp = member.hpp
                 local hp = member.hp
-                if hp > 0 and hpp < math.random(60,75) then
+                if hp > 0 and hpp < math.random(70,80) then
 --                     print(t.." HP: "..hp.." ("..hpp.."%)")
                     local command = 'input /ma ケアル <'..t..'>'
                     if hp < 300 and mainJob == "WHM" then
                         command = 'input /ja 女神の祝福 <me>'
-                    elseif hp < 700 then
+                    elseif hp < 800 then
                         command = 'input /ma ケアルIV <'..t..'>'                    
                     elseif hp < 1200 then
                         command = 'input /ma ケアルIII <'..t..'>'
-                    elseif hp < 1500 then
+                    elseif hp < 1600 then
                         command = 'input /ma ケアルII <'..t..'>'
                     end
                     windower.ffxi.run(false)
