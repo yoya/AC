@@ -367,11 +367,11 @@ local sendCommandProbTableSub = {
 
 M.getSendCommandProbTable = function(mainJob, subJob, rankInJob)
     local merged = {}
-    print("rankInJob", rankInJob)
+--    print("rankInJob", rankInJob)
     for job, commprob in pairs(sendCommandProbTable) do
         if job == mainJob or job == mainJob..'_'..rankInJob or job == "ALL" then
             merged = merge_lists(merged, commprob)
-            print(job, #merged)
+--            print(job, #merged)
         end
     end
     for job, commprob in pairs(sendCommandProbTableSub) do
