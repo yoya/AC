@@ -261,12 +261,18 @@ local notLeaderFunction = function()
         end
     end
     if attack then
-        windower.send_command('input /target <bt>')
-        local mob = windower.ffxi.get_mob_by_target("bt")
+        windower.ffxi.run(false)
+        --- p1 がターゲットしてる敵に合わせる
+        local p1 = windower.ffxi.get_mob_by_target("p1")
+        if p1.target_index == 0 then
+            return
+        end
+        utils.targetByMobIndex(p1.target_index)
+---        windower.send_command('input /target <bt>')
+        local mob = windower.ffxi.get_mob_by_target("t")
         if mob ~= nil and mob.hpp < 100 then
             windower.send_command('input /attack <t>')
         end
---        turnToTarget("bt")
         ProbRecastTime = {}
     end
 end
