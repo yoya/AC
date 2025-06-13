@@ -126,14 +126,21 @@ local fightingMobName = nil
 --- リーダー待機用
 local leaderFunction = function()
 ---    print("I am a reader")
+
+
     local me_pos = {}
     if getMobPosition(me_pos, "me") ~= true then
         print("getMobPosition failed ???")
         return
     end
 --    print("mid_pos:", mid_pos.x, mid_pos.y)
+    -- 優先する敵
     local mob =  utils.getNearestFightableMob(start_pos, settings.CampRange, preferedEnemyList)
 ---    print("nearest prefered mob", mob)
+    if mob == nil then
+        --- メンバーが戦っている敵がいれば、そちら優先
+--        mob = utils.PartyTargetMob()
+    end
     if mob == nil then
         --- 優先度の高い敵がいない場合は、誰でも良い
         mob = utils.getNearestFightableMob(start_pos, settings.CampRange, nil)

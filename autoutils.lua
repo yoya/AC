@@ -205,6 +205,23 @@ M.targetByMobIndex= function(mobIndex)
     }))
 end
 
+M.PartyTargetMob = function()
+    printChat("PartyTargetMob")
+    local party = windower.ffxi.get_party()
+    for i = 1, 6 do
+        local member = party["p"..i]
+        if member.mob ~= nil then
+            local target_index = member.mob.target_index
+            if target_index > 0 then
+                local mob = windower.ffxi.get_mob_by_index(mobIndex)
+                return mob
+            end
+        end
+    end
+    return nil
+end
+
+
 local turnToFront = function(target)
     local push_numpad5 = 'setkey numpad5 down; wait 0.1; setkey numpad5 up'
     windower.send_command(push_numpad5..'; wait 0.5; '..push_numpad5)
