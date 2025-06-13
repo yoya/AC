@@ -131,18 +131,12 @@ local leaderFunction = function()
         print("getMobPosition failed ???")
         return
     end
---- 開始位置(狩の中心)と現在位置の真ん中から、
---- 一番近い戦える敵と戦闘モードになって近づく。優先度の高い敵を先に検索
---- （少しずつでも、開始位置に戻る方向に誘導したい）
-    local mid_pos = {x=(start_pos.x + me_pos.x)/2,
-                     y=(start_pos.y + me_pos.y)/2,
-                     z=(start_pos.z + me_pos.z)/2 }
 --    print("mid_pos:", mid_pos.x, mid_pos.y)
-    local mob =  utils.getNearestFightableMob(mid_pos, settings.CampRange, preferedEnemyList)
+    local mob =  utils.getNearestFightableMob(start_pos, settings.CampRange, preferedEnemyList)
 ---    print("nearest prefered mob", mob)
     if mob == nil then
         --- 優先度の高い敵がいない場合は、誰でも良い
-        mob = utils.getNearestFightableMob(mid_pos, settings.CampRange, nil)
+        mob = utils.getNearestFightableMob(start_pos, settings.CampRange, nil)
     end
     if mob ~= nil then
         windower.ffxi.run(false)
