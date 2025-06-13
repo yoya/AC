@@ -187,6 +187,24 @@ M.targetByMobId = function(mobId)
     }))
 end
 
+M.targetByMobIndex= function(mobIndex)
+---    print("tagetByMobId", mobId)
+    if mobIndex == 0 then
+        print("targetByMobIndex mobIndex: "..mobIndex)
+        return
+    end
+    local player = windower.ffxi.get_player()
+    local mob = windower.ffxi.get_mob_by_index(mobIndex)
+    if mob == nil then
+        return
+    end
+    packets.inject(packets.new('incoming', 0x58, {
+        ['Player'] = player.id,
+        ['Target'] = mob.id,
+        ['Index'] = player.index
+    }))
+end
+
 local turnToFront = function(target)
     local push_numpad5 = 'setkey numpad5 down; wait 0.1; setkey numpad5 up'
     windower.send_command(push_numpad5..'; wait 0.5; '..push_numpad5)
