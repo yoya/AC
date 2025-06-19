@@ -86,6 +86,7 @@ ws.weaponskillTable = {
     -- 両手棍
     myrkr = 'ミルキル',
     spirit = 'スピリットテーカー',
+    cata = 'カタクリスム',
     brain = 'ブレインシェイカー',
     heavy = 'ヘヴィスイング',
     -- 射撃(銃)
@@ -136,9 +137,10 @@ ws.exec = function()
         return
     end
     local player = windower.ffxi.get_player()
+--    print(player.vitals.tp)
 --    if mob.hpp < math.random(30, 33) and -- 醴泉島かえる
     if mob.hpp < math.random(3,5) and -- ウォーAPEXかえる
-        player.vitals.tp ~= 3000 then
+        player.vitals.tp < 3000 then
         return
     end
     wsname = ws.weaponskillTable[ws.weaponskill]
