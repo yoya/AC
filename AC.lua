@@ -126,8 +126,6 @@ local fightingMobName = nil
 --- リーダー待機用
 local leaderFunction = function()
 ---    print("I am a reader")
-
-
     local me_pos = {}
     if getMobPosition(me_pos, "me") ~= true then
         print("getMobPosition failed ???")
@@ -169,7 +167,7 @@ local leaderFunction = function()
     if attack then
         windower.send_command('input /attack on')
         ProbRecastTime = {}
-    end 
+    end
 end 
 
 --- メンバー待機用
@@ -271,13 +269,14 @@ local notLeaderFunction = function()
         windower.ffxi.run(false)
         --- p1 がターゲットしてる敵に合わせる
         local p1 = windower.ffxi.get_mob_by_target("p1")
-        if p1.target_index == 0 then
+        if p1 == nil or p1.status ~= 1 or p1.target_index == 0 then
             return
         end
         utils.targetByMobIndex(p1.target_index)
 ---        windower.send_command('input /target <bt>')
         local mob = windower.ffxi.get_mob_by_target("t")
         if mob ~= nil and mob.hpp < 100 then
+            coroutine.sleep(math.random(0,2)/4)
             windower.send_command('input /attack <t>')
         end
         ProbRecastTime = {}
@@ -290,7 +289,7 @@ local figtingFunction = function()
 --- printChat("figtingFunction")
     local mob = windower.ffxi.get_mob_by_target("t")
     if mob == nil then
-        print("figtingFunction mob is nil")
+--        print("figtingFunction mob is nil")
         -- 多分、戦闘モードなのにターゲットがいない。
         windower.send_command('input /attack off')
         return
@@ -299,7 +298,8 @@ local figtingFunction = function()
     local mainJob = player.main_job
     local subJob = player.sub_job
 ---    print("XXX", preferedEnemyList)
-    local preferMob =  utils.getNearestFightableMob(start_pos, settings.CampRange, preferedEnemyList)
+    -- 優先する敵は、索敵範囲を半分に。
+    local preferMob =  utils.getNearestFightableMob(start_pos, settings.CampRange/2, preferedEnemyList)
 ---    print("prefereMob", preferMob)
     if preferMob ~= nil and mob.name ~= preferMob.name then
 --        print("preferMob:", mob.name)
@@ -349,20 +349,23 @@ local figtingFunction = function()
         --　戦闘中でないときは、WSやMAを自粛。フェイスが動かないので。
         if dist > math.random(4,7)/2 or player.status == 0 then
             windower.ffxi.run(dx, dy)
+            -- 向きが悪くて戦闘が開始しない問題への対策
+            windower.send_command('setkey numpad5 down; wait 0.05; setkey numpad5 up')
             return
         else
             windower.ffxi.run(false)
             sendCommandProb({
-                { 150, 0, 'setkey a down; wait 0.05; setkey a up', 0 },
-                { 150, 0, 'setkey d down; wait 0.05; setkey d up', 0 },
-                { 150, 0, 'setkey a down; wait 0.1; setkey a up', 0 },
+                { 150, 0, 'setkey a down; wait 0.05; setkey a up', 0 }, -- 左
+                { 150, 0, 'setkey d down; wait 0.05; setkey d up', 0 }, -- 右
+                { 150, 0, 'setkey a down; wait 0.1; setkey a up', 0 }, 
                 { 150, 0, 'setkey d down; wait 0.1; setkey d up', 0 },
                 { 200, 0, 'setkey a down; wait 0.15; setkey a up', 0 },
                 { 200, 0, 'setkey d down; wait 0.15; setkey d up', 0 },
-                    { 200, 0, 'setkey a down; wait 0.2; setkey a up', 0 },
+                { 200, 0, 'setkey a down; wait 0.2; setkey a up', 0 },
                 { 200, 0, 'setkey d down; wait 0.2; setkey d up', 0 },
                 { 300, 0, 'setkey a down; wait 0.25; setkey a up', 0 },
                 { 300, 0, 'setkey d down; wait 0.25; setkey d up', 0 },
+                { 500, 0, 'setkey s down; wait 0.01; setkey s up', 0 }, -- 後ろ
          }, 1.0, ProbRecastTime)
          --- 一回だけなので 1 を入れる。
         end
@@ -442,8 +445,8 @@ local idleFunctionTradeItems = function(tname, items, wait)
 ---    windower.send_command('input /targetnpc')
     local mob = windower.ffxi.get_mob_by_name(tname)
     if mob == nil then
-        print("not found")
-         return 
+        print("idleFunctionTradeItems: mob not found")
+        return 
     end
     if mob.name == tname then
         for i, id in pairs(items) do
@@ -852,7 +855,7 @@ windower.register_event('addon command', function(command, command2)
         printChat("current_sparks:"..current_sparks)
     elseif command == 'test' then
         print("test command")
-        print("ジオバリア")
+        utils.PartyTargetMob()
     elseif command == 'enterloop' then
         auto = true
         local i = 0
@@ -923,12 +926,21 @@ windower.register_event('zone change', function()
  end)
 
 
- windower.register_event('incoming chunk', function()
+ windower.register_event('incoming chunk', function(id, original, modified, injected, blocked)
     autoincoming.incoming_handler()
+    local player = windower.ffxi.get_player()
+    if id == 0x2D then
+        local packet = packets.parse('incoming', original)
+--        printChat("============== packet(0x2D)")
+--        if packet["Player Index"] == player.index then  
+--            printChat(packet)
+--        end
+    end
     if id == 0x110 then -- Update Current Sparks via 110
-        --- ここにこない？
+        local data = original
 		local header, value1, value2, Unity1, Unity2, Unknown = data:unpack('II')
 		current_sparks = value1
+--        printChat({"current_sparks", current_sparks})
 	end
  end)
 
