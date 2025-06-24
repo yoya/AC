@@ -475,10 +475,9 @@ local idleFunctionTradeItems = function(tname, items, wait)
     coroutine.sleep(1)
 end
 
-local idleFunctionSellJunkItems = function()
-    local total_count = 0
-    -- 可搬ストレージのジャンクアイテムをかばんに集める
-    print("Aggregate Bag Junk Items to Inventory")
+
+-- ジャンクアイテムをかばんに集める
+local aggregateJunkItemsToInventory = function()
     for id in pairs(JunkItems) do
         if autoitem.checkInventoryFreespace() == false then
             break
@@ -489,21 +488,29 @@ local idleFunctionSellJunkItems = function()
             coroutine.sleep(0.5)
         end
         if autoitem.bagsHasItem(id) then
-            print("bags "..id.."to Inventory")
+            print("bags id:"..id.." to Inventory")
             autoitem.bagsToInventory(id)
             coroutine.sleep(0.5)
         end
     end
-    -- カウント
-    for index = 1, 80 do
+end
+
+-- かばん内のジャンクアイテムを数える
+local countJunkItemsInInventory = function ()
+    local total_count = 0
+        for index = 1, 80 do
         local item = windower.ffxi.get_items(0, index)
 --        printChat({"item:", windower.to_shift_jis(res.items[item.id].ja), item.id, item.status})
         if item and JunkItems:contains(item.id) then
             total_count = total_count + 1
         end
     end
+    return total_count
+end
+
+local idleFunctionSellJunkItemsInInventory = function()
+    local total_count = countJunkItemsInInventory()
     printChat(total_count.."回売却 start")
-    -- 売却処理
     local remain_count = total_count
     for index = 1, 80 do
         local item = windower.ffxi.get_items(0, index)
@@ -527,6 +534,16 @@ local idleFunctionSellJunkItems = function()
     printChat(total_count.."回売却 end")
 ---  stop() ---何故か動かない
     auto = false
+end
+
+local idleFunctionSellJunkItems = function()
+    -- 可搬ストレージのジャンクアイテムをかばんに集める
+    print("Aggregate Bag Junk Items to Inventory")
+    aggregateJunkItemsToInventory()
+    -- カウント
+    local total_count = countJunkItemsInInventory()
+    -- 売却処理
+    idleFunctionSellJunkItemsInInventory()
 end
 
 --- モグガーデン(280)のみ動作する
