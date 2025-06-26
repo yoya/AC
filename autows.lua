@@ -25,11 +25,12 @@ local preferWeaponSkill = {
     'ukko', 'steel',  --両手斧
     'dai',  -- 両手槍
     'demi', 'spin', 'ent', 'frost', -- 両手剣
-    'hocho', 'gekko', 'kagero', 'yuki', -- 両手刀
+    'shoha', 'hocho', 'gekko', 'kagero', 'yuki', -- 両手刀
     'shun', -- 片手刀
     'moon', 'realm', 'hexa', 'shine', 'circle', -- 片手棍
     'myrkr', 'spirit', 'full', 'heavy', -- 両手棍
-    'leaden', 'hot', -- 射撃(銃)
+    'apex', -- 弓
+    'leaden', 'hot', 'wild' -- 射撃(銃)
 }
 
 ws.weaponskillTable = {
@@ -75,6 +76,7 @@ ws.weaponskillTable = {
     yuki = '七之太刀・雪風', -- 硬化、炸裂
     gekko = '八之太刀・月光', -- 貫通、衝撃
     hocho = '十\一之太刀・鳳蝶', -- 防御力ダウン
+    shoha = '十\二之太刀・照破', --　防御力カット。格上に強い
     -- 片手刀
     shun = '瞬',
     -- 片手棍
@@ -89,9 +91,12 @@ ws.weaponskillTable = {
     cata = 'カタクリスム',
     brain = 'ブレインシェイカー',
     heavy = 'ヘヴィスイング',
+    -- 弓
+    apex = 'エイペクスアロー',
     -- 射撃(銃)
     leaden = 'レデンサリュート',
     hot = 'ホットショット',
+    wild = 'ワイルドファイア',
 }
 
 ws.weaponskillTargetMeTable = S{
