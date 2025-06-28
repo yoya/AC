@@ -478,6 +478,7 @@ end
 
 -- ジャンクアイテムをかばんに集める
 local aggregateJunkItemsToInventory = function()
+    local count = 0
     for id in pairs(JunkItems) do
         if autoitem.checkInventoryFreespace() == false then
             break
@@ -485,30 +486,34 @@ local aggregateJunkItemsToInventory = function()
         if autoitem.safesHasItem(id) then
             print("safes "..id.."to Inventory")
             autoitem.safesToInventory(id)
+            count = count + 1
             coroutine.sleep(0.5)
         end
         if autoitem.bagsHasItem(id) then
             print("bags id:"..id.." to Inventory")
             autoitem.bagsToInventory(id)
+            count = count + 1
             coroutine.sleep(0.5)
         end
     end
+    print("aggregateJunkItemsToInventory: "..count)
+    return count
 end
 
 -- かばん内のジャンクアイテムを数える
 local countJunkItemsInInventory = function ()
-    local total_count = 0
+    local count = 0
         for index = 1, 80 do
         local item = windower.ffxi.get_items(0, index)
 --        printChat({"item:", windower.to_shift_jis(res.items[item.id].ja), item.id, item.status})
         if item and JunkItems:contains(item.id) then
-            total_count = total_count + 1
+            count = count + 1
         end
     end
-    return total_count
+    return count
 end
 
-local idleFunctionSellJunkItemsInInventory = function()
+local sellJunkItemsInInventory = function()
     local total_count = countJunkItemsInInventory()
     printChat(total_count.."回売却 start")
     local remain_count = total_count
@@ -540,10 +545,16 @@ local idleFunctionSellJunkItems = function()
     -- 可搬ストレージのジャンクアイテムをかばんに集める
     print("Aggregate Bag Junk Items to Inventory")
     aggregateJunkItemsToInventory()
-    -- カウント
-    local total_count = countJunkItemsInInventory()
-    -- 売却処理
-    idleFunctionSellJunkItemsInInventory()
+    local done = false
+    while done == false and auto do
+        -- 売却処理
+        sellJunkItemsInInventory()
+        local move_count = aggregateJunkItemsToInventory()
+        if move_count == 0 then
+            -- 移動するアイテムがなければ終了
+            done = true
+        end
+    end
 end
 
 --- モグガーデン(280)のみ動作する
@@ -600,7 +611,7 @@ local idleFunctionMobGarden = function()
 end
 
 local idleFunctionJeunoPort = function()
-    idleFunctionTradeItems("Shemo", seal_ids, 5)  --- or Shami
+    idleFunctionTradeItems("Shemo", seal_ids, 2)  --- or Shami
 end
 
 local idleFunctionSouthSand = function()
@@ -924,11 +935,13 @@ end)
 windower.register_event('load', 'login', 'logout', function()
     local player = windower.ffxi.get_player()
     player_id = player and player.id
-    wskey = ws.getAnyWeaponSkill()
+--    wskey = ws.getAnyWeaponSkill()
+    ws.init()
 end)
 
 windower.register_event('job change', function()
-    wskey = ws.getAnyWeaponSkill()
+--    wskey = ws.getAnyWeaponSkill()
+    ws.init()
 end)
 
 
