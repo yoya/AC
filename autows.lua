@@ -157,9 +157,11 @@ ws.exec = function()
     windower.send_command('input /ws ' .. wsname .. ' ' .. target)
 end
 
-ws.weaponskill = ws.getAnyWeaponSkill()
-if ws.weaponskill ~= nil then
-    windower.add_to_chat(17, 'set any ' .. ws.weaponskill .. ' => ' .. ws.weaponskillTable[ws.weaponskill])
+ws.init = function()
+    ws.weaponskill = ws.getAnyWeaponSkill()
+    if ws.weaponskill ~= nil then
+        windower.add_to_chat(17, 'set any ' .. ws.weaponskill .. ' => ' .. ws.weaponskillTable[ws.weaponskill])
+    end
 end
 
 return ws
