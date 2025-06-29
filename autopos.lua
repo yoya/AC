@@ -475,10 +475,21 @@ local automoveRouteTable = {
         },
     },
     [126] = { -- クフィム島
+        -- HP#1
         pec = { --　珍妙なモンスター
-            {x=-212,y=94}, {x=-204,y=83.5},
+            {x=-212,y=94,z=-21}, {x=-204,y=83.5},
             {x=-191.7,y=47.4}
         },
+        pond = { -- 中央の池
+            {x=-212,y=94,z=-21}, {x=-142,y=24},
+            {x=-70,y=16}, {x=-61,y=17}, {x=-56,y=62},
+            {x=-36,y=83}, {x=-10,y=85},
+            -- {x=-4.5,y=99}, {x=-18,y=104},
+        },
+        hiero = { --デュミナス
+            {r="pond"}, {x=7,y=117}, {x=19,y=148},
+            {x=16,y=159}, {a="f8touch"}
+        }
     },
     [132] = { -- アビセア、ラテーヌ
         conf = {
@@ -946,9 +957,13 @@ local automoveRouteTable = {
     [245] = { -- ジュノ下層
         --HP モグハウス側
         tensho = { {x=19,y=-53}, {x=17.2,y=31.7},  -- 天晶堂
-            {x=10.3,y=25.1}, {x=6,y=18.1}, {x=4,y=8.2},
-            {x=12.6,y=-1.5}, {a="f8touch"}, {x=35.9,y=-15.4},
-            {a="f8touch"}
+            --{x=10.3,y=25.1}, {x=6,y=18.1}, {x=4,y=8.2},
+            --{x=12.6,y=-1.5}, {a="f8touch"}, {x=35.9,y=-15.4},
+            --{a="f8touch"}
+            {x=19,y=53,z=-1}, {x=17,y=46}, {x=19,y=33},
+            {x=15,y=28}, {x=11,y=26}, {x=5,y=17}, {x=4,y=8},
+            {x=12.5,y=-1}, {a="f8touch"}, {x=15,y=-3.3},
+            {x=36,y=-15.5}, {a="f8touch"},
         },
         gob = { {x=-99.6,y=-183.4}, {x=-93.8,y=-150.4},
                 {x=-68.7,y=-102.6},{x=-51.2,y=-113.2} },
@@ -1569,7 +1584,7 @@ function moveTo(route)
                 windower.send_command('input /target '..p.t)
                 coroutine.sleep(0.5)
             end
-            if p.a == "f8touch" then
+            if p.a == "f8touch" or p.a == "opendoor" then
                 pushKeys({"escape", "f8", "enter"})
                 coroutine.sleep(1.0)
                 touch = true
