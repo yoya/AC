@@ -513,7 +513,17 @@ local automoveRouteTable = {
             {x=110.6,y=242.9}, {x=92.6,y=276.5}, {x=87.1,y=288.4}
         },
     },
-    [143] ={ -- パルブロ鉱山
+    [142] = { -- ユグホトの岩屋
+        -- 温泉から入ったところ
+        horl = { -- ホルレー
+            {x=437.6,y=68.1,z=-40.1},
+            {x=429,y=64}, {x=426,y=67.5}, {x=421,y=92},
+            {x=410,y=109},{x=405.5,y=125}, {x=403,y=130},
+            {x=415,y=146}, {x=427,y=154}, {x=436,y=169},
+            {x=440,y=171,z=-40}, {}
+        },
+    },
+    [143] = { -- パルブロ鉱山
         pec = { --　珍妙なモンスター
             {x=108,y=-147,z=-38.5}, {x=94.7,y=-149,z=-36.7},
             {x=92,y=-142.8,z=-36.2}, {x=100.5,y=-131.6,z=-34.3},
@@ -1562,6 +1572,12 @@ function moveTo(route)
                 coroutine.sleep(1)
                 windower.send_command('input /ma インビジ <me>')
                 coroutine.sleep(7)
+            end
+            if p.a == "invisi_cancel" then
+                print("invisi cancel")
+                windower.ffxi.run(false)
+                coroutine.sleep(1)
+                windower.ffxi.cancel_buff(69) -- インビジキャンセル
             end
             if p.x ~= nil then
                 print("moving", i, p.x, p.y)
