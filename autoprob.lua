@@ -17,14 +17,14 @@ local M = {}
 local SMN_summon_head = ""
 local SMN_summon_tail = "; wait 3; input /pet 神獣の攻撃 <t>"
 
---- 通常の的
----local GEO_inde = "インデフューリー"
+--- 通常の敵
+--local GEO_inde = "インデフューリー"
 local GEO_inde = "インデヘイスト"
 local GEO_geo = "ジオフレイル"  -- 防御down
 local GEO_inde2 = "インデヒューリー" -- 攻撃力up
 local GEO_geo2 = "ジオトーパー" -- 回避down
 --- 格上の敵
----local GEO_inde = "インデプレサイス" --- 命中up
+--local GEO_inde = "インデプレサイス" --- 命中up
 --- 醴泉島かえる
 --local GEO_inde = "インデリジェネ"
 --local GEO_geo = "ジオバリア"  -- 防御down
@@ -56,8 +56,8 @@ local sendCommandProbTable = {
     WHM = {
 --        { 100, 120, 'input /ma ディア <t>', 3 },
         { 100, 120, 'input /ma ディアII <t>', 3 },
---      { 100, 120, 'input /ma スロウ <t>', 3 },
---      { 100, 120, 'input /ma パライズ <t>', 3 },
+        { 100, 120, 'input /ma スロウ <t>', 3 },
+        { 100, 120, 'input /ma パライズ <t>', 3 },
 --        { 100, 120, 'input /ma アドル <t>', 3 },
         { 50, 300-100, 'input /ma アディデック <me>', 5 },
 --        { 100, 180, 'input /ma オースピス <me>', 1 },
@@ -65,18 +65,21 @@ local sendCommandProbTable = {
 --       { 100, 120, 'input /ma リジェネIV <p1>', 6 },
 --       { 100, 120, 'input /ma リジェネIV <p2>', 6 },
         { 100, 120, 'input /ma リジェネIII <p1>', 6 },
+        { 100, 120, 'input /ma リジェネIII <p2>', 6 },
 --        { 100, 120, 'input /ma リジェネIII <p2>', 6 },
         { 100, 120, 'input /ma ヘイスト <p1>', 6 },
         { 100, 120, 'input /ma ヘイスト <p2>', 6 },
+        { 100, 120, 'input /ma ヘイスト <p3>', 6 },
 --        { 100, 120, 'input /ma ヘイスト <p3>', 6 },
         { 100, 180, 'input /ja ハートオブソ\ラス <me>', 0 },
 --        { 100, 600, 'input /ja 女神の聖域 <me>', 0 },
         { 10, 300, 'input /ma リレイズIV <me>', 0 },
---        { 500, 60, 'input /ma ケアル <p1>', 3 },
+        { 500, 60, 'input /ma ケアル <p1>', 3 },
+        { 500, 60, 'input /ma ケアル <p2>', 3 },
 --      { 200, 60, 'input /ma ケアルII <p1>', 3 },
         { 10, 300-30, 'input /ma ブリンク <me>', 5},
         { 10, 300-30, 'input /ma ストンスキン <me>', 5},
---        { 100, 60, 'input /ma バニシュ <t>', 3 },
+        { 100, 60, 'input /ma バニシュ <t>', 3 },
 --      { 100, 60, 'input /ma バニシュII <t>', 3 },
 --        { 100, 60, 'input /ma バニシュIII <t>', 3 },
 --        { 100, 60, 'input /ma ホーリー <t>', 3 },
@@ -84,27 +87,30 @@ local sendCommandProbTable = {
         { 100, 600, 'input /ja デヴォーション <p2>', 0 },
     },
     BLM = {
-         { 200, 10, 'input /ma ブリザド <t>', 2 },
-        { 100, 10, 'input /ma ブリザドII <t>', 2 },
---      { 100, 10, 'input /ma ブリザドIII <t>', 3 },
---      { 100, 10, 'input /ma ブリザドIV <t>', 4 },
---      { 100, 10, 'input /ma ブリザドV <t>', 5 },
---        { 100,10, 'input /ma サンダー <t>', 2 },
-        { 100,10, 'input /ma サンダー <t>', 2 },
-        { 200,10, 'input /ma サンダーII <t>', 2 },
---        { 400, 10, 'input /ma サンダーIII <t>', 3 },
---      { 200, 10, 'input /ma サンダーIV <t>', 4 },
---        { 100, 10, 'input /ma サンダーV <t>', 5 },
---
-        { 200, 10, 'input /ma ストーン <t>', 2 },
-        { 200, 10, 'input /ma ファイア <t>', 2 },
         { 200, 10, 'input /ma ブリザド <t>', 2 },
-        { 200,10, 'input /ma バイオ <t>', 2 },
-        { 200,10, 'input /ma ドレイン <t>', 2 },
-        { 200,10, 'input /ma スタン <t>', 2 },
-        { 200,10, 'input /ma ディア <t>', 2 },
-        --[[
-]]
+        { 100, 10, 'input /ma ブリザドII <t>', 2 },
+        { 200, 10, 'input /ma ブリザドIII <t>', 3 },
+        { 100, 10, 'input /ma ブリザドIV <t>', 4 },
+--        { 100, 10, 'input /ma ブリザドV <t>', 5 },
+--      { 100,10, 'input /ma ファイア <t>', 2 },
+--        { 200,10, 'input /ma ファイアII <t>', 2 },
+--        { 400, 10, 'input /ma ファイアIII <t>', 3 },
+--        { 300, 10, 'input /ma ファイアIV <t>', 4 },
+--        { 300, 10, 'input /ma ファイアV <t>', 5 },
+--
+          { 100,10, 'input /ma サンダー <t>', 2 },
+          { 200,10, 'input /ma サンダーII <t>', 2 },
+          { 400, 10, 'input /ma サンダーIII <t>', 3 },
+          { 300, 10, 'input /ma サンダーIV <t>', 4 },
+--          { 300, 10, 'input /ma サンダーV <t>', 5 },
+-- スキル上げ
+--        { 200, 10, 'input /ma ストーン <t>', 2 },
+--        { 200, 10, 'input /ma ファイア <t>', 2 },
+--        { 200, 10, 'input /ma ブリザド <t>', 2 },
+--        { 200,10, 'input /ma バイオ <t>', 2 },
+--        { 400,10, 'input /ma ドレイン <t>', 2 },
+--        { 200,10, 'input /ma スタン <t>', 2 },
+--        { 200,10, 'input /ma ディア <t>', 2 },
         { 100, 10, 'input /ma ショックスパイク <me>', 5 },
      },          
     RDM = {
@@ -150,6 +156,9 @@ local sendCommandProbTable = {
         { 100, 180, 'input /ma ドレッドスパイク <me>', 3 },
         { 60, 120, 'input /ma ドレインIII <t>', 3 },
         { 100, 120, 'input /ma アブゾースト <t>', 3 },
+        { 100, 120, 'input /ma アブゾバイト <t>', 3 },
+        { 100, 120, 'input /ma アブゾタック <t>', 3 },
+        { 100, 120, 'input /ma アブゾデック <t>', 3 },
         { 100, 120, 'input /ma アブゾアキュル <t>', 3 },
         { 100, 3000, 'input /ja ラストリゾート <me>', 0 },
         { 100, 3000, 'input /ja ディアボリクアイ <me>', 0 },
@@ -161,24 +170,24 @@ local sendCommandProbTable = {
 ---        { 500, 15, 'input /pet センシラブレード <t>', 0 },
     },
     BRD = {
-        { 100, 120, 'input /ma 重装騎兵のミンネIV <me>', 7 },
-        { 200, 60, 'input /ma 重装騎兵のミンネV <me>', 7 },
-        { 200, 60, 'input /ma 闘龍士のマンボ <me>', 7 },
-        { 200, 60, 'input /ma 活力のエチュード <me>', 7 },
-        { 200, 60, 'input /ma 戦士達のピーアンVI <me>', 7 },
 --[[
-        { 150, 120/2, 'input /ma 無敵の進撃マーチ <me>', 7 },
-        { 200, 120/2, 'input /ma 栄光の凱旋マーチ <me>', 7 },
-        { 200, 120, 'input /ma 猛者のメヌエットV <me>', 7 },
-        { 50, 180/2, 'input /ma 猛者のメヌエットIV <me>', 7 },
-        { 100, 180/2, 'input /ma 剣豪のマドリガル <me>', 7 },
-        { 50, 180/2, 'input /ma 怪力のエチュード <me>', 7 },
-        { 100, 180/2, 'input /ma 妙技のエチュード <me>', 7 },
-]]
+        { 100, 120, 'input /ma 重装騎兵のミンネIV <me>', 7 },
+        { 200, 120, 'input /ma 重装騎兵のミンネV <me>', 7 },
+        { 200, 120, 'input /ma 闘龍士のマンボ <me>', 7 },
+        { 200, 120, 'input /ma 活力のエチュード <me>', 7 },
+        { 200, 120, 'input /ma 戦士達のピーアンVI <me>', 7 },
+-]]
+        { 150, 900/2, 'input /ma 無敵の進撃マーチ <me>', 7 },
+        { 200, 900/3, 'input /ma 栄光の凱旋マーチ <me>', 7 },
+        { 200, 900/2, 'input /ma 猛者のメヌエットV <me>', 7 },
+        { 50, 900, 'input /ma 猛者のメヌエットIV <me>', 7 },
+        { 100, 900, 'input /ma 剣豪のマドリガル <me>', 7 },
+        { 50, 900, 'input /ma 怪力のエチュード <me>', 7 },
+        { 100, 900, 'input /ma 妙技のエチュード <me>', 7 },
 --        { 100, 60, 'input /ma 魔法のフィナーレ <t>', 7 },
 --        { 200, 120, 'input /ma 修羅のエレジー <t>', 7 },
---       { 200, 120, 'input /ma 魔物のレクイエムVII <t>', 7 },
-        { 200, 120, 'input /ma 光のスレノディII <t>', 7 },
+        { 200, 120, 'input /ma 魔物のレクイエムVII <t>', 7 },
+--        { 200, 120, 'input /ma 光のスレノディII <t>', 7 },
     },
     SAM = {
         { 100, 180, 'input /ja 黙想 <me>', 1 },
@@ -231,8 +240,14 @@ local sendCommandProbTable = {
         { 100, 90, 'input /pet ライトマニューバ <me>', 0 },
     },
     DNC = {
---     {50, 300-30, 'input /ja 剣の舞い <me>', 0 },
-        {50, 300-30, 'input /ja 扇の舞い <me>', 0 },
+      {200, 300-30, 'input /ja 剣の舞い <me>', 0 },
+--        {500, 300-30, 'input /ja \扇\の\舞\い <me>', 0 }, --OK
+--        {500, 300-30, 'input /ja 扇\の\舞\い <me>', 0 }, --NG
+--        {500, 300-30, 'input /ja 扇の\舞\い <me>', 0 }, -- NG
+--      {500, 300-30, 'input /ja 扇\の舞い <me>', 0 }, --NG
+--        {500, 300-30, 'input /ja 扇の舞\い <me>', 0 }, --NG
+--        {500, 300-30, 'input /ja 扇の\舞い <me>', 0 }, --NG
+--        {500, 100, 'input /ja 扇の舞い <me>', 0 },
         {50, 90-10, 'input /ja ヘイストサンバ <me>', 0 },
         {50, 90-10, 'input /ja ドレインサンバII <me>', 0 },
         {100, 60, 'input /ja B.フラリッシュ <me>', 0 },
@@ -241,6 +256,8 @@ local sendCommandProbTable = {
         {100, 90, 'input /ja T.フラリッシュ <me>', 0 },
         {100, 30, 'input /ja クイックステップ <t>', 0 },
         {100, 30, 'input /ja ボックスステップ <t>', 0 },
+        {100, 30, 'input /ja フェザーステップ <t>', 0 },
+        {200, 300/2, 'input /ja 剣の舞い  <me>', 0 },
     },
     SCH = {
         { 100, 3600/36, 'input /ja 白のグリモア <me>', 0 },
@@ -333,14 +350,14 @@ local sendCommandProbTableSub = {
     },
     RDM = {
 --        { 5, 600-60, 'input /ma アクアベール <me>', 5},
-        { 5, 300-30, 'input /ma ブリンク <me>', 5},
-        { 5, 300-30, 'input /ma ストンスキン <me>', 5},
+        { 10, 300/2, 'input /ma ブリンク <me>', 5},
+        { 10, 300/2, 'input /ma ストンスキン <me>', 5},
         { 100, 300-30, 'input /ma リフレシュ <me>', 5},
 --        { 250, 120, 'input /ma ディアII <t>', 4 },
 --        { 100, 120, 'input /ma ディストラ <t>', 4 },
 --        { 100, 120, 'input /ma フラズル <t>', 4 },
 --        { 50, 300, 'input /ja コンバート <me>', 1 },
---        { 100, 120-30, 'input /ma ヘイスト <p1>', 4 },
+          { 100, 120-30, 'input /ma ヘイスト <p1>', 4 },
 --        { 100, 120-30, 'input /ma ヘイスト <p2>', 4 },
 --        { 100, 120-30, 'input /ma ヘイスト <p3>', 4 },
     },
@@ -365,6 +382,14 @@ local sendCommandProbTableSub = {
     },
 }
 
+local isBacklineJob = function(job)
+    if job == 'WHM' or job == 'RDM' or
+    job == 'BLM' or job == 'SCH' or job == 'SMN' then
+        return true
+    end
+    return false
+end
+
 M.getSendCommandProbTable = function(mainJob, subJob, rankInJob)
     local merged = {}
 --    print("rankInJob", rankInJob)
@@ -373,6 +398,10 @@ M.getSendCommandProbTable = function(mainJob, subJob, rankInJob)
             merged = merge_lists(merged, commprob)
 --            print(job, #merged)
         end
+    end
+    if isBacklineJob(mainJob) == false and
+       isBacklineJob(subJob) == true then
+        subJob = nil
     end
     for job, commprob in pairs(sendCommandProbTableSub) do
         if job == subJob or job == "ALL" then
