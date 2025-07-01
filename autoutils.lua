@@ -15,6 +15,35 @@ function M.iamLeader()
     return false
 end
 
+function isMobAttackableTargetIndex(index)
+    if index == 0 then -- 占有されてない
+        return true
+    end
+    local party = windower.ffxi.get_party()
+    for x in pairs({"p", "a1", "a2"}) do -- アライアンス全員
+        for i = 0, 5 do -- 自分含めて全員
+            local member = party[x..i]
+            if member.mob ~= nil then
+                if index == member.mob.target_index then
+                    return true
+                end
+            end
+        end
+    end
+    return false
+end
+
+--- 多分、戦える敵 (レイド戦には未対応)+
+function isMobAttackable(mob)
+    if (mob.status == 0 or mob.status == 1) and
+        mob.spawn_type == 16 and
+        isMobAttackableTargetIndex(mob.target_index) then
+        return true
+    end
+end
+
+M.isMobAttackable = isMobAttackable
+
 function M.pushKeys(keys)
     local command = ""
     for i, k in ipairs(keys) do
@@ -152,9 +181,7 @@ M.getNearestFightableMob = function(pos, dist, preferMobs)
         --- リンクすると status が 1になるので対象にする
 --        print("preferMobs: " ..  m.name, "  c:", preferMobs:contains(m.name))
         if ( preferMobs == nil or preferMobs:contains(m.name)) and
-            (m.status == 0 or m.status == 1) and m.spawn_type == 16 and
-            (m.valid_target or m.target_index ~= 0) then
-             --- 多分、戦える敵
+            isMobAttackable(m) then
             local dx = m.x - pos.x
             local dy = m.y - pos.y
             local dz = m.z - pos.z
@@ -205,16 +232,19 @@ M.targetByMobIndex= function(mobIndex)
     }))
 end
 
+-- パーティで戦闘中のモンスターがいれば、それを返す
 M.PartyTargetMob = function()
-    printChat("PartyTargetMob")
+--    printChat("PartyTargetMob")
     local party = windower.ffxi.get_party()
-    for i = 1, 6 do
+    for i = 1, 5 do -- 自分以外
         local member = party["p"..i]
-        if member.mob ~= nil then
-            local target_index = member.mob.target_index
-            if target_index > 0 then
-                local mob = windower.ffxi.get_mob_by_index(mobIndex)
-                return mob
+        if member.mob ~= nil and member.mob.status == 1 then
+            local index = member.mob.target_index
+            if index > 0 then
+                local mob = windower.ffxi.get_mob_by_index(index)
+                if isMobAttackable(mob) then
+                    return mob
+                end
             end
         end
     end
@@ -260,7 +290,7 @@ end
 M.rankInJob = function()
     printChat("rankInJob")
     local party = windower.ffxi.get_party()
-    for i = 1, 6 do
+    for i = 0, 5 do
         local member = party["p"..i]
         if i == 1 then
             printChat(member)
