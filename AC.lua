@@ -258,9 +258,10 @@ local notLeaderFunction = function()
     end
     isFar = false
     windower.ffxi.run(false)
-    if item_level < 119 then  -- 119未満は無理しない
+    -- 119未満は無理しない, 109 は頑張る。潜在外し
+    if item_level < 109 then
         local mob = windower.ffxi.get_mob_by_target("bt")
-        if mob == nil or mob.hpp > 85 then
+        if mob == nil or mob.hpp > 90 then
             -- 戦闘直後は危ないので、戦いに参加しない
             return
         end
@@ -347,7 +348,7 @@ local figtingFunction = function()
     end
     if isFar then
         --　戦闘中でないときは、WSやMAを自粛。フェイスが動かないので。
-        if dist > math.random(4,7)/2 or player.status == 0 then
+        if dist / mob.model_size > math.random(4,7)/2 or player.status == 0 then
             windower.ffxi.run(dx, dy)
             -- 向きが悪くて戦闘が開始しない問題への対策
             windower.send_command('setkey numpad5 down; wait 0.05; setkey numpad5 up')
@@ -441,7 +442,7 @@ local figtingFunction = function()
     end  
 end
 
-local idleFunctionTradeItems = function(tname, items, wait)
+local idleFunctionTradeItems = function(tname, items, wait, enterWaits)
 ---    windower.send_command('input /targetnpc')
     local mob = windower.ffxi.get_mob_by_name(tname)
     if mob == nil then
@@ -461,14 +462,15 @@ local idleFunctionTradeItems = function(tname, items, wait)
         for i, id in pairs(items) do
             if autoitem.inventoryHasItem(id) then
                 autoitem.tradeByItemId(mob, id)
-                coroutine.sleep(wait)
+                coroutine.sleep(1)
                 utils.targetByMobId(mob.id)
-                print("XXX enter")
-                pushKeys({"enter"})
-                coroutine.sleep(wait*4)
-                utils.targetByMobId(mob.id)
-                print("YYY enter")
-                pushKeys({"enter"})
+                coroutine.sleep(wait-1)
+                for w in pears(enterWaits) do
+                    pushKeys({"enter"})
+                    coroutine.sleep(1)
+                    utils.targetByMobId(mob.id)
+                    coroutine.sleep(w-1)
+                end
             end
         end
     end
@@ -557,6 +559,20 @@ local idleFunctionSellJunkItems = function()
     end
 end
 
+local dropJunkItemsInInventory = function()
+    local remain_count = total_count
+    for index = 1, 80 do
+        local item = windower.ffxi.get_items(0, index)
+--        printChat({"item:", windower.to_shift_jis(res.items[item.id].ja), item.id, item.status})
+        if item and JunkItems:contains(-item.id) then
+            local item_id = -item.id
+            print("drop???:"..item_id.." x "..item.count)
+            -- windower.ffxi.drop_item(item.index, item.count)
+            coroutine.sleep(math.random(6,8)/5)
+        end
+    end
+end
+
 --- モグガーデン(280)のみ動作する
 local idleFunctionMobGarden = function()
     local mob = windower.ffxi.get_mob_by_target("t")
@@ -611,11 +627,16 @@ local idleFunctionMobGarden = function()
 end
 
 local idleFunctionJeunoPort = function()
-    idleFunctionTradeItems("Shemo", seal_ids, 2)  --- or Shami
+    idleFunctionTradeItems("Shemo", seal_ids, {2,5})  --- or Shami
 end
 
 local idleFunctionSouthSand = function()
-    idleFunctionTradeItems("Gondebaud", cipher_ids, 5)
+    idleFunctionTradeItems("Gondebaud", cipher_ids, {5,20})
+end
+
+local idleFunctionSandPort = function()
+    print("XXXXX")
+    idleFunctionTradeItems("Joulet", {4401,5789}, {}) -- 堀ブナ
 end
 
 local idleFunctionWestAdoulin = function()
@@ -669,6 +690,8 @@ local idleFunction = function()
         idleFunctionJeunoPort()
     elseif zone == 230 then -- 南サンドリア
         idleFunctionSouthSand()
+    elseif zone == 232 then -- サンドリア港
+        idleFunctionSandPort()
     elseif zone == 256 then -- 西アドゥリン
         idleFunctionWestAdoulin()
     elseif zone == 257 then -- 東アドゥリン
