@@ -334,7 +334,7 @@ local figtingFunction = function()
         print("if enemy_pos.x == nil")
         return
     end
-    cureIfPartyHPisLow()
+--    cureIfPartyHPisLow()
 
     local dx = enemy_pos.x - me_pos.x
     local dy = enemy_pos.y - me_pos.y
@@ -393,10 +393,10 @@ local figtingFunction = function()
     local tpJobs = S{"WAR"} --- "DNC"
     local tpMin = 1500
     local tpMax = 2000
-    if tp100Jobs:contains(player.main_job)~= nil then
+    if tp100Jobs:contains(player.main_job) then
         tpMin = 1050
         tpMax = 1150
-    elseif tpJobs:contains(player.main_job) ~= nil then
+    elseif tpJobs:contains(player.main_job) then
         tpMin = 2000
         tpMax = 2500
     end
@@ -465,7 +465,7 @@ local idleFunctionTradeItems = function(tname, items, wait, enterWaits)
                 coroutine.sleep(1)
                 utils.targetByMobId(mob.id)
                 coroutine.sleep(wait-1)
-                for w in pears(enterWaits) do
+                for w in pairs(enterWaits) do
                     pushKeys({"enter"})
                     coroutine.sleep(1)
                     utils.targetByMobId(mob.id)
@@ -627,16 +627,15 @@ local idleFunctionMobGarden = function()
 end
 
 local idleFunctionJeunoPort = function()
-    idleFunctionTradeItems("Shemo", seal_ids, {2,5})  --- or Shami
+    idleFunctionTradeItems("Shemo", seal_ids, 3, {2,4})  --- or Shami
 end
 
 local idleFunctionSouthSand = function()
-    idleFunctionTradeItems("Gondebaud", cipher_ids, {5,20})
+    idleFunctionTradeItems("Gondebaud", cipher_ids, 5, {10,10})
 end
 
 local idleFunctionSandPort = function()
-    print("XXXXX")
-    idleFunctionTradeItems("Joulet", {4401,5789}, {}) -- 堀ブナ
+    idleFunctionTradeItems("Joulet", {4401,5789}, 5, {}) -- 堀ブナ
 end
 
 local idleFunctionWestAdoulin = function()
@@ -727,6 +726,7 @@ local prevPos = nil
     tickRunning = true
     local player = windower.ffxi.get_player()
     if player ~= nil then   --- ログインし直す時に
+        cureIfPartyHPisLow()
        if player.status == 0 then
             --- 待機中
           idleFunction()
