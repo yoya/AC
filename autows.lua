@@ -29,6 +29,7 @@ local preferWeaponSkill = {
     'shun', -- 片手刀
     'moon', 'realm', 'hexa', 'shine', 'circle', -- 片手棍
     'myrkr', 'spirit', 'full', 'heavy', -- 両手棍
+    'spiral', 'cross', -- 両手鎌
     'apex', -- 弓
     'leaden', 'hot', 'wild' -- 射撃(銃)
 }
@@ -91,6 +92,9 @@ ws.weaponskillTable = {
     cata = 'カタクリスム',
     brain = 'ブレインシェイカー',
     heavy = 'ヘヴィスイング',
+    -- 両手鎌
+    spiral = 'スパイラルヘル',
+    cross = 'クロスリーパー',
     -- 弓
     apex = 'エイペクスアロー',
     -- 射撃(銃)
@@ -138,7 +142,7 @@ ws.exec = function()
         return
     end        
     local mob = windower.ffxi.get_mob_by_target("t")
-    if mob == nil or mob.distance > 10 then
+    if mob == nil or mob.distance/mob.model_size > 10 then
         return
     end
     local player = windower.ffxi.get_player()
