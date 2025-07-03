@@ -11,6 +11,15 @@ local currentPos = autopos.currentPos
 local turnTo = autopos.turnTo
 local lookForward = autopos.lookForward
 
+function isNear(pos)
+    local me_pos = autopos.currentPos()
+    d = autopos.distance(me_pos, pos)
+    if d < 1.0 then
+        return true
+    end
+    return false
+end
+
 function zone_change_handler()
     coroutine.sleep(3)
     local zone = windower.ffxi.get_info().zone
@@ -87,7 +96,11 @@ function zone_change_handler()
         windower.ffxi.run(tx - me_pos.x, ty - me_pos.y)
         lookForward()
     elseif zone == 142 then  --- ユグホト砦洞窟内
-        windower.ffxi.run(1, 0)  -- go to right
+        if isNear({x=437.2,y=68.6,z=-40}) then -- 温泉から入った所
+            autopos.autoMoveTo(zone, "horl", false)
+        elseif isNear({x=434,y=170,z=-40}) then -- HP#1
+            windower.ffxi.run(1, 0)  -- go to right
+        end
     elseif zone == 79 then  --- カダーバのうき沼、本ワープ
         windower.ffxi.run(-1, 0)  -- go to left
     elseif zone == 273 then -- うぉーの門
