@@ -691,19 +691,17 @@ local NW = math.pi * (7/4)
 -- 4:励ます 5:慌てる 6:照れる 7:気合
 
 local stationWorkerBoostTable = {
-    [265] = {
+    [265] = { -- モリマー台地
         [0]  = {SE,S, 4}, [3]  = {S,SW, 5},
         [6]  = {SW,W, 6}, [9]  = {W,NW, 7},
-        [12] = {NW,N, 0}, [15] = {N,NW, 1},
+        [12] = {NW,N, 0}, [15] = {N,NE, 1},
         [18] = {NE,E, 2}, [21] = {E,SE, 3},
     },
 }
 
-local getStationWorkerBoostInfo = function()
-    local zone = windower.ffxi.get_info().zone
-    local info = windower.ffxi.get_info()
-    local time = info.time
+local getStationWorkerBoostInfo = function(zone)
     local timeTable = stationWorkerBoostTable[zone]
+    local time = windower.ffxi.get_info().time
     for t, i in pairs(timeTable) do
         if t*60 <= time and time < (t+3)*60 then
             return i
@@ -723,6 +721,7 @@ local normalangle = function(a)
     return a - (2*math.pi)
 end
 
+-- 中間の角度
 local midangle = function(a, b)
     a = normalangle(a)
     b = normalangle(b)
@@ -735,10 +734,8 @@ local midangle = function(a, b)
 end
 
 local stationWorkerFunction = function(zone, mob)
-    print(zone, mob.x, mob.y)
     target_lockon(true)
-    local info = getStationWorkerBoostInfo()
-    local dist = 0.5
+    local info = getStationWorkerBoostInfo(zone)
     -- N = 0, E = 3.14*0.5, S = 3.14, W = 3.14*1.5 
     local theta = midangle(info[1], info[2])
     printChat("theta: "..theta.." select:"..info[3])
@@ -759,12 +756,12 @@ local stationWorkerFunction = function(zone, mob)
     end
     -- 応援方法を選択する
     keyboard.pushKeys({"enter"})
-    coroutine.sleep(2)
+    coroutine.sleep(2.5)
     for i = 0, info[2] do
         pushKeys({"down"})
-        printChat("Down")
-        coroutine.sleep(0.5)
+        coroutine.sleep(1)
     end
+    keyboard.pushKeys({"enter"})
     auto = false
 end
 
