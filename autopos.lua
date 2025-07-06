@@ -308,7 +308,7 @@ local automoveRouteTable = {
             {x=-110.2,y=-179.9}, {a="f8touch"}
        },
     },
-    [89] = zone_89_Grauberg_S.routes -- 過去グロウベルグ
+    [89] = zone_89_Grauberg_S.routes, -- 過去グロウベルグ
     [91] = { -- 過去ロランベリー耕地
         sauro = { -- 過去扉からソロムグへ
             {x=-196.5,y=361.2,z=8}, {x=-190,y=360},
