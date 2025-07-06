@@ -391,7 +391,7 @@ local figtingFunction = function()
     --- PLD はタゲ取り.RNG はエヴィ用。"BLM", "SMN", "SCH"はミルキル
     local tp100Jobs = S{-"RNG", "BLM", "SMN", "SCH"}
     --- WAR はスチサイ用。DNC はダンス用？
-    local tpJobs = S{"WAR"} --- "DNC"
+    local tpJobs = S{"DNC"}
     local tpMin = 1200
     local tpMax = 1500
     if tp100Jobs:contains(player.main_job) then
@@ -748,7 +748,7 @@ local stationWorkerFunction = function(zone, mob)
         local dy = me_pos.y - mob.y
         local t = math.atan2(dx, dy)
         local dt = (theta % (2*math.pi)) - (t % (2*math.pi))
-        left_move(0.05)
+        left_move(0.025)
 --        printChat("theta:"..theta.." t:"..t.." dt:"..dt)
         if math.abs(dt) < 2*math.pi/32 then
             done = true
@@ -757,9 +757,11 @@ local stationWorkerFunction = function(zone, mob)
     -- 応援方法を選択する
     keyboard.pushKeys({"enter"})
     coroutine.sleep(2.5)
-    for i = 0, info[2] do
-        pushKeys({"down"})
-        coroutine.sleep(1)
+    if info[2] > 0 then
+        for i = 1, info[2] do
+            pushKeys({"down"})
+            coroutine.sleep(1)
+        end
     end
     keyboard.pushKeys({"enter"})
     auto = false
