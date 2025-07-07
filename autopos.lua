@@ -1,4 +1,3 @@
-
 ---
 --- Position
 --- 位置関係の関数郡
@@ -10,22 +9,9 @@ local printChat = utils.printChat
 local array_reverse = utils.array_reverse
 local pushKeys = utils.pushKeys
 local turnToFront = utils.turnToFront
-
-local zone_2_CpntLanding = require('zone/2_CpntLanding')
-local zone_7_Attohwa = require('zone/7_Attohwa')
-local zone_25_Misareaux = require('zone/25_Misareaux')
-local zone_26_Tavnazia = require('zone/26_Tavnazia')
-local zone_50_AhtUrhgan_Whitegate = require('zone/50_AhtUrhgan_Whitegate')
-local zone_61_Zhayolm = require('zone/61_Zhayolm')
-local zone_68_Aydeewa = require('zone/68_Aydeewa')
-local zone_80_Southern_SandOria_S = require('zone/80_Southern_SandOria_S')
-local zone_82_Jugner_S = require('zone/82_Jugner_S')
-local zone_83_Vunkerl_S = require('zone/83_Vunkerl_S')
-local zone_89_Grauberg_S = require('zone/89_Grauberg_S')
-local zone_273_WohGates = require('zone/273_WohGates')
+local aczone = require 'zone'
 
 local automoveRouteTable = {
-    [2] = zone_2_CpntLanding.routes, -- ギルド桟橋
     [6] = {  -- 熊爪獄
         wind = { -- Wind Pillar
             {x=-679.8, y=-540, z=18.5}, {x=-694.8,y=-537},
@@ -33,7 +19,6 @@ local automoveRouteTable = {
             {x=-702.1,y=-461.6}, {x=-717.5,y=-443}
         }
     },
-    [7] = zone_7_Attohwa.routes, -- アットワ地溝
     [15] = { -- アビセア、コンシュタット
         conf = {
             {x=154.5,y=-840,z=-72}, {x=130.4,y=-826},
@@ -41,15 +26,12 @@ local automoveRouteTable = {
         }
 
     },
-    [25] = zone_25_Misareaux.routes, -- ミザレオ海岸
-    [26] = zone_26_Tavnazia.routes, -- タブナジア地下壕
     [45] = { -- アビセア、タロンギ
         conf = {
             {x=-23.1,y=-677.4,z=44.3}, {x=-1.7,y=-678.4},
             {x=0,y=-680.3}, {a="f8touch"}
         }
     },
-    [50] = zone_50_AhtUrhgan_Whitegate.routes, -- アトルガン白門
     [51] = { --- ワジャーム樹林
         pec = { --- 珍妙なモンスター
             {x=100,y=-163,z=-12}, {x=87.7,y=-256.6},  {a="mount"},
@@ -69,8 +51,6 @@ local automoveRouteTable = {
             {x=-419,y=344.6}, {x=-393.4,y=333.1,z=-3.5}
         }
     },
-    [61] = zone_61_Zhayolm.routes, -- ゼオルム火山
-    [68] = zone_68_Aydeewa.routes, -- エジワ蘿洞
     [70] = { -- チョコボサーキット
         ent = {
             {x=-320,y=-475,z=-0.3}, {x=-326.1,y=-463.9},
@@ -90,9 +70,6 @@ local automoveRouteTable = {
             {x=787.4,y=644.6}, {a="dismount"}
         }
     },
-    [80] = zone_80_Southern_SandOria_S.routes, -- 南サンドリア〔Ｓ〕
-    [82] = zone_82_Jugner_S.routes, -- ジャグナー森林〔Ｓ〕
-    [83] = zone_83_Vunkerl_S.routes, -- 過去ブンカール
     [84] = { -- 過去バタリア
         rola = { -- 扉から過去ロランベリー
             {x=-51.5,y=437,z=0.4}, {x=-50,y=430},
@@ -141,7 +118,6 @@ local automoveRouteTable = {
             {x=-110.2,y=-179.9}, {a="f8touch"}
        },
     },
-    [89] = zone_89_Grauberg_S.routes, -- 過去グロウベルグ
     [91] = { -- 過去ロランベリー耕地
         sauro = { -- 過去扉からソロムグへ
             {x=-196.5,y=361.2,z=8}, {x=-190,y=360},
@@ -1145,7 +1121,6 @@ local automoveRouteTable = {
             {x=300.3,y=-71.7}, {a="f8touch"}
        },
     },
-    [273] = zone_273_WohGates.routes, -- ウォーの門
     [274] = { -- カザナル外郭
         pec = { --　珍妙なモンスター
             {x=-148,y=27,z=-170}, {x=-98.8,y=-7.9,z=-176.3},
@@ -1258,11 +1233,11 @@ end
 M.stop = stop
 
 function getRouteTable(zone)
-    local t = automoveRouteTable[zone]
-    if t.routes ~= nil then
+    local t = aczone.zoneTable[zone]
+    if t ~= nil and t.routes ~= nil then
 	return t.routes
     end
-    return t
+    return automoveRouteTable[zone]
 end
 
 function moveTo(route)
