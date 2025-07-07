@@ -1257,15 +1257,28 @@ function stop()
 end
 M.stop = stop
 
+function getRouteTable(zone)
+    local t = automoveRouteTable[zone]
+    if t.routes ~= nil then
+	return t.routes
+    end
+    return t
+end
+
 function moveTo(route)
     local zone_id = windower.ffxi.get_info().zone
     local pos = currentPos()
     local r1List = {}  -- Šeroute‚ÌˆêŒÂ–Ú‚ðƒŠƒXƒg‰»
     local r1ListName = {}
+    local routeTable = getRouteTable(zone_id)
+    if routeTable == nil then
+	print("routeTable == nil")
+	return
+    end
     for i, p in ipairs(route) do
         if p.r ~= nil then
             print("p.r="..(p.r))
-            local r = automoveRouteTable[zone_id][p.r]
+            local r = routeTable[p.r]
             print("r", r)
             table[p.r] = r[1]
             table.insert(r1List, r[1])
@@ -1276,7 +1289,7 @@ function moveTo(route)
     if #r1List > 0 then
         local idx = nearest_idx(pos, r1List)
         local name = r1ListName[idx]
-        local r = automoveRouteTable[zone_id][name]
+        local r = routeTable[name]
         print(idx, name, r)
         moveTo(r)
     end
@@ -1393,17 +1406,17 @@ end
 M.moveTo = moveTo
 
 function autoMoveTo(zone_id, dest, reverse)
+    local routeTable = getRouteTable(zone_id)
     if dest == nil then
-        if automoveRouteTable[zone_id] == nil then
+        if routeTable == nil then
             print("not defined zone route", zone_id)
         else
-            local route =  automoveRouteTable[zone_id]
-            for i, dest in pairs(route) do
+            for i, dest in pairs(routeTable) do
                 printChat(i)
             end
         end
     else
-        route = automoveRouteTable[zone_id][dest]
+        route = routeTable[dest]
         if reverse == true then
             route = array_reverse(route)
         end
