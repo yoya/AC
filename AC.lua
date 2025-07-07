@@ -920,7 +920,8 @@ end)
 
 local changeWS = function(wskey)
     if wskey == nil then
-        windower.add_to_chat(17, '' .. ws.getWeaponSkillUsage())
+	local usageSJIS = windower.to_shift_jis(ws.getWeaponSkillUsage())
+        windower.add_to_chat(17, '' .. usageSJIS)
         return
     end
     if wskey == 'any' then
@@ -937,7 +938,8 @@ local changeWS = function(wskey)
     end
     ws.weaponskill = wskey
     wsName = ws.weaponskillTable[ws.weaponskill]
-    windower.add_to_chat(17, 'set any ' .. wskey .. ' => ' .. wsName)
+    local wsNameSJIS = windower.to_shift_jis(wsName)
+    windower.add_to_chat(17, 'set any ' .. wskey .. ' => ' .. wsNameSJIS)
 end
 
 local showMob = function()

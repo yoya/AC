@@ -126,6 +126,7 @@ function _printChat(text, depth, maxDepth)
 ---        print(text, depth)
         indent = string.rep('- ', depth)
         text = boolToStringIfBool(text)
+	text = windower.to_shift_jis(text)
         windower.add_to_chat(17, indent .. text)
 --        windower.add_to_chat(0, indent .. text)
         return
@@ -139,6 +140,7 @@ function _printChat(text, depth, maxDepth)
             if type(v) == "table" then
                 _printChat(v, depth+1, maxDepth+1)
             else
+		v = windower.to_shift_jis(v)
                 mesg = mesg .. " " ..v
             end
         end
@@ -148,6 +150,7 @@ function _printChat(text, depth, maxDepth)
             if type(v) ~= "table" then
                 v = boolToStringIfBool(v)
                 v = roundIfNumber(v)
+		v = windower.to_shift_jis(v)
                 _printChat(k..": "..v, depth, maxDepth+1)
             else
                 _printChat(k..": ", depth, maxDepth+1)

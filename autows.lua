@@ -113,7 +113,7 @@ ws.getWeaponSkillUsage = function()
     local weaponSkillUsage = "  "
     for key, name in pairs(ws.weaponskillTable) do
         for key2, name2 in pairs(abilities.weapon_skills) do
-            local n = windower.to_shift_jis(res.weapon_skills[name2]['ja'])
+            local n = res.weapon_skills[name2]['ja']
             if name == n then
                 entry =  key .. " = " .. name -- windower.to_shift_jis(name)
                 weaponSkillUsage = weaponSkillUsage .. entry .. "\n"

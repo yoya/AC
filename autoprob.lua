@@ -433,7 +433,8 @@ M.sendCommandProb = function(table, period, ProbRecastTime)
                 ProbRecastTime[c] = r
                 windower.ffxi.run(false)
                 coroutine.sleep(0.25)
-                windower.send_command(c)
+                local s = windower.to_shift_jis(c)
+                windower.send_command(s)
                 if t > 0 then
                     coroutine.sleep(t)
                 end
