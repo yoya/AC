@@ -1,6 +1,6 @@
 ---
 --- Utility
---- é›‘å¤šãªé–¢æ•°ç¾¤ã€‚æ•´ç†ã§ãã¦ãªã„
+--- G‘½‚ÈŠÖ”ŒQB®—‚Å‚«‚Ä‚È‚¢
 
 packets = require 'packets'
 
@@ -16,12 +16,12 @@ function M.iamLeader()
 end
 
 function isMobAttackableTargetIndex(index)
-    if index == 0 then -- å æœ‰ã•ã‚Œã¦ãªã„
+    if index == 0 then -- è—L‚³‚ê‚Ä‚È‚¢
         return true
     end
     local party = windower.ffxi.get_party()
-    for x in pairs({"p", "a1", "a2"}) do -- ã‚¢ãƒ©ã‚¤ã‚¢ãƒ³ã‚¹å…¨å“¡
-        for i = 0, 5 do -- è‡ªåˆ†å«ã‚ã¦å…¨å“¡
+    for x in pairs({"p", "a1", "a2"}) do -- ƒAƒ‰ƒCƒAƒ“ƒX‘Sˆõ
+        for i = 0, 5 do -- ©•ªŠÜ‚ß‚Ä‘Sˆõ
             local member = party[x..i]
             if member.mob ~= nil then
                 if index == member.mob.target_index then
@@ -33,7 +33,7 @@ function isMobAttackableTargetIndex(index)
     return false
 end
 
---- å¤šåˆ†ã€æˆ¦ãˆã‚‹æ•µ (ãƒ¬ã‚¤ãƒ‰æˆ¦ã«ã¯æœªå¯¾å¿œ)+
+--- ‘½•ªAí‚¦‚é“G (ƒŒƒCƒhí‚É‚Í–¢‘Î‰)+
 function isMobAttackable(mob)
     if (mob.status == 0 or mob.status == 1) and
         mob.spawn_type == 16 and
@@ -126,7 +126,6 @@ function _printChat(text, depth, maxDepth)
 ---        print(text, depth)
         indent = string.rep('- ', depth)
         text = boolToStringIfBool(text)
-	text = windower.to_shift_jis(text)
         windower.add_to_chat(17, indent .. text)
 --        windower.add_to_chat(0, indent .. text)
         return
@@ -140,7 +139,6 @@ function _printChat(text, depth, maxDepth)
             if type(v) == "table" then
                 _printChat(v, depth+1, maxDepth+1)
             else
-		v = windower.to_shift_jis(v)
                 mesg = mesg .. " " ..v
             end
         end
@@ -150,7 +148,6 @@ function _printChat(text, depth, maxDepth)
             if type(v) ~= "table" then
                 v = boolToStringIfBool(v)
                 v = roundIfNumber(v)
-		v = windower.to_shift_jis(v)
                 _printChat(k..": "..v, depth, maxDepth+1)
             else
                 _printChat(k..": ", depth, maxDepth+1)
@@ -172,16 +169,16 @@ M.printChat = printChat
 
 local ignoreMobs = S{
     "fep2",
-    "Resolute Leafkin", -- ãƒŸãƒƒã‚·ãƒ§ãƒ³ã€Œé–€ã€
+    "Resolute Leafkin", -- ƒ~ƒbƒVƒ‡ƒ“u–åv
 }
 M.getNearestFightableMob = function(pos, dist, preferMobs)
 --    print("M.getNearestFightableMob", preferMobs);
 --    M.printChat("getNearestFifhtableMob")
--- è·é›¢(ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ20)ä»¥å†…ã ã‘å¯¾è±¡
+-- ‹——£(ƒfƒtƒHƒ‹ƒg20)ˆÈ“à‚¾‚¯‘ÎÛ
     local mob = nil
     local mobArr = windower.ffxi.get_mob_array()
     for i, m in pairs(mobArr) do
-        --- ãƒªãƒ³ã‚¯ã™ã‚‹ã¨ status ãŒ 1ã«ãªã‚‹ã®ã§å¯¾è±¡ã«ã™ã‚‹
+        --- ƒŠƒ“ƒN‚·‚é‚Æ status ‚ª 1‚É‚È‚é‚Ì‚Å‘ÎÛ‚É‚·‚é
 --        print("preferMobs: " ..  m.name, "  c:", preferMobs:contains(m.name))
         if ( preferMobs == nil or preferMobs:contains(m.name)) and
             isMobAttackable(m) then
@@ -189,7 +186,7 @@ M.getNearestFightableMob = function(pos, dist, preferMobs)
             local dy = m.y - pos.y
             local dz = m.z - pos.z
             d = math.sqrt(dx*dx + dy*dy)
-            --- é«˜ã•ãŒï¼˜é•ã†ã®ã¯ç„¡è¦–ã€‚
+            --- ‚‚³‚ª‚Wˆá‚¤‚Ì‚Í–³‹B
             if m.x ~= 0 and m.y ~= 0 and m.z ~= 0 and d < dist and math.abs(dz) < 1 then
 --             if m.name == "Water Elemental" then
 --                    printChat(i .. ": name:" .. m.name ..", dist:".. m.distance .. ", status:".. m.status ..", d:".. d)
@@ -235,11 +232,11 @@ M.targetByMobIndex= function(mobIndex)
     }))
 end
 
--- ãƒ‘ãƒ¼ãƒ†ã‚£ã§æˆ¦é—˜ä¸­ã®ãƒ¢ãƒ³ã‚¹ã‚¿ãƒ¼ãŒã„ã‚Œã°ã€ãã‚Œã‚’è¿”ã™
+-- ƒp[ƒeƒB‚Åí“¬’†‚Ìƒ‚ƒ“ƒXƒ^[‚ª‚¢‚ê‚ÎA‚»‚ê‚ğ•Ô‚·
 M.PartyTargetMob = function()
 --    printChat("PartyTargetMob")
     local party = windower.ffxi.get_party()
-    for i = 1, 5 do -- è‡ªåˆ†ä»¥å¤–
+    for i = 1, 5 do -- ©•ªˆÈŠO
         local member = party["p"..i]
         if member.mob ~= nil and member.mob.status == 1 then
             local index = member.mob.target_index
@@ -264,7 +261,7 @@ M.turnToFront = turnToFront
 local turnToPos = function(x1, y1, x2, y2)
     local dx = x2 - x1
     local dy = y2 - y1
-    --- atan2 ã®ã¾ã¾ã ã¨å³ã‚’å‘ãã®ã§ã€90åº¦ã®è£œæ­£
+    --- atan2 ‚Ì‚Ü‚Ü‚¾‚Æ‰E‚ğŒü‚­‚Ì‚ÅA90“x‚Ì•â³
     local dir = math.atan2(dx, dy) - 3.14/2
     windower.ffxi.turn(dir)
 end
@@ -339,15 +336,15 @@ M.cureIfPartyHPisLow = function()
             if hp > 0 and hpp < hp_need_cure
                 and hp < 1800 then
 --              print(t.." HP: "..hp.." ("..hpp.."%)")
-                local command = 'input /ma ã‚±ã‚¢ãƒ« <'..t..'>'
+                local command = 'input /ma ƒPƒAƒ‹ <'..t..'>'
                 if hp < 300 and mainJob == "WHM" then
-                    command = 'input /ja å¥³ç¥ã®ç¥ç¦ <me>'
+                    command = 'input /ja —_‚Ìj•Ÿ <me>'
                 elseif hp < 500 and player_mp >= 88 then
-                   command = 'input /ma ã‚±ã‚¢ãƒ«IV <'..t..'>'
+                   command = 'input /ma ƒPƒAƒ‹IV <'..t..'>'
                 elseif hp < 1000  and player_mp >= 46 then
-                    command = 'input /ma ã‚±ã‚¢ãƒ«III <'..t..'>'
+                    command = 'input /ma ƒPƒAƒ‹III <'..t..'>'
                 elseif hp < 1500  and player_mp >= 24 then
-                    command = 'input /ma ã‚±ã‚¢ãƒ«II <'..t..'>'
+                    command = 'input /ma ƒPƒAƒ‹II <'..t..'>'
                 end
                 windower.ffxi.run(false)
                 windower.send_command(command)

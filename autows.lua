@@ -1,4 +1,4 @@
---- ã“ã®ãƒ•ã‚¡ã‚¤ãƒ«ã¯ SJIS ä¿å­˜
+--- ‚±‚Ìƒtƒ@ƒCƒ‹‚Í SJIS •Û‘¶
 ---
 --- weapon skill
 ---
@@ -17,90 +17,90 @@ ws.weaponskill = 'flat'
 
 
 local preferWeaponSkill = {
-    'victory', 'shishin', 'tokon', 'dragon', 'tackle',-- æ ¼é—˜
-    'manda', 'exen', 'rudra', 'evis',  'dance', 'shadow', -- çŸ­å‰£
-    'savage', 'chant', -- ç‰‡æ‰‹å‰£
-    'reso','ground', -- ä¸¡æ‰‹å‰£
-    'rui', 'ramp', -- ç‰‡æ‰‹æ–§
-    'ukko', 'steel',  --ä¸¡æ‰‹æ–§
-    'dai',  -- ä¸¡æ‰‹æ§
-    'demi', 'spin', 'ent', 'frost', -- ä¸¡æ‰‹å‰£
-    'shoha', 'hocho', 'gekko', 'kagero', 'yuki', -- ä¸¡æ‰‹åˆ€
-    'shun', -- ç‰‡æ‰‹åˆ€
-    'moon', 'realm', 'hexa', 'shine', 'circle', -- ç‰‡æ‰‹æ£
-    'myrkr', 'spirit', 'full', 'heavy', -- ä¸¡æ‰‹æ£
-    'spiral', 'cross', -- ä¸¡æ‰‹éŒ
-    'apex', -- å¼“
-    'leaden', 'hot', 'wild' -- å°„æ’ƒ(éŠƒ)
+    'victory', 'shishin', 'tokon', 'dragon', 'tackle',-- Ši“¬
+    'manda', 'exen', 'rudra', 'evis',  'dance', 'shadow', -- ’ZŒ•
+    'savage', 'chant', -- •ĞèŒ•
+    'reso','ground', -- —¼èŒ•
+    'rui', 'ramp', -- •Ğè•€
+    'ukko', 'steel',  --—¼è•€
+    'dai',  -- —¼è‘„
+    'demi', 'spin', 'ent', 'frost', -- —¼èŒ•
+    'shoha', 'hocho', 'gekko', 'kagero', 'yuki', -- —¼è“
+    'shun', -- •Ğè“
+    'moon', 'realm', 'hexa', 'shine', 'circle', -- •Ğè
+    'myrkr', 'spirit', 'full', 'heavy', -- —¼è
+    'spiral', 'cross', -- —¼èŠ™
+    'apex', -- ‹|
+    'leaden', 'hot', 'wild' -- ËŒ‚(e)
 }
 
 ws.weaponskillTable = {
-    -- æ ¼é—˜
-    tackle = 'ã‚¿ãƒƒã‚¯ãƒ«',
-    shishin = 'å››ç¥å††èˆ',
-    victory = 'ãƒ“ã‚¯ãƒˆãƒªãƒ¼ã‚¹ãƒã‚¤ãƒˆ',
-    tokon = 'é—˜é­‚æ—‹é¢¨è„š',
-    dragon = 'ãƒ‰ãƒ©ã‚´ãƒ³ãƒ–ãƒ­ã‚¦',
-    -- çŸ­å‰£
-    manda = 'ãƒãƒ³ãƒ€ãƒªã‚¯ã‚¹ã‚¿ãƒƒãƒ–',
-    rudra = 'ãƒ«ãƒ‰ãƒ©ã‚¹ãƒˆãƒ¼ãƒ ',
-    dance = 'ãƒ€ãƒ³ã‚·ãƒ³ã‚°ã‚¨ãƒƒã‚¸',
-    shadow = 'ã‚·ãƒ£ãƒ‰ãƒ¼ã‚¹ãƒ†ãƒƒãƒ',
-    evis = 'ã‚¨ãƒ´ã‚£ã‚µãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³',
-    wasp = 'ãƒ¯ã‚¹ãƒ—ã‚¹ãƒ†ã‚£ãƒ³ã‚°',
-    energy = 'ã‚¨ãƒŠã‚¸ãƒ¼ãƒ‰ãƒ¬ã‚¤ãƒ³',
-    aeolian = 'ã‚¤ã‚ªãƒªã‚¢ãƒ³ã‚¨ãƒƒã‚¸',
-    exen = 'ã‚¨ã‚¯ã‚¼ãƒ³ãƒ†ãƒ¬ã‚¿ãƒ¼',
-    -- ç‰‡æ‰‹å‰£
-    chant = 'ã‚·ãƒ£ãƒ³ãƒ‡ãƒ¥ã‚·ãƒ‹ãƒ¥',
-    savage = 'ã‚µãƒ™ãƒƒã‚¸ãƒ–ãƒ¬ãƒ¼ãƒ‰',
-    flat = 'ãƒ•ãƒ©ãƒƒãƒˆãƒ–ãƒ¬ãƒ¼ãƒ‰',
-    circle = 'ã‚µãƒ¼ã‚¯ãƒ«ãƒ–ãƒ¬ãƒ¼ãƒ‰',
-    -- ä¸¡æ‰‹å‰£
-    demi = 'ãƒ‡ãƒŸãƒ‡ã‚£ã‚¨ãƒ¼ã‚·ãƒ§ãƒ³',
-    spin = 'ã‚¹ãƒ”ãƒ³ã‚¹ãƒ©ãƒƒã‚·ãƒ¥',    
-    reso = 'ãƒ¬ã‚¾ãƒ«ãƒ¼ã‚·ãƒ§ãƒ³',
-    ground = 'ã‚°ãƒ©ã‚¦ãƒ³ãƒ‰ã‚¹ãƒˆãƒ©ã‚¤ã‚¯',
-    frost = 'ãƒ•ãƒ­ã‚¹ãƒˆãƒã‚¤ãƒˆ',
-    -- ç‰‡æ‰‹æ–§
-    rui = 'ãƒ«ã‚¤ãƒãƒ¼ã‚¿ãƒ¼',
-    ramp = 'ãƒ©ãƒ³ãƒšãƒ¼ã‚¸',
-    -- ä¸¡æ‰‹æ–§
-    ukko = 'ã‚¦ãƒƒã‚³ãƒ•ãƒ¥ãƒ¼ãƒªãƒ¼',
-    steel = 'ã‚¹ãƒãƒ¼ãƒ«ã‚µã‚¤ã‚¯ãƒ­ãƒ³',
-    -- ä¸¡æ‰‹æ§
-    dai = 'å¤§è»Šè¼ª',
-    -- ä¸¡æ‰‹éŒ
-    ent = 'ã‚¨ãƒ³ãƒˆãƒ­ãƒ”ãƒ¼',
-    -- ä¸¡æ‰‹åˆ€
-    kagero = 'å››ä¹‹å¤ªåˆ€ãƒ»é™½ç‚', -- æº¶è§£
-    yuki = 'ä¸ƒä¹‹å¤ªåˆ€ãƒ»é›ªé¢¨', -- ç¡¬åŒ–ã€ç‚¸è£‚
-    gekko = 'å…«ä¹‹å¤ªåˆ€ãƒ»æœˆå…‰', -- è²«é€šã€è¡æ’ƒ
-    hocho = 'å\ä¸€ä¹‹å¤ªåˆ€ãƒ»é³³è¶', -- é˜²å¾¡åŠ›ãƒ€ã‚¦ãƒ³
-    shoha = 'å\äºŒä¹‹å¤ªåˆ€ãƒ»ç…§ç ´', --ã€€é˜²å¾¡åŠ›ã‚«ãƒƒãƒˆã€‚æ ¼ä¸Šã«å¼·ã„
-    -- ç‰‡æ‰‹åˆ€
-    shun = 'ç¬',
-    -- ç‰‡æ‰‹æ£
-    shine = 'ã‚·ãƒ£ã‚¤ãƒ³ã‚¹ãƒˆãƒ©ã‚¤ã‚¯',
-    realm = 'ãƒ¬ãƒ«ãƒ ãƒ¬ã‚¤ã‚¶ãƒ¼',
-    moon = 'ãƒ ãƒ¼ãƒ³ãƒ©ã‚¤ãƒˆ',
-    full = 'ãƒ•ãƒ«ã‚¹ã‚¤ãƒ³ã‚°',
-    hexa = 'ãƒ˜ã‚­ã‚µã‚¹ãƒˆãƒ©ã‚¤ã‚¯',
-    -- ä¸¡æ‰‹æ£
-    myrkr = 'ãƒŸãƒ«ã‚­ãƒ«',
-    spirit = 'ã‚¹ãƒ”ãƒªãƒƒãƒˆãƒ†ãƒ¼ã‚«ãƒ¼',
-    cata = 'ã‚«ã‚¿ã‚¯ãƒªã‚¹ãƒ ',
-    brain = 'ãƒ–ãƒ¬ã‚¤ãƒ³ã‚·ã‚§ã‚¤ã‚«ãƒ¼',
-    heavy = 'ãƒ˜ãƒ´ã‚£ã‚¹ã‚¤ãƒ³ã‚°',
-    -- ä¸¡æ‰‹éŒ
-    spiral = 'ã‚¹ãƒ‘ã‚¤ãƒ©ãƒ«ãƒ˜ãƒ«',
-    cross = 'ã‚¯ãƒ­ã‚¹ãƒªãƒ¼ãƒ‘ãƒ¼',
-    -- å¼“
-    apex = 'ã‚¨ã‚¤ãƒšã‚¯ã‚¹ã‚¢ãƒ­ãƒ¼',
-    -- å°„æ’ƒ(éŠƒ)
-    leaden = 'ãƒ¬ãƒ‡ãƒ³ã‚µãƒªãƒ¥ãƒ¼ãƒˆ',
-    hot = 'ãƒ›ãƒƒãƒˆã‚·ãƒ§ãƒƒãƒˆ',
-    wild = 'ãƒ¯ã‚¤ãƒ«ãƒ‰ãƒ•ã‚¡ã‚¤ã‚¢',
+    -- Ši“¬
+    tackle = 'ƒ^ƒbƒNƒ‹',
+    shishin = 'l_‰~•‘',
+    victory = 'ƒrƒNƒgƒŠ[ƒXƒ}ƒCƒg',
+    tokon = '“¬°ù•—‹r',
+    dragon = 'ƒhƒ‰ƒSƒ“ƒuƒƒE',
+    -- ’ZŒ•
+    manda = 'ƒ}ƒ“ƒ_ƒŠƒNƒXƒ^ƒbƒu',
+    rudra = 'ƒ‹ƒhƒ‰ƒXƒg[ƒ€',
+    dance = 'ƒ_ƒ“ƒVƒ“ƒOƒGƒbƒW',
+    shadow = 'ƒVƒƒƒh[ƒXƒeƒbƒ`',
+    evis = 'ƒGƒ”ƒBƒTƒŒ[ƒVƒ‡ƒ“',
+    wasp = 'ƒƒXƒvƒXƒeƒBƒ“ƒO',
+    energy = 'ƒGƒiƒW[ƒhƒŒƒCƒ“',
+    aeolian = 'ƒCƒIƒŠƒAƒ“ƒGƒbƒW',
+    exen = 'ƒGƒNƒ[ƒ“ƒeƒŒƒ^[',
+    -- •ĞèŒ•
+    chant = 'ƒVƒƒƒ“ƒfƒ…ƒVƒjƒ…',
+    savage = 'ƒTƒxƒbƒWƒuƒŒ[ƒh',
+    flat = 'ƒtƒ‰ƒbƒgƒuƒŒ[ƒh',
+    circle = 'ƒT[ƒNƒ‹ƒuƒŒ[ƒh',
+    -- —¼èŒ•
+    demi = 'ƒfƒ~ƒfƒBƒG[ƒVƒ‡ƒ“',
+    spin = 'ƒXƒsƒ“ƒXƒ‰ƒbƒVƒ…',    
+    reso = 'ƒŒƒ]ƒ‹[ƒVƒ‡ƒ“',
+    ground = 'ƒOƒ‰ƒEƒ“ƒhƒXƒgƒ‰ƒCƒN',
+    frost = 'ƒtƒƒXƒgƒoƒCƒg',
+    -- •Ğè•€
+    rui = 'ƒ‹ƒCƒl[ƒ^[',
+    ramp = 'ƒ‰ƒ“ƒy[ƒW',
+    -- —¼è•€
+    ukko = 'ƒEƒbƒRƒtƒ…[ƒŠ[',
+    steel = 'ƒXƒ`[ƒ‹ƒTƒCƒNƒƒ“',
+    -- —¼è‘„
+    dai = '‘åÔ—Ö',
+    -- —¼èŠ™
+    ent = 'ƒGƒ“ƒgƒƒs[',
+    -- —¼è“
+    kagero = 'l”V‘¾“E—z‰Š', -- —n‰ğ
+    yuki = 'µ”V‘¾“Eá•—', -- d‰»Aày—ô
+    gekko = '”ª”V‘¾“EŒŒõ', -- ŠÑ’ÊAÕŒ‚
+    hocho = '\\ˆê”V‘¾“E–P’±', -- –hŒä—Íƒ_ƒEƒ“
+    shoha = '\\“ñ”V‘¾“EÆ”j', --@–hŒä—ÍƒJƒbƒgBŠiã‚É‹­‚¢
+    -- •Ğè“
+    shun = 'u',
+    -- •Ğè
+    shine = 'ƒVƒƒƒCƒ“ƒXƒgƒ‰ƒCƒN',
+    realm = 'ƒŒƒ‹ƒ€ƒŒƒCƒU[',
+    moon = 'ƒ€[ƒ“ƒ‰ƒCƒg',
+    full = 'ƒtƒ‹ƒXƒCƒ“ƒO',
+    hexa = 'ƒwƒLƒTƒXƒgƒ‰ƒCƒN',
+    -- —¼è
+    myrkr = 'ƒ~ƒ‹ƒLƒ‹',
+    spirit = 'ƒXƒsƒŠƒbƒgƒe[ƒJ[',
+    cata = 'ƒJƒ^ƒNƒŠƒXƒ€',
+    brain = 'ƒuƒŒƒCƒ“ƒVƒFƒCƒJ[',
+    heavy = 'ƒwƒ”ƒBƒXƒCƒ“ƒO',
+    -- —¼èŠ™
+    spiral = 'ƒXƒpƒCƒ‰ƒ‹ƒwƒ‹',
+    cross = 'ƒNƒƒXƒŠ[ƒp[',
+    -- ‹|
+    apex = 'ƒGƒCƒyƒNƒXƒAƒ[',
+    -- ËŒ‚(e)
+    leaden = 'ƒŒƒfƒ“ƒTƒŠƒ…[ƒg',
+    hot = 'ƒzƒbƒgƒVƒ‡ƒbƒg',
+    wild = 'ƒƒCƒ‹ƒhƒtƒ@ƒCƒA',
 }
 
 ws.weaponskillTargetMeTable = S{
@@ -113,7 +113,7 @@ ws.getWeaponSkillUsage = function()
     local weaponSkillUsage = "  "
     for key, name in pairs(ws.weaponskillTable) do
         for key2, name2 in pairs(abilities.weapon_skills) do
-            local n = res.weapon_skills[name2]['ja']
+            local n = windower.to_shift_jis(res.weapon_skills[name2]['ja'])
             if name == n then
                 entry =  key .. " = " .. name -- windower.to_shift_jis(name)
                 weaponSkillUsage = weaponSkillUsage .. entry .. "\n"
@@ -147,8 +147,8 @@ ws.exec = function()
     end
     local player = windower.ffxi.get_player()
 --    print(player.vitals.tp)
---    if mob.hpp < math.random(30, 33) and -- é†´æ³‰å³¶ã‹ãˆã‚‹
-    if mob.hpp < math.random(3,5) and -- ã‚¦ã‚©ãƒ¼APEXã‹ãˆã‚‹
+--    if mob.hpp < math.random(30, 33) and -- çÒò“‡‚©‚¦‚é
+    if mob.hpp < math.random(3,5) and -- ƒEƒH[APEX‚©‚¦‚é
         player.vitals.tp < 3000 then
         return
     end
