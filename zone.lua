@@ -30,3 +30,5 @@ M.zoneTable = {
     [89] = zone_89_Grauberg_S,  -- 過去グロウベルグ
     [273] = zone_273_WohGates,  -- ウォーの門
 }
+
+return M
