@@ -1,11 +1,11 @@
---- ƒAƒCƒeƒ€ˆ—
+--- ã‚¢ã‚¤ãƒ†ãƒ å‡¦ç†
 
 packets = require 'packets'
 res = require('resources')
 
 local M = {}
 
--- ƒAƒCƒeƒ€‚Ì—Ê
+-- ã‚¢ã‚¤ãƒ†ãƒ ã®é‡
 
 local inventoryTotalNum = function()
     local items = windower.ffxi.get_items()
@@ -27,7 +27,7 @@ local diffInventoryTotalNum = function()
 end
 M.diffInventoryTotalNum = diffInventoryTotalNum
 
---- ƒAƒCƒeƒ€‚Ì‹ó‚«
+--- ã‚¢ã‚¤ãƒ†ãƒ ã®ç©ºã
 M.showInventory = function()
     local items = windower.ffxi.get_items()
     local item = items.inventory
@@ -48,7 +48,7 @@ M.checkInventoryFreespace = function()
     return false
 end
 
---- ‚©‚Î‚ñ‚Ì‹ó‚«”
+--- ã‹ã°ã‚“ã®ç©ºãæ•°
 local inventoryFreespaceNum = function()
     local items = windower.ffxi.get_items()
     local inventory = items.inventory
@@ -58,10 +58,10 @@ M.inventoryFreespaceNum = inventoryFreespaceNum
 
 
 
--- ‹àŒÉŒn‚ÌkeyƒŠƒXƒg
+-- é‡‘åº«ç³»ã®keyãƒªã‚¹ãƒˆ
 local SafesList = { locker = 4, storage = 2, safe = 1 }
--- ‚¿‚È‚İ‚É 3 ‚Í Temporary
---- ‚¿•à‚«ƒoƒbƒO‚ÌkeyƒŠƒXƒg
+-- ã¡ãªã¿ã« 3 ã¯ Temporary
+--- æŒã¡æ­©ããƒãƒƒã‚°ã®keyãƒªã‚¹ãƒˆ
 local BagsList = { case = 7, sack = 6, satchel = 5 }
 
 
@@ -89,7 +89,7 @@ end
 M.safesToInventory = safesToInventory
 
 
---- ‚¿•à‚«ƒoƒbƒO‚Ì‹ó‚«
+--- æŒã¡æ­©ããƒãƒƒã‚°ã®ç©ºã
 local checkBagsFreespace = function()
     local items = windower.ffxi.get_items()
     for bname, bagid in pairs(BagsList) do
@@ -131,7 +131,7 @@ M.moveToBags = function(id)
         local bag = items[bname]
         if bag.count < bag.max then
             for i, item in ipairs(items.inventory) do
-                --- 1D‘µ‚Á‚½‚çƒoƒbƒO‚É‘Ş”ğ
+                --- 1Dæƒã£ãŸã‚‰ãƒãƒƒã‚°ã«é€€é¿
                 if item.id == id and item.count == 12 then
                     windower.ffxi.put_item(bagid, item.slot, item.count)
                     return true

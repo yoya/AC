@@ -1,5 +1,5 @@
---- ‚±‚Ìƒtƒ@ƒCƒ‹‚Í SJIS •Û‘¶
---- zone ŠÖŒW
+--- ã“ã®ãƒ•ã‚¡ã‚¤ãƒ«ã¯ SJIS ä¿å­˜
+--- zone é–¢ä¿‚
 
 local M = {}
 
@@ -32,25 +32,25 @@ function zone_change_handler()
     local round_y = math.round(me_pos.y, 3)
     local round_z = math.round(me_pos.z, 3)
     print("zone:"..zone.." x="..round_x.." y="..round_y.." z="..round_z)
----    local east_adoulin_hp_pos = {-50.5, -92, 0} ‚±‚±‚Ü‚ÅŠÜ‚ß‚é
+---    local east_adoulin_hp_pos = {-50.5, -92, 0} ã“ã“ã¾ã§å«ã‚ã‚‹
     local east_adoulin_hp2_pos = {-51.5, -96, 0}
 ---local east_adoulin_hp2_pos = {-57.8, -130, 0}
     local jeuno_garden_hp_pos = {36.0, 8.8}
     if zone == 257 then
---        print("“ŒƒAƒhƒDƒŠƒ“‚È‚¤")
+--        print("æ±ã‚¢ãƒ‰ã‚¥ãƒªãƒ³ãªã†")
         local dx = me_pos.x - east_adoulin_hp2_pos[1]
         local dy = me_pos.y - east_adoulin_hp2_pos[2]
         local dist = math.sqrt(dx*dx + dy+dy)
 --        print("dist: "..dist)
         if dist < 10 then
-            printChat("“ŒƒAƒhƒDƒŠƒ“ Home Point #2 (M)")
+            printChat("æ±ã‚¢ãƒ‰ã‚¥ãƒªãƒ³ Home Point #2 (M)")
             coroutine.sleep(10)
             local me_pos2 = autopos.currentPos()
             local dx2 = me_pos.x - me_pos2.x
             local dy2 = me_pos.y - me_pos2.y
             local dist2 = math.sqrt(dx2*dx2 + dy2+dy2)
             if dist2 < 0.5 then
-                turnTo({x=-58, y=-131}) --- ƒ‚ƒOƒnƒEƒX‚Ö
+                turnTo({x=-58, y=-131}) --- ãƒ¢ã‚°ãƒã‚¦ã‚¹ã¸
                 lookForward()
                 coroutine.sleep(2)
                 windower.ffxi.run(true)
@@ -59,32 +59,32 @@ function zone_change_handler()
             end
         end   
     elseif zone == 246 then
---        printChat("ƒWƒ…ƒm’ë‚È‚¤")
+--        printChat("ã‚¸ãƒ¥ãƒåº­ãªã†")
         local dx = me_pos.x - jeuno_garden_hp_pos[1]
         local dy = me_pos.y - jeuno_garden_hp_pos[2]
         local dist = math.sqrt(dx*dx + dy+dy)
         print("dist: "..dist)
         if dist < 10 then
---            printChat("ƒWƒ…ƒm’ë Home Point #1 (E)")
+--            printChat("ã‚¸ãƒ¥ãƒåº­ Home Point #1 (E)")
             coroutine.sleep(2)
-            turnTo({x=-54.5, y=0}) --- ƒˆƒAƒqƒ€‚ÆƒVƒFƒ~‚ÌŠÔ
+            turnTo({x=-54.5, y=0}) --- ãƒ¨ã‚¢ãƒ’ãƒ ã¨ã‚·ã‚§ãƒŸã®é–“
             lookForward()
             coroutine.sleep(3)
             windower.ffxi.run(true)
         end
-    --- ƒ\ƒƒ€ƒOŒ´–ì(120),ƒUƒ‹ƒJƒo[ƒh(112)
-    ---  ƒƒWƒƒ[ƒ€÷—Ñ(51)Aƒ[ƒIƒ‹ƒ€‰ÎR(61)AƒJƒ_[ƒo‚Ì•‚À(79)Aƒ{ƒXƒfƒBƒ“(111)A
-    --- ƒˆƒAƒgƒ‹X—Ñ(124), “ŒƒAƒ‹ƒeƒp(114), ¼ƒAƒ‹ƒeƒp(125)A ƒoƒ^ƒŠƒA(105)
-    --- ƒrƒrƒL[˜p(4)Aƒ}ƒŠƒ~ƒA(266)
-    -- ‰ß‹ƒƒ‰ƒ“ƒxƒŠ[k’n(84)
-    --- ƒPƒCƒUƒbƒNŒÃíê(261)Aƒ„ƒbƒZ‚Ìë‚èê(260), ƒ‚ƒŠƒ}[‘ä’n(265),ƒˆƒ‹ƒVƒAX—Ñ(263)
-    --- ˆê’UŠO‚·Bƒ[ƒNƒX‚Ì×–‚   261, 260, 265, 263, 266
+    --- ã‚½ãƒ­ãƒ ã‚°åŸé‡(120),ã‚¶ãƒ«ã‚«ãƒãƒ¼ãƒ‰(112)
+    ---  ãƒ¯ã‚¸ãƒ£ãƒ¼ãƒ æ¨¹æ—(51)ã€ã‚¼ã‚ªãƒ«ãƒ ç«å±±(61)ã€ã‚«ãƒ€ãƒ¼ãƒã®æµ®æ²¼(79)ã€ãƒœã‚¹ãƒ‡ã‚£ãƒ³(111)ã€
+    --- ãƒ¨ã‚¢ãƒˆãƒ«æ£®æ—(124), æ±ã‚¢ãƒ«ãƒ†ãƒ‘(114), è¥¿ã‚¢ãƒ«ãƒ†ãƒ‘(125)ã€ ãƒã‚¿ãƒªã‚¢(105)
+    --- ãƒ“ãƒ“ã‚­ãƒ¼æ¹¾(4)ã€ãƒãƒªãƒŸã‚¢(266)
+    -- éå»ãƒ­ãƒ©ãƒ³ãƒ™ãƒªãƒ¼è€•åœ°(84)
+    --- ã‚±ã‚¤ã‚¶ãƒƒã‚¯å¤æˆ¦å ´(261)ã€ãƒ¤ãƒƒã‚»ã®ç‹©ã‚Šå ´(260), ãƒ¢ãƒªãƒãƒ¼å°åœ°(265),ãƒ¨ãƒ«ã‚·ã‚¢æ£®æ—(263)
+    --- ä¸€æ—¦å¤–ã™ã€‚ãƒ¯ãƒ¼ã‚¯ã‚¹ã®é‚ªé­”   261, 260, 265, 263, 266
 --    elseif S{120, 112, 51, 61, 79, 111, 124, 114, 125, 105, 4, 84}:contains(zone) then
---        printChat("5•bŒã‚É /mount ƒ‰ƒvƒgƒ‹")
---        coroutine.sleep(5) --- 10‚Íok
---        windower.send_command('input /mount ƒ‰ƒvƒgƒ‹; wait 1; input /follow <p1>')
+--        printChat("5ç§’å¾Œã« /mount ãƒ©ãƒ—ãƒˆãƒ«")
+--        coroutine.sleep(5) --- 10ã¯ok
+--        windower.send_command('input /mount ãƒ©ãƒ—ãƒˆãƒ«; wait 1; input /follow <p1>')
     elseif zone == 70 then
-        printChat("ƒ`ƒ‡ƒRƒ{ƒT[ƒLƒbƒg‚È‚¤")
+        printChat("ãƒãƒ§ã‚³ãƒœã‚µãƒ¼ã‚­ãƒƒãƒˆãªã†")
         coroutine.sleep(2)
 ---        turnToPos(-320, -475, -335.4, -473.2)
         local tx = -335.4
@@ -95,15 +95,15 @@ function zone_change_handler()
         coroutine.sleep(2)
         windower.ffxi.run(tx - me_pos.x, ty - me_pos.y)
         lookForward()
-    elseif zone == 142 then  --- ƒ†ƒOƒzƒgÔ“´ŒA“à
-        if isNear({x=437.2,y=68.6,z=-40}) then -- ‰·ò‚©‚ç“ü‚Á‚½Š
+    elseif zone == 142 then  --- ãƒ¦ã‚°ãƒ›ãƒˆç ¦æ´çªŸå†…
+        if isNear({x=437.2,y=68.6,z=-40}) then -- æ¸©æ³‰ã‹ã‚‰å…¥ã£ãŸæ‰€
             autopos.autoMoveTo(zone, "horl", false)
         elseif isNear({x=434,y=170,z=-40}) then -- HP#1
             windower.ffxi.run(1, 0)  -- go to right
         end
-    elseif zone == 79 then  --- ƒJƒ_[ƒo‚Ì‚¤‚«ÀA–{ƒ[ƒv
+    elseif zone == 79 then  --- ã‚«ãƒ€ãƒ¼ãƒã®ã†ãæ²¼ã€æœ¬ãƒ¯ãƒ¼ãƒ—
         windower.ffxi.run(-1, 0)  -- go to left
-    elseif zone == 273 then -- ‚¤‚§[‚Ì–å
+    elseif zone == 273 then -- ã†ã‰ãƒ¼ã®é–€
         print("woh gate")
         coroutine.sleep(1)
         autopos.autoMoveTo(zone, "raive", false)
@@ -117,13 +117,13 @@ function warp_handler(prevZone, prevPos, zone, pos)
         return
     end
     print("warp_handler", prevZone, prevPos.x, prevPos.y, zone, pos.x, pos.y)
-    if zone == 139 then -- ƒzƒ‹ƒŒ[
-        printChat("ƒzƒ‹ƒŒ[‚È‚¤")
+    if zone == 139 then -- ãƒ›ãƒ«ãƒ¬ãƒ¼
+        printChat("ãƒ›ãƒ«ãƒ¬ãƒ¼ãªã†")
         local bcStartPos = {x=-316.3,y=-102.57}
         local dist = autopos.distance(pos, bcStartPos)
         printChat({"dist", dist})
         if dist < 10 then
-            printChat("AMAN ƒgƒ[ƒuŠJnˆÊ’u")
+            printChat("AMAN ãƒˆãƒ­ãƒ¼ãƒ–é–‹å§‹ä½ç½®")
             coroutine.sleep(2)
         end  
     end

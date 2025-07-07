@@ -1,5 +1,5 @@
 
---- ‚±‚Ìƒtƒ@ƒCƒ‹‚Í SJIS •Û‘¶
+--- ã“ã®ãƒ•ã‚¡ã‚¤ãƒ«ã¯ SJIS ä¿å­˜
 _addon.author = 'Yoya'
 _addon.version = '1.0.0'
 _addon.commands = {'accountcluster', 'ac'}
@@ -29,7 +29,7 @@ local current_sparks = -1
 
 local ProbRecastTime = {}
 
---- ƒNƒŠƒXƒ^ƒ‹
+--- ã‚¯ãƒªã‚¹ã‚¿ãƒ«
 local crystal_id_fire = 4096
 local crystal_id_ice = 4097
 local crystal_id_wind = 4098
@@ -38,7 +38,7 @@ local crystal_id_thunber = 4100
 local crystal_id_water = 4101
 local crystal_id_light = 4102
 local crystal_id_dark = 4103
---- ‰ò
+--- å¡Š
 local cluster_id_wind = 4106-------
 local cluster_id_stone = 4107
 local cluster_id_thunder = 4108
@@ -60,26 +60,26 @@ local crystal_ids = {
 }
 
 local seal_ids = {
-    1126, --- blˆóÍ
-    1127, --- b_ˆóÍ
-    2955, --- –‚lˆóÍ
-    2956, --- –‚‰¤ˆóÍ
-    2957, --- –‚_ˆóÍ
+    1126, --- ç£äººå°ç« 
+    1127, --- ç£ç¥å°ç« 
+    2955, --- é­”äººå°ç« 
+    2956, --- é­”ç‹å°ç« 
+    2957, --- é­”ç¥å°ç« 
 }
 
 local cipher_ids = {}
 for i=10112, 10193 do table.insert(cipher_ids,i) end
 
 local preferedEnemyList = S{
-    "Profane Circle", "Chaos",--- ƒJƒIƒXí
-    "Tyny Lycopodium",  -- ƒAƒ“ƒoƒX
-    --- ƒeƒXƒg
-    "Mourioche",  -- ƒ}ƒ“ƒhƒ‰
---    "Apex Toad",  -- ƒg[ƒh
-    "Knotted Root", "Bedrock Crag", "Icy Palisade", -- ƒRƒƒiƒCƒY
-    -- çÒò“‡
+    "Profane Circle", "Chaos",--- ã‚«ã‚ªã‚¹æˆ¦
+    "Tyny Lycopodium",  -- ã‚¢ãƒ³ãƒã‚¹
+    --- ãƒ†ã‚¹ãƒˆ
+    "Mourioche",  -- ãƒãƒ³ãƒ‰ãƒ©
+--    "Apex Toad",  -- ãƒˆãƒ¼ãƒ‰
+    "Knotted Root", "Bedrock Crag", "Icy Palisade", -- ã‚³ãƒ­ãƒŠã‚¤ã‚º
+    -- é†´æ³‰å³¶
     "Wretched Poroggo", "Water Elemental", 
-    "Indomitable Faaz", "Devouring Mosquito", -- çÒò“‡
+    "Indomitable Faaz", "Devouring Mosquito", -- é†´æ³‰å³¶
 }
 
 windower.send_command('bind ^d ac start')
@@ -124,7 +124,7 @@ end
 local isFar = false
 local fightingMobName = nil
 
---- ƒŠ[ƒ_[‘Ò‹@—p
+--- ãƒªãƒ¼ãƒ€ãƒ¼å¾…æ©Ÿç”¨
 local leaderFunction = function()
 ---    print("I am a reader")
     local me_pos = {}
@@ -133,15 +133,15 @@ local leaderFunction = function()
         return
     end
 --    print("mid_pos:", mid_pos.x, mid_pos.y)
-    -- —Dæ‚·‚é“G
+    -- å„ªå…ˆã™ã‚‹æ•µ
     local mob =  utils.getNearestFightableMob(start_pos, settings.CampRange, preferedEnemyList)
 ---    print("nearest prefered mob", mob)
     if mob == nil then
-        --- ƒƒ“ƒo[‚ªí‚Á‚Ä‚¢‚é“G‚ª‚¢‚ê‚ÎA‚»‚¿‚ç—Dæ
+        --- ãƒ¡ãƒ³ãƒãƒ¼ãŒæˆ¦ã£ã¦ã„ã‚‹æ•µãŒã„ã‚Œã°ã€ãã¡ã‚‰å„ªå…ˆ
 --        mob = utils.PartyTargetMob()
     end
     if mob == nil then
-        --- —Dæ“x‚Ì‚‚¢“G‚ª‚¢‚È‚¢ê‡‚ÍA’N‚Å‚à—Ç‚¢
+        --- å„ªå…ˆåº¦ã®é«˜ã„æ•µãŒã„ãªã„å ´åˆã¯ã€èª°ã§ã‚‚è‰¯ã„
         mob = utils.getNearestFightableMob(start_pos, settings.CampRange, nil)
     end
     if mob ~= nil then
@@ -171,7 +171,7 @@ local leaderFunction = function()
     end
 end 
 
---- ƒƒ“ƒo[‘Ò‹@—p
+--- ãƒ¡ãƒ³ãƒãƒ¼å¾…æ©Ÿç”¨
 local notLeaderFunction = function()
 ---    print("I am not a reader")
     local player = windower.ffxi.get_player()
@@ -190,44 +190,44 @@ local notLeaderFunction = function()
     local subJob = player.sub_job
 ---    local level = player.main_job_level
     local item_level = player.item_level
-    if item_level < 109 then --- öİ—‚Æ‚µ
+    if item_level < 109 then --- æ½œåœ¨è½ã¨ã—
 --        if math.random(1, 100) < 0 then
---            windower.send_command('input /ma ƒCƒ“ƒrƒW <me>')
+--            windower.send_command('input /ma ã‚¤ãƒ³ãƒ“ã‚¸ <me>')
 --        end
         if (mainJob == "WHM" or  (mainJob == "SCH" and subJob == "WHM")) and math.random(1, 100) < 10 then
             if math.random(1, 100) < 50 then
                 if math.random(1, 100) < 50 then
-                    windower.send_command('input /ma ƒPƒAƒ‹ <p1>')
+                    windower.send_command('input /ma ã‚±ã‚¢ãƒ« <p1>')
                 else
-                    windower.send_command('input /ma ƒXƒgƒ“ƒXƒLƒ“ <me>')
+                    windower.send_command('input /ma ã‚¹ãƒˆãƒ³ã‚¹ã‚­ãƒ³ <me>')
                 end                 
             else
                 if math.random(1, 100) < 50 then
-                    windower.send_command('input /ma ƒoƒEƒHƒ^ƒ‰ <me>')
+                    windower.send_command('input /ma ãƒã‚¦ã‚©ã‚¿ãƒ© <me>')
                 else
-                    windower.send_command('input /ma ƒuƒŠƒ“ƒN <me>')   
+                    windower.send_command('input /ma ãƒ–ãƒªãƒ³ã‚¯ <me>')   
                 end
             end
         end
         if mainJob == "GEO" and math.random(1, 100) <= 5 then
----            windower.send_command('input /ma ƒCƒ“ƒfƒtƒ…[ƒŠ[ <me>')
-           windower.send_command('input /ma ƒCƒ“ƒfƒŠƒtƒŒƒVƒ… <me>')
+---            windower.send_command('input /ma ã‚¤ãƒ³ãƒ‡ãƒ•ãƒ¥ãƒ¼ãƒªãƒ¼ <me>')
+           windower.send_command('input /ma ã‚¤ãƒ³ãƒ‡ãƒªãƒ•ãƒ¬ã‚·ãƒ¥ <me>')
         end
         if mainJob == "BRD" and math.random(1, 100) < 5 then
             if math.random(1, 100) <= 30 then
-                windower.send_command('input /ma –³“G‚ÌiŒ‚ƒ}[ƒ` <me>')
+                windower.send_command('input /ma ç„¡æ•µã®é€²æ’ƒãƒãƒ¼ãƒ <me>')
             elseif math.random(1, 100) <= 50 then
-                windower.send_command('input /ma ím’B‚Ìƒs[ƒAƒ“III <me>')
+                windower.send_command('input /ma æˆ¦å£«é”ã®ãƒ”ãƒ¼ã‚¢ãƒ³III <me>')
             else
-                windower.send_command('input /ma ƒuƒŠƒ“ƒN <me>') 
+                windower.send_command('input /ma ãƒ–ãƒªãƒ³ã‚¯ <me>') 
             end
         end
         if subJob == "RDM" then
             if math.random(1, 100) <= 0 then
-                windower.send_command('input /ma ƒŠƒtƒŒƒVƒ… <me>')  
+                windower.send_command('input /ma ãƒªãƒ•ãƒ¬ã‚·ãƒ¥ <me>')  
             end
             if math.random(1, 100) <= 1 then
-                windower.send_command('input /ja ƒRƒ“ƒo[ƒg <me>') 
+                windower.send_command('input /ja ã‚³ãƒ³ãƒãƒ¼ãƒˆ <me>') 
 
             end
         end
@@ -236,7 +236,7 @@ local notLeaderFunction = function()
     local me_pos = {}
     local leader_pos = {}
     getMobPosition(me_pos, "me")
-    --- p1 ‚ªƒŠ[ƒ_[‚¾‚Æ‰¼’èB
+    --- p1 ãŒãƒªãƒ¼ãƒ€ãƒ¼ã ã¨ä»®å®šã€‚
     local target_leader = "p1"
     getMobPosition(leader_pos, target_leader)
     if leader_pos.x == nil then
@@ -245,7 +245,7 @@ local notLeaderFunction = function()
     local dx = leader_pos.x - me_pos.x
     local dy = leader_pos.y - me_pos.y
     local dist =  math.sqrt(dx*dx + dy*dy)
-    --- ƒŠ[ƒ_[‚Æ—£‚ê‚½‚Ì‚ğŠm—¦“I‚É‹C‚Ã‚­‚æ‚¤‚É
+    --- ãƒªãƒ¼ãƒ€ãƒ¼ã¨é›¢ã‚ŒãŸã®ã‚’ç¢ºç‡çš„ã«æ°—ã¥ãã‚ˆã†ã«
     if math.random(1, 2) <= 1 and dist > math.random(3,5) then
         isFar = true
         turnToTarget(target_leader)
@@ -259,17 +259,17 @@ local notLeaderFunction = function()
     end
     isFar = false
     windower.ffxi.run(false)
-    -- 119–¢–‚Í–³—‚µ‚È‚¢, 109 ‚ÍŠæ’£‚éBöİŠO‚µ
+    -- 119æœªæº€ã¯ç„¡ç†ã—ãªã„, 109 ã¯é ‘å¼µã‚‹ã€‚æ½œåœ¨å¤–ã—
     if item_level < 109 then
         local mob = windower.ffxi.get_mob_by_target("bt")
         if mob == nil or mob.hpp > 90 then
-            -- í“¬’¼Œã‚ÍŠë‚È‚¢‚Ì‚ÅAí‚¢‚ÉQ‰Á‚µ‚È‚¢
+            -- æˆ¦é—˜ç›´å¾Œã¯å±ãªã„ã®ã§ã€æˆ¦ã„ã«å‚åŠ ã—ãªã„
             return
         end
     end
     if attack then
         windower.ffxi.run(false)
-        --- p1 ‚ªƒ^[ƒQƒbƒg‚µ‚Ä‚é“G‚É‡‚í‚¹‚é
+        --- p1 ãŒã‚¿ãƒ¼ã‚²ãƒƒãƒˆã—ã¦ã‚‹æ•µã«åˆã‚ã›ã‚‹
         local p1 = windower.ffxi.get_mob_by_target("p1")
         if p1 == nil or p1.status ~= 1 or p1.target_index == 0 then
             return
@@ -285,14 +285,14 @@ local notLeaderFunction = function()
     end
 end
 
---- í“¬’†BƒŠ[ƒ_[Aƒƒ“ƒo[‹¤’ÊB
+--- æˆ¦é—˜ä¸­ã€‚ãƒªãƒ¼ãƒ€ãƒ¼ã€ãƒ¡ãƒ³ãƒãƒ¼å…±é€šã€‚
 local figtingFunction = function()
 ---    print("figtingFunction")
 --- printChat("figtingFunction")
     local mob = windower.ffxi.get_mob_by_target("t")
     if mob == nil then
 --        print("figtingFunction mob is nil")
-        -- ‘½•ªAí“¬ƒ‚[ƒh‚È‚Ì‚Éƒ^[ƒQƒbƒg‚ª‚¢‚È‚¢B
+        -- å¤šåˆ†ã€æˆ¦é—˜ãƒ¢ãƒ¼ãƒ‰ãªã®ã«ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãŒã„ãªã„ã€‚
         windower.send_command('input /attack off')
         return
     end
@@ -300,7 +300,7 @@ local figtingFunction = function()
     local mainJob = player.main_job
     local subJob = player.sub_job
 ---    print("XXX", preferedEnemyList)
-    -- —Dæ‚·‚é“G‚ÍAõ“G”ÍˆÍ‚ğ”¼•ª‚ÉB
+    -- å„ªå…ˆã™ã‚‹æ•µã¯ã€ç´¢æ•µç¯„å›²ã‚’åŠåˆ†ã«ã€‚
     local preferMob =  utils.getNearestFightableMob(start_pos, settings.CampRange/2, preferedEnemyList)
 ---    print("prefereMob", preferMob)
     if preferMob ~= nil and mob.name ~= preferMob.name then
@@ -310,18 +310,18 @@ local figtingFunction = function()
             coroutine.sleep(1)
             windower.send_command('input /attack <t>')
         else
-            --- ƒŠ[ƒ_[(p1)‚ªí“¬‚µ‚Ä‚¢‚é“G‚ÉØ‚è‘Ö‚¦‚é
+            --- ãƒªãƒ¼ãƒ€ãƒ¼(p1)ãŒæˆ¦é—˜ã—ã¦ã„ã‚‹æ•µã«åˆ‡ã‚Šæ›¿ãˆã‚‹
             windower.send_command('input /assist <p1>')
         end
     end
  ---   if not player or not player.target_index then
  ---       return
  ---   end
-    --- ƒTƒ|”’‚ÍPL‚È‚Ì‚ÅA‚¸‚Á‚ÆƒCƒ“ƒrƒW
+    --- ã‚µãƒç™½ã¯PLãªã®ã§ã€ãšã£ã¨ã‚¤ãƒ³ãƒ“ã‚¸
     local subJob = player.sub_job
     if false and subJob == "WHM" then
         if math.random(1, 100) <= 1 then
----            windower.send_command('input /ma ƒCƒ“ƒrƒW <me>')
+---            windower.send_command('input /ma ã‚¤ãƒ³ãƒ“ã‚¸ <me>')
 ---            coroutine.sleep(2)
         end
         return 
@@ -330,7 +330,7 @@ local figtingFunction = function()
     local me_pos = {}
     getMobPosition(enemy_pos, "t")
     getMobPosition(me_pos, "me")
-    --- í“¬‚µ‚Ä‚È‚¢H
+    --- æˆ¦é—˜ã—ã¦ãªã„ï¼Ÿ
     if enemy_pos.x == nil then
         print("if enemy_pos.x == nil")
         return
@@ -341,24 +341,24 @@ local figtingFunction = function()
     local dy = enemy_pos.y - me_pos.y
     local dist =  math.sqrt(dx*dx + dy*dy)
 
-    --- ƒŠ[ƒ_[ˆÈŠO‚Í—£‚ê‚Ä‚é‚Æ‹C•t‚­‚Ì‚ğ’x‚ç‚¹‚é
+    --- ãƒªãƒ¼ãƒ€ãƒ¼ä»¥å¤–ã¯é›¢ã‚Œã¦ã‚‹ã¨æ°—ä»˜ãã®ã‚’é…ã‚‰ã›ã‚‹
     if iamLeader() or math.random(1, 2*settings.Period) <= 1 then
         if dist > math.random(2, 5) then
             isFar = true
         end
     end
     if isFar then
-        --@í“¬’†‚Å‚È‚¢‚Æ‚«‚ÍAWS‚âMA‚ğ©lBƒtƒFƒCƒX‚ª“®‚©‚È‚¢‚Ì‚ÅB
+        --ã€€æˆ¦é—˜ä¸­ã§ãªã„ã¨ãã¯ã€WSã‚„MAã‚’è‡ªç²›ã€‚ãƒ•ã‚§ã‚¤ã‚¹ãŒå‹•ã‹ãªã„ã®ã§ã€‚
         if dist / mob.model_size > math.random(4,7)/2 or player.status == 0 then
             windower.ffxi.run(dx, dy)
-            -- Œü‚«‚ªˆ«‚­‚Äí“¬‚ªŠJn‚µ‚È‚¢–â‘è‚Ö‚Ì‘Îô
+            -- å‘ããŒæ‚ªãã¦æˆ¦é—˜ãŒé–‹å§‹ã—ãªã„å•é¡Œã¸ã®å¯¾ç­–
             windower.send_command('setkey numpad5 down; wait 0.05; setkey numpad5 up')
             return
         else
             windower.ffxi.run(false)
             sendCommandProb({
-                { 150, 0, 'setkey a down; wait 0.05; setkey a up', 0 }, -- ¶
-                { 150, 0, 'setkey d down; wait 0.05; setkey d up', 0 }, -- ‰E
+                { 150, 0, 'setkey a down; wait 0.05; setkey a up', 0 }, -- å·¦
+                { 150, 0, 'setkey d down; wait 0.05; setkey d up', 0 }, -- å³
                 { 150, 0, 'setkey a down; wait 0.1; setkey a up', 0 }, 
                 { 150, 0, 'setkey d down; wait 0.1; setkey d up', 0 },
                 { 200, 0, 'setkey a down; wait 0.15; setkey a up', 0 },
@@ -367,30 +367,30 @@ local figtingFunction = function()
                 { 200, 0, 'setkey d down; wait 0.2; setkey d up', 0 },
                 { 300, 0, 'setkey a down; wait 0.25; setkey a up', 0 },
                 { 300, 0, 'setkey d down; wait 0.25; setkey d up', 0 },
-                { 500, 0, 'setkey s down; wait 0.01; setkey s up', 0 }, -- Œã‚ë
+                { 500, 0, 'setkey s down; wait 0.01; setkey s up', 0 }, -- å¾Œã‚
          }, 1.0, ProbRecastTime)
-         --- ˆê‰ñ‚¾‚¯‚È‚Ì‚Å 1 ‚ğ“ü‚ê‚éB
+         --- ä¸€å›ã ã‘ãªã®ã§ 1 ã‚’å…¥ã‚Œã‚‹ã€‚
         end
     end
-    -- —…”Õ‚ªí“¬êŠ‚©‚ç—£‚ê‚Ä‚½‚çÁ‚·
+    -- ç¾…ç›¤ãŒæˆ¦é—˜å ´æ‰€ã‹ã‚‰é›¢ã‚Œã¦ãŸã‚‰æ¶ˆã™
     if mainJob == "GEO" and math.random(1, 100) <= 30 then
         local petdist = autopos.targetDistance("pet")
         if petdist ~= nil and petdist > math.random(25, 40) then
             printChat("petdist:"..petdist)
-            windower.send_command('input /ja ƒtƒ‹ƒT[ƒNƒ‹ <me>; wait 2; input /ja ƒOƒ[ƒŠ[ƒuƒŒƒCƒY <me>; wait 2; input /ma ƒWƒIƒtƒŒƒCƒ‹ <bt>')
+            windower.send_command('input /ja ãƒ•ãƒ«ã‚µãƒ¼ã‚¯ãƒ« <me>; wait 2; input /ja ã‚°ãƒ­ãƒ¼ãƒªãƒ¼ãƒ–ãƒ¬ã‚¤ã‚º <me>; wait 2; input /ma ã‚¸ã‚ªãƒ•ãƒ¬ã‚¤ãƒ« <bt>')
         end 
     end
-    --- ~‚Ü‚Á‚Äí“¬ŠJn
+    --- æ­¢ã¾ã£ã¦æˆ¦é—˜é–‹å§‹
     isFar = false
     windower.ffxi.run(false)
-    --- atan2 ‚Ì‚Ü‚Ü‚¾‚Æ‰E‚ğŒü‚­‚Ì‚ÅA90“x‚Ì•â³
+    --- atan2 ã®ã¾ã¾ã ã¨å³ã‚’å‘ãã®ã§ã€90åº¦ã®è£œæ­£
 --    local dir = math.atan2(dx, dy) - 3.14/2
 --    windower.ffxi.turn(dir)
     turnToTarget("t")
 ---    if player.vitals.tp >= math.random(1100, 1200) then
-    --- PLD ‚Íƒ^ƒQæ‚è.RNG ‚ÍƒGƒ”ƒB—pB"BLM", "SMN", "SCH"‚Íƒ~ƒ‹ƒLƒ‹
+    --- PLD ã¯ã‚¿ã‚²å–ã‚Š.RNG ã¯ã‚¨ãƒ´ã‚£ç”¨ã€‚"BLM", "SMN", "SCH"ã¯ãƒŸãƒ«ã‚­ãƒ«
     local tp100Jobs = S{-"RNG", "BLM", "SMN", "SCH"}
-    --- WAR ‚ÍƒXƒ`ƒTƒC—pBDNC ‚Íƒ_ƒ“ƒX—pH
+    --- WAR ã¯ã‚¹ãƒã‚µã‚¤ç”¨ã€‚DNC ã¯ãƒ€ãƒ³ã‚¹ç”¨ï¼Ÿ
     local tpJobs = S{"DNC"}
     local tpMin = 1200
     local tpMax = 1500
@@ -412,13 +412,13 @@ local figtingFunction = function()
         end
     end
 ---    if math.random(1, 100) <= 1 then
-    --- í“¬ƒ^[ƒQƒbƒg‚ª‚½‚Ü‚ÉŠO‚ê‚é‘ÎôB‚Æ‚è‚ ‚¦‚¸‚Ì•û–@B
+    --- æˆ¦é—˜ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãŒãŸã¾ã«å¤–ã‚Œã‚‹å¯¾ç­–ã€‚ã¨ã‚Šã‚ãˆãšã®æ–¹æ³•ã€‚
     if iamLeader() or puller then
         if math.random(1, 10) <= 1 then
             windower.send_command('input /attack <t>')
         end
     end
-    --- ‚½‚Ü‚É¶‚â‰E‚É‚¸‚ê‚éB‘O‚âŒã‚É‚àB
+    --- ãŸã¾ã«å·¦ã‚„å³ã«ãšã‚Œã‚‹ã€‚å‰ã‚„å¾Œã«ã‚‚ã€‚
     sendCommandProb({
         { 10, 10, 'setkey a down; wait 0.1; setkey a up', 0 },
         { 10, 10, 'setkey d down; wait 0.1; setkey d up', 0 },
@@ -432,7 +432,7 @@ local figtingFunction = function()
             end
         end
     end
-    if doPointCheer then  --- ƒAƒ“ƒoƒXFƒ}ƒ“ƒhƒ‰
+    if doPointCheer then  --- ã‚¢ãƒ³ãƒã‚¹ï¼šãƒãƒ³ãƒ‰ãƒ©
         sendCommandProb({
             { 200, 1, 'input /point <t>', 1 },
             { 100, 1, 'input /cheer <p1>', 1 },
@@ -479,7 +479,7 @@ local idleFunctionTradeItems = function(tname, items, wait, enterWaits)
 end
 
 
--- ƒWƒƒƒ“ƒNƒAƒCƒeƒ€‚ğ‚©‚Î‚ñ‚ÉW‚ß‚é
+-- ã‚¸ãƒ£ãƒ³ã‚¯ã‚¢ã‚¤ãƒ†ãƒ ã‚’ã‹ã°ã‚“ã«é›†ã‚ã‚‹
 local aggregateJunkItemsToInventory = function()
     local count = 0
     for id in pairs(JunkItems) do
@@ -503,7 +503,7 @@ local aggregateJunkItemsToInventory = function()
     return count
 end
 
--- ‚©‚Î‚ñ“à‚ÌƒWƒƒƒ“ƒNƒAƒCƒeƒ€‚ğ”‚¦‚é
+-- ã‹ã°ã‚“å†…ã®ã‚¸ãƒ£ãƒ³ã‚¯ã‚¢ã‚¤ãƒ†ãƒ ã‚’æ•°ãˆã‚‹
 local countJunkItemsInInventory = function ()
     local count = 0
         for index = 1, 80 do
@@ -518,7 +518,7 @@ end
 
 local sellJunkItemsInInventory = function()
     local total_count = countJunkItemsInInventory()
-    printChat(total_count.."‰ñ”„‹p start")
+    printChat(total_count.."å›å£²å´ start")
     local remain_count = total_count
     for index = 1, 80 do
         local item = windower.ffxi.get_items(0, index)
@@ -539,22 +539,22 @@ local sellJunkItemsInInventory = function()
         end
     end
     print("junk sold out", total_count)
-    printChat(total_count.."‰ñ”„‹p end")
----  stop() ---‰½ŒÌ‚©“®‚©‚È‚¢
+    printChat(total_count.."å›å£²å´ end")
+---  stop() ---ä½•æ•…ã‹å‹•ã‹ãªã„
     auto = false
 end
 
 local idleFunctionSellJunkItems = function()
-    -- ‰Â”ÀƒXƒgƒŒ[ƒW‚ÌƒWƒƒƒ“ƒNƒAƒCƒeƒ€‚ğ‚©‚Î‚ñ‚ÉW‚ß‚é
+    -- å¯æ¬ã‚¹ãƒˆãƒ¬ãƒ¼ã‚¸ã®ã‚¸ãƒ£ãƒ³ã‚¯ã‚¢ã‚¤ãƒ†ãƒ ã‚’ã‹ã°ã‚“ã«é›†ã‚ã‚‹
     print("Aggregate Bag Junk Items to Inventory")
     aggregateJunkItemsToInventory()
     local done = false
     while done == false and auto do
-        -- ”„‹pˆ—
+        -- å£²å´å‡¦ç†
         sellJunkItemsInInventory()
         local move_count = aggregateJunkItemsToInventory()
         if move_count == 0 then
-            -- ˆÚ“®‚·‚éƒAƒCƒeƒ€‚ª‚È‚¯‚ê‚ÎI—¹
+            -- ç§»å‹•ã™ã‚‹ã‚¢ã‚¤ãƒ†ãƒ ãŒãªã‘ã‚Œã°çµ‚äº†
             done = true
         end
     end
@@ -574,7 +574,7 @@ local dropJunkItemsInInventory = function()
     end
 end
 
---- ƒ‚ƒOƒK[ƒfƒ“(280)‚Ì‚İ“®ì‚·‚é
+--- ãƒ¢ã‚°ã‚¬ãƒ¼ãƒ‡ãƒ³(280)ã®ã¿å‹•ä½œã™ã‚‹
 local idleFunctionMobGarden = function()
     local mob = windower.ffxi.get_mob_by_target("t")
     if mob == nil then
@@ -601,7 +601,7 @@ local idleFunctionMobGarden = function()
         utils.targetByMobId(mob.id)
     elseif mob.name == "Garden Furrow" or mob.name == "Garden Furrow #2"
            or mob.name == "Garden Furrow #3" then
-        local id = 940 -- ”½°÷‚Ìª
+        local id = 940 -- åé­‚æ¨¹ã®æ ¹
         autoitem.tradeByItemId(mob, id)
         auto = false
     elseif mob.name == "Mineral Vein" or mob.name == "Mineral Vein #2"
@@ -636,7 +636,7 @@ local idleFunctionSouthSand = function()
 end
 
 local idleFunctionSandPort = function()
-    idleFunctionTradeItems("Joulet", {4401,5789}, 5, {}) -- –xƒuƒi
+    idleFunctionTradeItems("Joulet", {4401,5789}, 5, {}) -- å €ãƒ–ãƒŠ
 end
 
 local idleFunctionWestAdoulin = function()
@@ -654,7 +654,7 @@ local idleFunctionWestAdoulin = function()
         auto = false
     elseif mob.name == "Nunaarl Bthtrogg" then
         n = autoitem.inventoryFreespaceNum()
-        printChat("‚©‚Î‚ñ‚Ì‹ó‚«‚Í"..n.."*99 = "..(n*99))
+        printChat("ã‹ã°ã‚“ã®ç©ºãã¯"..n.."*99 = "..(n*99))
         auto = false
     end
 end
@@ -687,11 +687,11 @@ local SW = math.pi * (5/4)
 local W  = math.pi * (6/4)
 local NW = math.pi * (7/4)
 
--- 0:Šì‚Ô 1:‹ƒ‚­ 2:‹Á‚­ 3:‰÷‚µ‚Ş
--- 4:—ã‚Ü‚· 5:Q‚Ä‚é 6:Æ‚ê‚é 7:‹C‡
+-- 0:å–œã¶ 1:æ³£ã 2:é©šã 3:æ‚”ã—ã‚€
+-- 4:åŠ±ã¾ã™ 5:æ…Œã¦ã‚‹ 6:ç…§ã‚Œã‚‹ 7:æ°—åˆ
 
 local stationWorkerBoostTable = {
-    [265] = { -- ƒ‚ƒŠƒ}[‘ä’n
+    [265] = { -- ãƒ¢ãƒªãƒãƒ¼å°åœ°
         [0]  = {SE,S, 4}, [3]  = {S,SW, 5},
         [6]  = {SW,W, 6}, [9]  = {W,NW, 7},
         [12] = {NW,N, 0}, [15] = {N,NE, 1},
@@ -710,7 +710,7 @@ local getStationWorkerBoostInfo = function(zone)
     return nil
 end 
 
--- ”ÍˆÍ‚Í -math.pi < theta < math.pi
+-- ç¯„å›²ã¯ -math.pi < theta < math.pi
 local normalangle = function(a)
     if a <= math.pi or math.pi <= a then
         a = a % (2*math.pi)
@@ -721,7 +721,7 @@ local normalangle = function(a)
     return a - (2*math.pi)
 end
 
--- ’†ŠÔ‚ÌŠp“x
+-- ä¸­é–“ã®è§’åº¦
 local midangle = function(a, b)
     a = normalangle(a)
     b = normalangle(b)
@@ -740,7 +740,7 @@ local stationWorkerFunction = function(zone, mob)
     local theta = midangle(info[1], info[2])
     printChat("theta: "..theta.." select:"..info[3])
     local done = false
-    -- Œü‚«‚ğ‚ ‚í‚¹‚é
+    -- å‘ãã‚’ã‚ã‚ã›ã‚‹
     while done == false and auto do
         local me_pos = {}
         getMobPosition(me_pos, "me")
@@ -754,7 +754,7 @@ local stationWorkerFunction = function(zone, mob)
             done = true
         end
     end
-    -- ‰‰‡•û–@‚ğ‘I‘ğ‚·‚é
+    -- å¿œæ´æ–¹æ³•ã‚’é¸æŠã™ã‚‹
     keyboard.pushKeys({"enter"})
     coroutine.sleep(2.5)
     if info[2] > 0 then
@@ -789,25 +789,25 @@ local idleFunction = function()
         return
     end
     if zone == 280 then
-        --- ˆÈ‰º‚Íƒ‚ƒOƒK[ƒfƒ“‚Ì‚İˆ—
+        --- ä»¥ä¸‹ã¯ãƒ¢ã‚°ã‚¬ãƒ¼ãƒ‡ãƒ³ã®ã¿å‡¦ç†
         idleFunctionMobGarden()
         if mob and mob.name == "Green Thumb Moogle" then
             idleFunctionSellJunkItems()
         end
-    elseif zone == 246 then --- ƒWƒ…ƒm`
+    elseif zone == 246 then --- ã‚¸ãƒ¥ãƒæ¸¯
         idleFunctionJeunoPort()
-    elseif zone == 230 then -- “ìƒTƒ“ƒhƒŠƒA
+    elseif zone == 230 then -- å—ã‚µãƒ³ãƒ‰ãƒªã‚¢
         idleFunctionSouthSand()
-    elseif zone == 232 then -- ƒTƒ“ƒhƒŠƒA`
+    elseif zone == 232 then -- ã‚µãƒ³ãƒ‰ãƒªã‚¢æ¸¯
         idleFunctionSandPort()
-    elseif zone == 256 then -- ¼ƒAƒhƒDƒŠƒ“
+    elseif zone == 256 then -- è¥¿ã‚¢ãƒ‰ã‚¥ãƒªãƒ³
         idleFunctionWestAdoulin()
-    elseif zone == 257 then -- “ŒƒAƒhƒDƒŠƒ“
+    elseif zone == 257 then -- æ±ã‚¢ãƒ‰ã‚¥ãƒªãƒ³
         if mob and mob.name == "Malgrom" then
             idleFunctionSellJunkItems()
         end
     end
-    -- ƒ[ƒNƒX‰‰‡
+    -- ãƒ¯ãƒ¼ã‚¯ã‚¹å¿œæ´
     if mob.name == "Station Worker" then
         stationWorkerFunction(zone, mob)
     end
@@ -826,7 +826,7 @@ end
 local tickRunning = false
 
 
---- “r’†‚Å‚Ì return ”²‚¯‹Ö~BÅŒã‚Åƒtƒ‰ƒO—‚Æ‚·‚Ì‚ÅB
+--- é€”ä¸­ã§ã® return æŠœã‘ç¦æ­¢ã€‚æœ€å¾Œã§ãƒ•ãƒ©ã‚°è½ã¨ã™ã®ã§ã€‚
 local tick = function()
 ---    print("tick")
 local prevPos = nil
@@ -838,10 +838,10 @@ local prevPos = nil
     end
     tickRunning = true
     local player = windower.ffxi.get_player()
-    if player ~= nil then   --- ƒƒOƒCƒ“‚µ’¼‚·‚É
+    if player ~= nil then   --- ãƒ­ã‚°ã‚¤ãƒ³ã—ç›´ã™æ™‚ã«
         cureIfPartyHPisLow()
        if player.status == 0 then
-            --- ‘Ò‹@’†
+            --- å¾…æ©Ÿä¸­
           idleFunction()
           if iamLeader() or puller then
               leaderFunction()
@@ -849,7 +849,7 @@ local prevPos = nil
                 notLeaderFunction()
             end
         elseif player.status == 1 then
-            --- í“¬’†
+            --- æˆ¦é—˜ä¸­
             figtingFunction()
         end
     end
@@ -857,7 +857,7 @@ local prevPos = nil
 end
 
 
---- ƒ‹[ƒv‚ÌI—¹ğŒ
+--- ãƒ«ãƒ¼ãƒ—ã®çµ‚äº†æ¡ä»¶
 local loopCnd = function()
     return auto
 end
@@ -867,7 +867,7 @@ local start2 = function()
     printChat({"CampRange: " .. settings.CampRange})
     getMobPosition(start_pos, "me")
     printChat("save start_pos: {x:" .. math.round(start_pos.x,2) .. " y:"..math.round(start_pos.y,2)  .. " z:"..math.round(start_pos.z,2).."}")
-    -- true ‚Ì‚ÍŠù‚É“®‚¢‚Ä‚é loop ‚ğI—¹‚³‚¹‚é
+    -- true ã®æ™‚ã¯æ—¢ã«å‹•ã„ã¦ã‚‹ loop ã‚’çµ‚äº†ã•ã›ã‚‹
     if auto == true then
         auto = false
         socket.sleep(settings.Period * 2)
@@ -998,7 +998,7 @@ windower.register_event('addon command', function(command, command2)
         local x = math.round(me_pos.x, 1)
         local y = math.round(me_pos.y, 1)
         local z = math.round(me_pos.z, 1)
----    print ‚Í - ‹L†‚ğŒë”F‚µ‚â‚·‚¢‚Ì‚ÅA•\¦‚µ‚È‚¢
+---    print ã¯ - è¨˜å·ã‚’èª¤èªã—ã‚„ã™ã„ã®ã§ã€è¡¨ç¤ºã—ãªã„
 ---        print("me potision", " x="..x, "  y="..y, "  z="..z)
         printChat("me potision  x="..x.."  y="..y.."  z="..z)
     elseif command == 'move' then
@@ -1081,7 +1081,7 @@ windower.register_event('job change', function()
 end)
 
 
---- ƒ][ƒ“‚ª•Ï‚í‚Á‚½‚ç’â~‚·‚é
+--- ã‚¾ãƒ¼ãƒ³ãŒå¤‰ã‚ã£ãŸã‚‰åœæ­¢ã™ã‚‹
 windower.register_event('zone change', function()
     auto = false
     useSilt = false
