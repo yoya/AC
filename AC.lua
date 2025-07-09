@@ -1,5 +1,5 @@
 _addon.author = 'Yoya'
-_addon.version = '1.0.0'
+_addon.version = '1.1.0'
 _addon.commands = {'accountcluster', 'ac'}
 
 require('functions')
