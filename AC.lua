@@ -54,7 +54,7 @@ command.send('bind ^f ac showmob')
 local keyboard = require 'keyboard'
 local pushKeys = keyboard.pushKeys
 
-local utils = require 'autoutils'
+local utils = require 'utils'
 local iamLeader = utils.iamLeader
 local printChat = utils.printChat
 local turnToPos = utils.turnToPos
@@ -62,14 +62,14 @@ local turnToTarget = utils.turnToTarget
 local turnToFront = utils.turnToFront
 local cureIfPartyHPisLow = utils.cureIfPartyHPisLow
 
-local autoitem = require 'autoitem'
-local ws = require 'autows'
-local aprob = require 'autoprob'
+local acitem = require 'item'
+local ws = require 'ws'
+local aprob = require 'prob'
 local sendCommandProb = aprob.sendCommandProb
 local getSendCommandProbTable = aprob.getSendCommandProbTable
-local autopos = require 'autopos'
+local acpos = require 'pos'
 local autozone = require 'autozone'
-local autoincoming = require 'autoincoming'
+local acincoming = require 'incoming'
 
 local JunkItems = item_data.JunkItems
 local _JunkItems = item_data._JunkItems
@@ -144,10 +144,10 @@ local notLeaderFunction = function()
     if not player then
         return
     end
-    if autoitem.checkBagsFreespace() then
+    if acitem.checkBagsFreespace() then
         for i, id in pairs(crystal_ids) do
-            if autoitem.inventoryHasItem(id) then
-                autoitem.moveToBags(id)
+            if acitem.inventoryHasItem(id) then
+                acitem.moveToBags(id)
             end
         end
     end
@@ -339,7 +339,7 @@ local figtingFunction = function()
     end
     -- 羅盤が戦闘場所から離れてたら消す
     if mainJob == "GEO" and math.random(1, 100) <= 30 then
-        local petdist = autopos.targetDistance("pet")
+        local petdist = acpos.targetDistance("pet")
         if petdist ~= nil and petdist > math.random(25, 40) then
             printChat("petdist:"..petdist)
             command.send('input /ja フルサークル <me>; wait 2; input /ja グローリーブレイズ <me>; wait 2; input /ma ジオフレイル <bt>')
@@ -390,10 +390,10 @@ local figtingFunction = function()
         { 10, 10, 'setkey w down; wait 0.1; setkey w up', 0 },
         { 10, 10, 'setkey s down; wait 0.1; setkey s up', 0 },
     }, settings.Period, ProbRecastTime)
-    if autoitem.checkBagsFreespace() then
+    if acitem.checkBagsFreespace() then
         for i, id in pairs(crystal_ids) do
-            if autoitem.inventoryHasItem(id) then
-                autoitem.moveToBags(id)
+            if acitem.inventoryHasItem(id) then
+                acitem.moveToBags(id)
             end
         end
     end
@@ -417,17 +417,17 @@ local idleFunctionTradeItems = function(tname, items, wait, enterWaits)
     end
     if mob.name == tname then
         for i, id in pairs(items) do
-            if autoitem.checkInventoryFreespace() == false then
+            if acitem.checkInventoryFreespace() == false then
                 break
             end
-            if autoitem.bagsHasItem(id) then
-                autoitem.bagsToInventory(id)
+            if acitem.bagsHasItem(id) then
+                acitem.bagsToInventory(id)
                 coroutine.sleep(1)
             end
         end
         for i, id in pairs(items) do
-            if autoitem.inventoryHasItem(id) then
-                autoitem.tradeByItemId(mob, id)
+            if acitem.inventoryHasItem(id) then
+                acitem.tradeByItemId(mob, id)
                 coroutine.sleep(1)
                 utils.targetByMobId(mob.id)
                 coroutine.sleep(wait-1)
@@ -448,18 +448,18 @@ end
 local aggregateJunkItemsToInventory = function()
     local count = 0
     for id in pairs(JunkItems) do
-        if autoitem.checkInventoryFreespace() == false then
+        if acitem.checkInventoryFreespace() == false then
             break
         end
-        if autoitem.safesHasItem(id) then
+        if acitem.safesHasItem(id) then
             print("safes "..id.."to Inventory")
-            autoitem.safesToInventory(id)
+            acitem.safesToInventory(id)
             count = count + 1
             coroutine.sleep(0.5)
         end
-        if autoitem.bagsHasItem(id) then
+        if acitem.bagsHasItem(id) then
             print("bags id:"..id.." to Inventory")
-            autoitem.bagsToInventory(id)
+            acitem.bagsToInventory(id)
             count = count + 1
             coroutine.sleep(0.5)
         end
@@ -547,17 +547,17 @@ local idleFunctionMobGarden = function()
         return
     end
     if mob.name == "Ephemeral Moogle" then
-        if autoitem.checkInventoryFreespace() then
+        if acitem.checkInventoryFreespace() then
             for i, id in pairs(crystal_ids) do
-                if autoitem.bagsHasItem(id) then
-                    autoitem.bagsToInventory(id)
+                if acitem.bagsHasItem(id) then
+                    acitem.bagsToInventory(id)
                     coroutine.sleep(1)
                 end
             end
         end
         for i, id in pairs(crystal_ids) do
-            if autoitem.inventoryHasItem(id) then
-                autoitem.tradeByItemId(mob, id)
+            if acitem.inventoryHasItem(id) then
+                acitem.tradeByItemId(mob, id)
                 coroutine.sleep(3)
                 utils.targetByMobId(mob.id)
             end
@@ -567,7 +567,7 @@ local idleFunctionMobGarden = function()
     elseif mob.name == "Garden Furrow" or mob.name == "Garden Furrow #2"
            or mob.name == "Garden Furrow #3" then
         local id = 940 -- 反魂樹の根
-        autoitem.tradeByItemId(mob, id)
+        acitem.tradeByItemId(mob, id)
         auto = false
     elseif mob.name == "Mineral Vein" or mob.name == "Mineral Vein #2"
             or mob.name == "Mineral Vein #3"
@@ -578,8 +578,8 @@ local idleFunctionMobGarden = function()
             coroutine.sleep(2)
             pushKeys({"enter"})
             coroutine.sleep(3)
-            if autoitem.diffInventoryTotalNum() == 0 or
-                autoitem.checkInventoryFreespace() == false then
+            if acitem.diffInventoryTotalNum() == 0 or
+                acitem.checkInventoryFreespace() == false then
                 auto = false
             end
         end
@@ -612,13 +612,13 @@ local idleFunctionWestAdoulin = function()
     if mob.name == "Defliaa" then
         idleFunctionSellJunkItems()
     elseif mob.name == "Eternal Flame" then
-        if autoitem.inventoryFreespaceNum() > 0 then
+        if acitem.inventoryFreespaceNum() > 0 then
             command.send('sparks buyall Acheron Shield')
             auto = false
         end
         auto = false
     elseif mob.name == "Nunaarl Bthtrogg" then
-        n = autoitem.inventoryFreespaceNum()
+        n = acitem.inventoryFreespaceNum()
         printChat("かばんの空きは"..n.."*99 = "..(n*99))
         auto = false
     end
@@ -737,12 +737,12 @@ local idleFunction = function()
     local ret
     if  useSilt then
         windower.ffxi.run(false)
-        useSilt = autoitem.useItemIncludeBags(6391)
+        useSilt = acitem.useItemIncludeBags(6391)
         return
     end
     if  useBeads then
         windower.ffxi.run(false)
-        useBeads = autoitem.useItemIncludeBags(6392)
+        useBeads = acitem.useItemIncludeBags(6392)
         return 
     end
     if useSilt or useBeads then
@@ -845,7 +845,7 @@ end
 local stop2 = function()
     printChat('### AutoA  STOP')
     auto = false
-    autopos.stop()
+    acpos.stop()
     windower.add_to_chat(17, '### AutoA  STOP')
 end
 
@@ -939,10 +939,10 @@ windower.register_event('addon command', function(command, command2)
         doPointCheer = not doPointCheer
         printChat({"do point&cheer for ambus", doPointCheer})
     elseif command == 'checkbags' then
-        printChat(autoitem.checkInventoryFreespace())
-        printChat(autoitem.checkBagsFreespace())
+        printChat(acitem.checkInventoryFreespace())
+        printChat(acitem.checkBagsFreespace())
     elseif command == 'showinventory' then
-        autoitem.showInventory()
+        acitem.showInventory()
     elseif command == 'ws' then
         changeWS(command2)
     elseif command == 'puller' then
@@ -968,10 +968,10 @@ windower.register_event('addon command', function(command, command2)
         printChat("me potision  x="..x.."  y="..y.."  z="..z)
     elseif command == 'move' then
         local zone = windower.ffxi.get_info().zone
-        autopos.autoMoveTo(zone, command2, false)
+        acpos.autoMoveTo(zone, command2, false)
     elseif command == 'moverev' then
         local zone = windower.ffxi.get_info().zone
-        autopos.autoMoveTo(zone, command2, true)
+        acpos.autoMoveTo(zone, command2, true)
     elseif command == 'info' then
         local zone = windower.ffxi.get_info().zone
         printChat("zone id:"..zone)
@@ -1058,7 +1058,7 @@ windower.register_event('zone change', function()
 
 
  windower.register_event('incoming chunk', function(id, original, modified, injected, blocked)
-    autoincoming.incoming_handler()
+    acincoming.incoming_handler()
     local player = windower.ffxi.get_player()
     if id == 0x2D then
 --        local packet = packets.parse('incoming', original)

@@ -2,18 +2,18 @@
 
 local M = {}
 
-local utils = require 'autoutils'
+local utils = require 'utils'
 local printChat = utils.printChat
 
-local autopos = require 'autopos'
-local currentPos = autopos.currentPos
-local turnTo = autopos.turnTo
-local lookForward = autopos.lookForward
+local acpos = require 'pos'
+local currentPos = acpos.currentPos
+local turnTo = acpos.turnTo
+local lookForward = acpos.lookForward
 local command = require 'command'
 
 function isNear(pos)
-    local me_pos = autopos.currentPos()
-    d = autopos.distance(me_pos, pos)
+    local me_pos = acpos.currentPos()
+    d = acpos.distance(me_pos, pos)
     if d < 1.0 then
         return true
     end
@@ -23,7 +23,7 @@ end
 function zone_change_handler()
     coroutine.sleep(3)
     local zone = windower.ffxi.get_info().zone
-    local me_pos = autopos.currentPos()
+    local me_pos = acpos.currentPos()
     if me_pos == nil then
         print("failed currentPos for me_pos")
         return ;
@@ -45,7 +45,7 @@ function zone_change_handler()
         if dist < 10 then
             printChat("東アドゥリン Home Point #2 (M)")
             coroutine.sleep(10)
-            local me_pos2 = autopos.currentPos()
+            local me_pos2 = acpos.currentPos()
             local dx2 = me_pos.x - me_pos2.x
             local dy2 = me_pos.y - me_pos2.y
             local dist2 = math.sqrt(dx2*dx2 + dy2+dy2)
@@ -97,7 +97,7 @@ function zone_change_handler()
         lookForward()
     elseif zone == 142 then  --- ユグホト砦洞窟内
         if isNear({x=437.2,y=68.6,z=-40}) then -- 温泉から入った所
-            autopos.autoMoveTo(zone, "horl", false)
+            acpos.autoMoveTo(zone, "horl", false)
         elseif isNear({x=434,y=170,z=-40}) then -- HP#1
             windower.ffxi.run(1, 0)  -- go to right
         end
@@ -106,7 +106,7 @@ function zone_change_handler()
     elseif zone == 273 then -- うぉーの門
         print("woh gate")
         coroutine.sleep(1)
-        autopos.autoMoveTo(zone, "raive", false)
+        acpos.autoMoveTo(zone, "raive", false)
     end
 end
 M.zone_change_handler = zone_change_handler
@@ -120,7 +120,7 @@ function warp_handler(prevZone, prevPos, zone, pos)
     if zone == 139 then -- ホルレー
         printChat("ホルレーなう")
         local bcStartPos = {x=-316.3,y=-102.57}
-        local dist = autopos.distance(pos, bcStartPos)
+        local dist = acpos.distance(pos, bcStartPos)
         printChat({"dist", dist})
         if dist < 10 then
             printChat("AMAN トローブ開始位置")

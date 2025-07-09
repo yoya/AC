@@ -2,7 +2,7 @@
 
 require('functions')
 local res = require 'resources'
-local utils = require 'autoutils'
+local utils = require 'utils'
 local get_keys = utils.get_keys
 local command = require 'command'
 

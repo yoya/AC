@@ -4,7 +4,7 @@
 
 local M = {}
 
-local utils = require 'autoutils'
+local utils = require 'utils'
 local printChat = utils.printChat
 local array_reverse = utils.array_reverse
 local turnToFront = utils.turnToFront
