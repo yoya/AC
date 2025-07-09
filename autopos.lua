@@ -7,8 +7,11 @@ local M = {}
 local utils = require 'autoutils'
 local printChat = utils.printChat
 local array_reverse = utils.array_reverse
-local pushKeys = utils.pushKeys
 local turnToFront = utils.turnToFront
+
+local keyboard = require 'keyboard'
+local pushKeys = keyboard.pushKeys
+
 local aczone = require 'zone'
 local command = require 'command'
 

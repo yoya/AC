@@ -51,13 +51,15 @@ command.send('bind ^d ac start')
 command.send('bind !d ac stop')
 command.send('bind ^f ac showmob')
 
+local keyboard = require 'keyboard'
+local pushKeys = keyboard.pushKeys
+
 local utils = require 'autoutils'
 local iamLeader = utils.iamLeader
 local printChat = utils.printChat
 local turnToPos = utils.turnToPos
 local turnToTarget = utils.turnToTarget
 local turnToFront = utils.turnToFront
-local pushKeys = utils.pushKeys
 local cureIfPartyHPisLow = utils.cureIfPartyHPisLow
 
 local autoitem = require 'autoitem'
@@ -68,7 +70,6 @@ local getSendCommandProbTable = aprob.getSendCommandProbTable
 local autopos = require 'autopos'
 local autozone = require 'autozone'
 local autoincoming = require 'autoincoming'
-local keyboard = require 'keyboard'
 
 local JunkItems = item_data.JunkItems
 local _JunkItems = item_data._JunkItems

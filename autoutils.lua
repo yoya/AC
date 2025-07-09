@@ -44,15 +44,6 @@ end
 
 M.isMobAttackable = isMobAttackable
 
-function M.pushKeys(keys)
-    local command = ""
-    for i, k in ipairs(keys) do
-        command = command.."setkey "..k.." down; wait 0.1; setkey "..k.." up; wait 0.1; "
-    end
-    command.send(command)
-end
-
-
 function M.get_keys(t)
     local keys={}
     for key, _ in pairs(t) do
