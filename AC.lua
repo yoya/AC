@@ -95,7 +95,7 @@ local pushKeys = utils.pushKeys
 local cureIfPartyHPisLow = utils.cureIfPartyHPisLow
 
 local autoitem = require 'autoitem'
-local item_junkitem = require 'item/junkitem'
+local item_data = require 'item/data'
 local ws = require 'autows'
 local aprob = require 'autoprob'
 local sendCommandProb = aprob.sendCommandProb
@@ -105,8 +105,8 @@ local autozone = require 'autozone'
 local autoincoming = require 'autoincoming'
 local keyboard = require 'keyboard'
 
-local JunkItems = item_junkitem.JunkItems
-local _JunkItems = item_junkitem._JunkItems
+local JunkItems = item_data.JunkItems
+local _JunkItems = item_data._JunkItems
 
 local getMobPosition = function(pos, target)
     local mob = windower.ffxi.get_mob_by_target(target)
