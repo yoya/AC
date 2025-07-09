@@ -29,45 +29,11 @@ local current_sparks = -1
 local ProbRecastTime = {}
 
 --- クリスタル
-local crystal_id_fire = 4096
-local crystal_id_ice = 4097
-local crystal_id_wind = 4098
-local crystal_id_stone = 4099
-local crystal_id_thunber = 4100
-local crystal_id_water = 4101
-local crystal_id_light = 4102
-local crystal_id_dark = 4103
---- 塊
-local cluster_id_wind = 4106-------
-local cluster_id_stone = 4107
-local cluster_id_thunder = 4108
-local cluster_id_water = 4109
+local item_data = require 'item/data'
 
-local crystal_ids = {
-    crystal_id_fire,
-    crystal_id_ice,
-    crystal_id_wind,
-    crystal_id_stone,
-    crystal_id_thunber,
-    crystal_id_water,
-    crystal_id_light,
-    crystal_id_dark,
-    cluster_id_wind,
-    cluster_id_stone,
-    cluster_id_thunder,
-    cluster_id_water,
-}
-
-local seal_ids = {
-    1126, --- 獣人印章
-    1127, --- 獣神印章
-    2955, --- 魔人印章
-    2956, --- 魔王印章
-    2957, --- 魔神印章
-}
-
-local cipher_ids = {}
-for i=10112, 10193 do table.insert(cipher_ids,i) end
+local crystal_ids = item_data.crystal_ids -- クリスタル/塊
+local seal_ids = item_data.seal_ids -- 印章
+local cipher_ids = item_data.cipher_ids --  盟スクロール
 
 local preferedEnemyList = S{
     "Profane Circle", "Chaos",--- カオス戦
@@ -95,7 +61,6 @@ local pushKeys = utils.pushKeys
 local cureIfPartyHPisLow = utils.cureIfPartyHPisLow
 
 local autoitem = require 'autoitem'
-local item_data = require 'item/data'
 local ws = require 'autows'
 local aprob = require 'autoprob'
 local sendCommandProb = aprob.sendCommandProb
