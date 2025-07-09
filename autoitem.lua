@@ -1,8 +1,8 @@
 --- アイテム処理
 
-packets = require 'packets'
-res = require('resources')
-command = require('command')
+local packets = require('packets')
+local res = require('resources')
+local command = require('command')
 
 local M = {}
 

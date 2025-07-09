@@ -3,9 +3,9 @@ _addon.version = '1.1.0'
 _addon.commands = {'accountcluster', 'ac'}
 
 require('functions')
-local socket = require('socket')
-local config = require('config')
-local command = require('command')
+local socket = require 'socket'
+local config = require 'config'
+local command = require 'command'
 
 local res = require('resources')
 

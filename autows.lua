@@ -1,10 +1,10 @@
 --- weapon skill
 
 require('functions')
-res = require 'resources'
-utils = require 'autoutils'
+local res = require 'resources'
+local utils = require 'autoutils'
 local get_keys = utils.get_keys
-command = require 'command'
+local command = require 'command'
 
 local ws = {}
 

@@ -1,9 +1,8 @@
----
 --- Utility
 --- 雑多な関数群。整理できてない
 
-packets = require 'packets'
-command = require 'command'
+local packets = require 'packets'
+local command = require 'command'
 
 local M = {}
 

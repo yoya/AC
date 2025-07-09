@@ -2,9 +2,7 @@
 --- Prob
 --- 確率的なコマンド実行
 
---- packets = require 'packets'
-
-utils = require 'autoutils'
+local utils = require 'autoutils'
 local merge_lists = utils.merge_lists
 local merge_tables = utils.merge_tables
 local command = require 'command'
