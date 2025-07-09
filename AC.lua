@@ -1095,8 +1095,8 @@ windower.register_event('zone change', function()
     autoincoming.incoming_handler()
     local player = windower.ffxi.get_player()
     if id == 0x2D then
-        local packet = packets.parse('incoming', original)
---        printChat("============== packet(0x2D)")
+--        local packet = packets.parse('incoming', original)
+--          printChat("============== packet(0x2D)")
 --        if packet["Player Index"] == player.index then  
 --            printChat(packet)
 --        end
