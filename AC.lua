@@ -35,7 +35,7 @@ local crystal_ids = item_data.crystal_ids -- クリスタル/塊
 local seal_ids = item_data.seal_ids -- 印章
 local cipher_ids = item_data.cipher_ids --  盟スクロール
 
-local preferedEnemyList = S{
+local preferedEnemyList = {
     "Profane Circle", "Chaos",--- カオス戦
     "Tyny Lycopodium",  -- アンバス
     --- テスト
@@ -356,15 +356,15 @@ local figtingFunction = function()
     turnToTarget("t")
 ---    if player.vitals.tp >= math.random(1100, 1200) then
     --- PLD はタゲ取り.RNG はエヴィ用。"BLM", "SMN", "SCH"はミルキル
-    local tp100Jobs = S{-"RNG", "BLM", "SMN", "SCH"}
+    local tp100Jobs = {-"RNG", "BLM", "SMN", "SCH"}
     --- WAR はスチサイ用。DNC はダンス用？
-    local tpJobs = S{"DNC"}
+    local tpJobs = {"DNC"}
     local tpMin = 1200
     local tpMax = 1500
-    if tp100Jobs:contains(player.main_job) then
+    if utils.contains(tp100Jobs, player.main_job) then
         tpMin = 1050
         tpMax = 1150
-    elseif tpJobs:contains(player.main_job) then
+    elseif utils.contains(tpJobs, player.main_job) then
         tpMin = 2000
         tpMax = 2500
     end
@@ -476,7 +476,7 @@ local countJunkItemsInInventory = function ()
         for index = 1, 80 do
         local item = windower.ffxi.get_items(0, index)
 --        printChat({"item:", windower.to_shift_jis(res.items[item.id].ja), item.id, item.status})
-        if item and JunkItems:contains(item.id) then
+        if item and utils.contains(JunkItems, item.id) then
             count = count + 1
         end
     end
@@ -490,7 +490,7 @@ local sellJunkItemsInInventory = function()
     for index = 1, 80 do
         local item = windower.ffxi.get_items(0, index)
 --        printChat({"item:", windower.to_shift_jis(res.items[item.id].ja), item.id, item.status})
-        if item and JunkItems:contains(item.id) then
+        if item and utils.contains(JunkItems, item.id) then
             windower.packets.inject_outgoing(0x084,string.char(0x084,0x06,0,0,item.count,0,0,0,
                                         item.id%256,math.floor(item.id/256)%256,index,0))
             windower.packets.inject_outgoing(0x085,string.char(0x085,0x04,0,0,1,0,0,0))
@@ -532,7 +532,7 @@ local dropJunkItemsInInventory = function()
     for index = 1, 80 do
         local item = windower.ffxi.get_items(0, index)
 --        printChat({"item:", windower.to_shift_jis(res.items[item.id].ja), item.id, item.status})
-        if item and JunkItems:contains(-item.id) then
+        if item and utils.contains(JunkItems, -item.id) then
             local item_id = -item.id
             print("drop???:"..item_id.." x "..item.count)
             -- windower.ffxi.drop_item(item.index, item.count)

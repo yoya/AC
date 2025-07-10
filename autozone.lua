@@ -3,6 +3,7 @@
 local M = {}
 
 local utils = require 'utils'
+
 local printChat = utils.printChat
 
 local acpos = require 'pos'
@@ -79,7 +80,7 @@ function zone_change_handler()
     -- 過去ロランベリー耕地(84)
     --- ケイザック古戦場(261)、ヤッセの狩り場(260), モリマー台地(265),ヨルシア森林(263)
     --- 一旦外す。ワークスの邪魔   261, 260, 265, 263, 266
---    elseif S{120, 112, 51, 61, 79, 111, 124, 114, 125, 105, 4, 84}:contains(zone) then
+--    elseif utils.contains({120, 112, 51, 61, 79, 111, 124, 114, 125, 105, 4, 84}, zone) then
 --        printChat("5秒後に /mount ラプトル")
 --        coroutine.sleep(5) --- 10はok
 --        command.send('input /mount ラプトル; wait 1; input /follow <p1>')

@@ -5,44 +5,6 @@ local command = require 'command'
 
 local M = {}
 
-function M.iamLeader()
-    local player = windower.ffxi.get_player()
-    local party = windower.ffxi.get_party()
-    if party.party1_leader == player.id then
-        return true
-    end
-    return false
-end
-
-function isMobAttackableTargetIndex(index)
-    if index == 0 then -- 占有されてない
-        return true
-    end
-    local party = windower.ffxi.get_party()
-    for x in pairs({"p", "a1", "a2"}) do -- アライアンス全員
-        for i = 0, 5 do -- 自分含めて全員
-            local member = party[x..i]
-            if member.mob ~= nil then
-                if index == member.mob.target_index then
-                    return true
-                end
-            end
-        end
-    end
-    return false
-end
-
---- 多分、戦える敵 (レイド戦には未対応)+
-function isMobAttackable(mob)
-    if (mob.status == 0 or mob.status == 1) and
-        mob.spawn_type == 16 and
-        isMobAttackableTargetIndex(mob.target_index) then
-        return true
-    end
-end
-
-M.isMobAttackable = isMobAttackable
-
 function M.get_keys(t)
     local keys={}
     for key, _ in pairs(t) do
@@ -80,6 +42,53 @@ function M.merge_tables(t1, t2)
     end
     return merged
 end
+
+function M.contains(arr, val)
+   for i=1,#arr do
+      if arr[i] == val then 
+         return true
+      end
+   end
+   return false
+end
+
+function M.iamLeader()
+    local player = windower.ffxi.get_player()
+    local party = windower.ffxi.get_party()
+    if party.party1_leader == player.id then
+        return true
+    end
+    return false
+end
+
+function isMobAttackableTargetIndex(index)
+    if index == 0 then -- 占有されてない
+        return true
+    end
+    local party = windower.ffxi.get_party()
+    for x in pairs({"p", "a1", "a2"}) do -- アライアンス全員
+        for i = 0, 5 do -- 自分含めて全員
+            local member = party[x..i]
+            if member.mob ~= nil then
+                if index == member.mob.target_index then
+                    return true
+                end
+            end
+        end
+    end
+    return false
+end
+
+--- 多分、戦える敵 (レイド戦には未対応)+
+function isMobAttackable(mob)
+    if (mob.status == 0 or mob.status == 1) and
+        mob.spawn_type == 16 and
+        isMobAttackableTargetIndex(mob.target_index) then
+        return true
+    end
+end
+
+M.isMobAttackable = isMobAttackable
 
 function isNumericalIndexedTable(table)
     local isNumeric = true
@@ -164,13 +173,12 @@ function _printChat(text, depth, maxDepth)
     end
 end
 
-
 function printChat(text)
     _printChat(text, 1, 1)
 end
 M.printChat = printChat
 
-local ignoreMobs = S{
+local ignoreMobs = {
     "fep2",
     "Resolute Leafkin", -- ミッション「門」
 }
@@ -183,7 +191,7 @@ M.getNearestFightableMob = function(pos, dist, preferMobs)
     for i, m in pairs(mobArr) do
         --- リンクすると status が 1になるので対象にする
 --        print("preferMobs: " ..  m.name, "  c:", preferMobs:contains(m.name))
-        if ( preferMobs == nil or preferMobs:contains(m.name)) and
+        if ( preferMobs == nil or M.contains(preferMobs, m.name)) and
             isMobAttackable(m) then
             local dx = m.x - pos.x
             local dy = m.y - pos.y
@@ -195,7 +203,7 @@ M.getNearestFightableMob = function(pos, dist, preferMobs)
 --                    printChat(i .. ": name:" .. m.name ..", dist:".. m.distance .. ", status:".. m.status ..", d:".. d)
 --                printChat(m)
 --             end
-                if ignoreMobs:contains(m.name) == false then
+                if M.contains(ignoreMobs, m.name) == false then
 --                if m.name ~= "fep2" then 
                     mob = m
                     dist = d

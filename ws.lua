@@ -97,7 +97,7 @@ ws.weaponskillTable = {
     wild = 'ワイルドファイア',
 }
 
-ws.weaponskillTargetMeTable = S{
+ws.weaponskillTargetMeTable = {
     "myrkr", "moon",
 }
 
@@ -148,7 +148,7 @@ ws.exec = function()
     end
     wsname = ws.weaponskillTable[ws.weaponskill]
     local target = "<t>"
-    if ws.weaponskillTargetMeTable:contains(ws.weaponskill) then
+    if utils.contains(ws.weaponskillTargetMeTable, ws.weaponskill) then
         target = "<me>"
     end
     windower.ffxi.run(false)
