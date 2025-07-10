@@ -1,7 +1,6 @@
 --- Utility
 --- 雑多な関数群。整理できてない
 
-local packets = require 'packets'
 local command = require 'command'
 
 local M = {}
@@ -206,34 +205,6 @@ M.getNearestFightableMob = function(pos, dist, preferMobs)
     end
 ---    print("mob", mob.name)
     return mob
-end
-
-M.targetByMobId = function(mobId)
----    print("tagetByMobId", mobId)
-    local player = windower.ffxi.get_player()
-    packets.inject(packets.new('incoming', 0x58, {
-        ['Player'] = player.id,
-        ['Target'] = mobId,
-        ['Index'] = player.index
-    }))
-end
-
-M.targetByMobIndex= function(mobIndex)
----    print("tagetByMobId", mobId)
-    if mobIndex == 0 then
-        print("targetByMobIndex mobIndex: "..mobIndex)
-        return
-    end
-    local player = windower.ffxi.get_player()
-    local mob = windower.ffxi.get_mob_by_index(mobIndex)
-    if mob == nil then
-        return
-    end
-    packets.inject(packets.new('incoming', 0x58, {
-        ['Player'] = player.id,
-        ['Target'] = mob.id,
-        ['Index'] = player.index
-    }))
 end
 
 -- パーティで戦闘中のモンスターがいれば、それを返す

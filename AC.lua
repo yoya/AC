@@ -62,6 +62,8 @@ local turnToTarget = utils.turnToTarget
 local turnToFront = utils.turnToFront
 local cureIfPartyHPisLow = utils.cureIfPartyHPisLow
 
+local io_net = require 'io/net'
+
 local acitem = require 'item'
 local ws = require 'ws'
 local aprob = require 'prob'
@@ -112,7 +114,7 @@ local leaderFunction = function()
     if mob ~= nil then
         windower.ffxi.run(false)
 ---        printChat(mob.name)
-        utils.targetByMobId(mob.id)
+        io_net.targetByMobId(mob.id)
         command.send('wait 0.5; input /attack <t>')
     else 
         local dx = start_pos.x - me_pos.x
@@ -239,7 +241,7 @@ local notLeaderFunction = function()
         if p1 == nil or p1.status ~= 1 or p1.target_index == 0 then
             return
         end
-        utils.targetByMobIndex(p1.target_index)
+        io_net.targetByMobIndex(p1.target_index)
 ---        command.send('input /target <bt>')
         local mob = windower.ffxi.get_mob_by_target("t")
         if mob ~= nil and mob.hpp < 100 then
@@ -271,7 +273,7 @@ local figtingFunction = function()
     if preferMob ~= nil and mob.name ~= preferMob.name then
 --        print("preferMob:", mob.name)
         if iamLeader() then
-            utils.targetByMobId(preferMob.id)
+            io_net.targetByMobId(preferMob.id)
             coroutine.sleep(1)
             command.send('input /attack <t>')
         else
@@ -429,12 +431,12 @@ local idleFunctionTradeItems = function(tname, items, wait, enterWaits)
             if acitem.inventoryHasItem(id) then
                 acitem.tradeByItemId(mob, id)
                 coroutine.sleep(1)
-                utils.targetByMobId(mob.id)
+                io_net.targetByMobId(mob.id)
                 coroutine.sleep(wait-1)
                 for w in pairs(enterWaits) do
                     pushKeys({"enter"})
                     coroutine.sleep(1)
-                    utils.targetByMobId(mob.id)
+                    io_net.targetByMobId(mob.id)
                     coroutine.sleep(w-1)
                 end
             end
@@ -559,11 +561,11 @@ local idleFunctionMobGarden = function()
             if acitem.inventoryHasItem(id) then
                 acitem.tradeByItemId(mob, id)
                 coroutine.sleep(3)
-                utils.targetByMobId(mob.id)
+                io_net.targetByMobId(mob.id)
             end
         end
         coroutine.sleep(7)
-        utils.targetByMobId(mob.id)
+        io_net.targetByMobId(mob.id)
     elseif mob.name == "Garden Furrow" or mob.name == "Garden Furrow #2"
            or mob.name == "Garden Furrow #3" then
         local id = 940 -- 反魂樹の根
