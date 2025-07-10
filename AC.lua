@@ -72,6 +72,7 @@ local getSendCommandProbTable = aprob.getSendCommandProbTable
 local acpos = require 'pos'
 local autozone = require 'autozone'
 local acincoming = require 'incoming'
+local acmob = require 'mob'
 
 local JunkItems = item_data.JunkItems
 local _JunkItems = item_data._JunkItems
@@ -101,7 +102,7 @@ local leaderFunction = function()
     end
 --    print("mid_pos:", mid_pos.x, mid_pos.y)
     -- 優先する敵
-    local mob =  utils.getNearestFightableMob(start_pos, settings.CampRange, preferedEnemyList)
+    local mob =  acmob.getNearestFightableMob(start_pos, settings.CampRange, preferedEnemyList)
 ---    print("nearest prefered mob", mob)
     if mob == nil then
         --- メンバーが戦っている敵がいれば、そちら優先
@@ -109,7 +110,7 @@ local leaderFunction = function()
     end
     if mob == nil then
         --- 優先度の高い敵がいない場合は、誰でも良い
-        mob = utils.getNearestFightableMob(start_pos, settings.CampRange, nil)
+        mob = acmob.getNearestFightableMob(start_pos, settings.CampRange, nil)
     end
     if mob ~= nil then
         windower.ffxi.run(false)
@@ -268,7 +269,7 @@ local figtingFunction = function()
     local subJob = player.sub_job
 ---    print("XXX", preferedEnemyList)
     -- 優先する敵は、索敵範囲を半分に。
-    local preferMob =  utils.getNearestFightableMob(start_pos, settings.CampRange/2, preferedEnemyList)
+    local preferMob =  acmob.getNearestFightableMob(start_pos, settings.CampRange/2, preferedEnemyList)
 ---    print("prefereMob", preferMob)
     if preferMob ~= nil and mob.name ~= preferMob.name then
 --        print("preferMob:", mob.name)
@@ -1004,8 +1005,8 @@ windower.register_event('addon command', function(command, command2)
             coroutine.sleep(3)
         end
     elseif command == 'nearest' then
-        local preferMob =  utils.getNearestFightableMob(start_pos, settings.CampRange, preferedEnemyList)
-        local mob =  utils.getNearestFightableMob(start_pos, settings.CampRange, nil)
+        local preferMob =  acmob.getNearestFightableMob(start_pos, settings.CampRange, preferedEnemyList)
+        local mob =  acmob.getNearestFightableMob(start_pos, settings.CampRange, nil)
         printChat("nearest preferMob=====================")
         printChat(preferMob)
         printChat("nearest mob =====================")
