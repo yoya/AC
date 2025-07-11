@@ -1015,6 +1015,10 @@ windower.register_event('addon command', function(command, command2)
         else
             printChat("same name monster")
         end
+    elseif command == 'scroll' then
+	for i,id in ipairs(item_data.magicScrolls) do
+	    acitem.useItemIncludeBags(id)
+	end
     elseif command == 'help' then
         windower.add_to_chat(17, 'AC (AccountCluster)  v' .. _addon.version .. 'commands:')
         windower.add_to_chat(17, '//ac [options]')

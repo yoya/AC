@@ -26,6 +26,14 @@ M.seal_ids = {
 M.cipher_ids = {} --  盟スクロール
 for i=10112, 10193 do table.insert(M.cipher_ids,i) end
 
+M.magicScrolls = {} -- 魔法スクロール
+-- 魔法/精霊契約書/忍術/歌 (ディア〜イナンデーション)
+for i=4606,5106  do table.insert(M.magicScrolls, i) end
+-- ダイス(戦士のダイス〜迎撃のダイス)
+for i=5477,5505  do table.insert(M.magicScrolls, i) end
+-- 風水(インデリジェネ〜ジオヘイスト)
+for i=6073,6132 do table.insert(M.magicScrolls, i) end
+
 M.JunkItems = {
     90, -- 錆びたバケツ
     505, -- 大羊の毛皮
