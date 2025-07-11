@@ -20,6 +20,8 @@ M.zoneTable = {
     [80] = require('zone/80_SSandOria_S'),  -- 南サンドリア〔Ｓ〕
     [82] = require('zone/82_Jugner_S'),     -- ジャグナー森林〔Ｓ〕
     [83] = require('zone/83_Vunkerl_S'),    -- 過去ブンカール
+    [84] = require('zone/84_Batallia_S'),   -- バタリア丘陵〔Ｓ〕
+    [85] = require('zone/85_LaVaule_S'),    -- ラヴォール村〔Ｓ〕
     [89] = require('zone/89_Grauberg_S'),   -- 過去グロウベルグ
     [273] = require('zone/273_WohGates'),   -- ウォーの門
 }
