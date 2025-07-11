@@ -2,10 +2,9 @@
 
 local M = {}
 
-local BLM = require('job/BLM')
-
 M.jobTable = {
-    BLM = BLM, -- 黒魔道士
+    WHM = require('job/WHM'), -- 白魔導士
+    BLM = require('job/BLM'), -- 黒魔道士
 }
 
 return M
