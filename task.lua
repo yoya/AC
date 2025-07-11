@@ -13,23 +13,28 @@ M.taskTable = {
     [4] = {},  -- 優先度低。バフ。通常の魔法、遠隔武器
 }
 
+-- タスク追加
 function M.setTask(task, level)
     if utils.contains(taskTable[level], task) == false then
 	taskTable[level].insert(task)
     end
 end
 
-function M.clearTask(task, level)
+-- タスク削除
+function M.removeTask(task, level)
     if utils.contains(taskTable[level], task) == false then
 	taskTable[level].remove(task)
     end
 end
 
+-- 優先順の高い方から、1つだけタスクを取得
 function M.getTask(level)
-    if #taskTable[level] >= 1 then
-	local task = taskTable[0]
-	taskTable[level].remove(task)
-	return task
+    for level = 1, #taskTable do
+	if #taskTable[level] >= 1 then
+	    local task = taskTable[level][0]
+	    taskTable[level].remove(task)
+	    return task
+	end
     end
     return nil
 end
