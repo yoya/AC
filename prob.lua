@@ -3,6 +3,7 @@
 --- 確率的なコマンド実行
 
 local utils = require 'utils'
+local acjob = require 'job'
 local merge_lists = utils.merge_lists
 local merge_tables = utils.merge_tables
 local command = require 'command'
@@ -51,72 +52,8 @@ local sendCommandProbTable = {
         { 60, 300, 'input /ja 猫足立ち <me>', 0 },
         { 60, 300, 'input /ja インピタス <me>', 0 },
     },
-    WHM = {
---        { 100, 120, 'input /ma ディア <t>', 3 },
-        { 100, 120, 'input /ma ディアII <t>', 3 },
-        { 100, 120, 'input /ma スロウ <t>', 3 },
-        { 100, 120, 'input /ma パライズ <t>', 3 },
---        { 100, 120, 'input /ma アドル <t>', 3 },
-        { 50, 300-100, 'input /ma アディデック <me>', 5 },
---        { 100, 180, 'input /ma オースピス <me>', 1 },
-        { 50, 600-300, 'input /ma バウォタラ <me>', 1 },
-       { 100, 120, 'input /ma リジェネIV <p1>', 6 },
---       { 100, 120, 'input /ma リジェネIV <p2>', 6 },
---        { 100, 120, 'input /ma リジェネIII <p1>', 6 },
-        { 100, 120, 'input /ma リジェネIII <p2>', 6 },
---        { 100, 120, 'input /ma リジェネIII <p2>', 6 },
-        { 100, 120, 'input /ma ヘイスト <p1>', 6 },
-        { 100, 120, 'input /ma ヘイスト <p2>', 6 },
-        { 100, 120, 'input /ma ヘイスト <p3>', 6 },
---        { 100, 120, 'input /ma ヘイスト <p3>', 6 },
-        { 100, 180, 'input /ja ハートオブソ\ラス <me>', 0 },
---        { 100, 600, 'input /ja 女神の聖域 <me>', 0 },
-        { 10, 300, 'input /ma リレイズIV <me>', 0 },
-        { 500, 60, 'input /ma ケアル <p1>', 3 },
---      { 500, 60, 'input /ma ケアル <p2>', 3 },
---      { 200, 60, 'input /ma ケアルII <p1>', 3 },
-        { 10, 300-30, 'input /ma ブリンク <me>', 5},
-        { 10, 300-30, 'input /ma ストンスキン <me>', 5},
---      { 100, 60, 'input /ma バニシュ <t>', 3 },
---      { 100, 60, 'input /ma バニシュII <t>', 3 },
---        { 100, 60, 'input /ma バニシュIII <t>', 3 },
---        { 100, 60, 'input /ma ホーリー <t>', 3 },
---        { 100, 60, 'input /ma ホーリーII <t>', 3 },
-        { 100, 600, 'input /ja デヴォーション <p2>', 0 },
-    },
-    BLM = {
---     { 200, 10, 'input /ma ブリザド <t>', 2 },
-        { 200, 10, 'input /ma ブリザドII <t>', 2 },
-        { 300, 5, 'input /ma ブリザドIII <t>', 3 },
-        { 200, 10, 'input /ma ブリザドIV <t>', 4 },
---      { 100, 10, 'input /ma ブリザドV <t>', 5 },
---      { 100,10, 'input /ma ファイア <t>', 2 },
-        { 200,10, 'input /ma ファイアII <t>', 2 },
-        { 300, 10, 'input /ma ファイアIII <t>', 3 },
-        { 200, 10, 'input /ma ファイアIV <t>', 4 },
---        { 300, 10, 'input /ma ファイアV <t>', 5 },
---
---          { 100,10, 'input /ma サンダー <t>', 2 },
-        { 200, 5, 'input /ma サンダーII <t>', 2 },
-        { 300, 5, 'input /ma サンダーIII <t>', 3 },
-        { 200, 10, 'input /ma サンダーIV <t>', 4 },
---        { 200, 10, 'input /ma サンダーV <t>', 5 },
---        { 200, 10, 'input /ma サンダーVI <t>', 5 },
-        { 500, 90, 'input /ma バーン <t>', 5 },
-        { 500, 90, 'input /ma チョーク <t>', 5 },
--- スキル上げ
---        { 500, 10, 'input /ma ストーン <t>', 2 },
---        { 200, 10, 'input /ma ファイア <t>', 2 },
---        { 500, 10, 'input /ma ブリザド <t>', 2 },
---        { 500, 10, 'input /ma サンダー <t>', 2 },
---        { 300,10, 'input /ma バイオ <t>', 2 },
-        { 300,40/2, 'input /ma ドレイン <t>', 2 },
---        { 200,10, 'input /ma スタン <t>', 2 },
-         { 200,10, 'input /ma アスピル <t>', 2 },
-          { 200,10, 'input /ma アスピルII <t>', 2 },
---        { 200,10, 'input /ma ディア <t>', 2 },
---        { 100, 10, 'input /ma ショックスパイク <me>', 5 },
-     },          
+    -- WHM = { } -- job/WHM.lua に移動
+    -- BLM = { } -- job/BLM.lua に移動
     RDM = {
         { 200, 300*2, 'input /ja コンポージャー <me>', 0 },
         { 100, 30, 'input /ma ディスペル <t>', 3 },
@@ -342,16 +279,8 @@ local sendCommandProbTableSub = {
     MNK = {
         { 100, 120, 'input /ja 集中 <me>', 0 },
     },
-    WHN = {
-        { 5, 600-60, 'input /ma アクアベール <me>', 5},
-        { 5, 300-30, 'input /ma ブリンク <me>', 5},
-        { 5, 300-30, 'input /ma ストンスキン <me>', 5},
-        { 100, 120-30, 'input /ma ヘイスト <p1>', 4 },
-    },
-    BLM = {
----        { 100, 30, 'input /ma サンダーII <t>', 2},
----        { 200, 30, 'input /ma フロスト <t>', 3},
-    },
+    -- WHM = { } -- job/WHM.lua に移動
+    -- BLM = { } -- job/BLM.lua に移動
     RDM = {
 --        { 5, 600-60, 'input /ma アクアベール <me>', 5},
         { 10, 300/2, 'input /ma ブリンク <me>', 5},
@@ -386,6 +315,16 @@ local sendCommandProbTableSub = {
 ---     { 100, 60, 'input /ja ファイターズロール  <me>', 1 },
     },
 }
+
+-- jobTable から取り込む
+for k,v in pairs(acjob.jobTable) do
+    if v.mainJobProbTable ~= nil then
+	sendCommandProbTable[k] = v.mainJobProbTable
+    end
+    if v.subJobProbTable ~= nil then
+	sendCommandProbTableSub[k] = v.subJobProbTable
+    end
+end
 
 local isBacklineJob = function(job)
     if job == 'WHM' or job == 'RDM' or

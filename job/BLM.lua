@@ -36,8 +36,8 @@ M.mainJobProbTable = {
 }
 
 M.subJobProbTable = {
-    ---        { 100, 30, 'input /ma サンダーII <t>', 2},
-    ---        { 200, 30, 'input /ma フロスト <t>', 3},
+    -- { 100, 30, 'input /ma サンダーII <t>', 2},
+    -- { 200, 30, 'input /ma フロスト <t>', 3},
 }
 
 return M
