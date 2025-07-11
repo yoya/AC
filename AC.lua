@@ -476,7 +476,7 @@ local countJunkItemsInInventory = function ()
     local count = 0
         for index = 1, 80 do
         local item = windower.ffxi.get_items(0, index)
---        printChat({"item:", windower.to_shift_jis(res.items[item.id].ja), item.id, item.status})
+	-- printChat({"item:", item.status, item.id, res.items[item.id].ja })
         if item and utils.contains(JunkItems, item.id) then
             count = count + 1
         end
@@ -490,7 +490,7 @@ local sellJunkItemsInInventory = function()
     local remain_count = total_count
     for index = 1, 80 do
         local item = windower.ffxi.get_items(0, index)
---        printChat({"item:", windower.to_shift_jis(res.items[item.id].ja), item.id, item.status})
+	-- printChat({ "item:", item.status, item.id, res.items[item.id].ja })
         if item and utils.contains(JunkItems, item.id) then
             windower.packets.inject_outgoing(0x084,string.char(0x084,0x06,0,0,item.count,0,0,0,
                                         item.id%256,math.floor(item.id/256)%256,index,0))
