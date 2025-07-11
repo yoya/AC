@@ -26,7 +26,7 @@ M.seal_ids = {
 M.cipher_ids = {} --  盟スクロール
 for i=10112, 10193 do table.insert(M.cipher_ids,i) end
 
-M.JunkItems = S{
+M.JunkItems = {
     90, -- 錆びたバケツ
     505, -- 大羊の毛皮
 --  529, -- 夜光布 -- エンブリオ、ワークス、クエ
