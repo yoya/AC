@@ -99,7 +99,7 @@ function _tableToString(data, depth)
 		end
 		text = text .. k .. "=".. M.valueToString(v) .. ", "
 	    end
-	    text = text .. "},"
+	    text = text .. "},\n"
 	else
 	    for k,v in pairs(data) do
 		if type(k) == "number" then
@@ -119,8 +119,7 @@ end
 
 function M.tableToString(data)
     local str = _tableToString(data, 1)
-    return str
-    -- return string.gsub(str, "^%s*(.-)%s*$", "%1")
+    return (string.gsub(str, "^%s*(.-)%s*$", "%1"))  -- trim
 end
 
 return M
