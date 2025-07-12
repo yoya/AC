@@ -46,7 +46,34 @@ M.zoneTable = {
     [159] = require('zone/159_Uggalepih'),  -- ウガレピ寺院
     [182] = require('zone/182_WalkEchoes'), -- ウォークオブエコーズ
     [184] = require('zone/184_LowDelkfut'), -- デルクフの塔下層
+    -- 215,216,217,218 アビセア
+    [230] = require('zone/230_SSandOria'),  -- 南サンドリア
+    [236] = require('zone/236_PortBastok'), -- バストゥーク港
+    [237] = require('zone/237_Metalworks'), -- 大工房
+    [238] = require('zone/238_WindWaters'), -- ウィンダス水の区
+    [239] = require('zone/239_WindWalls'),  -- ウィンダス石の区
+    [240] = require('zone/240_PortWind'),   -- ウィンダス港
+    [242] = require('zone/242_HeavenTowr'), -- 天の塔
+    [243] = require('zone/243_RuLudeGard'), -- ル・ルデの庭
+    [244] = require('zone/244_UpJeuno'),    -- ジュノ上層
+    [245] = require('zone/245_LowJeuno'),   -- ジュノ下層
+    [252] = require('zone/252_Norg'),       -- ノーグ
+    -- 253,254 アビセア
+    [256] = require('zone/256_WestAdoulin'), -- 西アドゥリン
+    [257] = require('zone/257_EastAdoulin'), -- 東アドゥリン
+    [258] = require('zone/258_Rala'),       -- ララ水道
+    [261] = require('zone/261_Ceizak'),     -- ケイザック古戦場
+    [262] = require('zone/262_Hennetiel'),  -- エヌティエル水林
+    [263] = require('zone/263_Yorcia'),     -- ヨルシア森林
+    [265] = require('zone/265_Morimar'),    -- モリマー台地
+    [266] = require('zone/266_Marjami'),    -- マリアミ渓谷
+    [267] = require('zone/267_Kamihr'),     -- カミール山麓
+    [268] = require('zone/268_SihGates'),   -- シィの門
+    [270] = require('zone/270_Cirdas'),     -- シルダス洞窟
     [273] = require('zone/273_WohGates'),   -- ウォーの門
+    [274] = require('zone/274_OutRaKaz'),   -- ラ・カザナル宮外郭
+    [277] = require('zone/277_RaKazTurris'), -- ラ・カザナル宮天守
+    [281] = require('zone/281_Leafallia'),  -- リファーリア
 }
 
 return M
