@@ -1,6 +1,7 @@
 --- mob 関連
 
 local utils = require('utils')
+local io_chat = require('io/chat')
 
 local M = {}
 
@@ -39,7 +40,7 @@ local ignoreMobs = {
 }
 M.getNearestFightableMob = function(pos, dist, preferMobs)
 --    print("M.getNearestFightableMob", preferMobs);
---    M.printChat("getNearestFifhtableMob")
+--    M.io_chat.print("getNearestFifhtableMob")
 -- 距離(デフォルト20)以内だけ対象
     local mob = nil
     local mobArr = windower.ffxi.get_mob_array()
@@ -55,8 +56,8 @@ M.getNearestFightableMob = function(pos, dist, preferMobs)
             --- 高さが８違うのは無視。
             if m.x ~= 0 and m.y ~= 0 and m.z ~= 0 and d < dist and math.abs(dz) < 1 then
 --             if m.name == "Water Elemental" then
---                    printChat(i .. ": name:" .. m.name ..", dist:".. m.distance .. ", status:".. m.status ..", d:".. d)
---                printChat(m)
+--                    io_chat.print(i .. ": name:" .. m.name ..", dist:".. m.distance .. ", status:".. m.status ..", d:".. d)
+--                io_chat.print(m)
 --             end
                 if utils.contains(ignoreMobs, m.name) == false then
 --                if m.name ~= "fep2" then 
@@ -72,7 +73,7 @@ end
 
 -- パーティで戦闘中のモンスターがいれば、それを返す
 M.PartyTargetMob = function()
---    printChat("PartyTargetMob")
+--    io_chat.print("PartyTargetMob")
     local party = windower.ffxi.get_party()
     for i = 1, 5 do -- 自分以外
         local member = party["p"..i]

@@ -1,9 +1,10 @@
 local M = {}
 
-local utils = require "utils"
+local utils_table = require "utils/table"
 
 function M.print(v)
-    print(utils.tableToString(v))
+    local text = utils_table.tableToString(v)
+    print(text)
 end
 
 return M

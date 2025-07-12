@@ -5,6 +5,7 @@ local res = require 'resources'
 local utils = require 'utils'
 local get_keys = utils.get_keys
 local command = require 'command'
+local io_chat = require 'io/chat'
 
 local ws = {}
 
@@ -158,7 +159,7 @@ end
 ws.init = function()
     ws.weaponskill = ws.getAnyWeaponSkill()
     if ws.weaponskill ~= nil then
-	printChat('set any ' .. ws.weaponskill .. ' => ' .. ws.weaponskillTable[ws.weaponskill])
+	io_chat.print('set any ' .. ws.weaponskill .. ' => ' .. ws.weaponskillTable[ws.weaponskill])
     end
 end
 

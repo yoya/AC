@@ -3,6 +3,7 @@
 local packets = require('packets')
 local res = require('resources')
 local command = require('command')
+local io_chat = require('io/chat')
 
 local M = {}
 
@@ -34,7 +35,7 @@ M.showInventory = function()
     local item = items.inventory
     for i, e in ipairs(item) do
         if e.count > 0 then
-            printChat("count:" .. e.count .. " id:" .. e.id)
+            io_chat.print("count:" .. e.count .. " id:" .. e.id)
         end
     end
 end

@@ -57,13 +57,13 @@ local pushKeys = keyboard.pushKeys
 
 local utils = require 'utils'
 local iamLeader = utils.iamLeader
-local printChat = utils.printChat
 local turnToPos = utils.turnToPos
 local turnToTarget = utils.turnToTarget
 local turnToFront = utils.turnToFront
 local cureIfPartyHPisLow = utils.cureIfPartyHPisLow
 
 local io_net = require 'io/net'
+local io_chat = require 'io/chat'
 
 local acitem = require 'item'
 local ws = require 'ws'
@@ -115,7 +115,7 @@ local leaderFunction = function()
     end
     if mob ~= nil then
         windower.ffxi.run(false)
----        printChat(mob.name)
+---        io_chat.print(mob.name)
         io_net.targetByMobId(mob.id)
         command.send('wait 0.5; input /attack <t>')
     else 
@@ -257,7 +257,7 @@ end
 --- 戦闘中。リーダー、メンバー共通。
 local figtingFunction = function()
 ---    print("figtingFunction")
---- printChat("figtingFunction")
+--- io_chat.print("figtingFunction")
     local mob = windower.ffxi.get_mob_by_target("t")
     if mob == nil then
 --        print("figtingFunction mob is nil")
@@ -345,7 +345,7 @@ local figtingFunction = function()
     if mainJob == "GEO" and math.random(1, 100) <= 30 then
         local petdist = acpos.targetDistance("pet")
         if petdist ~= nil and petdist > math.random(25, 40) then
-            printChat("petdist:"..petdist)
+            io_chat.print("petdist:"..petdist)
             command.send('input /ja フルサークル <me>; wait 2; input /ja グローリーブレイズ <me>; wait 2; input /ma ジオフレイル <bt>')
         end 
     end
@@ -376,7 +376,7 @@ local figtingFunction = function()
     else
         if player.item_level > 99 then
             local commprob = getSendCommandProbTable(mainJob, subJob, 1)
---            printChat(commprob)
+--            io_chat.print(commprob)
             sendCommandProb(commprob, settings.Period, ProbRecastTime)
         end
     end
@@ -477,7 +477,7 @@ local countJunkItemsInInventory = function ()
     local count = 0
         for index = 1, 80 do
         local item = windower.ffxi.get_items(0, index)
-	-- printChat({"item:", item.status, item.id, res.items[item.id].ja })
+	-- io_chat.print({"item:", item.status, item.id, res.items[item.id].ja })
         if item and utils.contains(JunkItems, item.id) then
             count = count + 1
         end
@@ -487,28 +487,28 @@ end
 
 local sellJunkItemsInInventory = function()
     local total_count = countJunkItemsInInventory()
-    printChat(total_count.."回売却 start")
+    io_chat.print(total_count.."回売却 start")
     local remain_count = total_count
     for index = 1, 80 do
         local item = windower.ffxi.get_items(0, index)
-	-- printChat({ "item:", item.status, item.id, res.items[item.id].ja })
+	-- io_chat.print({ "item:", item.status, item.id, res.items[item.id].ja })
         if item and utils.contains(JunkItems, item.id) then
             windower.packets.inject_outgoing(0x084,string.char(0x084,0x06,0,0,item.count,0,0,0,
                                         item.id%256,math.floor(item.id/256)%256,index,0))
             windower.packets.inject_outgoing(0x085,string.char(0x085,0x04,0,0,1,0,0,0))
---          printChat({"item:", windower.to_shift_jis(res.items[item.id].ja), item.id, item.status})
+--          io_chat.print({"item:", windower.to_shift_jis(res.items[item.id].ja), item.id, item.status})
             remain_count = remain_count - 1
             if remain_count <= 0 then
                 break
             end
             if remain_count % 5 == 0 then
-                printChat("# "..remain_count.."/"..total_count)
+                io_chat.print("# "..remain_count.."/"..total_count)
             end
             coroutine.sleep(math.random(6,8)/4)
         end
     end
     print("junk sold out", total_count)
-    printChat(total_count.."回売却 end")
+    io_chat.print(total_count.."回売却 end")
 ---  stop() ---何故か動かない
     auto = false
 end
@@ -533,7 +533,7 @@ local dropJunkItemsInInventory = function()
     local remain_count = total_count
     for index = 1, 80 do
         local item = windower.ffxi.get_items(0, index)
---        printChat({"item:", windower.to_shift_jis(res.items[item.id].ja), item.id, item.status})
+--        io_chat.print({"item:", windower.to_shift_jis(res.items[item.id].ja), item.id, item.status})
         if item and utils.contains(JunkItems, -item.id) then
             local item_id = -item.id
             print("drop???:"..item_id.." x "..item.count)
@@ -623,7 +623,7 @@ local idleFunctionWestAdoulin = function()
         auto = false
     elseif mob.name == "Nunaarl Bthtrogg" then
         n = acitem.inventoryFreespaceNum()
-        printChat("かばんの空きは"..n.."*99 = "..(n*99))
+        io_chat.print("かばんの空きは"..n.."*99 = "..(n*99))
         auto = false
     end
 end
@@ -737,10 +737,10 @@ local loopCnd = function()
 end
 
 local start2 = function()
-    printChat('### AutoA  START')
-    printChat({"CampRange: " .. settings.CampRange})
+    io_chat.print('### AutoA  START')
+    io_chat.print("CampRange: " .. settings.CampRange)
     getMobPosition(start_pos, "me")
-    printChat("save start_pos: {x:" .. math.round(start_pos.x,2) .. " y:"..math.round(start_pos.y,2)  .. " z:"..math.round(start_pos.z,2).."}")
+    io_chat.print("save start_pos: {x:" .. math.round(start_pos.x,2) .. " y:"..math.round(start_pos.y,2)  .. " z:"..math.round(start_pos.z,2).."}")
     -- true の時は既に動いてる loop を終了させる
     if auto == true then
         auto = false
@@ -752,7 +752,7 @@ local start2 = function()
 end
 
 local stop2 = function()
-    printChat('### AutoA  STOP')
+    io_chat.print('### AutoA  STOP')
     auto = false
     acpos.stop()
     works.stop()
@@ -777,7 +777,7 @@ windower.register_event('ipc message', function(message)
 --    print("IPC:"..message)
     if message:sub(1, 5) == '__AutoA:' then
         command =  message:sub(6)
-        printChat("command:"..command)
+        io_chat.print("command:"..command)
         if command == 'start' then
             if iamLeader() == false then
                 print("before start2")
@@ -795,14 +795,14 @@ end)
 
 local changeWS = function(wskey)
     if wskey == nil then
-        windower.add_to_chat(17, '' .. ws.getWeaponSkillUsage())
+        io_chat.print(ws.getWeaponSkillUsage())
         return
     end
     if wskey == 'any' then
         wskey = ws.getAnyWeaponSkill()
     elseif wskey == 'stop' then
         ws.weaponskill = nil
-        printChat("ws stop")
+        io_chat.print("ws stop")
         return
      end
     print('wskey', wskey)
@@ -812,7 +812,7 @@ local changeWS = function(wskey)
     end
     ws.weaponskill = wskey
     wsName = ws.weaponskillTable[ws.weaponskill]
-    windower.add_to_chat(17, 'set any ' .. wskey .. ' => ' .. wsName)
+    io_chat.print('set any ' .. wskey .. ' => ' .. wsName)
 end
 
 local showMob = function()
@@ -821,7 +821,7 @@ local showMob = function()
     if mob == nil then
 ---        print("not found mob by target:" ..target)
     else
-        printChat(mob)
+        io_chat.print(mob)
     end
 end
 
@@ -833,24 +833,24 @@ windower.register_event('addon command', function(command, command2)
         stop()
     elseif command == 'attack' then
         attack = not attack
-        printChat({"attack mode", attack})
+        io_chat.print({"attack mode", attack})
     elseif command == 'camprange' then
         settings.CampRange = tonumber(command2, 10)
-        printChat({"CampRange:", command2})
+        io_chat.print({"CampRange:", command2})
     elseif command == 'showmob' then
         showMob()
     elseif command == 'silt' then
         useSilt = not useSilt
-        printChat({"item silt using start", useSilt})
+        io_chat.print({"item silt using start", useSilt})
     elseif command == 'beads' then
         useBeads = not useBeads
-        printChat({"item beads using start", useBeads})
+        io_chat.print({"item beads using start", useBeads})
     elseif command == 'point' then      
         doPointCheer = not doPointCheer
-        printChat({"do point&cheer for ambus", doPointCheer})
+        io_chat.print({"do point&cheer for ambus", doPointCheer})
     elseif command == 'checkbags' then
-        printChat(acitem.checkInventoryFreespace())
-        printChat(acitem.checkBagsFreespace())
+        io_chat.print(acitem.checkInventoryFreespace())
+        io_chat.print(acitem.checkBagsFreespace())
     elseif command == 'showinventory' then
         acitem.showInventory()
     elseif command == 'ws' then
@@ -858,16 +858,16 @@ windower.register_event('addon command', function(command, command2)
     elseif command == 'puller' then
         if command2 == 'on' then
             puller = true
-            printChat("puller on")
+            io_chat.print("puller on")
         elseif command2 == 'off' then
             puller = false
-            printChat("puller off")
+            io_chat.print("puller off")
         else 
-            printChat("Usage: aa puller {on|off}")
+            io_chat.print("Usage: aa puller {on|off}")
         end
     elseif command == 'pos' then
         local zone = windower.ffxi.get_info().zone
-        printChat("zone id:"..zone)
+        io_chat.print("zone id:"..zone)
         local me_pos = {}
         getMobPosition(me_pos, "me")
         local x = math.round(me_pos.x, 1)
@@ -875,7 +875,7 @@ windower.register_event('addon command', function(command, command2)
         local z = math.round(me_pos.z, 1)
 ---    print は - 記号を誤認しやすいので、表示しない
 ---        print("me potision", " x="..x, "  y="..y, "  z="..z)
-        printChat("me potision  x="..x.."  y="..y.."  z="..z)
+        io_chat.print("me potision  x="..x.."  y="..y.."  z="..z)
     elseif command == 'move' then
         local zone = windower.ffxi.get_info().zone
         acpos.autoMoveTo(zone, command2, false)
@@ -884,14 +884,14 @@ windower.register_event('addon command', function(command, command2)
         acpos.autoMoveTo(zone, command2, true)
     elseif command == 'info' then
         local zone = windower.ffxi.get_info().zone
-        printChat("zone id:"..zone)
+        io_chat.print("zone id:"..zone)
         local me_pos = {}
         getMobPosition(me_pos, "me")
-        printChat({"me potision", me_pos})
+        io_chat.print({"me potision", me_pos})
         local dist = utils.distance("t")
         dist = dist or "(nil)"
-        printChat("distance to <t>:"..dist)
-        printChat("current_sparks:"..current_sparks)
+        io_chat.print("distance to <t>:"..dist)
+        io_chat.print("current_sparks:"..current_sparks)
     elseif command == 'test' then
         print("test command")
         utils.PartyTargetMob()
@@ -914,13 +914,13 @@ windower.register_event('addon command', function(command, command2)
     elseif command == 'nearest' then
         local preferMob =  acmob.getNearestFightableMob(start_pos, settings.CampRange, preferedEnemyList)
         local mob =  acmob.getNearestFightableMob(start_pos, settings.CampRange, nil)
-        printChat("nearest preferMob=====================")
-        printChat(preferMob)
-        printChat("nearest mob =====================")
+        io_chat.print("nearest preferMob=====================")
+        io_chat.print(preferMob)
+        io_chat.print("nearest mob =====================")
         if preferMob == nil or preferMob.name ~= mob.name then
-            printChat(mob)
+            io_chat.print(mob)
         else
-            printChat("same name monster")
+            io_chat.print("same name monster")
         end
     elseif command == 'scroll' then
 	for i,id in ipairs(item_data.magicScrolls) do
@@ -943,7 +943,7 @@ windower.register_event('addon command', function(command, command2)
         windower.add_to_chat(17, 'To start AC without commands use the key:  Ctrl+D')
         windower.add_to_chat(17, 'To stop AC attacks in the same manner:  Atl+D')
     else
-        printChat("See ac help!!!")
+        io_chat.print("See ac help!!!")
     end
 end)
 
@@ -976,16 +976,16 @@ windower.register_event('zone change', function()
     local player = windower.ffxi.get_player()
     if id == 0x2D then
 --        local packet = packets.parse('incoming', original)
---          printChat("============== packet(0x2D)")
+--          io_chat.print("============== packet(0x2D)")
 --        if packet["Player Index"] == player.index then  
---            printChat(packet)
+--            io_chat.print(packet)
 --        end
     end
     if id == 0x110 then -- Update Current Sparks via 110
         local data = original
 		local header, value1, value2, Unity1, Unity2, Unknown = data:unpack('II')
 		current_sparks = value1
---        printChat({"current_sparks", current_sparks})
+--        io_chat.print({"current_sparks", current_sparks})
 	end
  end)
 

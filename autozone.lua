@@ -3,8 +3,7 @@
 local M = {}
 
 local utils = require 'utils'
-
-local printChat = utils.printChat
+local io_chat = require 'io/chat'
 
 local acpos = require 'pos'
 local currentPos = acpos.currentPos
@@ -44,7 +43,7 @@ function zone_change_handler()
         local dist = math.sqrt(dx*dx + dy+dy)
 --        print("dist: "..dist)
         if dist < 10 then
-            printChat("東アドゥリン Home Point #2 (M)")
+            io_chat.print("東アドゥリン Home Point #2 (M)")
             coroutine.sleep(10)
             local me_pos2 = acpos.currentPos()
             local dx2 = me_pos.x - me_pos2.x
@@ -60,13 +59,13 @@ function zone_change_handler()
             end
         end   
     elseif zone == 246 then
---        printChat("ジュノ庭なう")
+--        io_chat.print("ジュノ庭なう")
         local dx = me_pos.x - jeuno_garden_hp_pos[1]
         local dy = me_pos.y - jeuno_garden_hp_pos[2]
         local dist = math.sqrt(dx*dx + dy+dy)
         print("dist: "..dist)
         if dist < 10 then
---            printChat("ジュノ庭 Home Point #1 (E)")
+--            io_chat.print("ジュノ庭 Home Point #1 (E)")
             coroutine.sleep(2)
             turnTo({x=-54.5, y=0}) --- ヨアヒムとシェミの間
             lookForward()
@@ -81,11 +80,11 @@ function zone_change_handler()
     --- ケイザック古戦場(261)、ヤッセの狩り場(260), モリマー台地(265),ヨルシア森林(263)
     --- 一旦外す。ワークスの邪魔   261, 260, 265, 263, 266
 --    elseif utils.contains({120, 112, 51, 61, 79, 111, 124, 114, 125, 105, 4, 84}, zone) then
---        printChat("5秒後に /mount ラプトル")
+--        io_chat.print("5秒後に /mount ラプトル")
 --        coroutine.sleep(5) --- 10はok
 --        command.send('input /mount ラプトル; wait 1; input /follow <p1>')
     elseif zone == 70 then
-        printChat("チョコボサーキットなう")
+        io_chat.print("チョコボサーキットなう")
         coroutine.sleep(2)
 ---        turnToPos(-320, -475, -335.4, -473.2)
         local tx = -335.4
@@ -119,12 +118,12 @@ function warp_handler(prevZone, prevPos, zone, pos)
     end
     print("warp_handler", prevZone, prevPos.x, prevPos.y, zone, pos.x, pos.y)
     if zone == 139 then -- ホルレー
-        printChat("ホルレーなう")
+        io_chat.print("ホルレーなう")
         local bcStartPos = {x=-316.3,y=-102.57}
         local dist = acpos.distance(pos, bcStartPos)
-        printChat({"dist", dist})
+        io_chat.print({"dist", dist})
         if dist < 10 then
-            printChat("AMAN トローブ開始位置")
+            io_chat.print("AMAN トローブ開始位置")
             coroutine.sleep(2)
         end  
     end

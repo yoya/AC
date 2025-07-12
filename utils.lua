@@ -18,94 +18,6 @@ function M.iamLeader()
     return false
 end
 
-function isNumericalIndexedTable(table)
-    local isNumeric = true
-    if isNumeric == nil then
-        return false
-    end
-    for k, v in pairs(table) do
-        if type(k) ~= "number" then
-            isNumeric = false
-        end
-    end
-    return isNumeric
-end
-
-function boolToStringIfBool(b)
-    if type(b) == 'boolean' then
-        b = b and "true" or "false"
-    end
-    return b
-end
-
-function utf8ToSJISIfString(s)
-    if type(s) == 'string' then
-	return windower.to_shift_jis(s)
-    end
-    return s
-end
-    
-
-function roundIfNumber(n)
-    if type(n) == 'number' then
-        n = math.round(n, 2)
-    end
-    return n
-end
-
-function _printChat(text, depth, maxDepth)
-    if text == nil then
-        text = "(nil)"
-    end
-    if type(text) ~= "table" then
----        print(text, depth)
-        indent = string.rep('- ', depth)
-        text = boolToStringIfBool(text)
-	text = utf8ToSJISIfString(text)
-	text = roundIfNumber(text)
-        windower.add_to_chat(17, indent .. text)
---        windower.add_to_chat(0, indent .. text)
-        return
-    elseif isNumericalIndexedTable(text) then
-        mesg = ""
-        if #text >= 10 then
-                mesg = mesg .. "(count:"..#text.."): "
-        end
-        for k, v in pairs(text) do
-            v = boolToStringIfBool(v)
-	    v = utf8ToSJISIfString(v)
-	    v = roundIfNumber(v)
-            if type(v) == "table" then
-                _printChat(v, depth+1, maxDepth+1)
-            else
-                mesg = mesg .. " " ..v
-            end
-        end
-        _printChat(mesg, depth+1, maxDepth+1)
-    else
-        for k, v in pairs(text) do
-            if type(v) ~= "table" then
-                v = boolToStringIfBool(v)
-		v = utf8ToSJISIfString(v)
-                v = roundIfNumber(v)
-                _printChat(k..": "..v, depth, maxDepth+1)
-            else
-                _printChat(k..": ", depth, maxDepth+1)
-                if depth <= maxDepth then
-                    _printChat(v, depth+1, maxDepth+1)
-                else
-                    _printChat("(count:"..#v..")", depth+1, maxDepth)
-                end
-            end
-        end
-    end
-end
-
-function printChat(text)
-    _printChat(text, 1, 1)
-end
-M.printChat = printChat
-
 local turnToFront = function(target)
     local push_numpad5 = 'setkey numpad5 down; wait 0.1; setkey numpad5 up'
     command.send(push_numpad5..'; wait 0.5; '..push_numpad5)
@@ -142,12 +54,12 @@ M.distance = function(target)
 end
 
 M.rankInJob = function()
-    printChat("rankInJob")
+    print("rankInJob")
     local party = windower.ffxi.get_party()
     for i = 0, 5 do
         local member = party["p"..i]
         if i == 1 then
-            printChat(member)
+            io_chat.print(member)
         end
     end
 end

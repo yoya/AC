@@ -5,7 +5,6 @@
 local M = {}
 
 local utils = require 'utils'
-local printChat = utils.printChat
 local array_reverse = utils.array_reverse
 local turnToFront = utils.turnToFront
 
@@ -14,6 +13,7 @@ local pushKeys = keyboard.pushKeys
 
 local aczone = require 'zone'
 local command = require 'command'
+local io_chat = require 'io/chat'
 
 local automoveRouteTable = {
     [215] = { -- アビセアアットワ
@@ -300,7 +300,7 @@ function autoMoveTo(zone_id, dest, reverse)
             print("not defined zone route", zone_id)
         else
             for i, dest in pairs(routeTable) do
-                printChat(i)
+                io_chat.print(i)
             end
         end
     else

@@ -4,6 +4,7 @@ local M = {}
 
 local keyboard = require 'keyboard'
 local pushKeys = keyboard.pushKeys
+local io_chat = require 'io/chat'
 
 M.auto = false
 
@@ -68,7 +69,7 @@ local stationWorkerFunction = function(zone, mob)
     local info = getStationWorkerBoostInfo(zone)
     -- N = 0, E = 3.14*0.5, S = 3.14, W = 3.14*1.5 
     local theta = midangle(info[1], info[2])
-    printChat("theta: "..theta.." select:"..info[3])
+    io_chat.print("theta: "..theta.." select:"..info[3])
     local done = false
     -- 向きをあわせる
     while done == false and M.auto do
@@ -79,7 +80,7 @@ local stationWorkerFunction = function(zone, mob)
         local dy = me_pos.y - mob.y
         local t = math.atan2(dx, dy)
         local dt = (theta % (2*math.pi)) - (t % (2*math.pi))
-	--        printChat("theta:"..theta.." t:"..t.." dt:"..dt)
+	-- io_chat.print("theta:"..theta.." t:"..t.." dt:"..dt)
         if math.abs(dt) < 2*math.pi/32 then
             done = true
         end
