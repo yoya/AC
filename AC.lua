@@ -450,12 +450,12 @@ end
 -- ジャンクアイテムをかばんに集める
 local aggregateJunkItemsToInventory = function()
     local count = 0
-    for id in pairs(JunkItems) do
+    for i, id in pairs(JunkItems) do
         if acitem.checkInventoryFreespace() == false then
             break
         end
         if acitem.safesHasItem(id) then
-            print("safes "..id.."to Inventory")
+            print("safes "..id.." to Inventory")
             acitem.safesToInventory(id)
             count = count + 1
             coroutine.sleep(0.5)
