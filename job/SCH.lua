@@ -3,8 +3,8 @@
 local M = {}
 
 M.mainJobProbTable = {
-    { 100, 3600/36, 'input /ja 白のグリモア <me>', 0 },
-    { 100, 3600/36, 'input /ja 白の補遺 <me>', 0 },
+    { 100, 3600, 'input /ja 白のグリモア <me>', 0 },
+    { 100, 3600, 'input /ja 白の補遺 <me>', 0 },
     { 100, 300/2, 'input /ja 女神降臨の章 <me>; wait 1; input /ma ストンスキン <me>', 8 },
     { 100, 120, 'input /ja 女神降臨の章 <me>; wait 1; input /ma リジェネV <me>', 8 },
     { 100, 120, 'input /ma リジェネV <p1>', 5 },

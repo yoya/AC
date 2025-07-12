@@ -12,7 +12,7 @@ M.mainJobProbTable = {
     { 200, 30, 'input /pet 神獣の攻撃 <t>;', 0 },
     { 500, 15, 'input /pet 神獣の帰還 <me>;', 0 },
     -- { 50, 1200 / 50, 'input /ma タイタン召喚 <me>; wait 7; input /pet 大地の守り <me>; wait 3; input /pet 神獣の攻撃 <t>;', 15 },
-    { 50, 1200 / 50, SMN_summon_head .. 'input /ma イフリート召喚 <me>; wait 7; input /pet 紅蓮の咆哮 <me>; wait 3; input /pet メテオストライク <t>' .. SMN_summon_tail, 15 },
+    { 50, 1200 / 20, SMN_summon_head .. 'input /ma イフリート召喚 <me>; wait 7; input /pet 紅蓮の咆哮 <me>; wait 3; input /pet メテオストライク <t>' .. SMN_summon_tail, 15 },
     { 50, 1200 / 10,  SMN_summon_head .. 'input /ma ガルーダ召喚 <me>; wait 7; input /pet ヘイスガII <me>; wait 3; input /pet ウインドブレード <t>' .. SMN_summon_tail, 15 },
     { 50, 1200 / 20,  SMN_summon_head .. 'input /ma シヴァ召喚 <me>; wait 7; input /pet クリスタルブレシング <me>; wait 3; input /pet ヘヴンリーストライク <t>' .. SMN_summon_tail, 15 },
     { 50, 1200 / 20,  SMN_summon_head .. 'input /ma フェンリル召喚 <me>; wait 7; input /pet 上弦の唸り <me>; wait 3; input /pet インパクト <t>' .. SMN_summon_tail, 15 },

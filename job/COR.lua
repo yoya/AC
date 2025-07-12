@@ -4,7 +4,7 @@ local M = {}
 
 M.mainJobProbTable = {
     -- { 200, 60, 'input /ja コルセアズロール <me>; wait 2; input /ja ダブルアップ <me>', 0 },
-    { 50, 300-30, 'input /ja ブリッツァロール <me>', 1 },
+    { 50, 300, 'input /ja ブリッツァロール <me>', 1 },
     { 100, 60, 'input /ja サムライロール  <me>', 1 },
     { 100, 60, 'input /ja カオスロール  <me>', 1 },
     { 100, 60, 'input /ja ファイターズロール  <me>', 1 },

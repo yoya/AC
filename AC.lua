@@ -136,7 +136,7 @@ local leaderFunction = function()
     end
     if attack then
         command.send('input /attack on')
-        ProbRecastTime = {}
+	aprob.clearProbRecastTime(ProbRecastTime)
     end
 end 
 

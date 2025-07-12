@@ -39,17 +39,17 @@ M.mainJobProbTable_1 = {
     { 150, 300/3, 'input /ma '..GEO_geo..' <t>; wait 1; input /ja サークルエンリッチ <me>', 6 },
     { 250, 20, 'input /ma '..GEO_geo..' <t>', 6 },
     -- { 50, 600/2, 'input /ja グローリーブレイズ <me>; wait 1; input /ja フルサークル <me>; wait 1; input /ma '..GEO_geo..' <t>', 12  },
-    { 150, 180-30, 'input /ma '..GEO_inde..' <me>', 4 },
+    { 150, 180, 'input /ma '..GEO_inde..' <me>', 4 },
     { 10, 600, 'input /ja エントラスト <me>; wait 2; input /ma インデデック <p2>', 6 },
     { 10, 300, 'input /ja メンドハレイション <me>; wait 2; input /ma '..GEO_geo..' <t>', 7 },
     { 10, 300, 'input /ja レイディアルアルカナ <me>; wait 2; input /ma '..GEO_geo..' <t>', 7 },
 }
 
 M.mainJobProbTable_2 = {
-    { 150, 300/3, 'input /ma '..GEO_geo2..' <t>; wait 1; input /ja サークルエンリッチ <me>', 6 },
+    { 150, 300/2, 'input /ma '..GEO_geo2..' <t>; wait 1; input /ja サークルエンリッチ <me>', 6 },
     { 250, 20, 'input /ma '..GEO_geo2..' <t>', 6 },
     -- { 50, 600/2, 'input /ja グローリーブレイズ <me>; wait 1; input /ja フルサークル <me>; wait 1; input /ma '..GEO_geo2..' <t>', 12  },
-    { 150, 180-30, 'input /ma '..GEO_inde2..' <me>', 4 },
+    { 150, 180, 'input /ma '..GEO_inde2..' <me>', 4 },
     { 10, 600, 'input /ja エントラスト <me>; wait 2; input /ma インデスト <p2>', 6 },
     { 10, 300, 'input /ja メンドハレイション <me>; wait 2; input /ma '..GEO_geo2..' <t>', 7 },
     { 10, 300, 'input /ja レイディアルアルカナ <me>; wait 2; input /ma '..GEO_geo2..' <t>', 7 },

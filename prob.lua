@@ -75,31 +75,40 @@ M.sendCommandProb = function(table, period, ProbRecastTime)
         local r = p_c[2]  --- recast time
         local c = p_c[3]  --- command
         local t = p_c[4]  --- time
+	local f = p_c[4]  --- fight reset
 ---        print(p, r, c, t)
-        pn = pp + p*period   
+        pn = pp + p*period
         if ProbRecastTime[c] == nil then
             if pp < rnd and rnd <= pn then
-                ProbRecastTime[c] = r
                 windower.ffxi.run(false)
                 coroutine.sleep(0.25)
                 command.send(c)
+		-- タイマーセット
+                ProbRecastTime[c] = { }
+		ProbRecastTime[c][1] = os.time() + r
+		ProbRecastTime[c][2] = f  -- 戦闘毎にリセットするかフラグ
                 if t > 0 then
                     coroutine.sleep(t)
                 end
                 return true
             end
             pp = pn
-        else
-            local remain =  ProbRecastTime[c] - period
-            if remain > 0 then
-                ProbRecastTime[c] = remain
-            else
-                ProbRecastTime[c] = nil
-            end
+	else
+	    if ProbRecastTime[c][1] < os.time() then
+		ProbRecastTime[c] = nil
+	    end
         end
     end
     return false
 end
 
-return M
+M.clearProbRecastTime = function(probRecastTime)
+    for i, v in pairs(probRecastTime) do
+	local f = v[2]  -- 戦闘毎にリセットするかフラグ
+	if f == true then
+	    probRecastTime[i] = nil
+	end
+    end
+end
 
+return M
