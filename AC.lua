@@ -710,14 +710,14 @@ local stationWorkerFunction = function(zone, mob)
     local done = false
     -- 向きをあわせる
     while done == false and auto do
+        left_move(0.01)
         local me_pos = {}
         getMobPosition(me_pos, "me")
         local dx = me_pos.x - mob.x
         local dy = me_pos.y - mob.y
         local t = math.atan2(dx, dy)
         local dt = (theta % (2*math.pi)) - (t % (2*math.pi))
-        left_move(0.025)
---        printChat("theta:"..theta.." t:"..t.." dt:"..dt)
+	--        printChat("theta:"..theta.." t:"..t.." dt:"..dt)
         if math.abs(dt) < 2*math.pi/32 then
             done = true
         end
@@ -725,10 +725,11 @@ local stationWorkerFunction = function(zone, mob)
     -- 応援方法を選択する
     keyboard.pushKeys({"enter"})
     coroutine.sleep(2.5)
-    if info[2] > 0 then
-        for i = 1, info[2] do
+    if info[3] > 0 then
+        for i = 1, info[3] do
+	    print("select down: "..i.."/"..info[3])
             pushKeys({"down"})
-            coroutine.sleep(1)
+            coroutine.sleep(0.5)
         end
     end
     keyboard.pushKeys({"enter"})
