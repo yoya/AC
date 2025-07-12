@@ -693,14 +693,7 @@ local idleFunction = function()
         works.boost.stationWorkerFunction(zone, mob)
     end
     if mob.name == "Ergon Locus" then
-        pushKeys({"numpad5"})
-        while(auto)
-        do
-            pushKeys({"f8", "numpad*", "numpad2", "enter"})
-            coroutine.sleep(3)
-            pushKeys({"up", "enter"})
-            coroutine.sleep(3)
-        end
+	works.survey.ergonLocusFunction()
     end
 end
 
@@ -762,6 +755,7 @@ local stop2 = function()
     printChat('### AutoA  STOP')
     auto = false
     acpos.stop()
+    works.stop()
     windower.add_to_chat(17, '### AutoA  STOP')
 end
 

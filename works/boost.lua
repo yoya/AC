@@ -2,6 +2,11 @@
 
 local M = {}
 
+local keyboard = require 'keyboard'
+local pushKeys = keyboard.pushKeys
+
+M.auto = false
+
 local N  = 0
 local NE = math.pi * (1/4)
 local E  = math.pi * (2/4)
@@ -58,6 +63,7 @@ local midangle = function(a, b)
 end
 
 local stationWorkerFunction = function(zone, mob)
+    M.auto = true
     target_lockon(true)
     local info = getStationWorkerBoostInfo(zone)
     -- N = 0, E = 3.14*0.5, S = 3.14, W = 3.14*1.5 
@@ -65,7 +71,7 @@ local stationWorkerFunction = function(zone, mob)
     printChat("theta: "..theta.." select:"..info[3])
     local done = false
     -- 向きをあわせる
-    while done == false and auto do
+    while done == false and M.auto do
         left_move(0.01)
         local me_pos = {}
         getMobPosition(me_pos, "me")
@@ -79,7 +85,7 @@ local stationWorkerFunction = function(zone, mob)
         end
     end
     -- 応援方法を選択する
-    keyboard.pushKeys({"enter"})
+    pushKeys({"enter"})
     coroutine.sleep(2.5)
     if info[3] > 0 then
         for i = 1, info[3] do
@@ -88,9 +94,10 @@ local stationWorkerFunction = function(zone, mob)
             coroutine.sleep(0.5)
         end
     end
-    keyboard.pushKeys({"enter"})
-    auto = false
+    pushKeys({"enter"})
+    M.auto = false
 end
+
 M.stationWorkerFunction = stationWorkerFunction
 
 return M
