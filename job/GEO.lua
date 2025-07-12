@@ -24,18 +24,15 @@ local GEO_geo2 = "ジオトーパー" -- 回避down
 M.mainJobProbTable = {
     { 100, 120, 'input /ma ケアル <p1>', 3 },
     { 100, 120, 'input /ma ヘイスト <p2>', 3 },
-    { 100, 30, 'input /ma サンダー <t>', 3},
-    { 100, 30, 'input /ma サンダーII <t>', 3},
-    { 100, 30, 'input /ma サンダーIII <t>', 3},
-    --[[
-        { 100, 30, 'input /ma サンダーIV <t>', 4},
-    ]]
-    { 100, 30, 'input /ma ブリザド <t>', 3},
-    { 100, 30, 'input /ma ブリザドII <t>', 3},
-    { 100, 30, 'input /ma ブリザドIII <t>', 3},
-    --[[
-	{ 100, 30, 'input /ma ブリザドIV <t>', 4},
-    ]]
+    { 50, 30, 'input /ma サンダー <t>', 3},
+    { 50, 30, 'input /ma サンダーII <t>', 3},
+    -- { 100, 30, 'input /ma サンダーIII <t>', 3},
+    { 50, 30, 'input /ma ファイア <t>', 3},
+    { 50, 30, 'input /ma  ファイアII <t>', 3},
+    -- { 100, 30, 'input /ma ファイアIII <t>', 3},
+    { 50, 30, 'input /ma ブリザド <t>', 3},
+    { 50, 30, 'input /ma ブリザドII <t>', 3},
+    -- { 100, 30, 'input /ma ブリザドIII <t>', 3},
 }
 
 M.mainJobProbTable_1 = {
