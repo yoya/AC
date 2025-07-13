@@ -27,7 +27,7 @@ M.mainJobProbTable = {
     -- { 500, 10, 'input /ma ブリザド <t>', 2 },
     -- { 500, 10, 'input /ma サンダー <t>', 2 },
     -- { 300,10, 'input /ma バイオ <t>', 2 },
-    { 300,40, 'input /ma ドレイン <t>',  },
+    { 300,40, 'input /ma ドレイン <t>',  4},
     --   200,10, 'input /ma スタン <t>', 2 },
     { 200,10, 'input /ma アスピル <t>', 2 },
     { 200,10, 'input /ma アスピルII <t>', 2 },
