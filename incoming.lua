@@ -1,5 +1,5 @@
 local acpos = require 'pos'
-local aczone = require 'zone'
+local autozone = require 'autozone'
 
 local M = {}
 
@@ -14,7 +14,7 @@ function incoming_handler()
     end
     if prevZone ~= zone or acpos.distance(pos, prevPos) > 100 then
         print("incoming_handler", currentPos, prevPos)
-        aczone.warp_handler(prevZone, prevPos, zone, pos)
+        autozone.warp_handler(prevZone, prevPos, zone, pos)
     end
     prevZone = zone
     prevPos = pos
