@@ -7,6 +7,7 @@ local acjob = require 'job'
 local merge_lists = utils.merge_lists
 local merge_tables = utils.merge_tables
 local command = require 'command'
+local io_chat = require 'io/chat'
 local M = {}
 
 --- job = { probPermil(1/1000), recast, command, wait }
@@ -76,7 +77,10 @@ M.sendCommandProb = function(table, period, ProbRecastTime)
         local c = p_c[3]  --- command
         local t = p_c[4]  --- time
 	local f = p_c[4]  --- fight reset
----        print(p, r, c, t)
+	if t == nil then
+	    io_chat.print(p_c)
+	    return
+	end
         pn = pp + p*period
         if ProbRecastTime[c] == nil then
             if pp < rnd and rnd <= pn then
