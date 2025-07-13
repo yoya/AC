@@ -71,7 +71,7 @@ local aprob = require 'prob'
 local sendCommandProb = aprob.sendCommandProb
 local getSendCommandProbTable = aprob.getSendCommandProbTable
 local acpos = require 'pos'
-local autozone = require 'autozone'
+local aczone = require 'zone'
 local acincoming = require 'incoming'
 local acmob = require 'mob'
 
@@ -967,7 +967,7 @@ windower.register_event('zone change', function()
     useBeads = false
     doPointCheer = false
 --    wskey = ws.getAnyWeaponSkill()
-    autozone.zone_change_handler()
+    aczone.zone_change_handler()
  end)
 
 

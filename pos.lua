@@ -11,7 +11,6 @@ local turnToFront = utils.turnToFront
 local keyboard = require 'keyboard'
 local pushKeys = keyboard.pushKeys
 
-local aczone = require 'zone'
 local command = require 'command'
 local io_chat = require 'io/chat'
 
@@ -145,22 +144,15 @@ function stop()
 end
 M.stop = stop
 
-function getRouteTable(zone)
-    local t = aczone.zoneTable[zone]
-    if t ~= nil and t.routes ~= nil then
-	return t.routes
-    end
-    return automoveRouteTable[zone]
-end
 
 function moveTo(route)
     local zone_id = windower.ffxi.get_info().zone
     local pos = currentPos()
     local r1List = {}  -- 各routeの一個目をリスト化
     local r1ListName = {}
-    local routeTable = getRouteTable(zone_id)
+    local routeTable = aczone.getRouteTable(zone_id)
     if routeTable == nil then
-	print("routeTable == nil")
+	io_chat.print("unknown route:"..route.." in zone:"..zone_id)
 	return
     end
     for i, p in ipairs(route) do
@@ -292,25 +284,5 @@ function moveTo(route)
     return true
 end
 M.moveTo = moveTo
-
-function autoMoveTo(zone_id, dest, reverse)
-    local routeTable = getRouteTable(zone_id)
-    if dest == nil then
-        if routeTable == nil then
-            print("not defined zone route", zone_id)
-        else
-            for i, dest in pairs(routeTable) do
-                io_chat.print(i)
-            end
-        end
-    else
-        route = routeTable[dest]
-        if reverse == true then
-            route = array_reverse(route)
-        end
-        moveTo(route)
-    end
-end
-M.autoMoveTo = autoMoveTo
 
 return M
