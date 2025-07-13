@@ -44,10 +44,12 @@ M.zoneTable = {
     [151] = require('zone/151_Oztroja'),    -- オズトロヤ城
     [152] = require('zone/152_AltarRoom'),  -- 祭壇の間
     [159] = require('zone/159_Uggalepih'),  -- ウガレピ寺院
+    [167] = require('zone/167_Bostaunieu'), -- ボストーニュ監獄
     [182] = require('zone/182_WalkEchoes'), -- ウォークオブエコーズ
     [184] = require('zone/184_LowDelkfut'), -- デルクフの塔下層
     -- 215,216,217,218 アビセア
     [230] = require('zone/230_SSandOria'),  -- 南サンドリア
+    [233] = require('zone/233_ChatdOrag'),  -- ドラギーユ城
     [236] = require('zone/236_PortBastok'), -- バストゥーク港
     [237] = require('zone/237_Metalworks'), -- 大工房
     [238] = require('zone/238_WindWaters'), -- ウィンダス水の区
