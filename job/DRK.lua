@@ -15,6 +15,7 @@ M.mainJobProbTable = {
     { 100, 3000, 'input /ja 暗黒 <me>', 0 },
     { 100, 3000, 'input /ja ディアボリクアイ <me>', 0 },
     { 100, 180, 'input /ja コンスームマナ <me>', 0 },
+    { 100, 90, 'input /ja レッドデリリアム <me>', 0 },
 }
 
 M.subJobProbTable = {
