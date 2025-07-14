@@ -19,12 +19,12 @@ local preferWeaponSkill = {
     'rui', 'ramp', -- 片手斧
     'ukko', 'steel',  --両手斧
     'dai',  -- 両手槍
-    'demi', 'spin', 'ent', 'frost', -- 両手剣
+    'demi', 'spin', 'frost', -- 両手剣
     'shoha', 'hocho', 'gekko', 'kagero', 'yuki', -- 両手刀
     'shun', -- 片手刀
     'moon', 'realm', 'hexa', 'shine', 'circle', -- 片手棍
     'myrkr', 'spirit', 'full', 'heavy', -- 両手棍
-    'spiral', 'cross', -- 両手鎌
+    'spiral', 'cross', 'ent', -- 両手鎌
     'apex', -- 弓
     'leaden', 'hot', 'wild' -- 射撃(銃)
 }
@@ -66,6 +66,8 @@ M.weaponskillTable = {
     -- 両手槍
     dai = '大車輪',
     -- 両手鎌
+    spiral = 'スパイラルヘル',
+    cross = 'クロスリーパー',
     ent = 'エントロピー',
     -- 両手刀
     kagero = '四之太刀・陽炎', -- 溶解
@@ -87,9 +89,6 @@ M.weaponskillTable = {
     cata = 'カタクリスム',
     brain = 'ブレインシェイカー',
     heavy = 'ヘヴィスイング',
-    -- 両手鎌
-    spiral = 'スパイラルヘル',
-    cross = 'クロスリーパー',
     -- 弓
     apex = 'エイペクスアロー',
     -- 射撃(銃)
