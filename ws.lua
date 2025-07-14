@@ -1,4 +1,4 @@
---- weapon skill
+-- weapon skill
 
 require('functions')
 local res = require 'resources'
@@ -7,9 +7,9 @@ local get_keys = utils.get_keys
 local command = require 'command'
 local io_chat = require 'io/chat'
 
-local ws = {}
+local M = {}
 
-ws.weaponskill = 'flat'
+M.weaponskill = 'flat'
 
 local preferWeaponSkill = {
     'victory', 'shishin', 'tokon', 'dragon', 'tackle',-- 格闘
@@ -29,7 +29,7 @@ local preferWeaponSkill = {
     'leaden', 'hot', 'wild' -- 射撃(銃)
 }
 
-ws.weaponskillTable = {
+M.weaponskillTable = {
     -- 格闘
     tackle = 'タックル',
     shishin = '四神円舞',
@@ -98,15 +98,15 @@ ws.weaponskillTable = {
     wild = 'ワイルドファイア',
 }
 
-ws.weaponskillTargetMeTable = {
+M.weaponskillTargetMeTable = {
     "myrkr", "moon",
 }
 
-ws.getWeaponSkillUsage = function()
+M.getWeaponSkillUsage = function()
     local abilities = windower.ffxi.get_abilities()
-    -- local weaponSkillUsage = table.concat(get_keys(ws.weaponskillTable), " | ") .. "\n"
+    -- local weaponSkillUsage = table.concat(get_keys(M.weaponskillTable), " | ") .. "\n"
     local weaponSkillUsage = "  "
-    for key, name in pairs(ws.weaponskillTable) do
+    for key, name in pairs(M.weaponskillTable) do
         for key2, name2 in pairs(abilities.weapon_skills) do
             local n = res.weapon_skills[name2]['ja']
             if name == n then
@@ -118,10 +118,10 @@ ws.getWeaponSkillUsage = function()
     return weaponSkillUsage
 end
 
-ws.getAnyWeaponSkill = function()
+M.getAnyWeaponSkill = function()
     local abilities = windower.ffxi.get_abilities()
     for k_, k in pairs(preferWeaponSkill) do
-        v = ws.weaponskillTable[k]
+        v = M.weaponskillTable[k]
         for k2, v2 in pairs(abilities.weapon_skills) do
             name = res.weapon_skills[v2]['ja']
             if name == v then
@@ -132,8 +132,8 @@ ws.getAnyWeaponSkill = function()
     return nil
 end
 
-ws.exec = function()
-    if ws.weaponskill == nil then
+M.exec = function()
+    if M.weaponskill == nil then
         return
     end        
     local mob = windower.ffxi.get_mob_by_target("t")
@@ -147,20 +147,20 @@ ws.exec = function()
         player.vitals.tp < 3000 then
         return
     end
-    wsname = ws.weaponskillTable[ws.weaponskill]
+    wsname = M.weaponskillTable[M.weaponskill]
     local target = "<t>"
-    if utils.contains(ws.weaponskillTargetMeTable, ws.weaponskill) then
+    if utils.contains(M.weaponskillTargetMeTable, M.weaponskill) then
         target = "<me>"
     end
     windower.ffxi.run(false)
     command.send('input /ws ' .. wsname .. ' ' .. target)
 end
 
-ws.init = function()
-    ws.weaponskill = ws.getAnyWeaponSkill()
-    if ws.weaponskill ~= nil then
-	io_chat.print('set any ' .. ws.weaponskill .. ' => ' .. ws.weaponskillTable[ws.weaponskill])
+M.init = function()
+    M.weaponskill = M.getAnyWeaponSkill()
+    if M.weaponskill ~= nil then
+	io_chat.print('set any ' .. M.weaponskill .. ' => ' .. M.weaponskillTable[M.weaponskill])
     end
 end
 
-return ws
+return M
