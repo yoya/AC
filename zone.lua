@@ -81,6 +81,14 @@ M.zoneTable = {
     [281] = require('zone/281_Leafallia'),  -- リファーリア
 }
 
+for z, m in pairs(M.zoneTable) do
+    if z ~= m.id then
+	print("illegal zone:"..z.." module id:"..m.id)
+    end
+    -- 各々の zone handler から routeTable を参照できるようにする
+    m.parent = M
+end
+
 local automoveRouteTable = {
     [215] = { -- アビセアアットワ
         conf = {
