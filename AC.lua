@@ -953,12 +953,10 @@ end)
 windower.register_event('load', 'login', 'logout', function()
     local player = windower.ffxi.get_player()
     player_id = player and player.id
---    wskey = ws.getAnyWeaponSkill()
     ws.init()
 end)
 
 windower.register_event('job change', function()
---    wskey = ws.getAnyWeaponSkill()
     ws.init()
 end)
 
@@ -969,7 +967,6 @@ windower.register_event('zone change', function()
     useSilt = false
     useBeads = false
     doPointCheer = false
---    wskey = ws.getAnyWeaponSkill()
     autozone.zone_change_handler()
  end)
 
