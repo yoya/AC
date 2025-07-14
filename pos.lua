@@ -11,50 +11,8 @@ local turnToFront = utils.turnToFront
 local keyboard = require 'keyboard'
 local pushKeys = keyboard.pushKeys
 
-local aczone = require 'zone'
 local command = require 'command'
 local io_chat = require 'io/chat'
-
-local automoveRouteTable = {
-    [215] = { -- アビセアアットワ
-        conf = {
-            {x=-139.2,y=-180.6,z=20.3}, {x=-144.7,y=-178.8},
-            {x=-146.3,y=-176.9}, {a="f8touch"}
-        }
-    },
-    [216] = {
-        conf = {
-            {x=657.2,y=316.3,z=-15.1}, {x=644.1,y=317.4},
-            {x=642.8,y=319.4}, {a="f8touch"}
-        }
-    },
-    [217] = { -- アビセア、ブンカール
-        conf = {
-            {x=-351.3,y=699.8,z=-46.3}, {x=-339.7,y=696.7},
-            {x=-318.5,y=680.9}, {x=-317.2,y=682.4},
-            {a="f8touch"}
-        }
-    },
-    [218] = {
-        conf = {
-            {x=430,y=320,z=0.3}, {x=424.4,y=326.9},
-            {x=410.1,y=328.6}, {x=410.4,y=330},
-            {a="f8touch"}
-        },
-    },
-    [253] = { -- アビセア、ウルガラン
-        conf = {
-            {x=-236,y=-520,z=-40}, {x=-222.6,y=-522.3},
-            {x=-222.2,y=-524.9}, {a="f8touch"}
-        },
-    },
-    [254] = { -- アビセア、グロウベルグ
-        conf = {
-            {x=-552,y=-760,z=32.4}, {x=-528.2,y=-772.7},
-            {x=-528.9,y=-776.1}, {a="f8touch"}
-        },
-    },
-}
 
 function targetPos(t)
     local mob = windower.ffxi.get_mob_by_target(t)
@@ -145,20 +103,11 @@ function stop()
 end
 M.stop = stop
 
-function getRouteTable(zone)
-    local t = aczone.zoneTable[zone]
-    if t ~= nil and t.routes ~= nil then
-	return t.routes
-    end
-    return automoveRouteTable[zone]
-end
-
-function moveTo(route)
+function moveTo(zone, route, routeTable)
     local zone_id = windower.ffxi.get_info().zone
     local pos = currentPos()
     local r1List = {}  -- 各routeの一個目をリスト化
     local r1ListName = {}
-    local routeTable = getRouteTable(zone_id)
     if routeTable == nil then
 	print("routeTable == nil")
 	return
@@ -179,7 +128,7 @@ function moveTo(route)
         local name = r1ListName[idx]
         local r = routeTable[name]
         print(idx, name, r)
-        moveTo(r)
+        moveTo(zone, r, routeTable)
     end
     moveToRunning = true
     print("moveFrom", math.round(pos.x, 2), math.round(pos.y, 2))
@@ -293,8 +242,7 @@ function moveTo(route)
 end
 M.moveTo = moveTo
 
-function autoMoveTo(zone_id, dest, reverse)
-    local routeTable = getRouteTable(zone_id)
+function autoMoveTo(zone_id, dest, routeTable, reverse)
     if dest == nil then
         if routeTable == nil then
             print("not defined zone route", zone_id)
@@ -308,7 +256,7 @@ function autoMoveTo(zone_id, dest, reverse)
         if reverse == true then
             route = array_reverse(route)
         end
-        moveTo(route)
+        moveTo(zone, route, routeTable)
     end
 end
 M.autoMoveTo = autoMoveTo

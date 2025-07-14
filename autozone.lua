@@ -10,6 +10,7 @@ local currentPos = acpos.currentPos
 local turnTo = acpos.turnTo
 local lookForward = acpos.lookForward
 local command = require 'command'
+local aczone = require 'zone'
 
 function isNear(pos)
     local me_pos = acpos.currentPos()
@@ -97,7 +98,8 @@ function zone_change_handler()
         lookForward()
     elseif zone == 142 then  --- ユグホト砦洞窟内
         if isNear({x=437.2,y=68.6,z=-40}) then -- 温泉から入った所
-            acpos.autoMoveTo(zone, "horl", false)
+	    local routeTable = aczone.getRouteTable(zone)
+            acpos.autoMoveTo(zone, "horl", routeTable, false)
         elseif isNear({x=434,y=170,z=-40}) then -- HP#1
             windower.ffxi.run(1, 0)  -- go to right
         end
@@ -106,7 +108,8 @@ function zone_change_handler()
     elseif zone == 273 then -- うぉーの門
         print("woh gate")
         coroutine.sleep(1)
-        acpos.autoMoveTo(zone, "raive", false)
+	local routeTable = aczone.getRouteTable(zone)
+        acpos.autoMoveTo(zone, "raive", routeTable, false)
     end
 end
 M.zone_change_handler = zone_change_handler

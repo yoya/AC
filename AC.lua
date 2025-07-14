@@ -72,6 +72,7 @@ local sendCommandProb = aprob.sendCommandProb
 local getSendCommandProbTable = aprob.getSendCommandProbTable
 local acpos = require 'pos'
 local autozone = require 'autozone'
+local aczone = require 'zone'
 local acincoming = require 'incoming'
 local acmob = require 'mob'
 
@@ -878,10 +879,12 @@ windower.register_event('addon command', function(command, command2)
         io_chat.print("me potision  x="..x.."  y="..y.."  z="..z)
     elseif command == 'move' then
         local zone = windower.ffxi.get_info().zone
-        acpos.autoMoveTo(zone, command2, false)
+	local routeTable = aczone.getRouteTable(zone)
+        acpos.autoMoveTo(zone, command2, routeTable, false)
     elseif command == 'moverev' then
         local zone = windower.ffxi.get_info().zone
-        acpos.autoMoveTo(zone, command2, true)
+	local routeTable = aczone.getRouteTable(zone)
+        acpos.autoMoveTo(zone, command2, routeTable, true)
     elseif command == 'info' then
         local zone = windower.ffxi.get_info().zone
         io_chat.print("zone id:"..zone)

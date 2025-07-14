@@ -81,4 +81,53 @@ M.zoneTable = {
     [281] = require('zone/281_Leafallia'),  -- リファーリア
 }
 
+local automoveRouteTable = {
+    [215] = { -- アビセアアットワ
+        conf = {
+            {x=-139.2,y=-180.6,z=20.3}, {x=-144.7,y=-178.8},
+            {x=-146.3,y=-176.9}, {a="f8touch"}
+        }
+    },
+    [216] = {
+        conf = {
+            {x=657.2,y=316.3,z=-15.1}, {x=644.1,y=317.4},
+            {x=642.8,y=319.4}, {a="f8touch"}
+        }
+    },
+    [217] = { -- アビセア、ブンカール
+        conf = {
+            {x=-351.3,y=699.8,z=-46.3}, {x=-339.7,y=696.7},
+            {x=-318.5,y=680.9}, {x=-317.2,y=682.4},
+            {a="f8touch"}
+        }
+    },
+    [218] = {
+        conf = {
+            {x=430,y=320,z=0.3}, {x=424.4,y=326.9},
+            {x=410.1,y=328.6}, {x=410.4,y=330},
+            {a="f8touch"}
+        },
+    },
+    [253] = { -- アビセア、ウルガラン
+        conf = {
+            {x=-236,y=-520,z=-40}, {x=-222.6,y=-522.3},
+            {x=-222.2,y=-524.9}, {a="f8touch"}
+        },
+    },
+    [254] = { -- アビセア、グロウベルグ
+        conf = {
+            {x=-552,y=-760,z=32.4}, {x=-528.2,y=-772.7},
+            {x=-528.9,y=-776.1}, {a="f8touch"}
+        },
+    },
+}
+
+function M.getRouteTable(zone)
+    local t = M.zoneTable[zone]
+    if t ~= nil and t.routes ~= nil then
+	return t.routes
+    end
+    return automoveRouteTable[zone]
+end
+
 return M
