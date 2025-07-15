@@ -71,7 +71,9 @@ function M.isTableLeaf(table)
 end
 
 function M.valueToString(data, depth)
-    if type(data) == "string" then
+    if data == nil then
+	return "(nil)"
+    elseif type(data) == "string" then
 	return data
     elseif type(data) == "number" then
 	-- return indent .. math.round(data, 2)
