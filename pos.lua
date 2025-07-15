@@ -153,7 +153,9 @@ function moveTo(route, routeTable)
     end
 --    print("#route", #route)
     for i, p in ipairs(route) do
-        if i < start_idx then
+	if i <= 1 then
+	     do end
+	elseif i < start_idx then
             print("skip route idx:", i)
         else
             if p.x == nil and p.a == nil then
