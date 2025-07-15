@@ -975,7 +975,7 @@ windower.register_event('zone change', function(zone, prevZone)
  end)
 
 
- windower.register_event('incoming chunk', function(id, original, modified, injected, blocked)
+windower.register_event('incoming chunk', function(id, original, modified, injected, blocked)
     acincoming.incoming_handler()
     local player = windower.ffxi.get_player()
     if id == 0x2D then
