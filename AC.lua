@@ -71,8 +71,8 @@ local aprob = require 'prob'
 local sendCommandProb = aprob.sendCommandProb
 local getSendCommandProbTable = aprob.getSendCommandProbTable
 local acpos = require 'pos'
-local autozone = require 'autozone'
 local aczone = require 'zone'
+local zone_change = require 'zone/change'
 local acincoming = require 'incoming'
 local acmob = require 'mob'
 
@@ -966,12 +966,12 @@ end)
 
 
 --- ゾーンが変わったら停止する
-windower.register_event('zone change', function()
+windower.register_event('zone change', function(zone, prevZone)
     auto = false
     useSilt = false
     useBeads = false
     doPointCheer = false
-    autozone.zone_change_handler()
+    zone_change.zone_change_handler(zone, prevZone)
  end)
 
 

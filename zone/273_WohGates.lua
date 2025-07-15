@@ -29,5 +29,13 @@ M.routes = {
     test = { {x=347.7,y=-34}, {x=348.7,y=-18.2}, {x=331,y=-17.6} },
 }
 
+M.essentialPoints = {
+    from_mariami = {x=179.5,y=40.5}
+}
+
+M.automatic_routes = {
+    from_mariami = "raive"
+}
+
 return M
 

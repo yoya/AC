@@ -58,6 +58,19 @@ function distance(pos1, pos2)
 end
 M.distance = distance
 
+function isNear(pos, dist)
+    local me_pos = currentPos()
+    d = distance(me_pos, pos)
+    if dist == nil then
+	dist = 1.0
+    end
+    if d < dist then
+        return true
+    end
+    return false
+end
+M.isNear = isNear
+
 function nearest_idx(pos, posTable)
     local near_idx = nil
     local near_dis = 99999

@@ -19,4 +19,14 @@ M.routes = {
     },
 }
 
+M.essentialPoints = {
+    wp_warp = {x=-326,y=201.1,z=-40}
+}
+
+M.automatic_routes = {
+    wp_warp = "woh"
+}
+
+
+
 return M

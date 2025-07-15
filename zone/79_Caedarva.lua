@@ -12,6 +12,18 @@ M.routes = {
 	{x=749,y=537.2}, {x=776.4,y=539.6},
 	{x=787.4,y=644.6}, {a="dismount"}
     },
+    -- 本ワープ
+    arra = { -- すぐ左のアラパゴに入る
+	{x=-658,y=341,z=-13}, {x=-640.8,y=340,z=-16}, {}
+    }
+}
+
+M.essentialPoints = {
+    book_warp = {x=-658,y=341,z=-13},
+}
+
+M.automatic_routes = {
+    book_warp = "arra"
 }
 
 return M

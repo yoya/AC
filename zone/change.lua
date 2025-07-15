@@ -1,5 +1,6 @@
 local acpos = require 'pos'
 local aczone = require 'zone'
+local io_chat = require 'io/chat'
 
 local M = {}
 
@@ -14,16 +15,25 @@ function M.zone_change_handler(zone, prevZone)
 	print("zone_change_handler found")
 	change_handler(zone, prevZone)
     end
-    local automove_handler = zone_object.automove_handler
-    if automove_handler ~= nil then	
-	print("automove_handler found")
-	local pos1 = acpos.currentPos()
-	coroutine.sleep(5)
-	local pos2 = acpos.currentPos()
-	if acpos.distance(pos1, pos2) < 1.0 then
-	    automove_handler(zone, prevZone)
+    local automatic_routes = zone_object.automatic_routes
+    if automatic_routes ~= nil then
+	coroutine.sleep(2)
+	local pos = acpos.currentPos()
+	coroutine.sleep(3)
+	if acpos.isNear(pos, 1) then
+	    for f, t in pairs(automatic_routes) do
+		local fp = zone_object.essentialPoints[f]
+		if acpos.isNear(fp, 10) then
+		    io_chat.print(f.."から"..t.."に移動")
+		    acpos.moveTo(zone_object.routes[t], zone_object.routes)
+		end
+	    end
 	end
     end
+end
+
+function M.warp_handler(zone, pos, prevZone, prevPos)
+    -- print("zone/change: warp_handler", zone, pos)
 end
 
 return M

@@ -2,7 +2,16 @@
 
 local M = { id = 257 }
 
+local io_chat = require 'io/chat'
+local acpos = require 'pos'
+
 M.routes = {
+    -- HP#2(M)
+    moghouse = {
+	{x=-50.5,y=-95,z=-0.1}, {x=-54,y=-100},
+	{x=-53.9,y=-104}, { }
+    },
+    -- SCT
     sct = {
 	{x=-77.9,y=-63.9,z=-0.2}, {x=-109,y=-56.8},
 	{x=-111.6,y=-54.2}, {x=-112.7,y=-48.9}, {a="f8touch"}
@@ -21,6 +30,14 @@ M.routes = {
 	{x=-129.7,y=28.9,z=8.1}, {x=-126.5,y=28.4,z=8.1},
 	{}
     },
+}
+
+M.essentialPoints = {
+    homepoint_2_M = {x=-50.5,y=-95,z=-0.1},
+}
+
+M.automatic_routes = {
+    homepoint_2_M = "moghouse"
 }
 
 return M

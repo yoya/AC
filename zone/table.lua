@@ -1,9 +1,4 @@
----
---- Zone 毎の情報
-
-local M = {}
-
-M.zoneTable = {
+local M = {
     [2] = require('zone/2_CpntLanding'),    -- ギルド桟橋
     [6] = require('zone/6_BearclawPn'),     -- 熊爪嶽
     [7] = require('zone/7_Attohwa'),        -- アットワ地溝
@@ -30,11 +25,11 @@ M.zoneTable = {
     [105] = require('zone/105_Batallia'),   -- バタリア丘陵
     [111] = require('zone/111_Beaucedine'), -- ボスディン氷河
     [112] = require('zone/112_Xarcabard'),  -- ザルカバード
-    [113] = require('zone/113_Teriggan'),   -- テリガン岬
+    [113] = require('zone/112_Xarcabard'),  -- ザルカバード
+    -- 102,113,125,127,203
     [124] = require('zone/124_YhoatorJng'), -- ヨアトル大森林
     [125] = require('zone/125_WestAltepa'), -- 西アルテパ砂漠
     [126] = require('zone/126_Qufim'),      -- クフィム島
-    [127] = require('zone/127_BehemotDom'), -- ベヒーモスの縄張り
     [132] = require('zone/132_AbysLaThein'), -- アビセア-ラテーヌ
     [139] = require('zone/139_HorlaisPk'),  -- ホルレーの岩峰
     [142] = require('zone/142_Yughott'),    -- ユグホトの岩屋
@@ -49,7 +44,6 @@ M.zoneTable = {
     [167] = require('zone/167_Bostaunieu'), -- ボストーニュ監獄
     [182] = require('zone/182_WalkEchoes'), -- ウォークオブエコーズ
     [184] = require('zone/184_LowDelkfut'), -- デルクフの塔下層
-    [203] = require('zone/203_ClstFrost'),  -- 凍結の回廊
     -- 215,216,217,218 アビセア
     [230] = require('zone/230_SSandOria'),  -- 南サンドリア
     [233] = require('zone/233_ChatdOrag'),  -- ドラギーユ城
@@ -62,7 +56,6 @@ M.zoneTable = {
     [243] = require('zone/243_RuLudeGard'), -- ル・ルデの庭
     [244] = require('zone/244_UpJeuno'),    -- ジュノ上層
     [245] = require('zone/245_LowJeuno'),   -- ジュノ下層
-    [246] = require('zone/246_PortJeuno'),  -- ジュノ港
     [252] = require('zone/252_Norg'),       -- ノーグ
     -- 253,254 アビセア
     [256] = require('zone/256_WestAdoulin'), -- 西アドゥリン
@@ -81,62 +74,5 @@ M.zoneTable = {
     [277] = require('zone/277_RaKazTurris'), -- ラ・カザナル宮天守
     [281] = require('zone/281_Leafallia'),  -- リファーリア
 }
-
-for z, m in pairs(M.zoneTable) do
-    if z ~= m.id then
-	print("illegal zone:"..z.." module id:"..m.id)
-    end
-    -- 各々の zone handler から routeTable を参照できるようにする
-    m.parent = M
-end
-
-local automoveRouteTable = {
-    [215] = { -- アビセアアットワ
-        conf = {
-            {x=-139.2,y=-180.6,z=20.3}, {x=-144.7,y=-178.8},
-            {x=-146.3,y=-176.9}, {a="f8touch"}
-        }
-    },
-    [216] = {
-        conf = {
-            {x=657.2,y=316.3,z=-15.1}, {x=644.1,y=317.4},
-            {x=642.8,y=319.4}, {a="f8touch"}
-        }
-    },
-    [217] = { -- アビセア、ブンカール
-        conf = {
-            {x=-351.3,y=699.8,z=-46.3}, {x=-339.7,y=696.7},
-            {x=-318.5,y=680.9}, {x=-317.2,y=682.4},
-            {a="f8touch"}
-        }
-    },
-    [218] = {
-        conf = {
-            {x=430,y=320,z=0.3}, {x=424.4,y=326.9},
-            {x=410.1,y=328.6}, {x=410.4,y=330},
-            {a="f8touch"}
-        },
-    },
-    [253] = { -- アビセア、ウルガラン
-        conf = {
-            {x=-236,y=-520,z=-40}, {x=-222.6,y=-522.3},
-            {x=-222.2,y=-524.9}, {a="f8touch"}
-        },
-    },
-    [254] = { -- アビセア、グロウベルグ
-        conf = {
-            {x=-552,y=-760,z=32.4}, {x=-528.2,y=-772.7},
-            {x=-528.9,y=-776.1}, {a="f8touch"}
-        },
-    },
-}
-
-function M.getRouteTable(zone)
-    local t = M.zoneTable[zone]
-    if t ~= nil and t.routes ~= nil then
-	return t.routes
-    end
-    return automoveRouteTable[zone]
-end
 
 return M
