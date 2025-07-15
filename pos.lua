@@ -103,8 +103,7 @@ function stop()
 end
 M.stop = stop
 
-function moveTo(zone, route, routeTable)
-    local zone_id = windower.ffxi.get_info().zone
+function moveTo(route, routeTable)
     local pos = currentPos()
     local r1List = {}  -- 各routeの一個目をリスト化
     local r1ListName = {}
@@ -128,7 +127,7 @@ function moveTo(zone, route, routeTable)
         local name = r1ListName[idx]
         local r = routeTable[name]
         print(idx, name, r)
-        moveTo(zone, r, routeTable)
+        moveTo(r, routeTable)
     end
     moveToRunning = true
     print("moveFrom", math.round(pos.x, 2), math.round(pos.y, 2))
@@ -256,7 +255,7 @@ function autoMoveTo(zone_id, dest, routeTable, reverse)
         if reverse == true then
             route = array_reverse(route)
         end
-        moveTo(zone, route, routeTable)
+        moveTo(route, routeTable)
     end
 end
 M.autoMoveTo = autoMoveTo
