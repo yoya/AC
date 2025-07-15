@@ -926,18 +926,22 @@ windower.register_event('addon command', function(command, command2)
             io_chat.print("same name monster")
         end
     elseif command == 'scroll' then
+	io_chat.print("スクロール学習開始")
 	for i,id in ipairs(item_data.magicScrolls) do
 	    acitem.useItemIncludeBags(id)
 	end
+	io_chat.print("スクロール学習終わり")
     elseif command == 'help' then
         windower.add_to_chat(17, 'AC (AccountCluster)  v' .. _addon.version .. 'commands:')
         windower.add_to_chat(17, '//ac [options]')
         windower.add_to_chat(17, '    start           - Starts auto attack with ranged weapon')
         windower.add_to_chat(17, '    stop            - Stops auto attack with ranged weapon')
         windower.add_to_chat(17, '    ws              - Change weapon skill')
+        windower.add_to_chat(17, '    move <route>    - Auto move')
         windower.add_to_chat(17, '    attack          - Change attack mode')
         windower.add_to_chat(17, '    puller {on|off} - Change puller mode')
         windower.add_to_chat(17, '    silt|beads      - Use silt or beads')
+        windower.add_to_chat(17, '    scroll          - Learning from Scroll')
         windower.add_to_chat(17, '    showmob         - Show mob info')
         windower.add_to_chat(17, '    pos|info|nearest - Debug command')
         windower.add_to_chat(17, '    help            - Displays this help text')
