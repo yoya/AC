@@ -51,6 +51,7 @@ M.zoneTable = {
     [182] = require('zone/182_WalkEchoes'), -- ウォークオブエコーズ
     [184] = require('zone/184_LowDelkfut'), -- デルクフの塔下層
     [203] = require('zone/203_ClstFrost'),  -- 凍結の回廊
+    [208] = require('zone/208_Quicksand'),  -- 流砂洞
     -- 215,216,217,218 アビセア
     [230] = require('zone/230_SSandOria'),  -- 南サンドリア
     [233] = require('zone/233_ChatdOrag'),  -- ドラギーユ城
