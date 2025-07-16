@@ -74,22 +74,14 @@ local acpos = require 'pos'
 local aczone = require 'zone'
 local zone_change = require 'zone/change'
 local acincoming = require 'incoming'
+
 local acmob = require 'mob'
+local getMobPosition = acmob.getMobPosition
 
 local JunkItems = item_data.JunkItems
 local _JunkItems = item_data._JunkItems
 
-local getMobPosition = function(pos, target)
-    local mob = windower.ffxi.get_mob_by_target(target)
-    if mob == nil then
----        print("not found mob by target:" ..target)
-        return false
-    end
-    pos.x = mob.x
-    pos.y = mob.y
-    pos.z = mob.z
-    return true
-end
+
 
 local isFar = false
 local fightingMobName = nil
@@ -628,26 +620,6 @@ local idleFunctionWestAdoulin = function()
         auto = false
     end
 end
-
-local left_move = function(t)
-    command.send('setkey a down')
-    coroutine.sleep(t)
-    command.send('setkey a up')
-end
-local right_move = function(t)
-    command.send('setkey d down')
-    coroutine.sleep(t)
-    command.send('setkey d up')
-end
-
-local target_lockon = function(b)
-    local player = windower.ffxi.get_player()
-    local locked = player.target_locked
-    if b ~= locked then
-        command.send('input /lockon')
-    end
-end
---
 
 local idleFunction = function()
 --  87print("idleFunction")

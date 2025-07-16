@@ -120,4 +120,27 @@ M.cureIfPartyHPisLow = function()
     end
 end
 
+M.target_lockon = function(b)
+    local player = windower.ffxi.get_player()
+    local locked = player.target_locked
+    if b ~= locked then
+        command.send('input /lockon')
+    end
+end
+
+function M.left_move(t)
+    command.send('setkey a down')
+    coroutine.sleep(t)
+    command.send('setkey a up')
+end
+
+function M.right_move(t)
+    command.send('setkey d down')
+    coroutine.sleep(t)
+    command.send('setkey d up')
+end
+
+
+
+
 return M

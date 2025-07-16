@@ -90,4 +90,16 @@ M.PartyTargetMob = function()
     return nil
 end
 
+function M.getMobPosition(pos, target)
+    local mob = windower.ffxi.get_mob_by_target(target)
+    if mob == nil then
+---        print("not found mob by target:" ..target)
+	return false
+    end
+    pos.x = mob.x
+    pos.y = mob.y
+    pos.z = mob.z
+    return true
+end
+
 return M

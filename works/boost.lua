@@ -2,6 +2,8 @@
 
 local M = {}
 
+local utils = require 'utils'
+local acmob = require 'mob'
 local keyboard = require 'keyboard'
 local pushKeys = keyboard.pushKeys
 local io_chat = require 'io/chat'
@@ -65,7 +67,7 @@ end
 
 local stationWorkerFunction = function(zone, mob)
     M.auto = true
-    target_lockon(true)
+    utils.target_lockon(true)
     local info = getStationWorkerBoostInfo(zone)
     -- N = 0, E = 3.14*0.5, S = 3.14, W = 3.14*1.5 
     local theta = midangle(info[1], info[2])
@@ -73,9 +75,9 @@ local stationWorkerFunction = function(zone, mob)
     local done = false
     -- 向きをあわせる
     while done == false and M.auto do
-        left_move(0.01)
+        utils.left_move(0.01)
         local me_pos = {}
-        getMobPosition(me_pos, "me")
+        acmob.getMobPosition(me_pos, "me")
         local dx = me_pos.x - mob.x
         local dy = me_pos.y - mob.y
         local t = math.atan2(dx, dy)
