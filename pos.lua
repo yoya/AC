@@ -168,7 +168,7 @@ function moveTo(route, routeTable)
             end
             if p.a == "dismount" then
                 command.send('input /dismount')
-                coroutine.sleep(2.0)
+                coroutine.sleep(3.0)
             end
             if p.a == "insne" then
                 print("insne")
@@ -211,7 +211,7 @@ function moveTo(route, routeTable)
                     coroutine.sleep(0.1)
                 end
                 windower.ffxi.run(false)
-                local t = math.random(0,1)/5
+                local t = math.random(0,2)/10
                 coroutine.sleep(t)
             end
             if p.t ~= nil then
