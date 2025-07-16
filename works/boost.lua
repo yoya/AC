@@ -92,7 +92,7 @@ local stationWorkerFunction = function(zone, mob)
     coroutine.sleep(2.5)
     if info[3] > 0 then
         for i = 1, info[3] do
-	    print("select down: "..i.."/"..info[3])
+	    -- print("select down: "..i.."/"..info[3])
             pushKeys({"down"})
             coroutine.sleep(0.5)
         end
