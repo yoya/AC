@@ -49,4 +49,13 @@ M.routes = {
     },
 }
 
+M.essentialPoints = {
+    wp_mum = {x=-21,y=-79.9,z=-0.2},
+}
+
+M.automatic_routes = {
+    wp_mum = "mum"
+}
+
+
 return M

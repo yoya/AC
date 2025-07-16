@@ -31,6 +31,7 @@ M.zoneTable = {
     [111] = require('zone/111_Beaucedine'), -- ボスディン氷河
     [112] = require('zone/112_Xarcabard'),  -- ザルカバード
     [113] = require('zone/113_Teriggan'),   -- テリガン岬
+    [121] = require('zone/121_ZiTah'),      -- 聖地ジ・タ
     [124] = require('zone/124_YhoatorJng'), -- ヨアトル大森林
     [125] = require('zone/125_WestAltepa'), -- 西アルテパ砂漠
     [126] = require('zone/126_Qufim'),      -- クフィム島
