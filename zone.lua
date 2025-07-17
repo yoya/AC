@@ -65,6 +65,7 @@ M.zoneTable = {
     [244] = require('zone/244_UpJeuno'),    -- ジュノ上層
     [245] = require('zone/245_LowJeuno'),   -- ジュノ下層
     [246] = require('zone/246_PortJeuno'),  -- ジュノ港
+    [251] = require('zone/251_HallOfGods'), -- 神々の間
     [252] = require('zone/252_Norg'),       -- ノーグ
     -- 253,254 アビセア
     [256] = require('zone/256_WestAdoulin'), -- 西アドゥリン
