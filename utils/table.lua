@@ -50,24 +50,38 @@ function M.contains(arr, val)
 end
 
 function M.isNumericalIndexedTable(table)
-    local isNumeric = true
     for k, v in pairs(table) do
         if type(k) ~= "number" then
-            isNumeric = false
+            return false
         end
     end
-    return isNumeric
+    return true
 end
+
+-- キー指定なしのテーブル
+function M.isNaturalArray(table)
+    if M.isNumericalIndexedTable(table) == false then
+	return false -- 必要ないかも？
+    end
+    local i = 1
+    for k, v in pairs(table) do
+	if k ~= i then
+            return false
+        end
+	i = i + 1
+    end
+    return true
+end
+
 
 -- 末端のテーブルなら true
 function M.isTableLeaf(table)
-    local isLeaf = true
     for k, v in pairs(table) do
         if type(v) == "table" then
-            isLeaf = false
+            return false
         end
     end
-    return isLeaf
+    return true
 end
 
 function M.valueToString(data, depth)
