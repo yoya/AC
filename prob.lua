@@ -51,7 +51,7 @@ M.getSendCommandProbTable = function(mainJob, subJob, rankInJob)
     for job, commprob in pairs(sendCommandProbTable) do
         if job == mainJob or job == mainJob..'_'..rankInJob or job == "ALL" then
             merged = merge_lists(merged, commprob)
---            print(job, #merged)
+	    -- print(job, #merged)
         end
     end
     if isBacklineJob(mainJob) == false and
@@ -60,7 +60,8 @@ M.getSendCommandProbTable = function(mainJob, subJob, rankInJob)
     end
     for job, commprob in pairs(sendCommandProbTableSub) do
         if job == subJob or job == "ALL" then
-            merged = merge_tables(merged, commprob)
+            merged = merge_lists(merged, commprob)
+	    -- print(job, #merged)
         end
     end
     return merged
@@ -86,6 +87,7 @@ M.sendCommandProb = function(table, period, ProbRecastTime)
             if pp < rnd and rnd <= pn then
                 windower.ffxi.run(false)
                 coroutine.sleep(0.25)
+		-- io_chat.print(c)
                 command.send(c)
 		-- タイマーセット
                 ProbRecastTime[c] = { }
