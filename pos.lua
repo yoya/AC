@@ -198,16 +198,22 @@ function moveTo(route, routeTable)
                 windower.ffxi.cancel_buff(69) -- インビジキャンセル
             end
             if p.x ~= nil then
-                print("moving", i, p.x, p.y)
-                while (distance(currentPos(), p) > 0.5 and moveToRunning == true) do
-                    if distance(currentPos(), p) > 6468 and false then
+		local x = p.x
+		local y = p.y
+		local d = p.d or 0
+                print("moving to", i, x, y, d)
+		x = x + math.random(-d*100,d*100)/100
+		y = y + math.random(-d*100,d*100)/100
+		local dpos = {x=x,y=y,z=p.z}
+                while (distance(currentPos(), dpos) > 0.5 and moveToRunning == true) do
+                    if distance(currentPos(), dpos) > 6468 and false then
                         print("not near position")
                         stop()
                         return
                     end
-                    turnTo(p)
+                    turnTo(dpos)
                     pos = currentPos()
-                    windower.ffxi.run(p.x - pos.x, p.y - pos.y)
+                    windower.ffxi.run(dpos.x - pos.x, dpos.y - pos.y)
                     coroutine.sleep(0.1)
                 end
                 windower.ffxi.run(false)
