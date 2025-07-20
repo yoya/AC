@@ -675,13 +675,13 @@ local tickRunning = false
 
 --- 途中での return 抜け禁止。最後でフラグ落とすので。
 local tick = function()
----    print("tick")
-local prevPos = nil
-    if not auto then
-        return
-    end
     if tickRunning then
         return 
+    end
+    zone_change.warp_handler_tick()
+    -- ここからは auto のみ。
+    if not auto then
+        return
     end
     tickRunning = true
     local player = windower.ffxi.get_player()
