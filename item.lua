@@ -224,7 +224,7 @@ M.useItemIncludeBags = function(item_id)
         local name = res.items[item_id].name
 	command.send('input /item '..name..' <me>')
         ret = true
-        coroutine.sleep(math.random(4,5))
+        coroutine.sleep(math.random(5,6))
     end
     return ret
 end
