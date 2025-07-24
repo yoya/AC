@@ -6,7 +6,15 @@ M.routes = {
     conf = {
 	{x=154.5,y=-840,z=-72}, {x=130.4,y=-826},
 	{x=131,y=-825.5}, {a="f8touch"}
-    }
+    },
+}
+
+M.essentialPoints = {
+    entrance = {x=154.5,y=-840,z=-72},
+}
+
+M.automatic_routes = {
+    entrance = "conf",
 }
 
 return M

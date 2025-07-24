@@ -52,7 +52,10 @@ M.zoneTable = {
     [184] = require('zone/184_LowDelkfut'), -- デルクフの塔下層
     [203] = require('zone/203_ClstFrost'),  -- 凍結の回廊
     [208] = require('zone/208_Quicksand'),  -- 流砂洞
-    -- 215,216,217,218 アビセア
+    [215] = require('zone/215_AbysAttohwa'), -- アビセア-アットワ
+    [216] = require('zone/216_AbysMisar'),   -- アビセア-ミザレオ
+    [217] = require('zone/217_AbysVunkerl'), -- アビセア-ブンカール
+    [218] = require('zone/218_AbysAltepa'),  -- アビセア-アルテパ
     [230] = require('zone/230_SSandOria'),  -- 南サンドリア
     [233] = require('zone/233_ChatdOrag'),  -- ドラギーユ城
     [236] = require('zone/236_PortBastok'), -- バストゥーク港
@@ -67,7 +70,8 @@ M.zoneTable = {
     [246] = require('zone/246_PortJeuno'),  -- ジュノ港
     [251] = require('zone/251_HallOfGods'), -- 神々の間
     [252] = require('zone/252_Norg'),       -- ノーグ
-    -- 253,254 アビセア
+    [253] = require('zone/253_AbysUleg'),   -- アビセア-ウルガラン
+    [254] = require('zone/254_AbysGraub'),  -- アビセア-グロウベルグ
     [256] = require('zone/256_WestAdoulin'), -- 西アドゥリン
     [257] = require('zone/257_EastAdoulin'), -- 東アドゥリン
     [258] = require('zone/258_Rala'),       -- ララ水道
@@ -93,53 +97,12 @@ for z, m in pairs(M.zoneTable) do
     m.parent = M
 end
 
-local automoveRouteTable = {
-    [215] = { -- アビセアアットワ
-        conf = {
-            {x=-139.2,y=-180.6,z=20.3}, {x=-144.7,y=-178.8},
-            {x=-146.3,y=-176.9}, {a="f8touch"}
-        }
-    },
-    [216] = {
-        conf = {
-            {x=657.2,y=316.3,z=-15.1}, {x=644.1,y=317.4},
-            {x=642.8,y=319.4}, {a="f8touch"}
-        }
-    },
-    [217] = { -- アビセア、ブンカール
-        conf = {
-            {x=-351.3,y=699.8,z=-46.3}, {x=-339.7,y=696.7},
-            {x=-318.5,y=680.9}, {x=-317.2,y=682.4},
-            {a="f8touch"}
-        }
-    },
-    [218] = {
-        conf = {
-            {x=430,y=320,z=0.3}, {x=424.4,y=326.9},
-            {x=410.1,y=328.6}, {x=410.4,y=330},
-            {a="f8touch"}
-        },
-    },
-    [253] = { -- アビセア、ウルガラン
-        conf = {
-            {x=-236,y=-520,z=-40}, {x=-222.6,y=-522.3},
-            {x=-222.2,y=-524.9}, {a="f8touch"}
-        },
-    },
-    [254] = { -- アビセア、グロウベルグ
-        conf = {
-            {x=-552,y=-760,z=32.4}, {x=-528.2,y=-772.7},
-            {x=-528.9,y=-776.1}, {a="f8touch"}
-        },
-    },
-}
-
 function M.getRouteTable(zone)
     local t = M.zoneTable[zone]
     if t ~= nil and t.routes ~= nil then
 	return t.routes
     end
-    return automoveRouteTable[zone]
+    return nil
 end
 
 return M
