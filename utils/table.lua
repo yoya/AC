@@ -2,6 +2,7 @@
 --- テーブル操作の関数
 
 local M = {}
+
 function M.get_keys(t)
     local keys={}
     for key, _ in pairs(t) do
@@ -109,20 +110,27 @@ function _tableToString(data, depth)
 	local text = ""
 	if M.isTableLeaf(data) == true then
 	    text = text .. indent .. "{ "
+	    local natural = M.isNaturalArray(data)
 	    for k,v in pairs(data) do
-		if type(k) == "number" then
-		    k = "["..k.."]"
+		if natural == false then
+		    if type(k) == "number" then
+			k = "["..k.."]"
+		    else
+			k = '"'..k..'"'
+		    end
+		    text = text .. k .. "="
 		end
-		text = text .. k .. "=".. M.valueToString(v) .. ", "
+		text = text .. M.valueToString(v) .. ", "
 	    end
 	    text = text .. "},\n"
 	else
+	    local natural = M.isNaturalArray(data)
 	    for k,v in pairs(data) do
 		if type(k) == "number" then
 		    k = "["..k.."]"
 		end
 		if type(v) == "table" then
-		    text = text .. indent .. k .. "=\n"
+		    text = text .. indent .. '"' .. k .. "\"=\n"
 		    text = text .. _tableToString(v, depth+1) 
 		else
 		    text = text .. indent .. k .. "=" .. _tableToString(v, depth+1) .. ",\n"
