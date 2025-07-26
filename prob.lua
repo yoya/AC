@@ -84,7 +84,7 @@ M.sendCommandProb = function(table, period, ProbRecastTime)
         if ProbRecastTime[c] == nil then
             if pp < rnd and rnd <= pn then
                 windower.ffxi.run(false)
-                coroutine.sleep(0.25)
+                coroutine.sleep(0.5)
 		-- io_chat.print(c)
                 command.send(c)
 		-- タイマーセット
