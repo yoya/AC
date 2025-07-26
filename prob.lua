@@ -51,7 +51,6 @@ M.getSendCommandProbTable = function(mainJob, subJob, rankInJob)
     for job, commprob in pairs(sendCommandProbTable) do
         if job == mainJob or job == mainJob..'_'..rankInJob or job == "ALL" then
             merged = merge_lists(merged, commprob)
-	    -- print(job, #merged)
         end
     end
     if isBacklineJob(mainJob) == false and
@@ -61,7 +60,6 @@ M.getSendCommandProbTable = function(mainJob, subJob, rankInJob)
     for job, commprob in pairs(sendCommandProbTableSub) do
         if job == subJob or job == "ALL" then
             merged = merge_lists(merged, commprob)
-	    -- print(job, #merged)
         end
     end
     return merged
