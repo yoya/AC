@@ -8,6 +8,7 @@ M.zoneTable = {
     [6] = require('zone/6_BearclawPn'),     -- 熊爪嶽
     [7] = require('zone/7_Attohwa'),        -- アットワ地溝
     [15] = require('zone/15_AbysKonscht'),  -- アビセア-コンシュタット
+    [24] = require('zone/24_LufaiseMds'),   -- ルフェーゼ野
     [25] = require('zone/25_Misareaux'),    -- ミザレオ海岸
     [26] = require('zone/26_Tavnazia'),     -- タブナジア地下壕
     [45] = require('zone/45_AbysTahrongi'), -- アビセア-タロンギ
