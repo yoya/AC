@@ -106,7 +106,7 @@ local leaderFunction = function()
         --- 優先度の高い敵がいない場合は、誰でも良い
         mob = acmob.getNearestFightableMob(start_pos, settings.CampRange, nil)
     end
-    if mob ~= nil then
+    if mob ~= nil and attack then
         windower.ffxi.run(false)
 ---        io_chat.print(mob.name)
         io_net.targetByMobId(mob.id)
@@ -802,6 +802,7 @@ windower.register_event('addon command', function(command, command2)
     command = command and command:lower() or 'help'
     if command == 'start' then
         start()
+	io_chat.print({"attack mode", attack})
     elseif command == 'stop' then
         stop()
     elseif command == 'attack' then
