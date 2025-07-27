@@ -3,6 +3,9 @@
 local M = {}
 
 local utils = require 'utils'
+local normalangle = utils.normalangle
+local midangle = utils.midangle
+
 local acmob = require 'mob'
 local keyboard = require 'keyboard'
 local pushKeys = keyboard.pushKeys
@@ -21,6 +24,10 @@ local NW = math.pi * (7/4)
 
 -- 0:喜ぶ 1:泣く 2:驚く 3:悔しむ
 -- 4:励ます 5:慌てる 6:照れる 7:気合
+
+-- N-NE: ほぼ正しい。
+-- SE-S: 間違い、丁度逆方向
+-- NW-N: 正しい
 
 local stationWorkerBoostTable = {
     [265] = { -- モリマー台地
@@ -42,36 +49,7 @@ local getStationWorkerBoostInfo = function(zone)
     return nil
 end 
 
--- 範囲は -math.pi < theta < math.pi
-local normalangle = function(a)
-    if a <= math.pi or math.pi <= a then
-        a = a % (2*math.pi)
-    end
-    if a < math.pi then
-        return a
-    end
-    return a - (2*math.pi)
-end
-
--- 中間の角度
-local midangle = function(a, b)
-    a = normalangle(a)
-    b = normalangle(b)
-    if math.abs(a-b) < math.pi then
-        return normalangle((a + b) / 2)
-    end
-    a = a % (2*math.pi)
-    b = b % (2*math.pi)
-    return normalangle(a - b)
-end
-
-local stationWorkerFunction = function(zone, mob)
-    M.auto = true
-    utils.target_lockon(true)
-    local info = getStationWorkerBoostInfo(zone)
-    -- N = 0, E = 3.14*0.5, S = 3.14, W = 3.14*1.5 
-    local theta = midangle(info[1], info[2])
-    io_chat.print("theta: "..theta.." select:"..info[3])
+function M.turnToDirecton(mob, theta)
     local done = false
     -- 向きをあわせる
     while done == false and M.auto do
@@ -80,13 +58,23 @@ local stationWorkerFunction = function(zone, mob)
         acmob.getMobPosition(me_pos, "me")
         local dx = me_pos.x - mob.x
         local dy = me_pos.y - mob.y
-        local t = math.atan2(dx, dy)
+	local t = math.atan2(dx, dy) + 2*math.pi/32
         local dt = (theta % (2*math.pi)) - (t % (2*math.pi))
 	-- io_chat.print("theta:"..theta.." t:"..t.." dt:"..dt)
         if math.abs(dt) < 2*math.pi/32 then
             done = true
         end
     end
+end
+
+local stationWorkerFunction = function(zone, mob)
+    M.auto = true
+    utils.target_lockon(true)
+    local info = getStationWorkerBoostInfo(zone)
+    -- N = 0, E = 3.14*0.5, S = 3.14, W = 3.14*1.5
+    local theta = midangle(info[1], info[2])
+    io_chat.print("theta: "..theta.." select:"..info[3])
+    M.turnToDirecton(mob, theta)
     -- 応援方法を選択する
     pushKeys({"enter"})
     coroutine.sleep(2.5)
@@ -94,7 +82,7 @@ local stationWorkerFunction = function(zone, mob)
         for i = 1, info[3] do
 	    -- print("select down: "..i.."/"..info[3])
             pushKeys({"down"})
-            coroutine.sleep(0.5)
+            coroutine.sleep(0.2)
         end
     end
     pushKeys({"enter"})
