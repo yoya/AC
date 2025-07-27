@@ -36,7 +36,6 @@ local cipher_ids = item_data.cipher_ids --  盟スクロール
 
 local preferedEnemyList = {
     "Profane Circle", "Chaos",--- カオス戦
-    "Tyny Lycopodium",  -- アンバス
     --- テスト
     "Mourioche",  -- マンドラ
 --    "Apex Toad",  -- トード
@@ -44,6 +43,9 @@ local preferedEnemyList = {
     -- 醴泉島
     "Wretched Poroggo", "Water Elemental", 
     "Indomitable Faaz", "Devouring Mosquito", -- 醴泉島
+    -- アンバス
+    "Tyny Lycopodium",
+    "Skullcap", "Bozzetto Elemental"
 }
 
 command.send('bind ^d ac start')
