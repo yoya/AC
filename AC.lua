@@ -391,10 +391,10 @@ local figtingFunction = function()
     end
     --- たまに左や右にずれる。前や後にも。
     sendCommandProb({
-        { 10, 10, 'setkey a down; wait 0.1; setkey a up', 0 },
-        { 10, 10, 'setkey d down; wait 0.1; setkey d up', 0 },
-        { 10, 10, 'setkey w down; wait 0.1; setkey w up', 0 },
-        { 10, 10, 'setkey s down; wait 0.1; setkey s up', 0 },
+        { 10, 10, 'setkey a down; wait 0.1; setkey a up', 0 }, -- left
+        { 10, 10, 'setkey d down; wait 0.1; setkey d up', 0 }, -- right
+        { 20, 10, 'setkey w down; wait 0.1; setkey w up', 0 }, -- forward
+        { 20, 10, 'setkey s down; wait 0.1; setkey s up', 0 }, -- back
     }, settings.Period, ProbRecastTime)
     if acitem.checkBagsFreespace() then
         for i, id in pairs(crystal_ids) do
