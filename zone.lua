@@ -50,6 +50,7 @@ M.zoneTable = {
     [159] = require('zone/159_Uggalepih'),  -- ウガレピ寺院
     [167] = require('zone/167_Bostaunieu'), -- ボストーニュ監獄
     [182] = require('zone/182_WalkEchoes'), -- ウォークオブエコーズ
+    [183] = require('zone/183_Legion'),     -- アブダルスの模型-レギオン
     [184] = require('zone/184_LowDelkfut'), -- デルクフの塔下層
     [203] = require('zone/203_ClstFrost'),  -- 凍結の回廊
     [208] = require('zone/208_Quicksand'),  -- 流砂洞
@@ -69,6 +70,7 @@ M.zoneTable = {
     [244] = require('zone/244_UpJeuno'),    -- ジュノ上層
     [245] = require('zone/245_LowJeuno'),   -- ジュノ下層
     [246] = require('zone/246_PortJeuno'),  -- ジュノ港
+    [249] = require('zone/249_Mhaura'),     -- マウラ
     [251] = require('zone/251_HallOfGods'), -- 神々の間
     [252] = require('zone/252_Norg'),       -- ノーグ
     [253] = require('zone/253_AbysUleg'),   -- アビセア-ウルガラン
@@ -88,6 +90,7 @@ M.zoneTable = {
     [274] = require('zone/274_OutRaKaz'),   -- ラ・カザナル宮外郭
     [277] = require('zone/277_RaKazTurris'), -- ラ・カザナル宮天守
     [281] = require('zone/281_Leafallia'),  -- リファーリア
+    [291] = require('zone/291_ReisenHenge'),  -- 醴泉島-秘境
 }
 
 for z, m in pairs(M.zoneTable) do
