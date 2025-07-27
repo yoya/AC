@@ -153,6 +153,7 @@ M.exec = function()
     end
     windower.ffxi.run(false)
     command.send('input /ws ' .. wsname .. ' ' .. target)
+    coroutine.sleep(1)
 end
 
 M.init = function()
