@@ -363,7 +363,9 @@ local figtingFunction = function()
         tpMax = 2500
     end
     if player.vitals.tp >= math.random(tpMin,tpMax) then
-        ws.exec()
+	if  (asinspect.ws_time + 3) < os.time() then
+	    ws.exec()
+	end
         return
     else
         if player.item_level > 99 then
@@ -929,6 +931,7 @@ windower.register_event('load', 'login', 'logout', function()
     local player = windower.ffxi.get_player()
     player_id = player and player.id
     ws.init()
+    acstat.init()
 end)
 
 windower.register_event('job change', function()
