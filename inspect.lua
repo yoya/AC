@@ -1,12 +1,17 @@
 -- 行動を判断する為の監視データ
 -- 最後に WS をうった時間とか。
 
-local M = {}
+local M = {
+    ws_time = 0,
+    eminence_point = 0,
+}
 
-M.ws = function()
+function M.ws()
     M.ws_time = os.time()
 end
 
-M.eminence_point = function(pt)
+function M.eminence(pt)
     M.eminence_point = pt
 end
+
+return M
