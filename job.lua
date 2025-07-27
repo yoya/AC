@@ -33,4 +33,16 @@ M.jobTable = {
     RUN = require('job/RUN'), -- 魔導剣士
 }
 
+function M.tick(jobName)
+    local player = windower.ffxi.get_player()
+    local mainTick = M.jobTable[player.main_job].mainTick
+    local subTick = M.jobTable[player.sub_job].subTick
+    if mainTick ~= nil then
+	mainTick()
+    end
+    if subTick ~= nil then
+	subTick()
+    end
+end
+
 return M

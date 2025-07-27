@@ -1,5 +1,8 @@
 -- 黒魔道士
 
+local command = require 'command'
+local asinspect = require 'inspect'
+
 local M = {}
 
 M.mainJobProbTable = {
@@ -39,5 +42,17 @@ M.subJobProbTable = {
     -- { 100, 30, 'input /ma サンダーII <t>', 2},
     -- { 200, 30, 'input /ma フロスト <t>', 3, true},
 }
+
+function M.mainTick()
+    local ws_time = asinspect.ws_time + 2
+    local now = os.time()
+    if ws_time < now then
+	if  now < (ws_time + 1) then
+	    command.send('input /ma ブリザドV <t>')
+	elseif now < (ws_time + 3) then
+	    command.send('input /ma ブリザドIV <t>')
+	end
+    end
+end
 
 return M

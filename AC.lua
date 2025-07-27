@@ -80,6 +80,8 @@ local acincoming = require 'incoming'
 local acmob = require 'mob'
 local getMobPosition = acmob.getMobPosition
 
+local acjob = require 'job'
+
 local JunkItems = item_data.JunkItems
 
 local isFar = false
@@ -701,6 +703,7 @@ local tick = function()
             figtingFunction()
         end
     end
+    acjob.tick()
     tickRunning = false
 end
 
