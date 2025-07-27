@@ -364,11 +364,17 @@ local figtingFunction = function()
         tpMin = 2000
         tpMax = 2500
     end
-    if player.vitals.tp >= math.random(tpMin,tpMax) then
-	if  (asinspect.ws_time + 3) < os.time() then
-	    ws.exec()
+    local ws_request = false
+    if  player.vitals.tp >= 1000 and (asinspect.ws_time + 3) < os.time() then
+	if player.vitals.tp >= math.random(tpMin,tpMax) then
+	    ws_request = true
+	elseif (asinspect.ws_time + 5) < os.time() then
+	    ws_request = true
 	end
-        return
+    end
+    if ws_request == true then
+	ws.exec()
+	return
     else
         if player.item_level > 99 then
             local commprob = getSendCommandProbTable(mainJob, subJob, 1)
