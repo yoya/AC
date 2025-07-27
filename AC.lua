@@ -3,12 +3,12 @@ _addon.version = '1.1.0'
 _addon.commands = {'accountcluster', 'ac'}
 
 require('functions')
+local res = require 'resources'
 local socket = require 'socket'
 local config = require 'config'
+
 local command = require 'command'
 local works = require 'works'
-
-local res = require('resources')
 
 local defaults = {
     Period = 1.0,
@@ -25,11 +25,9 @@ local attack = true
 local useSilt = false
 local useBeads = false
 local doPointCheer = false
-local current_sparks = -1
 
 local ProbRecastTime = {}
 
---- クリスタル
 local item_data = require 'item/data'
 
 local crystal_ids = item_data.crystal_ids -- クリスタル/塊
@@ -64,6 +62,8 @@ local cureIfPartyHPisLow = utils.cureIfPartyHPisLow
 
 local io_net = require 'io/net'
 local io_chat = require 'io/chat'
+local acstat = require 'stat'
+local asinspect = require 'inspect'
 
 local acitem = require 'item'
 local ws = require 'ws'
@@ -79,9 +79,6 @@ local acmob = require 'mob'
 local getMobPosition = acmob.getMobPosition
 
 local JunkItems = item_data.JunkItems
-local _JunkItems = item_data._JunkItems
-
-
 
 local isFar = false
 local fightingMobName = nil
@@ -867,7 +864,6 @@ windower.register_event('addon command', function(command, command2)
         local dist = utils.distance("t")
         dist = dist or "(nil)"
         io_chat.print("distance to <t>:"..dist)
-        io_chat.print("current_sparks:"..current_sparks)
     elseif command == 'test' then
         print("test command")
         utils.PartyTargetMob()
@@ -948,23 +944,9 @@ windower.register_event('zone change', function(zone, prevZone)
  end)
 
 
-windower.register_event('incoming chunk', function(id, original, modified, injected, blocked)
-    acincoming.incoming_handler()
-    local player = windower.ffxi.get_player()
-    if id == 0x2D then
---        local packet = packets.parse('incoming', original)
---          io_chat.print("============== packet(0x2D)")
---        if packet["Player Index"] == player.index then  
---            io_chat.print(packet)
---        end
-    end
-    if id == 0x110 then -- Update Current Sparks via 110
-        local data = original
-		local header, value1, value2, Unity1, Unity2, Unknown = data:unpack('II')
-		current_sparks = value1
---        io_chat.print({"current_sparks", current_sparks})
-	end
- end)
+windower.register_event('incoming chunk', function(id, data, modified, injected, blocked)
+    acincoming.incoming_handler(id, data, modified, injected, blocked)
+end)
 
 local loopConf = function()
     return auto
@@ -974,7 +956,7 @@ end
 ---    local c = check:loop(1)
 --end)
 
---Copyright ? 2013, Banggugyangu
+--Copyright 2025, yoya@awm.jp
 --All rights reserved.
 
 --Redistribution and use in source and binary forms, with or without
