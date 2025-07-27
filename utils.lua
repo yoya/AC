@@ -2,12 +2,13 @@
 --- 雑多な関数群。整理できてない
 
 local command = require 'command'
-local utils_table = require 'utils/table'
 
 local M = {}
 
--- table メソッドのマージ
-for n, m in pairs(utils_table) do M[n] = m end
+-- utils/*.lua メソッドのマージ
+for n, m in pairs(require 'utils/table') do M[n] = m end
+for n, m in pairs(require 'utils/angle') do M[n] = m end
+for n, m in pairs(require 'utils/party') do M[n] = m end
 
 function M.iamLeader()
     local player = windower.ffxi.get_player()
