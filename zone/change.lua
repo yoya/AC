@@ -1,5 +1,6 @@
 local acpos = require 'pos'
 local aczone = require 'zone'
+local acstat = require 'stat'
 local io_chat = require 'io/chat'
 
 local M = {}
@@ -42,6 +43,8 @@ end
 
 function M.zone_change_handler(zone, prevZone)
     print("zone/change zone_change_handler", zone, prevZone)
+    acstat.init()
+    -- zone 毎の処理
     local zone_object = aczone.zoneTable[zone]
     if zone_object == nil then
 	return
@@ -84,7 +87,7 @@ function M.warp_handler(zone, pos, prevZone, prevPos, dist)
     end
     local automatic_routes = zone_object.automatic_routes
     if automatic_routes ~= nil then
-	-- M.automatic_routes_handler(zone, automatic_routes)
+	M.automatic_routes_handler(zone, automatic_routes)
     end
 end
 
