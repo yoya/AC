@@ -4,6 +4,7 @@ local M = {}
 
 local utils = require('utils')
 local io_console = require('io/console')
+local command = require 'command'
 
 -- 優先度別、タスク
 -- 優先度
@@ -17,6 +18,19 @@ local PRIORITY_LAST  = 4
 
 M.newTask = function(command, duration)
     return {command=command, duration=duration}
+end
+
+local tickNextTime = os.time()
+M.tick = function()
+    if os.time() < tickNextTime then
+	return
+    end
+    local task = M.getTask()
+    if task == nil then
+	return
+    end
+    command.send(task.command)
+    tickNextTime = os.time() + task.duration
 end
 
 -- 
