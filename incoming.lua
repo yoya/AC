@@ -10,17 +10,20 @@ local M = {}
 function actionHandler(amPacket) -- 0x028
     local cate = amPacket.Category
     -- io_chat.print("0x028: " .. cate)
-    if cate == 7 then
-	-- io_chat.print("Weapon Skill start")
-	acinspect.ws()
+    if cate == 1 then
+	-- auto attack
     elseif cate == 3 then
-	-- io_chat.print("Weapon Skill finish")
+	-- io_chat.print("0x028 cate:3 Weapon Skill finish")
+    elseif cate == 7 then
+	-- io_chat.print("0x028 cate:7 Weapon Skill start")
+	acinspect.ws()
+    else
+	-- io_chat.print("XXX 0x028 cate:"..cate)
     end
 end
 
 function actionMessageHandler(amPacket) -- 0x029
     -- io_chat.print(amPacket)
-    -- io_chat.print("0x029: "..amPacket.Message)
     local mesg = amPacket.Message
     if mesg == 6 then  -- defeated enemy
 	-- io_chat.print(amPacket)
@@ -36,6 +39,12 @@ function actionMessageHandler(amPacket) -- 0x029
 	io_chat.print("XXX: action message: Fall???")
     elseif mesg == 206 then
 	do end -- (味方の？)強化切れ
+    else
+	do end
+	-- io_chat.print("XXX 0x029: "..amPacket.Message)
+	-- 4 敵弱体
+	-- 17 味方強化？
+	-- 18  MB ？
     end
 end
 
