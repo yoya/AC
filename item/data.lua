@@ -37,10 +37,10 @@ M.magicScrolls = {} -- 魔法スクロール
 for i=4606,5106  do table.insert(M.magicScrolls, i) end
 -- ダイス(戦士のダイス〜迎撃のダイス)
 for i=5477,5505  do table.insert(M.magicScrolls, i) end
--- 風水(インデリジェネ〜ジオヘイスト)
-for i=6073,6132 do table.insert(M.magicScrolls, i) end
 -- 学者(計〜陣〜策)
 for i=6041,6061 do table.insert(M.magicScrolls, i) end
+-- 風水(インデリジェネ〜ジオヘイスト)
+for i=6073,6132 do table.insert(M.magicScrolls, i) end
 
 M.JunkItems = {
     90, -- 錆びたバケツ
