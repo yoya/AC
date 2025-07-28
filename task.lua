@@ -3,17 +3,25 @@
 local M = {}
 
 local utils = require('utils')
+local io_console = require('io/console')
 
 -- 優先度別、タスク
 -- 優先度
+local PRIORITY_FIRST  = 1
 M.PRIORITY_TOP    = 1  -- 最優先。スタンや緊急ケアル
 M.PRIORITY_HIGH   = 2  -- 優先度高。サイレス。MB
 M.PRIORITY_MIDDLE = 3  -- 優先度中。デバフ。通常ケアル
 M.PRIORITY_LOW    = 4  -- 優先度低。バフ。通常の魔法、遠隔武器
+local PRIORITY_LAST  = 4
 -- タスク
-{command, duration}
+
+M.newTask = function(command, duration)
+    return {command=command, duration=duration}
+end
+
+-- 
 -- 種類
-M.taskTable = {
+local taskTable = {
     [M.PRIORITY_TOP]    = {},
     [M.PRIORITY_HIGH]   = {},
     [M.PRIORITY_MIDDLE] = {},
@@ -23,27 +31,31 @@ M.taskTable = {
 -- タスク追加
 function M.setTask(level, task)
     if utils.contains(taskTable[level], task) == false then
-	taskTable[level].insert(task)
+	table.insert(taskTable[level], task)
     end
 end
 
 -- タスク削除
 function M.removeTask(level, task)
     if utils.contains(taskTable[level], task) == false then
-	taskTable[level].remove(task)
+	table.remove(taskTable[level], task)
     end
 end
 
 -- 優先順の高い方から、1つだけタスクを取得
-function M.getTask(level)
-    for level = 1, #taskTable do
+function M.getTask()
+    for level = PRIORITY_FIRST, PRIORITY_LAST do
 	if #taskTable[level] >= 1 then
-	    local task = taskTable[level][0]
-	    taskTable[level].remove(task)
+	    local task = taskTable[level][1]  -- 1 origin
+	    table.remove(taskTable[level], 1)
 	    return task
 	end
     end
     return nil
+end
+
+function M.print()
+    io_console.print(taskTable)
 end
 
 return M
