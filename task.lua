@@ -14,11 +14,18 @@ M.PRIORITY_HIGH   = 2  -- 優先度高。サイレス。MB
 M.PRIORITY_MIDDLE = 3  -- 優先度中。デバフ。通常ケアル
 M.PRIORITY_LOW    = 4  -- 優先度低。バフ。通常の魔法、遠隔武器
 local PRIORITY_LAST  = 4
--- タスク
-
+local taskTable = {
+    [M.PRIORITY_TOP]    = {},
+    [M.PRIORITY_HIGH]   = {},
+    [M.PRIORITY_MIDDLE] = {},
+    [M.PRIORITY_LOW]    = {},
+}
+-- ex) [M.PRIORITY_HIGH]   = { task1, task2, ... },
 M.newTask = function(command, duration)
     return {command=command, duration=duration}
 end
+
+--
 
 local tickNextTime = os.time()
 M.tick = function()
@@ -33,18 +40,22 @@ M.tick = function()
     tickNextTime = os.time() + task.duration
 end
 
--- 
--- 種類
-local taskTable = {
-    [M.PRIORITY_TOP]    = {},
-    [M.PRIORITY_HIGH]   = {},
-    [M.PRIORITY_MIDDLE] = {},
-    [M.PRIORITY_LOW]    = {},
-}
+function taskEqual(task1, task2)
+    return task1.command == task2.command
+end
+
+function taskContain(level, task)
+    for i,t in ipairs(taskTable[level]) do
+	if taskEqual(t, task) then
+	    return true
+	end
+    end
+    return false
+end
 
 -- タスク追加
 function M.setTask(level, task)
-    if utils.contains(taskTable[level], task) == false then
+    if taskContain(level, task) == false then
 	table.insert(taskTable[level], task)
     end
 end

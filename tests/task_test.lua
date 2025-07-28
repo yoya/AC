@@ -8,6 +8,7 @@ local task3 = actask.newTask("input /ma スタン <t>", 2)
 local task4 = actask.newTask("input /ma ウォークライ <t>", 2)
 
 actask.setTask(actask.PRIORITY_HIGH, task1)
+actask.setTask(actask.PRIORITY_HIGH, task1)
 actask.setTask(actask.PRIORITY_HIGH, task2)
 actask.setTask(actask.PRIORITY_TOP, task3)
 actask.setTask(actask.PRIORITY_MIDDLE, task4)
