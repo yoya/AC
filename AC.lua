@@ -685,6 +685,7 @@ local idleFunction = function()
     -- ワークス応援
     if mob.name == "Station Worker" then
         works.boost.stationWorkerFunction(zone, mob)
+	auto = false
     end
     if mob.name == "Ergon Locus" then
 	works.survey.ergonLocusFunction()
