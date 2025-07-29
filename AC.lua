@@ -34,18 +34,31 @@ local crystal_ids = item_data.crystal_ids -- クリスタル/塊
 local seal_ids = item_data.seal_ids -- 印章
 local cipher_ids = item_data.cipher_ids --  盟スクロール
 
-local preferedEnemyList = {
-    "Profane Circle", "Chaos",--- カオス戦
-    --- テスト
-    "Mourioche",  -- マンドラ
---    "Apex Toad",  -- トード
-    "Knotted Root", "Bedrock Crag", "Icy Palisade", -- コロナイズ
-    -- 醴泉島
-    "Wretched Poroggo", "Water Elemental", 
-    "Indomitable Faaz", "Devouring Mosquito", -- 醴泉島
+-- (他と戦闘中なら中断してでも)先に倒すべき敵
+local firstDefeatedEnemyList = {
+    -- カオス戦
+    "Profane Circle",
     -- アンバス
     "Tyny Lycopodium",
-    "Skullcap", "Bozzetto Elemental"
+    "Skullcap", "Bozzetto Elemental",
+    -- 醴泉島
+    "Wretched Poroggo", "Water Elemental",
+}
+
+-- 優先して釣る敵
+local preferedEnemyList = {
+    -- カオス戦
+    "Profane Circle", "Chaos",
+    -- アンバス
+    "Tyny Lycopodium",
+    "Skullcap", "Bozzetto Elemental",
+    -- コロナイズ
+    "Knotted Root", "Bedrock Crag", "Icy Palisade",
+    -- 醴泉島
+    "Wretched Poroggo", "Water Elemental",
+    "Indomitable Faaz", "Devouring Mosquito",
+    -- 実験
+    "Mourioche",  -- マンドラ
 }
 
 command.send('bind ^d ac start')
