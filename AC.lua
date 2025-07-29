@@ -688,14 +688,15 @@ local tick = function()
         return 
     end
     zone_change.warp_handler_tick()
+    acjob.tick()
     -- ここからは auto のみ。
     if not auto then
         return
     end
     tickRunning = true
     local player = windower.ffxi.get_player()
-    if player ~= nil then   --- ログインし直す時に
-        cureIfPartyHPisLow()
+    if player ~= nil then   --- ログインし直す時に nil
+       -- cureIfPartyHPisLow()
        if player.status == 0 then
             --- 待機中
           idleFunction()
@@ -709,7 +710,6 @@ local tick = function()
             figtingFunction()
         end
     end
-    acjob.tick()
     tickRunning = false
 end
 

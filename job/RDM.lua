@@ -1,5 +1,8 @@
 -- 赤魔導士
 
+local role_Healer = require 'role/Healer'
+local io_chat = require 'io/chat'
+
 local M = {}
 
 M.mainJobProbTable = {
@@ -37,5 +40,17 @@ M.subJobProbTable = {
     { 500, 120-10, 'input /ma ヘイスト <p2>', 4 },
     -- { 100, 120-30, 'input /ma ヘイスト <p3>', 4 },
 }
+
+function M.mainTick()
+    if role_Healer.mainTick ~= nil then
+	role_Healer.mainTick()
+    end
+end
+
+function M.subTick()
+    if role_Healer.subTick ~= nil then
+	role_Healer.subTick()
+    end
+end
 
 return M

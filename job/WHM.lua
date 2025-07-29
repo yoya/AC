@@ -1,4 +1,6 @@
--- 黒魔道士
+-- 白魔道士
+
+local role_Healer = require 'role/Healer'
 
 local M = {}
 
@@ -42,5 +44,17 @@ M.subJobProbTable = {
     { 5, 300-30, 'input /ma ストンスキン <me>', 5},
     { 100, 120-30, 'input /ma ヘイスト <p1>', 4 },
 }
+
+function M.mainTick()
+    if role_Healer.mainTick ~= nil then
+	role_Healer.mainTick()
+    end
+end
+
+function M.subTick()
+    if role_Healer.subTick ~= nil then
+	role_Healer.subTick()
+    end
+end
 
 return M

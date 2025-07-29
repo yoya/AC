@@ -1,7 +1,5 @@
 -- 黒魔道士
 
-local command = require 'command'
-local asinspect = require 'inspect'
 local role_Magicburst = require 'role/Magicburst'
 
 local M = {}
