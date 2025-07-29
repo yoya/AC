@@ -753,7 +753,6 @@ local stop2 = function()
     auto = false
     acpos.stop()
     works.stop()
-    windower.add_to_chat(17, '### AutoA  STOP')
 end
 
 local start = function()
@@ -809,7 +808,7 @@ local changeWS = function(wskey)
     end
     ws.weaponskill = wskey
     wsName = ws.weaponskillTable[ws.weaponskill]
-    io_chat.print('set any ' .. wskey .. ' => ' .. wsName)
+    io_chat.print('set any', wskey, '=>', wsName)
 end
 
 local showMob = function()
@@ -928,23 +927,23 @@ windower.register_event('addon command', function(command, command2)
 	end
 	io_chat.print("スクロール学習終わり")
     elseif command == 'help' then
-        windower.add_to_chat(17, 'AC (AccountCluster)  v' .. _addon.version .. 'commands:')
-        windower.add_to_chat(17, '//ac [options]')
-        windower.add_to_chat(17, '    start           - Starts auto attack with ranged weapon')
-        windower.add_to_chat(17, '    stop            - Stops auto attack with ranged weapon')
-        windower.add_to_chat(17, '    ws              - Change weapon skill')
-        windower.add_to_chat(17, '    move <route>    - Auto move')
-        windower.add_to_chat(17, '    attack          - Change attack mode')
-        windower.add_to_chat(17, '    puller {on|off} - Change puller mode')
-        windower.add_to_chat(17, '    silt|beads      - Use silt or beads')
-        windower.add_to_chat(17, '    scroll          - Learning from Scroll')
-        windower.add_to_chat(17, '    showmob         - Show mob info')
-        windower.add_to_chat(17, '    pos|info|nearest - Debug command')
-        windower.add_to_chat(17, '    help            - Displays this help text')
-        windower.add_to_chat(17, ' ')
-        windower.add_to_chat(17, 'AC will automate account cluster something.')
-        windower.add_to_chat(17, 'To start AC without commands use the key:  Ctrl+D')
-        windower.add_to_chat(17, 'To stop AC attacks in the same manner:  Atl+D')
+        io_chat.print('AC (AccountCluster)  v' .. _addon.version .. 'commands:')
+        io_chat.print('//ac [options]')
+        io_chat.print('    start           - Starts auto attack with ranged weapon')
+        io_chat.print('    stop            - Stops auto attack with ranged weapon')
+        io_chat.print('    ws              - Change weapon skill')
+        io_chat.print('    move <route>    - Auto move')
+        io_chat.print('    attack          - Change attack mode')
+        io_chat.print('    puller {on|off} - Change puller mode')
+        io_chat.print('    silt|beads      - Use silt or beads')
+        io_chat.print('    scroll          - Learning from Scroll')
+        io_chat.print('    showmob         - Show mob info')
+        io_chat.print('    pos|info|nearest - Debug command')
+        io_chat.print('    help            - Displays this help text')
+        io_chat.print(' ')
+        io_chat.print('AC will automate account cluster something.')
+        io_chat.print('To start AC without commands use the key:  Ctrl+D')
+        io_chat.print('To stop AC attacks in the same manner:  Atl+D')
     else
         io_chat.print("See ac help!!!")
     end
