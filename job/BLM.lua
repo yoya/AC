@@ -2,6 +2,7 @@
 
 local command = require 'command'
 local asinspect = require 'inspect'
+local role_Magicburst = require 'role/Magicburst'
 
 local M = {}
 
@@ -44,14 +45,8 @@ M.subJobProbTable = {
 }
 
 function M.mainTick()
-    local ws_time = asinspect.ws_time + 2
-    local now = os.time()
-    if ws_time < now then
-	if  now < (ws_time + 1) then
-	    command.send('input /ma ブリザドV <t>')
-	elseif now < (ws_time + 3) then
-	    command.send('input /ma ブリザドIV <t>')
-	end
+    if role_Magicburst.mainTick ~= nil then
+	role_Magicburst.mainTick()
     end
 end
 
