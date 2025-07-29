@@ -9,11 +9,13 @@ local config = require 'config'
 
 local command = require 'command'
 local works = require 'works'
+local pull = require 'pull'
 
 local defaults = {
     Period = 1.0,
 ---    CampRange = 15.0,
     CampRange = 18.0,
+    PullMethod = pull.MELEE,
 }
 
 local settings = config.load(defaults)
