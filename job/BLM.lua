@@ -42,9 +42,9 @@ M.subJobProbTable = {
     -- { 200, 30, 'input /ma フロスト <t>', 3, true},
 }
 
-function M.mainTick()
+function M.mainTick(player)
     if role_Magicburst.mainTick ~= nil then
-	role_Magicburst.mainTick()
+	role_Magicburst.mainTick(player)
     end
 end
 

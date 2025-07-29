@@ -41,8 +41,7 @@ M.cureIfPartyHPisLow = function(hp_need_cure)
     end
 end
 
-function M.mainTick()
-    local player = windower.ffxi.get_player()
+function M.mainTick(player)
     if player.main_job == "WHM" then
 	M.cureIfPartyHPisLow(75)
     else
@@ -50,7 +49,7 @@ function M.mainTick()
     end
 end
 
-function M.subTick()
+function M.subTick(player)
     M.cureIfPartyHPisLow(50)
 end
 

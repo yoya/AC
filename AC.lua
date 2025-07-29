@@ -60,7 +60,6 @@ local iamLeader = utils.iamLeader
 local turnToPos = utils.turnToPos
 local turnToTarget = utils.turnToTarget
 local turnToFront = utils.turnToFront
-local cureIfPartyHPisLow = utils.cureIfPartyHPisLow
 
 local io_net = require 'io/net'
 local io_chat = require 'io/chat'
@@ -684,19 +683,20 @@ local tickRunning = false
 
 --- 途中での return 抜け禁止。最後でフラグ落とすので。
 local tick = function()
+    local player = windower.ffxi.get_player()
+    if player ~= nil then   --- ログインし直す時に nil
+	zone_change.warp_handler_tick()
+	acjob.tick(player)
+    end
     if tickRunning then
         return 
     end
-    zone_change.warp_handler_tick()
-    acjob.tick()
     -- ここからは auto のみ。
     if not auto then
         return
     end
     tickRunning = true
-    local player = windower.ffxi.get_player()
     if player ~= nil then   --- ログインし直す時に nil
-       -- cureIfPartyHPisLow()
        if player.status == 0 then
             --- 待機中
           idleFunction()

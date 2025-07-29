@@ -5,14 +5,14 @@ local asinspect = require 'inspect'
 
 local M = {}
 
-function M.mainTick()
-    local ws_time = asinspect.ws_time + 3
+function M.mainTick(player)
+    local ws_time = asinspect.ws_time + 4
     local now = os.time()
     if ws_time < now then
-	if  now < (ws_time + 1) then
+	if  now < (ws_time + 2) then
 	    -- command.send('input /ma ブリザドV <t>')
 	    command.send('input /ma ファイアV <t>')
-	elseif now < (ws_time + 3) then
+	elseif now < (ws_time + 4) then
 	    -- command.send('input /ma ブリザドIV <t>')
 	    command.send('input /ma ファイアIV <t>')
 	end
