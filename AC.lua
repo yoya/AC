@@ -221,13 +221,15 @@ local notLeaderFunction = function()
     local dy = leader_pos.y - me_pos.y
     local dist =  math.sqrt(dx*dx + dy*dy)
     --- リーダーと離れたのを確率的に気づくように
-    if math.random(1, 2) <= 1 and dist > math.random(3,5) then
+    if math.random(1, 3) <= 1 and dist > math.random(3, 5) then
         isFar = true
+    elseif dist > 6 then -- 6 離れると
+        isFar = true
+    end
+    if isFar == true then
         turnToTarget(target_leader)
         turnToFront()
         windower.ffxi.run(dx, dy)
-    end
-    if isFar then
         if dist > math.random(2, 4) then
             return
         end
