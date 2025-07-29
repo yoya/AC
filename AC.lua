@@ -312,8 +312,6 @@ local figtingFunction = function()
         print("if enemy_pos.x == nil")
         return
     end
---    cureIfPartyHPisLow()
-
     local dx = enemy_pos.x - me_pos.x
     local dy = enemy_pos.y - me_pos.y
     local dist =  math.sqrt(dx*dx + dy*dy)
