@@ -15,14 +15,14 @@ end
 
 -- 中間の角度
 function M.midangle(a, b)
-    a = normalangle(a)
-    b = normalangle(b)
+    a = M.normalangle(a)
+    b = M.normalangle(b)
     if math.abs(a-b) < math.pi then
         return M.normalangle((a + b) / 2)
     end
     a = a % (2*math.pi)
     b = b % (2*math.pi)
-    return normalangle(a - b)
+    return M.normalangle(a - b)
 end
 
 return M
