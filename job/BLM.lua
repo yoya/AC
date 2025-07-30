@@ -1,8 +1,8 @@
 -- 黒魔道士
 
-local role_Magicburst = require 'role/Magicburst'
-
 local M = {}
+
+local role_Sorcerer = require 'role/Sorcerer'
 
 M.mainJobProbTable = {
     -- { 200, 10, 'input /ma ブリザド <t>', 2 },
@@ -43,8 +43,8 @@ M.subJobProbTable = {
 }
 
 function M.mainTick(player)
-    if role_Magicburst.mainTick ~= nil then
-	role_Magicburst.mainTick(player)
+    if role_Sorcerer.mainTick ~= nil then
+	role_Sorcerer.mainTick(player)
     end
 end
 

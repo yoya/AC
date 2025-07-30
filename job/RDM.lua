@@ -1,6 +1,7 @@
 -- 赤魔導士
 
 local role_Healer = require 'role/Healer'
+local role_Sorcerer = require 'role/Sorcerer'
 local io_chat = require 'io/chat'
 
 local M = {}
@@ -44,6 +45,9 @@ M.subJobProbTable = {
 function M.mainTick(player)
     if role_Healer.mainTick ~= nil then
 	role_Healer.mainTick(player)
+    end
+    if role_Sorcerer.mainTick ~= nil then
+	role_Sorcerer.mainTick(player)
     end
 end
 

@@ -2,6 +2,8 @@
 
 local M = {}
 
+local role_Sorcerer = require 'role/Sorcerer'
+
 --- 通常の敵
 --local GEO_inde = "インデフューリー"
 local GEO_inde = "インデヘイスト"
@@ -56,5 +58,11 @@ M.mainJobProbTable_2 = {
 }
  
 M.subJobProbTable = { }
+
+function M.mainTick(player)
+    if role_Sorcerer.mainTick ~= nil then
+	role_Sorcerer.mainTick(player)
+    end
+end
 
 return M
