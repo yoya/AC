@@ -1,6 +1,5 @@
----
---- Prob
---- 確率的なコマンド実行
+-- Prob
+-- 確率的なコマンド実行
 
 local utils = require 'utils'
 local acjob = require 'job'
@@ -10,11 +9,11 @@ local command = require 'command'
 local io_chat = require 'io/chat'
 local M = {}
 
---- job = { probPermil(1/1000), recast, command, wait }
+-- job = { probPermil(1/1000), recast, command, wait }
 
 local sendCommandProbTable = {
     ALL = {
----     { 200, 900, 'input /item キャパシティリング <me>', 1 },
+	-- { 200, 900, 'input /item キャパシティリング <me>', 1 },
     },
 }
 
@@ -46,7 +45,7 @@ end
 
 M.getSendCommandProbTable = function(mainJob, subJob, rankInJob)
     local merged = {}
---    print("rankInJob", rankInJob)
+    -- print("rankInJob", rankInJob)
     for job, commprob in pairs(sendCommandProbTable) do
         if job == mainJob or job == mainJob..'_'..rankInJob or job == "ALL" then
             merged = merge_lists(merged, commprob)
@@ -65,16 +64,16 @@ M.getSendCommandProbTable = function(mainJob, subJob, rankInJob)
 end 
 
 M.sendCommandProb = function(table, period, ProbRecastTime)
-    ---    print("sendCommandProb")
+    -- print("sendCommandProb")
     local rnd = math.random(1, 1000)
     local pp = 0
     local pn = 0
     for i, p_c in ipairs(table) do
-        local p = p_c[1]  --- probability
-        local r = p_c[2]  --- recast time
-        local c = p_c[3]  --- command
-        local t = p_c[4]  --- time
-	local f = p_c[4]  --- fight reset
+        local p = p_c[1]  -- probability
+        local r = p_c[2]  -- recast time
+        local c = p_c[3]  -- command
+        local t = p_c[4]  -- time
+	local f = p_c[4]  -- fight reset
 	if t == nil then
 	    io_chat.print(p_c)
 	    return
