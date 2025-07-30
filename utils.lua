@@ -1,14 +1,24 @@
---- Utility
---- 雑多な関数群。整理できてない
+-- Utility
+-- 雑多な関数群。整理できてない
 
 local command = require 'command'
 
 local M = {}
 
 -- utils/*.lua メソッドのマージ
-for n, m in pairs(require 'utils/table') do M[n] = m end
-for n, m in pairs(require 'utils/angle') do M[n] = m end
-for n, m in pairs(require 'utils/party') do M[n] = m end
+function M.child_module_merge(parent, mod)
+    mod.parent = parent
+    for n, m in pairs(mod) do
+	if M[n] ~= nil then
+	    error("utils.child_module_merge: duplicate member:"..n)
+	end
+	M[n] = m
+    end
+end
+
+M.child_module_merge(M, require 'utils/table')
+M.child_module_merge(M, require 'utils/angle')
+M.child_module_merge(M, require 'utils/party')
 
 function M.iamLeader()
     local player = windower.ffxi.get_player()
