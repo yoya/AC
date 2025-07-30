@@ -26,11 +26,10 @@ for k,v in pairs(acjob.jobTable) do
     if v.mainJobProbTable ~= nil then
 	sendCommandProbTable[k] = v.mainJobProbTable
     end
-    if v.mainJobProbTable_1 ~= nil then
-	sendCommandProbTable[k.."_1"] = v.mainJobProbTable_1
-    end
-    if v.mainJobProbTable_2 ~= nil then
-	sendCommandProbTable[k.."_2"] = v.mainJobProbTable_2
+    for i = 1, 6 do
+	if (v["mainJobProbTable_" .. i]) ~= nil then
+	    sendCommandProbTable[k.."_" .. i] = v["mainJobProbTable_" .. i]
+	end
     end
     if v.subJobProbTable ~= nil then
 	sendCommandProbTableSub[k] = v.subJobProbTable
