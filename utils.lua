@@ -9,8 +9,8 @@ local M = {}
 function M.child_module_merge(parent, mod)
     mod.parent = parent
     for n, m in pairs(mod) do
-	if M[n] ~= nil then
-	    error("utils.child_module_merge: duplicate member:"..n)
+	if n ~= 'parent' and M[n] ~= nil then
+	    error("utils.child_module_merge:\nduplicate member:"..n)
 	end
 	M[n] = m
     end
