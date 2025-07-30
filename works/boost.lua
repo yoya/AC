@@ -58,7 +58,8 @@ function M.turnToDirecton(mob, theta)
         acmob.getMobPosition(me_pos, "me")
         local dx = me_pos.x - mob.x
         local dy = me_pos.y - mob.y
-	local t = math.atan2(dx, dy) + 2*math.pi/32
+	-- local t = math.atan2(dx, dy) + 2*math.pi/32
+	local t = math.atan2(dx, dy)
         local dt = (theta % (2*math.pi)) - (t % (2*math.pi))
 	-- io_chat.print("theta:"..theta.." t:"..t.." dt:"..dt)
         if math.abs(dt) < 2*math.pi/32 then
