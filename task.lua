@@ -65,27 +65,36 @@ function taskEqual(task1, task2)
     return task1.command == task2.command
 end
 
-function taskContain(level, task)
+function taskIndex(level, task)
     for i,t in ipairs(taskTable[level]) do
 	if taskEqual(t, task) then
-	    return true
+	    return i
 	end
+    end
+    return 0
+end
+
+function taskContain(level, task)
+    if taskIndex(level, task) > 0 then
+	return true
     end
     return false
 end
 
 -- タスク追加
 function M.setTask(level, task)
-    if taskContain(level, task) == false then
+    if taskContain(level, task) == false then  -- 重複避け
 	table.insert(taskTable[level], task)
     end
 end
 
 -- タスク削除
 function M.removeTask(level, task)
-    if utils.contains(taskTable[level], task) == false then
-	table.remove(taskTable[level], task)
+    local i = taskIndex(level, task)
+    if i > 0 then
+	table.remove(taskTable[level], i)
     end
+    return i
 end
 
 -- 優先順の高い方から、1つだけタスクを取得
