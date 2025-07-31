@@ -1,7 +1,7 @@
 local M = {}
 
 M.MELEE = 1
-M.AVILITY = 2
+M.ABILITY = 2
 M.MAGIC = 3
 M.RANGE = 4
 
