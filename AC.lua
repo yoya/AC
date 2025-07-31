@@ -315,11 +315,14 @@ local figtingFunction = function()
     turnToTarget("t")
 ---    if player.vitals.tp >= math.random(1100, 1200) then
     --- PLD はタゲ取り.RNG はエヴィ用。"BLM", "SMN", "SCH"はミルキル
-    local tp100Jobs = {-"RNG", "BLM", "SMN", "SCH"}
+    -- local tp100Jobs = {-"RNG", "BLM", "SMN", "SCH"}
+    local tp100Jobs = {}
     --- WAR はスチサイ用。DNC はダンス用？
     local tpJobs = {"DNC"}
-    local tpMin = 1200
-    local tpMax = 1500
+--    local tpMin = 1200
+--    local tpMax = 1500
+    local tpMin = 2000
+    local tpMax = 2500
     if utils.contains(tp100Jobs, player.main_job) then
         tpMin = 1050
         tpMax = 1150
@@ -328,10 +331,13 @@ local figtingFunction = function()
         tpMax = 2500
     end
     local ws_request = false
+    local now = os.time()
     if  player.vitals.tp >= 1000 and (asinspect.ws_time + 3) < os.time() then
 	if player.vitals.tp >= math.random(tpMin,tpMax) then
 	    ws_request = true
-	elseif (asinspect.ws_time + 5) < os.time() then
+	elseif (asinspect.ws_time + 3) < now and
+	    now < (asinspect.ws_time + 5) then
+	    -- 連携受付時間なら WS 即打ち
 	    ws_request = true
 	end
     end
