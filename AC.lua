@@ -36,7 +36,7 @@ local crystal_ids = item_data.crystal_ids -- クリスタル/塊
 local seal_ids = item_data.seal_ids -- 印章
 local cipher_ids = item_data.cipher_ids --  盟スクロール
 
--- (他と戦闘中なら中断してでも)先に倒すべき敵
+-- (他と戦闘中でも中断して)先に倒すべき敵
 local firstDefeatedEnemyList = {
     -- カオス戦
     "Profane Circle",
@@ -170,7 +170,7 @@ local notLeaderFunction = function()
     local me_pos = {}
     local leader_pos = {}
     getMobPosition(me_pos, "me")
-    --- p1 がリーダーだと仮定。
+    --- p1 がリーダーだと仮定。(リーダーというよりフォローする対象が p1)
     local target_leader = "p1"
     getMobPosition(leader_pos, target_leader)
     if leader_pos.x == nil then
@@ -776,15 +776,15 @@ windower.register_event('addon command', function(command, command2)
     command = command and command:lower() or 'help'
     if command == 'start' then
         start()
-	io_chat.print({"attack mode", attack})
+	io_chat.print("attack mode", attack)
     elseif command == 'stop' then
         stop()
     elseif command == 'attack' then
         attack = not attack
-        io_chat.print({"attack mode", attack})
+        io_chat.print("attack mode", attack)
     elseif command == 'camprange' then
         settings.CampRange = tonumber(command2, 10)
-        io_chat.print({"CampRange:", command2})
+        io_chat.print("CampRange:", command2)
     elseif command == 'showmob' then
         showMob()
     elseif command == 'silt' then
