@@ -17,6 +17,19 @@ M.routes = {
     gob = { {x=-99.6,y=-183.4}, {x=-93.8,y=-150.4},
 	{x=-68.7,y=-102.6},{x=-51.2,y=-113.2}
     },
+    -- HP(E)
+    grey = { -- grayson (A.M.A.N.トローブ)
+	{x=-99.6,y=-183.4,z=0}, {x=-96.5,y=-173,d=0.5},
+	{x=-93.4,y=-168,z=0,d=0.5}, {a="f8touch"}
+    }
+}
+
+M.essentialPoints = {
+    hp1 = {x=-99.6,y=-183.4,z=0}
+}
+
+M.automatic_routes = {
+    hp1 = "grey"
 }
 
 return M
