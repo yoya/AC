@@ -1,12 +1,11 @@
 -- 統計情報。
 -- 倒した敵の count とか
 
-require('chat') -- string:color
-local io_chat = require('io/chat')
-
 local M = {
     DefeatedEnemyTable = {}
 }
+
+local io_chat = require('io/chat')
 
 function M.init()
     M.DefeatedEnemyTable = {}
@@ -20,8 +19,10 @@ function M.defeat(name)
 end
 
 function M.print()
-    io_chat.print("=== Defeated Enemy Table ===":color(5));
+    io_chat.setNextColor(5)
+    io_chat.print("=== Defeated Enemy Table ===");
     for name, count in pairs(M.DefeatedEnemyTable) do
+	io_chat.setNextColor(6)
 	io_chat.print(name .. ": "..count);
     end
 end
