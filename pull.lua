@@ -7,7 +7,7 @@ M.RANGE = 4
 
 M.pullTable = {
     [M.MELEE]   = require 'pull/melee',
-    [M.AVILITY] = require 'pull/avility',
+    [M.ABILITY] = require 'pull/ability',
     [M.MAGIC]   = require 'pull/magic',
     [M.RANGE]   = require 'pull/range',
 }
