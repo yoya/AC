@@ -167,49 +167,6 @@ local notLeaderFunction = function()
     local subJob = player.sub_job
 ---    local level = player.main_job_level
     local item_level = player.item_level
-    if item_level < 109 then --- 潜在落とし
---        if math.random(1, 100) < 0 then
---            command.send('input /ma インビジ <me>')
---        end
-        if (mainJob == "WHM" or  (mainJob == "SCH" and subJob == "WHM")) and math.random(1, 100) < 10 then
-            if math.random(1, 100) < 50 then
-                if math.random(1, 100) < 50 then
-                    command.send('input /ma ケアル <p1>')
-                else
-                    command.send('input /ma ストンスキン <me>')
-                end                 
-            else
-                if math.random(1, 100) < 50 then
-                    command.send('input /ma バウォタラ <me>')
-                else
-                    command.send('input /ma ブリンク <me>')   
-                end
-            end
-        end
-        if mainJob == "GEO" and math.random(1, 100) <= 5 then
----            command.send('input /ma インデフューリー <me>')
-           command.send('input /ma インデリフレシュ <me>')
-        end
-        if mainJob == "BRD" and math.random(1, 100) < 5 then
-            if math.random(1, 100) <= 30 then
-                command.send('input /ma 無敵の進撃マーチ <me>')
-            elseif math.random(1, 100) <= 50 then
-                command.send('input /ma 戦士達のピーアンIII <me>')
-            else
-                command.send('input /ma ブリンク <me>') 
-            end
-        end
-        if subJob == "RDM" then
-            if math.random(1, 100) <= 0 then
-                command.send('input /ma リフレシュ <me>')  
-            end
-            if math.random(1, 100) <= 1 then
-                command.send('input /ja コンバート <me>') 
-
-            end
-        end
---      return
-    end
     local me_pos = {}
     local leader_pos = {}
     getMobPosition(me_pos, "me")
@@ -348,14 +305,6 @@ local figtingFunction = function()
          }, 1.0, ProbRecastTime)
          --- 一回だけなので 1 を入れる。
         end
-    end
-    -- 羅盤が戦闘場所から離れてたら消す
-    if mainJob == "GEO" and math.random(1, 100) <= 30 then
-        local petdist = acpos.targetDistance("pet")
-        if petdist ~= nil and petdist > math.random(25, 40) then
-            io_chat.print("petdist:"..petdist)
-            command.send('input /ja フルサークル <me>; wait 2; input /ja グローリーブレイズ <me>; wait 2; input /ma ジオフレイル <bt>')
-        end 
     end
     --- 止まって戦闘開始
     isFar = false

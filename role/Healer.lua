@@ -42,15 +42,29 @@ M.cureIfPartyHPisLow = function(hp_need_cure)
 end
 
 function M.mainTick(player)
-    if player.main_job == "WHM" then
-	M.cureIfPartyHPisLow(75)
+    local item_level = player.item_level
+    if item_level < 117 then
+        if math.random(1, 100) < 0 then
+            -- command.send('input /ma インビジ <me>')
+        end
     else
-	M.cureIfPartyHPisLow(60)
+	if player.main_job == "WHM" then
+	    M.cureIfPartyHPisLow(75)
+	else
+	    M.cureIfPartyHPisLow(60)
+	end
     end
 end
 
 function M.subTick(player)
-    M.cureIfPartyHPisLow(50)
+    local item_level = player.item_level
+    if item_level < 117 then
+        if math.random(1, 100) < 0 then
+            -- command.send('input /ma インビジ <me>')
+        end
+    else
+	M.cureIfPartyHPisLow(50)
+    end
 end
 
 return M
