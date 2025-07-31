@@ -20,24 +20,45 @@ local taskTable = {
     [M.PRIORITY_MIDDLE] = {},
     [M.PRIORITY_LOW]    = {},
 }
+local taskPeriodTable = {}
 -- ex) [M.PRIORITY_HIGH]   = { task1, task2, ... },
-M.newTask = function(command, duration)
-    return {command=command, duration=duration}
-end
 
---
+-- newTask
+---  command: コマンド。/input  挑発 <t> 等々
+---  duration: command にかかる時間
+---  period: 同じ command を次に実行できるまでの時間
+---  eachfight: 戦闘毎に period をリセットするか否か
+M.newTask = function(command, duration, period, eachfight)
+    return {command=command, duration=duration, period=period,
+	    eachfight=eachfight}
+end
 
 local tickNextTime = os.time()
 M.tick = function()
     if os.time() < tickNextTime then
 	return
     end
-    local task = M.getTask()
+    local level, task = M.getTask()
     if task == nil then
 	return
     end
+    -- auto run の時。/ma の command は実行せず setTask し直す
     command.send(task.command)
     tickNextTime = os.time() + task.duration
+end
+
+M.resetByFight = function()
+    -- taskPeriodTable から eachfight が true のエントリを削除する
+    for level = PRIORITY_FIRST, PRIORITY_LAST do
+	for i, task in ipairs(taskTable[level]) do
+	    if task.eachfight == true then
+		local task = taskTable[level][1]  -- 1 origin
+		table.remove(taskTable[level], 1)
+		return level, task
+	    end
+	end
+    end
+    return 0, nil
 end
 
 function taskEqual(task1, task2)
@@ -73,10 +94,10 @@ function M.getTask()
 	if #taskTable[level] >= 1 then
 	    local task = taskTable[level][1]  -- 1 origin
 	    table.remove(taskTable[level], 1)
-	    return task
+	    return level, task
 	end
     end
-    return nil
+    return 0, nil
 end
 
 function M.print()
