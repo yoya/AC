@@ -49,6 +49,7 @@ M.zoneTable = {
     [152] = require('zone/152_AltarRoom'),  -- 祭壇の間
     [159] = require('zone/159_Uggalepih'),  -- ウガレピ寺院
     [167] = require('zone/167_Bostaunieu'), -- ボストーニュ監獄
+    [172] = require('zone/172_Zeruhn'),     -- ツェールン鉱山
     [182] = require('zone/182_WalkEchoes'), -- ウォークオブエコーズ
     [183] = require('zone/183_Legion'),     -- アブダルスの模型-レギオン
     [184] = require('zone/184_LowDelkfut'), -- デルクフの塔下層
