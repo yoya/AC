@@ -210,6 +210,12 @@ local notLeaderFunction = function()
         if p1 == nil or p1.status ~= 1 or p1.target_index == 0 then
             return
         end
+	local target = windower.ffxi.get_mob_by_index(p1.target_index)
+	if target == nil or target.status ~= 1 then
+	    -- 敵と戦闘開始してなければ様子見
+	    return
+	end
+	-- p1 が戦闘している敵にターゲット
         io_net.targetByMobIndex(p1.target_index)
 ---        command.send('input /target <bt>')
         local mob = windower.ffxi.get_mob_by_target("t")
