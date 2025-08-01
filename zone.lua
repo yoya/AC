@@ -62,6 +62,7 @@ M.zoneTable = {
     [230] = require('zone/230_SSandOria'),  -- 南サンドリア
     [233] = require('zone/233_ChatdOrag'),  -- ドラギーユ城
     [234] = require('zone/234_BastokMine'), -- バストゥーク鉱山区
+    [235] = require('zone/235_BastokMark'), -- バストゥーク商業区
     [236] = require('zone/236_PortBastok'), -- バストゥーク港
     [237] = require('zone/237_Metalworks'), -- 大工房
     [238] = require('zone/238_WindWaters'), -- ウィンダス水の区
