@@ -25,26 +25,18 @@ local taskPeriodTable = {}
 
 -- newTask
 ---  command: コマンド。/input  挑発 <t> 等々
+---  delay 開始するまでの遅延
 ---  duration: command にかかる時間
 ---  period: 同じ command を次に実行できるまでの時間
 ---  eachfight: 戦闘毎に period をリセットするか否か
-M.newTask = function(command, duration, period, eachfight)
-    return {command=command, duration=duration, period=period,
+M.newTask = function(command, delay, duration, period, eachfight)
+    assert(type(command) == "string", "command need to be a string: "..command)
+    assert(type(delay) == "number", "delay need to be a number: "..command)
+    assert(type(duration) == "number", "duration need to be a number: "..command)
+    assert(type(period) == "number", " period need to be a number: "..command)
+    assert(type(eachfight) == "boolean", "eachfight need to be a boolean: "..command)
+    return {command=command, delay=delay, duration=duration, period=period,
 	    eachfight=eachfight}
-end
-
-local tickNextTime = os.time()
-M.tick = function()
-    if os.time() < tickNextTime then
-	return
-    end
-    local level, task = M.getTask()
-    if task == nil then
-	return
-    end
-    -- auto run の時。/ma の command は実行せず setTask し直す
-    command.send(task.command)
-    tickNextTime = os.time() + task.duration
 end
 
 M.resetByFight = function()
@@ -85,6 +77,11 @@ end
 function M.setTask(level, task)
     if taskContain(level, task) == false then  -- 重複避け
 	table.insert(taskTable[level], task)
+	local c = task.command
+	local t = os.time() + task.delay
+	if taskPeriodTable[c] == nil or taskPeriodTable[c] < t then
+	    taskPeriodTable[c] = t
+	end
     end
 end
 
@@ -99,14 +96,33 @@ end
 
 -- 優先順の高い方から、1つだけタスクを取得
 function M.getTask()
+    local now = os.time()
     for level = PRIORITY_FIRST, PRIORITY_LAST do
-	if #taskTable[level] >= 1 then
-	    local task = taskTable[level][1]  -- 1 origin
-	    table.remove(taskTable[level], 1)
-	    return level, task
+	for i, task in ipairs(taskTable[level]) do
+	    local c = task.command
+	    local t = taskPeriodTable[c]
+	    if t <= now then
+		taskPeriodTable[c] = os.time() + task.period
+		table.remove(taskTable[level], 1)
+		return level, task
+	    end
 	end
     end
     return 0, nil
+end
+
+local tickNextTime = os.time()
+M.tick = function()
+    if os.time() < tickNextTime then
+	return
+    end
+    local level, task = M.getTask()
+    if task == nil then
+	return
+    end
+    -- auto run の時。/ma の command は実行せず setTask し直す
+    command.send(task.command)
+    tickNextTime = os.time() + task.duration
 end
 
 function M.print()

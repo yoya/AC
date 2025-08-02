@@ -2,18 +2,20 @@ package.path = package.path .. ";../?.lua"
 local actask = require('task')
 local io_console = require('io/console')
 
-local task1 = actask.newTask("input /ja 挑発 <t>", 2, 60)
-local task2 = actask.newTask("input /ma フラッシュ <t>", 2, 45)
-local task3 = actask.newTask("input /ma スタン <t>", 2, 10)
-local task4 = actask.newTask("input /ma ウォークライ <t>", 2, 300)
+local task1 = actask.newTask("input /ja 挑発 <t>", 0, 2, 60, false)
+local task2 = actask.newTask("input /ma フラッシュ <t>", 0, 2, 45, false)
+local task3 = actask.newTask("input /ma スタン <t>", 0, 2, 10, false)
+local task4 = actask.newTask("input /echo これは無し", 1, 0, 0, false)
+local task5 = actask.newTask("input /ma ウォークライ <t>", 0, 2, 300, false)
 
 actask.setTask(actask.PRIORITY_HIGH, task1)
 actask.setTask(actask.PRIORITY_HIGH, task1)
 actask.setTask(actask.PRIORITY_HIGH, task2)
 actask.setTask(actask.PRIORITY_TOP, task3)
 actask.setTask(actask.PRIORITY_MIDDLE, task4)
+actask.setTask(actask.PRIORITY_MIDDLE, task5)
 
-for i = 1,4 do
+repeat
     local level, task = actask.getTask()
     io_console.print(level, task)
-end
+until level == 0
