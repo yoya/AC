@@ -4,6 +4,17 @@ local M = { id = 172 }
 
 M.routes = {
     -- from_bas
+    korro = { -- コロロカ
+	{x=-10,y=6,z=0}, {x=-26,y=5}, {x=-29,y=8},
+	{x=-31,y=16}, {x=-33,y=19}, {x=-55,y=20},
+	-- はじめの十字路
+	{x=-75.7,y=21.6}, {a="f8touch"}, {a="up"}, {a="enter"},
+	-- 門の向こう
+	{a="wait"}, {x=-82.9,y=19.9,z=0.3}, {x=-164,y=20,d=1},
+	{x=-177,y=13}, {x=-184,y=-14}, {x=-194,y=-20},
+	{x=-203,y=-20}, {}
+    },
+    -- from_bas
     dirt = { -- Distured Dirt (エンブリオ)
 	{x=20.5,y=3.6,z=0}, {x=-26,y=5}, {x=-29,y=8},
 	{x=-31,y=16}, {x=-33,y=19}, {x=-55,y=20},
@@ -33,10 +44,12 @@ M.routes = {
 }
 
 M.essentialPoints = {
+    book = {x=-10,y=6,z=0},
     from_bas = {x=20.5,y=3.6,z=0},
 }
 
 M.automatic_routes = {
+    book = "korro",  -- コロロカ
 --    from_bas = "gumbah",
 }
 
