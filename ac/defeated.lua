@@ -3,6 +3,7 @@
 local M = {}
 
 local acstat = require('stat')
+local io_chat =  require('io/chat')
 local ac_record =  require('ac/record')
 
 function M.done()
@@ -15,8 +16,7 @@ function M.done()
 	for i, p in ipairs(cp_jp_list) do
 	    if jobpt.jp_spent < p and p <= jobpt.jp_spent+jobpt.jp then
 		io_chat.setNextColor(3)
-		io_chat.print(p.." <= "..jobpt.jp_spent.."+"..jobpt.jp)
-		break
+		io_chat.print("======= job point: "..p.." <= "..jobpt.jp_spent.."+"..jobpt.jp)
 	    end
 	end
     end

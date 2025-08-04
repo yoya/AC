@@ -5,6 +5,7 @@ local utils_table = require "utils/table"
 
 local M = {
     eminence_point = -1,
+    unity_point = -1,
 }
 
 function M.record()
@@ -23,7 +24,7 @@ function M.record()
 	return
     end
     f:write("name: "..player.name.."\n")
-    f:write("eminence: "..M.eminence_point.."\n")
+    f:write("eminence: "..M.eminence_point.."  unity: "..M.unity_point.."\n")
     --[[
     local jpText = ""
     for job, points in pairs(player.job_points) do
@@ -38,6 +39,11 @@ end
 
 function M.eminence(pt)
     M.eminence_point = pt
+    M.record()
+end
+
+function M.unity(pt)
+    M.unity_point = pt
     M.record()
 end
 
