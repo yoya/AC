@@ -427,7 +427,6 @@ local idleFunctionTradeItems = function(tname, items, wait, enterWaits)
     coroutine.sleep(1)
 end
 
-
 -- ジャンクアイテムをかばんに集める
 local aggregateJunkItemsToInventory = function()
     local count = 0
