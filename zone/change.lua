@@ -1,6 +1,6 @@
 local acpos = require 'pos'
 local aczone = require 'zone'
-local acstat = require 'stat'
+local ac_stat = require 'ac/stat'
 local io_chat = require 'io/chat'
 
 local M = {}
@@ -43,7 +43,7 @@ end
 
 function M.zone_change_handler(zone, prevZone)
     print("zone/change zone_change_handler", zone, prevZone)
-    acstat.init()
+    ac_stat.init()
     -- zone 毎の処理
     local zone_object = aczone.zoneTable[zone]
     if zone_object == nil then

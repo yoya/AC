@@ -2,12 +2,13 @@
 
 local M = {}
 
-local acstat = require('stat')
+local ac_stat = require('ac/stat')
 local io_chat =  require('io/chat')
 local ac_record =  require('ac/record')
 
+-- 敵を倒した時に呼ばれる関数
 function M.done()
-    acstat.print()
+    ac_stat.print()
     ac_record.record()
     local player = windower.ffxi.get_player()
     local jobpt = player.job_points[string.lower(player.main_job)]

@@ -81,7 +81,7 @@ local iamLeader = ac_party.iamLeader
 
 local io_net = require 'io/net'
 local io_chat = require 'io/chat'
-local acstat = require 'stat'
+local ac_stat = require 'ac/stat'
 local asinspect = require 'inspect'
 
 local acitem = require 'item'
@@ -946,7 +946,7 @@ windower.register_event('load', 'login', 'logout', function()
 --    local player = windower.ffxi.get_player()
 --    player_id = player and player.id
     ws.init()
-    acstat.init()
+    ac_stat.init()
 end)
 
 windower.register_event('job change', function()
