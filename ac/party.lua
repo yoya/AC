@@ -18,5 +18,21 @@ function M.isMemberIndex(index)
     return false
 end
 
+function M.hasJobMemberInParty(jobName)
+    local stat = M.parent.stat
+    print(stat)
+    local party = windower.ffxi.get_party()
+    for i = 0, 5 do -- 自分含めて全員
+	local member = party["p"..i]
+	-- 該当メンバーがいる。かつエリア内にいる
+	if member ~= nil and member.mob ~= nil then
+	    if  member.mob.main_job == jobName then -- 間違ってそう。要調査
+		return true
+	    end
+	end
+    end
+    return false
+end
+
 return M
     

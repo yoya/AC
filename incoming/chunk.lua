@@ -2,12 +2,12 @@ local M = {}
 
 local packets = require('packets')
 
-local utils = require('utils')
 local io_chat = require('io/chat')
 local acstat = require('stat')
 local acinspect = require('inspect')
 local ac_record =  require('ac/record')
 local ac_defeated = require('ac/defeated')
+local ac_party = require('ac/party')
 
 local packet_handler = { }
 
@@ -46,7 +46,7 @@ packet_handler[0x029] = function(packet) -- Action Message
 	local target_index = packet["Target Index"]
 	-- io_chat.print("defeated enemy: actor:"..actor_index .. " target:"..target_index)
 	-- 敵を倒した時の処理
-	if utils.isMemberIndex(actor_index) then
+	if ac_party.isMemberIndex(actor_index) then
 	    local mob = windower.ffxi.get_mob_by_index(target_index)
 	    acstat.defeat(mob.name)
 	    -- defeated 表示/保存処理は queue に乗せる予定

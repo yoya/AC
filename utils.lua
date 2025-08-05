@@ -18,7 +18,6 @@ end
 
 M.child_module_merge(M, require 'utils/table')
 M.child_module_merge(M, require 'utils/angle')
-M.child_module_merge(M, require 'utils/party')
 
 function M.iamLeader()
     local player = windower.ffxi.get_player()
