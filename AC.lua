@@ -800,6 +800,10 @@ local showMob = function()
     else
         io_chat.print(mob)
     end
+    local me_pos = {}
+    if getMobPosition(me_pos, "me") == true then
+	io_chat.print("utils.distance: ", acpos.distance(me_pos, mob))
+    end
 end
 
 windower.register_event('addon command', function(command, command2)
