@@ -2,10 +2,10 @@
 
 local M = {}
 
-local acpos = require 'pos'
 local command = require 'command'
 local role_Sorcerer = require 'role/Sorcerer'
 
+local ac_pos = require 'ac/pos'
 local io_chat = require 'io/chat'
 
 --- 通常の敵
@@ -67,7 +67,7 @@ function M.mainTick(player)
     if player.status == 1 then -- 戦闘中
 	-- 羅盤が戦闘場所から離れてたら消す
 	if math.random(1, 100) <= 30 then
-	    local petdist = acpos.targetDistance("pet")
+	    local petdist = ac_pos.targetDistance("pet")
 	    if petdist ~= nil and petdist > math.random(30, 40) then
 		-- io_chat.print("petdist:"..petdist)
 		command.send('input /ja フルサークル <me>; wait 2; input /ja グローリーブレイズ <me>; wait 2; input /ma '..GEO_geo..' <bt>')

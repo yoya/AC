@@ -1,5 +1,5 @@
-local acpos = require 'pos'
 local aczone = require 'zone'
+local ac_pos = require 'ac/pos'
 local ac_stat = require 'ac/stat'
 local io_chat = require 'io/chat'
 
@@ -28,14 +28,14 @@ function M.automatic_routes_handler(zone, automatic_routes)
 	return
     end
     coroutine.sleep(2)
-    local pos = acpos.currentPos()
+    local pos = ac_pos.currentPos()
     coroutine.sleep(3)
-    if acpos.isNear(pos, 1) then
+    if ac_pos.isNear(pos, 1) then
 	for f, t in pairs(automatic_routes) do
 	    local fp = zone_object.essentialPoints[f]
-	    if acpos.isNear(fp, 10) then
+	    if ac_pos.isNear(fp, 10) then
 		io_chat.print(f.."から"..t.."に移動")
-		acpos.moveTo(zone_object.routes[t], zone_object.routes)
+		ac_pos.moveTo(zone_object.routes[t], zone_object.routes)
 	    end
 	end
     end
@@ -62,13 +62,13 @@ end
 
 function M.warp_handler_tick()
     local zone = windower.ffxi.get_info().zone
-    local pos = acpos.currentPos()
+    local pos = ac_pos.currentPos()
     if zone == nil or pos == nil then
 	return
     end
-    -- print("M.warp_handler_tick", zone,  acpos.distance(pos, prevPos))
+    -- print("M.warp_handler_tick", zone,  ac_pos.distance(pos, prevPos))
     if prevZone == zone then
-	local dist = acpos.distance(pos, prevPos)
+	local dist = ac_pos.distance(pos, prevPos)
 	-- 東アドゥリンWP、レンタル<=>競売が 36.8
 	if  dist > 32 then
 	    M.warp_handler(zone, pos, prevZone, prevPos, dist)

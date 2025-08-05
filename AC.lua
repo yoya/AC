@@ -89,7 +89,7 @@ local ws = require 'ws'
 local aprob = require 'prob'
 local sendCommandProb = aprob.sendCommandProb
 local getSendCommandProbTable = aprob.getSendCommandProbTable
-local acpos = require 'pos'
+local ac_pos = require 'ac/pos'
 local aczone = require 'zone'
 local zone_change = require 'zone/change'
 local incoming_chunk = require 'incoming/chunk'
@@ -734,7 +734,7 @@ end
 local stop2 = function()
     io_chat.print('### AutoA  STOP')
     auto = false
-    acpos.stop()
+    ac_pos.stop()
     works.stop()
 end
 
@@ -804,7 +804,7 @@ local showMob = function()
     end
     local me_pos = {}
     if getMobPosition(me_pos, "me") == true then
-	io_chat.print("utils.distance: ", acpos.distance(me_pos, mob))
+	io_chat.print("utils.distance: ", ac_pos.distance(me_pos, mob))
     end
 end
 
@@ -865,11 +865,11 @@ windower.register_event('addon command', function(command, command2)
     elseif command == 'move' then
         local zone = windower.ffxi.get_info().zone
 	local routeTable = aczone.getRouteTable(zone)
-        acpos.autoMoveTo(zone, command2, routeTable, false)
+        ac_pos.autoMoveTo(zone, command2, routeTable, false)
     elseif command == 'moverev' then
         local zone = windower.ffxi.get_info().zone
 	local routeTable = aczone.getRouteTable(zone)
-        acpos.autoMoveTo(zone, command2, routeTable, true)
+        ac_pos.autoMoveTo(zone, command2, routeTable, true)
     elseif command == 'info' then
         local zone = windower.ffxi.get_info().zone
         io_chat.print("zone id:"..zone)

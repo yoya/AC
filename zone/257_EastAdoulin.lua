@@ -3,7 +3,6 @@
 local M = { id = 257 }
 
 local io_chat = require 'io/chat'
-local acpos = require 'pos'
 
 M.routes = {
     -- HP#2(M)
