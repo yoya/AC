@@ -5,7 +5,7 @@
 local M = {}
 
 local utils = require 'utils'
-local array_reverse = utils.array_reverse
+local array_reverse = utils.table.array_reverse
 local turnToFront = utils.turnToFront
 
 local keyboard = require 'keyboard'

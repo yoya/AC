@@ -3,8 +3,8 @@
 local M = {}
 
 local utils = require 'utils'
-local normalangle = utils.normalangle
-local midangle = utils.midangle
+local normalangle = utils.angle.normalangle
+local midangle = utils.angle.midangle
 
 local acmob = require 'mob'
 local keyboard = require 'keyboard'

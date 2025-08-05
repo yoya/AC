@@ -6,18 +6,22 @@ local command = require 'command'
 local M = {}
 
 -- utils/*.lua メソッドのマージ
-function M.child_module_merge(parent, mod)
+function M.require_child_module(parent, parentname, modname)
+    local mod = require(parentname..'/'..modname)
     mod.parent = parent
+    parent[modname] = mod
+    --[[
     for n, m in pairs(mod) do
 	if n ~= 'parent' and M[n] ~= nil then
-	    error("utils.child_module_merge:\nduplicate member:"..n)
+	    error("utils.require_child_module:\nduplicate member:"..n)
 	end
 	M[n] = m
     end
+    ]]
 end
 
-M.child_module_merge(M, require 'utils/table')
-M.child_module_merge(M, require 'utils/angle')
+M.require_child_module(M, 'utils', 'table')
+M.require_child_module(M, 'utils', 'angle')
 
 function M.iamLeader()
     local player = windower.ffxi.get_player()

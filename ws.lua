@@ -3,7 +3,7 @@
 require('functions')
 local res = require 'resources'
 local utils = require 'utils'
-local get_keys = utils.get_keys
+local get_keys = utils.table.get_keys
 local command = require 'command'
 local io_chat = require 'io/chat'
 
@@ -148,7 +148,7 @@ M.exec = function()
     end
     wsname = M.weaponskillTable[M.weaponskill]
     local target = "<t>"
-    if utils.contains(M.weaponskillTargetMeTable, M.weaponskill) then
+    if utils.table.contains(M.weaponskillTargetMeTable, M.weaponskill) then
         target = "<me>"
     end
     windower.ffxi.run(false)

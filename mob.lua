@@ -46,8 +46,7 @@ M.getNearestFightableMob = function(pos, dist, preferMobs)
     local mobArr = windower.ffxi.get_mob_array()
     for i, m in pairs(mobArr) do
         --- リンクすると status が 1になるので対象にする
---        print("preferMobs: " ..  m.name, "  c:", preferMobs:contains(m.name))
-        if ( preferMobs == nil or utils.contains(preferMobs, m.name)) and
+        if ( preferMobs == nil or utils.table.contains(preferMobs, m.name)) and
             isMobAttackable(m) then
             local dx = m.x - pos.x
             local dy = m.y - pos.y
@@ -59,7 +58,7 @@ M.getNearestFightableMob = function(pos, dist, preferMobs)
 --                    io_chat.print(i .. ": name:" .. m.name ..", dist:".. m.distance .. ", status:".. m.status ..", d:".. d)
 --                io_chat.print(m)
 --             end
-                if utils.contains(ignoreMobs, m.name) == false then
+                if utils.table.contains(ignoreMobs, m.name) == false then
 --                if m.name ~= "fep2" then 
                     mob = m
                     dist = d
