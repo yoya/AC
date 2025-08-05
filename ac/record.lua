@@ -23,7 +23,14 @@ function M.record()
 	print("io.open failed")
 	return
     end
-    f:write("name: "..player.name.."\n")
+    f:write("name: "..player.name)
+    f:write("  "..player.main_job..":"..player.main_job_level)
+    if player.main_job_level >= 99 then
+	f:write(" Ilv:"..player.item_level)
+	local jobpt = player.job_points[string.lower(player.main_job)]
+	f:write(" JP:"..jobpt.jp_spent.."+"..jobpt.jp)
+    end
+    f:write("\n")
     f:write("eminence: "..M.eminence_point.."  unity: "..M.unity_point.."\n")
     --[[
     local jpText = ""
