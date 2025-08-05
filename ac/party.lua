@@ -2,6 +2,15 @@
 
 local M = {}
 
+function M.iamLeader()
+    local player = windower.ffxi.get_player()
+    local party = windower.ffxi.get_party()
+    if party.party1_leader == player.id then
+        return true
+    end
+    return false
+end
+
 function M.isMemberIndex(index)
     local party = windower.ffxi.get_party()
     for _, x in pairs({"p", "a1", "a2"}) do -- アライアンス全員

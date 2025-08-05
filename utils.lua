@@ -23,15 +23,6 @@ end
 M.require_child_module(M, 'utils', 'table')
 M.require_child_module(M, 'utils', 'angle')
 
-function M.iamLeader()
-    local player = windower.ffxi.get_player()
-    local party = windower.ffxi.get_party()
-    if party.party1_leader == player.id then
-        return true
-    end
-    return false
-end
-
 local turnToFront = function(target)
     local push_numpad5 = 'setkey numpad5 down; wait 0.1; setkey numpad5 up'
     command.send(push_numpad5..'; wait 0.5; '..push_numpad5)

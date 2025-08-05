@@ -4,15 +4,6 @@ local M = {}
 
 local utils = require("utils")
 
-function M.iamLeader()
-    local player = windower.ffxi.get_player()
-    local party = windower.ffxi.get_party()
-    if party.party1_leader == player.id then
-        return true
-    end
-    return false
-end
-
 local tankJobs = { "PLD", "RUN", "WAR", "SAM", "DNC" }
 local skillChainJobs = { "WAR", "MNK", "DRK", "SAM", "DRG", "THF", "RNG", "NIN", "DNC" }
 local magicBurstJobs = { "BLM", "SCH", "GEO" }

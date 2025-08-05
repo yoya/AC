@@ -72,10 +72,12 @@ local keyboard = require 'keyboard'
 local pushKeys = keyboard.pushKeys
 
 local utils = require 'utils'
-local iamLeader = utils.iamLeader
 local turnToPos = utils.turnToPos
 local turnToTarget = utils.turnToTarget
 local turnToFront = utils.turnToFront
+
+local ac_party = require 'ac/party'
+local iamLeader = ac_party.iamLeader
 
 local io_net = require 'io/net'
 local io_chat = require 'io/chat'
