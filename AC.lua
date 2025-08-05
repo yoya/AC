@@ -21,7 +21,7 @@ local defaults = {
 local settings = config.load(defaults)
 
 local auto = false
-local player_id
+-- local player_id
 local start_pos = {x = -1, y = -1, z = -1}
 local attack = true
 local useSilt = false
@@ -914,8 +914,8 @@ windower.register_event('addon command', function(command, command2)
 end)
 
 windower.register_event('load', 'login', 'logout', function()
-    local player = windower.ffxi.get_player()
-    player_id = player and player.id
+--    local player = windower.ffxi.get_player()
+--    player_id = player and player.id
     ws.init()
     acstat.init()
 end)
