@@ -9,7 +9,7 @@ function posStr(pos)
     if pos == nil then
 	return "(nil)"
     end
-    if type(pos) == "table" then
+    if type(pos) ~= "table" then
 	return "(no table)"
     end
     if pos.x == nil then
