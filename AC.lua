@@ -97,6 +97,8 @@ local getMobPosition = acmob.getMobPosition
 
 local acjob = require 'job'
 
+local ac_defeated = require 'ac/defeated'
+
 local JunkItems = item_data.JunkItems
 
 local isFar = false
@@ -798,6 +800,8 @@ windower.register_event('addon command', function(command, command2)
     elseif command == 'camprange' then
         settings.CampRange = tonumber(command2, 10)
         io_chat.print("CampRange:", command2)
+    elseif command == 'defeated' then
+	ac_defeated.done()
     elseif command == 'showmob' then
         showMob()
     elseif command == 'silt' then
