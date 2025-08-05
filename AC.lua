@@ -60,6 +60,7 @@ local preferedEnemyList = {
     "Wretched Poroggo", "Water Elemental",
     "Indomitable Faaz", "Devouring Mosquito",
     -- 実験
+    "Apex Toad",  -- ウォーの門、トード。
     "Mourioche",  -- マンドラ
 }
 
