@@ -446,6 +446,21 @@ local aggregateJunkItemsToInventory = function()
             count = count + 1
             coroutine.sleep(0.5)
         end
+	--[[ -- 怖いので Safes は一旦無し
+        if acitem.safesHasItem(-id) then
+            print("safes "..id.." to Inventory")
+            acitem.safesToInventory(-id)
+            count = count + 1
+            coroutine.sleep(0.5)
+	end
+	]]
+        if acitem.bagsHasItem(-id) then
+            print("bags id:"..id.." to Inventory")
+            acitem.bagsToInventory(-id)
+            count = count + 1
+            coroutine.sleep(0.5)
+        end
+	-- drop予定アイテムも集める
     end
     print("aggregateJunkItemsToInventory: "..count)
     return count
@@ -506,17 +521,18 @@ local idleFunctionSellJunkItems = function()
             done = true
         end
     end
+    -- ついでに売れないゴミも捨てる
+    dropJunkItemsInInventory()
 end
 
-local dropJunkItemsInInventory = function()
+function dropJunkItemsInInventory()
     local remain_count = total_count
     for index = 1, 80 do
         local item = windower.ffxi.get_items(0, index)
 --        io_chat.print({"item:", windower.to_shift_jis(res.items[item.id].ja), item.id, item.status})
         if item and utils.contains(JunkItems, -item.id) then
-            local item_id = -item.id
-            print("drop???:"..item_id.." x "..item.count)
-            -- windower.ffxi.drop_item(item.index, item.count)
+            -- print("drop???:"..item.id.."("..index..") x "..item.count)
+            windower.ffxi.drop_item(index, item.count)
             coroutine.sleep(math.random(6,8)/5)
         end
     end
@@ -893,6 +909,10 @@ windower.register_event('addon command', function(command, command2)
 	    acitem.useItemIncludeBags(id)
 	end
 	io_chat.print("スクロール学習終わり")
+    elseif command == 'dropjunk' then
+	io_chat.print("アイテム廃棄開始")
+	dropJunkItemsInInventory()
+	io_chat.print("アイテム廃棄終わり")
     elseif command == 'help' then
         io_chat.print('AC (AccountCluster)  v' .. _addon.version .. 'commands:')
         io_chat.print('//ac [options]')
