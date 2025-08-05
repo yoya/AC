@@ -777,7 +777,7 @@ local changeWS = function(wskey)
     end
     if wskey == 'any' then
         wskey = ws.getAnyWeaponSkill()
-    elseif wskey == 'stop' then
+    elseif wskey == 'stop' or wskey == 'no' then
         ws.weaponskill = nil
         io_chat.print("ws stop")
         return
