@@ -30,12 +30,12 @@ M.mainJobProbTable = {
     -- { 200, 60, 'input /ma ケアルII <p1>', 3 },
     { 10, 300, 'input /ma ブリンク <me>', 5},
     { 10, 300, 'input /ma ストンスキン <me>', 5},
-    -- { 100, 60, 'input /ma バニシュ <t>', 3 },
+    { 100, 60, 'input /ma バニシュ <t>', 3 },
     -- { 100, 60, 'input /ma バニシュII <t>', 3 },
     -- { 100, 60, 'input /ma バニシュIII <t>', 3 },
     -- { 100, 60, 'input /ma ホーリー <t>', 3 },
     -- { 100, 60, 'input /ma ホーリーII <t>', 3 },
-    { 100, 600, 'input /ja デヴォーション <p2>', 0 },
+    { 200, 600/2, 'input /ja デヴォーション <p2>', 0 },
 }
 
 M.subJobProbTable = {
