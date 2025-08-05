@@ -58,15 +58,11 @@ local inventoryFreespaceNum = function()
 end
 M.inventoryFreespaceNum = inventoryFreespaceNum
 
-
-
 -- 金庫系のkeyリスト
 local SafesList = { locker = 4, storage = 2, safe = 1 }
 -- ちなみに 3 は Temporary
 --- 持ち歩きバッグのkeyリスト
 local BagsList = { case = 7, sack = 6, satchel = 5 }
-
-
 
 local safesToInventory = function(id)
 ---    print("safesToInventry")
@@ -89,7 +85,6 @@ local safesToInventory = function(id)
     return result
 end
 M.safesToInventory = safesToInventory
-
 
 --- 持ち歩きバッグの空き
 local checkBagsFreespace = function()
@@ -215,6 +210,7 @@ M.tradeByItemId = function(mob, id)
     return true
 end
 
+-- アイテムの使用。スクロールの学習など
 M.useItemIncludeBags = function(item_id)
     local ret = false
     if checkBagsFreespace(item_id) then
