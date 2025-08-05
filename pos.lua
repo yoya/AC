@@ -127,11 +127,13 @@ function moveTo(route, routeTable)
     for i, p in ipairs(route) do
         if p.r ~= nil then
             print("p.r="..(p.r))
+	    -- moveTo(p.r, routeTable)
+	    --[[
             local r = routeTable[p.r]
-            print("r", r)
             table[p.r] = r[1]
             table.insert(r1List, r[1])
             table.insert(r1ListName, p.r)
+	    ]]
         end
     end
     print("rList", rList)
@@ -158,7 +160,10 @@ function moveTo(route, routeTable)
 	elseif i < start_idx then
             print("skip route idx:", i)
         else
-            if p.x == nil and p.a == nil then
+	    if p.r ~= nil then
+		moveTo(p.r, routeTable)
+	    end
+	    if p.x == nil and p.a == nil then
                 windower.ffxi.run(true)
                 break
             end
@@ -231,6 +236,10 @@ function moveTo(route, routeTable)
             end
             if p.a == "esc" then
                 pushKeys({"escape"})
+                coroutine.sleep(1.0)
+            end
+            if p.a == "tab" then
+                pushKeys({"tab"})
                 coroutine.sleep(1.0)
             end
             if p.a == "touch" then
