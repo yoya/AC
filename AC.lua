@@ -332,10 +332,10 @@ local figtingFunction = function()
 --    local tpMax = 1500
     local tpMin = 2000
     local tpMax = 2500
-    if utils.contains(tp100Jobs, player.main_job) then
+    if utils.table.contains(tp100Jobs, player.main_job) then
         tpMin = 1050
         tpMax = 1150
-    elseif utils.contains(tpJobs, player.main_job) then
+    elseif utils.table.contains(tpJobs, player.main_job) then
         tpMin = 2000
         tpMax = 2500
     end
@@ -472,7 +472,7 @@ local countJunkItemsInInventory = function ()
         for index = 1, 80 do
         local item = windower.ffxi.get_items(0, index)
 	-- io_chat.print({"item:", item.status, item.id, res.items[item.id].ja })
-        if item and utils.contains(JunkItems, item.id) then
+        if item and utils.table.contains(JunkItems, item.id) then
             count = count + 1
         end
     end
@@ -486,7 +486,7 @@ local sellJunkItemsInInventory = function()
     for index = 1, 80 do
         local item = windower.ffxi.get_items(0, index)
 	-- io_chat.print({ "item:", item.status, item.id, res.items[item.id].ja })
-        if item and utils.contains(JunkItems, item.id) then
+        if item and utils.table.contains(JunkItems, item.id) then
             windower.packets.inject_outgoing(0x084,string.char(0x084,0x06,0,0,item.count,0,0,0,
                                         item.id%256,math.floor(item.id/256)%256,index,0))
             windower.packets.inject_outgoing(0x085,string.char(0x085,0x04,0,0,1,0,0,0))
@@ -530,7 +530,7 @@ function dropJunkItemsInInventory()
     for index = 1, 80 do
         local item = windower.ffxi.get_items(0, index)
 --        io_chat.print({"item:", windower.to_shift_jis(res.items[item.id].ja), item.id, item.status})
-        if item and utils.contains(JunkItems, -item.id) then
+        if item and utils.table.contains(JunkItems, -item.id) then
             -- print("drop???:"..item.id.."("..index..") x "..item.count)
             windower.ffxi.drop_item(index, item.count)
             coroutine.sleep(math.random(6,8)/5)
