@@ -1,4 +1,3 @@
----
 --- Position
 --- 位置関係の関数郡
 
@@ -24,7 +23,6 @@ function targetDistance(t)
     return mob.distance
 end
 M.targetDistance = targetDistance
-
 
 function currentPos()
     return targetPos("me")
