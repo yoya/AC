@@ -68,15 +68,15 @@ function M.warp_handler_tick()
 	return
     end
     -- print("M.warp_handler_tick", zone,  ac_pos.distance(pos, prevPos))
-    if prevZone == zone then
+    if M.prevZone == zone then
 	local dist = ac_pos.distance(pos, prevPos)
 	-- 東アドゥリンWP、レンタル<=>競売が 36.8
 	if  dist > 32 then
 	    M.warp_handler(zone, pos, prevZone, prevPos, dist)
 	end
     end
-    prevZone = zone
-    prevPos = pos
+    M.prevZone = zone
+    M.prevPos = pos
 end
 
 -- 同じ zone でワープした時。WP や AMANトローブ
