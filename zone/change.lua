@@ -1,5 +1,6 @@
 local aczone = require 'zone'
 local ac_pos = require 'ac/pos'
+local ac_move = require 'ac/move'
 local ac_stat = require 'ac/stat'
 local io_chat = require 'io/chat'
 
@@ -35,7 +36,7 @@ function M.automatic_routes_handler(zone, automatic_routes)
 	    local fp = zone_object.essentialPoints[f]
 	    if ac_pos.isNear(fp, 10) then
 		io_chat.print(f.."から"..t.."に移動")
-		ac_pos.moveTo(zone_object.routes[t], zone_object.routes)
+		ac_move.moveTo(zone_object.routes[t], zone_object.routes)
 	    end
 	end
     end

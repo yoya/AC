@@ -23,32 +23,6 @@ end
 M.require_child_module(M, 'utils', 'table')
 M.require_child_module(M, 'utils', 'angle')
 
-local turnToFront = function(target)
-    local push_numpad5 = 'setkey numpad5 down; wait 0.1; setkey numpad5 up'
-    command.send(push_numpad5..'; wait 0.5; '..push_numpad5)
-end
-M.turnToFront = turnToFront
-
-local turnToPos = function(x1, y1, x2, y2)
-    local dx = x2 - x1
-    local dy = y2 - y1
-    --- atan2 のままだと右を向くので、90度の補正
-    local dir = math.atan2(dx, dy) - 3.14/2
-    windower.ffxi.turn(dir)
-end
-M.turnToPos = turnToPos
-
-M.turnToTarget = function(target)
----    print("turnToTarget:"..target)
-    local mob = windower.ffxi.get_mob_by_target(target)
-    if mob == nil then
----        print("turnToTarget: target:"..#target.." not found")
-        return false
-    end
-    local me = windower.ffxi.get_mob_by_target("me")
-    turnToPos(me.x, me.y, mob.x, mob.y)
-end
-
 M.distance = function(target)
     local mob = windower.ffxi.get_mob_by_target(target)
     if mob == nil then

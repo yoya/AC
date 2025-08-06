@@ -72,9 +72,12 @@ local keyboard = require 'keyboard'
 local pushKeys = keyboard.pushKeys
 
 local utils = require 'utils'
-local turnToPos = utils.turnToPos
-local turnToTarget = utils.turnToTarget
-local turnToFront = utils.turnToFront
+local ac_pos = require 'ac/pos'
+local ac_move = require 'ac/move'
+
+local turnToPos = ac_move.turnToPos
+local turnToTarget = ac_move.turnToTarget
+local turnToFront = ac_move.turnToFront
 
 local ac_party = require 'ac/party'
 local iamLeader = ac_party.iamLeader
@@ -89,7 +92,6 @@ local ws = require 'ws'
 local aprob = require 'prob'
 local sendCommandProb = aprob.sendCommandProb
 local getSendCommandProbTable = aprob.getSendCommandProbTable
-local ac_pos = require 'ac/pos'
 local aczone = require 'zone'
 local zone_change = require 'zone/change'
 local incoming_chunk = require 'incoming/chunk'
@@ -734,7 +736,7 @@ end
 local stop2 = function()
     io_chat.print('### AutoA  STOP')
     auto = false
-    ac_pos.stop()
+    ac_move.stop()
     works.stop()
 end
 
@@ -865,11 +867,11 @@ windower.register_event('addon command', function(command, command2)
     elseif command == 'move' then
         local zone = windower.ffxi.get_info().zone
 	local routeTable = aczone.getRouteTable(zone)
-        ac_pos.autoMoveTo(zone, command2, routeTable, false)
+        ac_move.autoMoveTo(zone, command2, routeTable, false)
     elseif command == 'moverev' then
         local zone = windower.ffxi.get_info().zone
 	local routeTable = aczone.getRouteTable(zone)
-        ac_pos.autoMoveTo(zone, command2, routeTable, true)
+        ac_move.autoMoveTo(zone, command2, routeTable, true)
     elseif command == 'info' then
         local zone = windower.ffxi.get_info().zone
         io_chat.print("zone id:"..zone)
