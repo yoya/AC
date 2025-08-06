@@ -68,7 +68,8 @@ function M.warp_handler_tick()
 	return
     end
     -- print("M.warp_handler_tick", zone,  ac_pos.distance(pos, prevPos))
-    if M.prevZone == zone then
+    if M.prevZone ~= nil and zone ~= nil and M.prevZone == zone and
+	pos ~= nil and prevPos ~= nil then
 	local dist = ac_pos.distance(pos, prevPos)
 	-- 東アドゥリンWP、レンタル<=>競売が 36.8
 	if  dist > 32 then
