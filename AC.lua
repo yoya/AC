@@ -122,7 +122,7 @@ local leaderFunction = function()
 ---    print("nearest prefered mob", mob)
     if mob == nil then
         --- メンバーが戦っている敵がいれば、そちら優先
---        mob = utils.PartyTargetMob()
+--        mob = ac_mob.PartyTargetMob()
     end
     if mob == nil then
         --- 優先度の高い敵がいない場合は、誰でも良い
@@ -883,7 +883,7 @@ windower.register_event('addon command', function(command, command2)
         io_chat.print("distance to <t>:"..dist)
     elseif command == 'test' then
         print("test command")
-        utils.PartyTargetMob()
+        ac_mob.PartyTargetMob()
     elseif command == 'enterloop' then
         auto = true
         local i = 0
