@@ -3,7 +3,6 @@
 local M = {}
 
 local utils = require 'utils'
-local normalangle = utils.angle.normalangle
 local midangle = utils.angle.midangle
 
 local acmob = require 'mob'
@@ -24,10 +23,6 @@ local NW = math.pi * (7/4)
 
 -- 0:喜ぶ 1:泣く 2:驚く 3:悔しむ
 -- 4:励ます 5:慌てる 6:照れる 7:気合
-
--- N-NE: ほぼ正しい。
--- SE-S: 間違い、丁度逆方向
--- NW-N: 正しい
 
 local stationWorkerBoostTable = {
     [265] = { -- モリマー台地
@@ -53,13 +48,13 @@ function M.turnToDirecton(mob, theta)
     local done = false
     -- 向きをあわせる
     while done == false and M.auto do
-        utils.left_move(0.01)
+        utils.left_move(0.005)
         local me_pos = {}
         acmob.getMobPosition(me_pos, "me")
         local dx = me_pos.x - mob.x
         local dy = me_pos.y - mob.y
-	-- local t = math.atan2(dx, dy) + 2*math.pi/32
-	local t = math.atan2(dx, dy)
+	local t = math.atan2(dx, dy) - 2*math.pi/32
+	-- local t = math.atan2(dx, dy)
         local dt = (theta % (2*math.pi)) - (t % (2*math.pi))
 	-- io_chat.print("theta:"..theta.." t:"..t.." dt:"..dt)
         if math.abs(dt) < 2*math.pi/32 then
