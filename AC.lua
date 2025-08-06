@@ -8,6 +8,7 @@ local socket = require 'socket'
 local config = require 'config'
 
 local command = require 'command'
+local task = require 'task'
 local works = require 'works'
 local pull = require 'pull'
 
@@ -152,6 +153,7 @@ local leaderFunction = function()
     if attack then
         command.send('input /attack on')
 	aprob.clearProbRecastTime(ProbRecastTime)
+	task.resetByFight()
     end
 end 
 
@@ -229,6 +231,7 @@ local notLeaderFunction = function()
         if mob ~= nil and mob.hpp < 100 then
             coroutine.sleep(math.random(0,2)/4)
             command.send('input /attack <t>')
+	    task.resetByFight()
         end
         ProbRecastTime = {}
     end
@@ -679,13 +682,13 @@ end
 
 local tickRunning = false
 
-
 --- 途中での return 抜け禁止。最後でフラグ落とすので。
 local tick = function()
     local player = windower.ffxi.get_player()
     if player ~= nil then   --- ログインし直す時に nil
 	zone_change.warp_handler_tick()
 	acjob.tick(player)
+        task.tick()
     end
     if tickRunning then
         return 
@@ -814,6 +817,7 @@ windower.register_event('addon command', function(command, command2)
     command = command and command:lower() or 'help'
     if command == 'start' then
         start()
+	ac_defeated.done()
 	io_chat.print("attack mode", attack)
     elseif command == 'stop' then
         stop()
@@ -881,6 +885,8 @@ windower.register_event('addon command', function(command, command2)
         local dist = utils.distance("t")
         dist = dist or "(nil)"
         io_chat.print("distance to <t>:"..dist)
+    elseif command == 'task' then
+        task.print()
     elseif command == 'test' then
         print("test command")
         ac_mob.PartyTargetMob()

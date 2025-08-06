@@ -6,6 +6,7 @@ local io_chat = require('io/chat')
 
 local ac_stat = require('ac/stat')
 local acinspect = require('inspect')
+local task = require('task')
 local ac_record =  require('ac/record')
 local ac_defeated = require('ac/defeated')
 local ac_party = require('ac/party')
@@ -51,7 +52,10 @@ packet_handler[0x029] = function(packet) -- Action Message
 	    local mob = windower.ffxi.get_mob_by_index(target_index)
 	    ac_stat.defeat(mob.name)
 	    -- defeated 表示/保存処理は queue に乗せる予定
-	    ac_defeated.done()
+	    -- ac_defeated.done()
+	    -- command, delay, duration, period, eachfight)
+	    task.setTask(task.PRIORITY_LOW,
+			 task.newTask("ac defeated", 3, 3, 3, true))
 	end
     elseif mesg == 20 then
 	io_chat.setNextColor(3)

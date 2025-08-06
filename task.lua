@@ -4,6 +4,7 @@ local M = {}
 
 local utils = require('utils')
 local io_console = require('io/console')
+local io_chat = require('io/chat')
 local command = require 'command'
 
 -- 優先度別、タスク
@@ -30,13 +31,22 @@ local taskPeriodTable = {}
 ---  period: 同じ command を次に実行できるまでの時間
 ---  eachfight: 戦闘毎に period をリセットするか否か
 M.newTask = function(command, delay, duration, period, eachfight)
-    assert(type(command) == "string", "command need to be a string: "..command)
-    assert(type(delay) == "number", "delay need to be a number: "..command)
-    assert(type(duration) == "number", "duration need to be a number: "..command)
-    assert(type(period) == "number", " period need to be a number: "..command)
-    assert(type(eachfight) == "boolean", "eachfight need to be a boolean: "..command)
-    return {command=command, delay=delay, duration=duration, period=period,
-	    eachfight=eachfight}
+    local t = {command=command, delay=delay, duration=duration, period=period,
+	       eachfight=eachfight}
+    assertTask(t)
+    return t
+end
+
+function assertTask(task)
+    assert(type(task.command) == "string", "command need to be a string: "..task.command)
+    assert(type(task.delay) == "number", "delay need to be a number: "..task.command)
+    assert(type(task.duration) == "number", "duration need to be a number: "..task.command)
+    assert(type(task.period) == "number", " period need to be a number: "..task.command)
+    assert(type(task.eachfight) == "boolean", "eachfight need to be a boolean: "..task.command)
+end
+
+function assertLevel(level)
+    assert(PRIORITY_FIRST <= level and level <= PRIORITY_LAST, "unknown level: "..level)
 end
 
 M.resetByFight = function()
@@ -75,6 +85,8 @@ end
 
 -- タスク追加
 function M.setTask(level, task)
+    assertLevel(level)
+    assertTask(task)
     if taskContain(level, task) == false then  -- 重複避け
 	table.insert(taskTable[level], task)
 	local c = task.command
@@ -87,6 +99,8 @@ end
 
 -- タスク削除
 function M.removeTask(level, task)
+    assertLevel(level)
+    assertTask(task)
     local i = taskIndex(level, task)
     if i > 0 then
 	table.remove(taskTable[level], i)
@@ -121,12 +135,14 @@ M.tick = function()
 	return
     end
     -- auto run の時。/ma の command は実行せず setTask し直す
+    windower.ffxi.run(false)
+    coroutine.sleep(0.5)
     command.send(task.command)
     tickNextTime = os.time() + task.duration
 end
 
 function M.print()
-    io_console.print(taskTable)
+    io_chat.print(taskTable)
 end
 
 return M

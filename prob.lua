@@ -6,6 +6,7 @@ local acjob = require 'job'
 local merge_lists = utils.table.merge_lists
 local merge_tables = utils.table.merge_tables
 local command = require 'command'
+local task = require 'task'
 local io_chat = require 'io/chat'
 local M = {}
 
@@ -73,7 +74,10 @@ M.sendCommandProb = function(table, period, ProbRecastTime)
         local r = p_c[2]  -- recast time
         local c = p_c[3]  -- command
         local t = p_c[4]  -- time
-	local f = p_c[4]  -- fight reset
+	local f = p_c[5]  -- fight reset
+	if f == nil then
+	    f = false
+	end
 	if t == nil then
 	    io_chat.print(p_c)
 	    return
@@ -81,10 +85,22 @@ M.sendCommandProb = function(table, period, ProbRecastTime)
         pn = pp + p*period
         if ProbRecastTime[c] == nil then
             if pp < rnd and rnd <= pn then
-                windower.ffxi.run(false)
-                coroutine.sleep(0.5)
-		-- io_chat.print(c)
-                command.send(c)
+--                windower.ffxi.run(false)
+--                coroutine.sleep(0.5)
+                -- command.send(c)
+		local level = task.PRIORITY_LOW
+		if p >= 1000 then
+		    level = task.PRIORITY_TOP
+		elseif p >= 500 then
+		    level = task.PRIORITY_HIGH
+		elseif p >= 100 then
+		    level = task.PRIORITY_MIDDLE
+		else
+		    level = task.PRIORITY_LOW
+		end
+		-- command, delay, duration, period, eachfight
+		task.setTask(level,
+			     task.newTask(c, 0, t, r, f))
 		-- タイマーセット
                 ProbRecastTime[c] = { }
 		ProbRecastTime[c][1] = os.time() + r
