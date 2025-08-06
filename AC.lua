@@ -685,34 +685,33 @@ local tickRunning = false
 --- 途中での return 抜け禁止。最後でフラグ落とすので。
 local tick = function()
     local player = windower.ffxi.get_player()
-    if player ~= nil then   --- ログインし直す時に nil
-	zone_change.warp_handler_tick()
-	acjob.tick(player)
-        task.tick()
+    if player == nil then   --- ログインし直す時に nil
+	return
     end
-    if tickRunning then
+    if tickRunning then -- 二重に動かないガード。(ちゃんと働いているか不明)
         return 
     end
+    zone_change.warp_handler_tick()
+    acjob.tick(player)
+    task.tick()
     -- ここからは auto のみ。
     if not auto then
         return
     end
     tickRunning = true
-    if player ~= nil then   --- ログインし直す時に nil
-       if player.status == 0 then
-            --- 待機中
-          idleFunction()
-          if iamLeader() or puller then
-              leaderFunction()
-          else
-                notLeaderFunction()
-            end
-        elseif player.status == 1 then
-            --- 戦闘中
-            figtingFunction()
-        end
+    if player.status == 0 then
+	--- 待機中
+	idleFunction()
+	if iamLeader() or puller then
+	    leaderFunction()
+	else
+	    notLeaderFunction()
+	end
+    elseif player.status == 1 then
+	--- 戦闘中
+	figtingFunction()
     end
-    tickRunning = false
+    tickRunning = false -- 二重に動かないガード終了
 end
 
 
