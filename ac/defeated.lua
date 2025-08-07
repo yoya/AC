@@ -17,7 +17,12 @@ function M.done()
 	for i, p in ipairs(cp_jp_list) do
 	    if jobpt.jp_spent < p and p <= jobpt.jp_spent+jobpt.jp then
 		io_chat.setNextColor(3)
-		io_chat.print("======= job point: "..p.." <= "..jobpt.jp_spent.."+"..jobpt.jp)
+		io_chat.print("======= job point: "..p.."(clear) <= "..jobpt.jp_spent.."+"..jobpt.jp)
+	    end
+	    if jobpt.jp_spent+jobpt.jp < p then
+		io_chat.setNextColor(3)
+		io_chat.print("======= job point: "..jobpt.jp_spent.."+"..jobpt.jp.." < "..p.."(next)")
+		break
 	    end
 	end
     end
