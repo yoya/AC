@@ -52,7 +52,7 @@ packet_handler[0x029] = function(packet) -- Action Message
 	    local mob = windower.ffxi.get_mob_by_index(target_index)
 	    ac_stat.defeat(mob.name)
 	    -- defeated 表示/保存処理は queue に乗せる予定
-	    -- ac_defeated.done()
+	    ac_defeated.done() -- setTask だと表示しない時があるので、一旦戻す
 	    -- command, delay, duration, period, eachfight)
 	    task.setTask(task.PRIORITY_LOW,
 			 task.newTask("ac defeated", 3, 3, 3, true))
