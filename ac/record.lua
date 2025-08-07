@@ -23,15 +23,22 @@ function M.record()
 	print("io.open failed")
 	return
     end
-    f:write("name: "..player.name)
-    f:write("  "..player.main_job..":"..player.main_job_level)
+    f:write(player.name)
+    local namelen = string.len(player.name)
+    if namelen < 7 then
+	f:write(string.rep(" ", 7 - namelen))
+    end
+    if player.status > 1 then
+	f:write("(status:"..player.status..")")
+    end
+    f:write(" "..player.main_job..":"..player.main_job_level)
     if player.main_job_level >= 99 then
 	f:write(" Ilv:"..player.item_level)
 	local jobpt = player.job_points[string.lower(player.main_job)]
 	f:write(" JP:"..jobpt.jp_spent.."+"..jobpt.jp)
     end
     f:write("\n")
-    f:write("eminence: "..M.eminence_point.."  unity: "..M.unity_point.."\n")
+    f:write("Eminence:"..M.eminence_point.."  Unity:"..M.unity_point.."\n")
     --[[
     local jpText = ""
     for job, points in pairs(player.job_points) do
