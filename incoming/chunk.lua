@@ -4,25 +4,16 @@ local packets = require('packets')
 
 local io_chat = require('io/chat')
 
-local ac_stat = require('ac/stat')
-local acinspect = require('inspect')
 local task = require('task')
-local ac_record =  require('ac/record')
+local acinspect = require('inspect')
+
+local ac_char = require('ac/char')
 local ac_defeated = require('ac/defeated')
 local ac_party = require('ac/party')
+local ac_record =  require('ac/record')
+local ac_stat = require('ac/stat')
 
 local packet_handler = { }
-
-packet_handler[0x01B] = function(packet) -- Job Info
-    --[[
-    local data = packet._raw
-    local arr = data:unpack('I')
-    local main_job = arr[0x08]
-    print("main_job"..main_job)
-    local job_master_level = arr[0x6D+(2*main_job)+1]
-    io_chat.print("job_master_level:"..job_master_level)
-    ]]
-end
 
 packet_handler[0x028] = function(packet) -- Action Message
     local cate = packet.Category
@@ -83,7 +74,23 @@ end
 -- Char Stats -- id がないので(パーティメンバーでなく)自分のみの情報？
 packet_handler[0x061] = function(packet)
     local points = packet["Unity Points"]  -- ユニテイポイント
+    local current_exemplar = packet["Current Exemplar Points"]
+    local next_exemplar = packet["Required Exemplar Points"]
     ac_record.unity(points)
+    ac_char.current_exemplar(current_exemplar)
+    ac_char.next_exemplar(next_exemplar)
+end
+
+-- Char Update
+packet_handler[0x0DF] = function(packet)
+    local id = packet["ID"]
+    local char = {
+	main_job_id = packet["Main job"],
+	sub_job_id = packet["Sub job"],
+	master_level = packet["Master Level"],
+	master_breaker = packet["Master Breaker"],
+    }
+    ac_char.update(id, char)
 end
 
 -- Update Current Sparks via 110
@@ -94,6 +101,7 @@ end
 
 function M.incoming_handler(id, data, modified, injected, blocked)
     local handler = packet_handler[id]
+    --print("incoming_handler:",id)
     if handler ~= nil then
 	local packet = packets.parse('incoming', data)
 	handler(packet)
