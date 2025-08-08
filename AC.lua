@@ -75,6 +75,8 @@ local pushKeys = keyboard.pushKeys
 local utils = require 'utils'
 local ac_pos = require 'ac/pos'
 local ac_move = require 'ac/move'
+local ac_record = require 'ac/record'
+local ac_char = require 'ac/char'
 
 local turnToPos = ac_move.turnToPos
 local turnToTarget = ac_move.turnToTarget
@@ -886,6 +888,12 @@ windower.register_event('addon command', function(command, command2)
         io_chat.print("distance to <t>:"..dist)
     elseif command == 'task' then
         task.print()
+    elseif command == 'print' then
+        if command2 == 'char' then
+	    ac_char.print()
+	else
+	    print("ac print char")
+	end
     elseif command == 'test' then
         print("test command")
         ac_mob.PartyTargetMob()
@@ -954,6 +962,8 @@ windower.register_event('load', 'login', 'logout', function()
 --    player_id = player and player.id
     ws.init()
     ac_stat.init()
+    ac_record.init()
+    ac_char.init()  -- 不要になる予定。id 毎に保存を分けるつもり
 end)
 
 windower.register_event('job change', function()
