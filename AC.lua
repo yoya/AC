@@ -1,5 +1,5 @@
 _addon.author = 'Yoya'
-_addon.version = '1.1.0'
+_addon.version = '1.2.0'
 _addon.commands = {'accountcluster', 'ac'}
 
 require('functions')
@@ -67,7 +67,7 @@ local preferedEnemyList = {
 
 command.send('bind ^d ac start')
 command.send('bind !d ac stop')
-command.send('bind ^f ac showmob')
+command.send('bind ^f ac show mob')
 
 local keyboard = require 'keyboard'
 local pushKeys = keyboard.pushKeys
@@ -816,6 +816,7 @@ end
 
 windower.register_event('addon command', function(command, command2)
     command = command and command:lower() or 'help'
+    -- start/stop, (諸々ABC順), help の並び
     if command == 'start' then
         start()
 	ac_defeated.done()
@@ -828,75 +829,31 @@ windower.register_event('addon command', function(command, command2)
     elseif command == 'camprange' then
         settings.CampRange = tonumber(command2, 10)
         io_chat.print("CampRange:", command2)
-    elseif command == 'defeated' then
-	ac_defeated.done()
-    elseif command == 'showmob' then
-        showMob()
-    elseif command == 'silt' then
-        useSilt = not useSilt
-        io_chat.print({"item silt using start", useSilt})
-    elseif command == 'beads' then
-        useBeads = not useBeads
-        io_chat.print({"item beads using start", useBeads})
-    elseif command == 'point' then      
-        doPointCheer = not doPointCheer
-        io_chat.print({"do point&cheer for ambus", doPointCheer})
-    elseif command == 'checkbags' then
-        io_chat.print(acitem.checkInventoryFreespace())
-        io_chat.print(acitem.checkBagsFreespace())
-    elseif command == 'showinventory' then
-        acitem.showInventory()
-    elseif command == 'ws' then
-        changeWS(command2)
-    elseif command == 'puller' then
-        if command2 == 'on' then
-            puller = true
-            io_chat.print("puller on")
-        elseif command2 == 'off' then
-            puller = false
-            io_chat.print("puller off")
-        else 
-            io_chat.print("Usage: aa puller {on|off}")
-        end
-    elseif command == 'pos' then
-        local zone = windower.ffxi.get_info().zone
-        io_chat.print("zone id:"..zone)
-        local me_pos = {}
-        getMobPosition(me_pos, "me")
-        local x = math.round(me_pos.x, 1)
-        local y = math.round(me_pos.y, 1)
-        local z = math.round(me_pos.z, 1)
----    print は - 記号を誤認しやすいので、表示しない
----        print("me potision", " x="..x, "  y="..y, "  z="..z)
-        io_chat.print("me potision  x="..x.."  y="..y.."  z="..z)
-    elseif command == 'move' then
-        local zone = windower.ffxi.get_info().zone
-	local routeTable = aczone.getRouteTable(zone)
-        ac_move.autoMoveTo(zone, command2, routeTable, false)
-    elseif command == 'moverev' then
-        local zone = windower.ffxi.get_info().zone
-	local routeTable = aczone.getRouteTable(zone)
-        ac_move.autoMoveTo(zone, command2, routeTable, true)
-    elseif command == 'info' then
-        local zone = windower.ffxi.get_info().zone
-        io_chat.print("zone id:"..zone)
-        local me_pos = {}
-        getMobPosition(me_pos, "me")
-        io_chat.print({"me potision", me_pos})
-        local dist = utils.distance("t")
-        dist = dist or "(nil)"
-        io_chat.print("distance to <t>:"..dist)
-    elseif command == 'task' then
-        task.print()
-    elseif command == 'print' then
-        if command2 == 'char' then
-	    ac_char.print()
+    elseif command == 'debug' then
+	if command2 == 'checkbags' then
+	    io_chat.print(acitem.checkInventoryFreespace())
+	    io_chat.print(acitem.checkBagsFreespace())
+	elseif command2 == 'nearest' then
+	    local preferMob =  acmob.getNearestFightableMob(start_pos, settings.CampRange, preferedEnemyList)
+	    local mob =  acmob.getNearestFightableMob(start_pos, settings.CampRange, nil)
+	    io_chat.print("nearest preferMob=====================")
+	    io_chat.print(preferMob)
+	    io_chat.print("nearest mob =====================")
+	    if preferMob == nil or preferMob.name ~= mob.name then
+		io_chat.print(mob)
+	    else
+		io_chat.print("same name monster")
+	    end
 	else
-	    print("ac print char")
+	    print("ac debug checkbags|neaest")
 	end
-    elseif command == 'test' then
-        print("test command")
-        ac_mob.PartyTargetMob()
+    elseif command == 'defeated' then
+	-- 戦闘終了時の処理
+	ac_defeated.done()
+    elseif command == 'dropjunk' then
+	io_chat.print("アイテム廃棄開始")
+	dropJunkItemsInInventory()
+	io_chat.print("アイテム廃棄終わり")
     elseif command == 'enterloop' then
         auto = true
         local i = 0
@@ -913,41 +870,90 @@ windower.register_event('addon command', function(command, command2)
             pushKeys({"down", "enter"})
             coroutine.sleep(3)
         end
-    elseif command == 'nearest' then
-        local preferMob =  acmob.getNearestFightableMob(start_pos, settings.CampRange, preferedEnemyList)
-        local mob =  acmob.getNearestFightableMob(start_pos, settings.CampRange, nil)
-        io_chat.print("nearest preferMob=====================")
-        io_chat.print(preferMob)
-        io_chat.print("nearest mob =====================")
-        if preferMob == nil or preferMob.name ~= mob.name then
-            io_chat.print(mob)
-        else
-            io_chat.print("same name monster")
+    elseif command == 'move' then
+        local zone = windower.ffxi.get_info().zone
+	local routeTable = aczone.getRouteTable(zone)
+        ac_move.autoMoveTo(zone, command2, routeTable, false)
+    elseif command == 'moverev' then
+        local zone = windower.ffxi.get_info().zone
+	local routeTable = aczone.getRouteTable(zone)
+        ac_move.autoMoveTo(zone, command2, routeTable, true)
+    elseif command == 'point' then
+        doPointCheer = not doPointCheer
+        io_chat.print({"do point&cheer for ambus", doPointCheer})
+    elseif command == 'pos' then  -- よく使うので ac 直下のまま
+        local zone = windower.ffxi.get_info().zone
+        io_chat.print("zone id:"..zone)
+        local me_pos = {}
+        getMobPosition(me_pos, "me")
+        local x = math.round(me_pos.x, 1)
+        local y = math.round(me_pos.y, 1)
+        local z = math.round(me_pos.z, 1)
+---    print は - 記号を誤認しやすいので、表示しない
+---        print("me potision", " x="..x, "  y="..y, "  z="..z)
+        io_chat.print("me potision  x="..x.."  y="..y.."  z="..z)
+    elseif command == 'puller' then
+        if command2 == 'on' then
+            puller = true
+            io_chat.print("puller on")
+        elseif command2 == 'off' then
+            puller = false
+            io_chat.print("puller off")
+        else 
+            io_chat.print("Usage: aa puller { on | off }")
         end
-    elseif command == 'scroll' then
-	io_chat.print("スクロール学習開始")
-	for i,id in ipairs(item_data.magicScrolls) do
-	    acitem.useItemIncludeBags(id)
+    elseif command == 'print' then
+        if command2 == 'char' then
+	    ac_char.print()
+	elseif command2 == 'task' then
+	    task.print()
+	else
+	    io_chat.print("ac print { char | task }")
 	end
-	io_chat.print("スクロール学習終わり")
-    elseif command == 'dropjunk' then
-	io_chat.print("アイテム廃棄開始")
-	dropJunkItemsInInventory()
-	io_chat.print("アイテム廃棄終わり")
+    elseif command == 'show' then
+	if command2 == 'mob' then
+	    showMob()
+	elseif command2 == 'inventory' then
+	    acitem.showInventory()
+	else
+	    io_chat.print("ac show { mob | inventory }")
+	end
+    elseif command == 'test' then
+        print("test command")
+        ac_mob.PartyTargetMob()
+    elseif command == 'use' then
+	if command2 == 'silt' then
+	    useSilt = not useSilt
+	    io_chat.print({"item silt using start", useSilt})
+	elseif command2 == 'beads' then
+	    useBeads = not useBeads
+	    io_chat.print({"item beads using start", useBeads})
+	elseif command2 == 'scroll' then
+	    io_chat.print("スクロール学習開始")
+	    for i,id in ipairs(item_data.magicScrolls) do
+		acitem.useItemIncludeBags(id)
+	    end
+	    io_chat.print("スクロール学習終わり")
+	else
+	    io_chat.print("ac use { silt | beads | scroll }")
+	end
+    elseif command == 'ws' then
+        changeWS(command2)
     elseif command == 'help' then
         io_chat.print('AC (AccountCluster)  v' .. _addon.version .. 'commands:')
         io_chat.print('//ac [options]')
-        io_chat.print('    start           - Starts auto attack with ranged weapon')
-        io_chat.print('    stop            - Stops auto attack with ranged weapon')
-        io_chat.print('    ws              - Change weapon skill')
-        io_chat.print('    move <route>    - Auto move')
-        io_chat.print('    attack          - Change attack mode')
-        io_chat.print('    puller {on|off} - Change puller mode')
-        io_chat.print('    silt|beads      - Use silt or beads')
-        io_chat.print('    scroll          - Learning from Scroll')
-        io_chat.print('    showmob         - Show mob info')
-        io_chat.print('    pos|info|nearest - Debug command')
-        io_chat.print('    help            - Displays this help text')
+        io_chat.print('    start              - Starts auto attack')
+        io_chat.print('    stop               - Stops auto attack')
+        io_chat.print('    attack             - Change attack mode')
+	io_chat.print('    debug info | nearest - Debug')
+	io_chat.print('    dropjunk           - Drop JunkItem')
+        io_chat.print('    move <route>       - Auto move')
+        io_chat.print('    pos|info|nearest   - Debug command')
+        io_chat.print('    puller on|off      - Change puller mode')
+        io_chat.print('    show mob | inventory - Show something')
+        io_chat.print('    use silt | beads | scroll - Use Item')
+        io_chat.print('    ws                 - Change weapon skill')
+        io_chat.print('    help               - Displays this help text')
         io_chat.print(' ')
         io_chat.print('AC will automate account cluster something.')
         io_chat.print('To start AC without commands use the key:  Ctrl+D')
