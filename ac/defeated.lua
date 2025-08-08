@@ -13,15 +13,15 @@ function M.done()
     local player = windower.ffxi.get_player()
     local jobpt = player.job_points[string.lower(player.main_job)]
     if jobpt.jp > 0 then
-	local cp_jp_list = {5,25,55,95,145,205,275,355,445,545,655,775,905,1045,1195,1355}
+	local cp_jp_list = {5,25,55,95,145,205,275,355,445,545,655,775,905,1045,1195,1355,2100}
 	for i, p in ipairs(cp_jp_list) do
 	    if jobpt.jp_spent < p and p <= jobpt.jp_spent+jobpt.jp then
 		io_chat.setNextColor(3)
-		io_chat.print("======= job point: "..p.."(clear) <= "..jobpt.jp_spent.."+"..jobpt.jp)
+		io_chat.print("======= job point: "..p.."(clear) <= "..jobpt.jp_spent.."+"..jobpt.jp.."="..(jobpt.jp_spent+jobpt.jp))
 	    end
 	    if jobpt.jp_spent+jobpt.jp < p then
 		io_chat.setNextColor(3)
-		io_chat.print("======= job point: "..jobpt.jp_spent.."+"..jobpt.jp.." < "..p.."(next)")
+		io_chat.print("======= job point: "..jobpt.jp_spent.."+"..jobpt.jp.."="..(jobpt.jp_spent+jobpt.jp).." < "..p.."(next)")
 		break
 	    end
 	end
