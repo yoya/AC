@@ -1,12 +1,18 @@
 -- ファイル保存するデータ
 
 local io_chat = require("io/chat")
+local ac_char = require("ac/char")
 local utils_table = require "utils/table"
 
 local M = {
     eminence_point = -1,
     unity_point = -1,
 }
+
+function M.init()
+    M.eminence_point = -1
+    M.unity_point = -1
+end
 
 function M.record()
     local player = windower.ffxi.get_player()
@@ -35,7 +41,12 @@ function M.record()
     if player.main_job_level >= 99 then
 	f:write(" Ilv:"..player.item_level)
 	local jobpt = player.job_points[string.lower(player.main_job)]
-	f:write(" JP:"..jobpt.jp_spent.."+"..jobpt.jp)
+	if jobpt.jp_spent < 2100 then
+	    f:write(" JP:"..jobpt.jp_spent.."+"..jobpt.jp)
+	elseif jobpt.jp_spent >= 2100 and ac_char.real_master_level >= 0 then
+	    f:write(" Mlv:"..ac_char.real_master_level)
+	    f:write(" ("..ac_char.current_exemplar_point.."/"..ac_char.next_exemplar_point..")")
+	end
     end
     f:write("\n")
     f:write("Eminence:"..M.eminence_point.."  Unity:"..M.unity_point.."\n")
