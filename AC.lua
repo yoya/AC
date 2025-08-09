@@ -968,12 +968,11 @@ windower.register_event('load', 'login', 'logout', function()
 --    player_id = player and player.id
     ws.init()
     ac_stat.init()
-    ac_record.init()
-    ac_char.init()  -- 不要になる予定。id 毎に保存を分けるつもり
 end)
 
 windower.register_event('job change', function()
     ws.init()
+    ac_stat.init()
 end)
 
 

@@ -73,12 +73,18 @@ end
 
 -- Char Stats -- id がないので(パーティメンバーでなく)自分のみの情報？
 packet_handler[0x061] = function(packet)
-    local points = packet["Unity Points"]  -- ユニテイポイント
-    local current_exemplar = packet["Current Exemplar Points"]
-    local next_exemplar = packet["Required Exemplar Points"]
-    ac_record.unity(points)
-    ac_char.current_exemplar(current_exemplar)
-    ac_char.next_exemplar(next_exemplar)
+    local player = windower.ffxi.get_player()
+    local char = {
+	main_job_id = packet["Main job"],
+	sub_job_id = packet["Sub job"],
+	unity_point = packet["Unity Points"],
+	current_exp_point = packet["Current EXP"],
+	next_exp_point = packet["Required EXP"],
+	master_breaker = packet["Master Breaker"],
+	current_exemplar_point = packet["Current Exemplar Points"],
+	next_exemplar_point = packet["Required Exemplar Points"],
+    }
+    ac_char.update(player.id, char)
 end
 
 -- Char Update
@@ -87,16 +93,19 @@ packet_handler[0x0DF] = function(packet)
     local char = {
 	main_job_id = packet["Main job"],
 	sub_job_id = packet["Sub job"],
-	master_level = packet["Master Level"],
+	-- master_level = packet["Master Level"],
 	master_breaker = packet["Master Breaker"],
     }
-    ac_char.update(id, char)
+    -- ac_char.update(id, char)
 end
 
 -- Update Current Sparks via 110
 packet_handler[0x110] = function(packet)
-    local sparks = packet["Sparks Total"]
-    ac_record.eminence(sparks)
+    local player = windower.ffxi.get_player()
+    local char = {
+	eminence_point = packet["Sparks Total"]
+    }
+    ac_char.update(player.id, char)
 end
 
 function M.incoming_handler(id, data, modified, injected, blocked)

@@ -2,44 +2,6 @@
 
 local res = require('resources')
 
-local M = {
-    charTable = {},
-    real_master_level = -1,
-    current_exemplar_point = -1,
-    next_exemplar_point = -1,
-}
-
-local io_chat = require('io/chat')
-local jobs = res.jobs
-
-function M.init(id, char)
-    M.charTable = {}
-    M.real_master_level = -1
-    M.current_exemplar_point = -1
-    M.next_exemplar_point = -1
-end
-
-function M.update(id, char)
-    if M.charTable[id] == nil then
-	M.charTable[id] = {}
-    end
-    local main_job_id = char.main_job_id
-    local sub_job_id = char.sub_job_id
-    local master_level = char.master_level
-    local master_breaker = char.master_breaker
-    if main_job_id ~= nil and main_job_id > 0 then
-	M.charTable[id].main_job = jobs[main_job_id].ens
-    end
-    if sub_job_id ~= nil and sub_job_id > 0 then
-	M.charTable[id].sub_job = jobs[sub_job_id].ens
-    end
-    local master_level = char.master_level
-    if master_breaker ~= nil and master_breaker == true and
-	master_level ~= nil then
-	M.charTable[id].master_level = master_level
-    end
-end
-
 -- https://wiki.ffo.jp/html/38412.html
 local next_exemplar_table = {
     [0] = 2500, [1] = 5550, [2] = 8721, [3] = 11919, [4] = 15122,
@@ -55,21 +17,165 @@ local next_exemplar_table = {
     [48] = 2936001, [49] = 3354601, [50] = 3817561
 }
 
-function M.current_exemplar(pt)
-    M.current_exemplar_point = pt
+local M = {
+    charTable = {},
+}
+
+local io_chat = require('io/chat')
+local jobs = res.jobs
+
+function M.init(id, char)
+    M.charTable = {}
+    --[[ user_id => eminence_point
+                 => unity_point
+	         => main_job
+                 => job => exp_point ...
+    ]]
 end
 
-function M.next_exemplar(pt)
-    M.next_exemplar_point = pt
-    for m, p in pairs(next_exemplar_table) do
-	if pt == p then
-	    M.real_master_level = m
-	    break
+function M.update_points(id, char)
+    local eminence_point = char.eminence_point
+    local unity_point = char.unity_point
+    if eminence_point ~= nil then
+	M.charTable[id].eminence_point = eminence_point
+    end
+    if unity_point ~= nil then
+	M.charTable[id].unity_point = unity_point
+    end
+end
+
+function M.update_job_info(id, main_job, sub_job, char)
+    local current_exp_point = char.current_exp_point
+    local next_exp_point = char.next_exp_point
+    -- local master_level = char.master_level  -- レベルシンクで変動する
+    local master_breaker = char.master_breaker
+    local current_exemplar_point = char.current_exemplar_point
+    local next_exemplar_point = char.next_exemplar_point
+    -- io_chat.print(id, main_job, char)
+    --
+    M.charTable[id].main_job = main_job
+    M.charTable[id].sub_job = sub_job
+    --
+    if main_job_id ~= nil and main_job_id > 0 then
+	M.charTable[id].main_job = main_job
+    end
+    if sub_job_id ~= nil and sub_job_id > 0 then
+	M.charTable[id].sub_job = sub_job
+    end
+    if current_exp_point ~= nil then
+	M.charTable[id][main_job].current_exp_point = current_exp_point
+    end
+    if next_exp_point ~= nil then
+	M.charTable[id][main_job].next_exp_point = next_exp_point
+    end
+    if master_breaker ~= nil and master_breaker == true then
+	if current_exemplar_point ~= nil then
+	    M.charTable[id][main_job].current_exemplar_point = current_exemplar_point
+	end
+	if next_exemplar_point ~= nil then
+	    M.charTable[id][main_job].next_exemplar_point = next_exemplar_point
+	    for m, p in pairs(next_exemplar_table) do
+		if next_exemplar_point == p then
+		    M.charTable[id][main_job].real_master_level = m
+		    break
+		end
+	    end
 	end
     end
 end
 
+function M.update(id, char)
+    if M.charTable[id] == nil then
+	M.charTable[id] = {
+	    eminence_point = -1,
+	    unity_point = -1,
+	}
+    end
+    local player = windower.ffxi.get_player()
+    local main_job = nil
+    local sub_job = nil
+    if player.id == id then
+	main_job = player.main_job
+	sub_job = player.sub_job
+    end
+    local main_job_id = char.main_job_id
+    local sub_job_id = char.sub_job_id
+    if main_job_id ~= nil then
+	main_job = jobs[main_job_id].ens
+    end
+    if sub_job_id ~= nil then
+	sub_job = jobs[sub_job_id].ens
+    end
+    if main_job == nil or main_job == 0 then
+	return  -- フェイスとか
+    end
+    M.update_points(id, char)
+    if M.charTable[id][main_job] == nil then
+	M.charTable[id][main_job] = {
+	    real_master_level = -1,
+	    current_exp_point = -1,
+	    next_exp_point = -1,
+	    current_exemplar_point = -1,
+	    next_exemplar_point = -1,
+	}
+    end
+    M.update_job_info(id, main_job, sub_job, char)
+end
+
+-- char point
+
+function M.eminence_point()
+    local player = windower.ffxi.get_player()
+    if M.charTable[player.id] == nil then
+	return -1
+    end
+    return M.charTable[player.id].eminence_point
+end
+
+function M.unity_point()
+    local player = windower.ffxi.get_player()
+    if M.charTable[player.id] == nil then
+	return -1
+    end
+    return M.charTable[player.id].unity_point
+end
+
+
+-- char job info
+
+function get_point(key)
+    local player = windower.ffxi.get_player()
+    if M.charTable[player.id] == nil then
+	return -1
+    end
+    if M.charTable[player.id][player.main_job] == nil then
+	return -1
+    end
+    return M.charTable[player.id][player.main_job][key]
+end
+
+function M.current_exp()
+    return get_point("current_exp_point")
+end
+
+function M.next_exp()
+    return get_point("next_exp_point")
+end
+
+function M.real_master_level()
+    return get_point("real_master_level")
+end
+
+function M.current_exemplar_point()
+    return get_point("current_exemplar_point")
+end
+
+function M.next_exemplar_point()
+    return get_point("next_exemplar_point")
+end
+
 function M.print()
+    io_chat.print("### ac/char print #"..#M.charTable)
     for id, char in pairs(M.charTable) do
 	local mob = windower.ffxi.get_mob_by_id(id)
 	io_chat.print(id, mob.name, char)

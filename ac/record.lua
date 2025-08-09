@@ -4,16 +4,6 @@ local io_chat = require("io/chat")
 local ac_char = require("ac/char")
 local utils_table = require "utils/table"
 
-local M = {
-    eminence_point = -1,
-    unity_point = -1,
-}
-
-function M.init()
-    M.eminence_point = -1
-    M.unity_point = -1
-end
-
 function M.record()
     local player = windower.ffxi.get_player()
     -- addon_path の最後に / がついてる。
@@ -43,14 +33,15 @@ function M.record()
 	f:write(" Ilv:"..player.item_level)
 	local jobpt = player.job_points[string.lower(player.main_job)]
 	if jobpt.jp_spent < 2100 then
-	    f:write(" JP:"..jobpt.jp_spent.."+"..jobpt.jp)
-	elseif jobpt.jp_spent >= 2100 and ac_char.real_master_level >= 0 then
-	    f:write(" Mlv:"..ac_char.real_master_level)
-	    f:write(" ("..ac_char.current_exemplar_point.."/"..ac_char.next_exemplar_point..")")
+	    f:write(" JP:"..jobpt.jp_spent.."+"..jobpt.jp.."="..(jobpt.jp_spent+jobpt.jp))
+	elseif jobpt.jp_spent >= 2100 and ac_char.real_master_level() >= 0 then
+	    f:write(" Mlv:"..ac_char.real_master_level())
+	    local exemplar_percent = math.floor(100 * ac_char.current_exemplar_point()/ac_char.next_exemplar_point() + 0.5)
+	    f:write(" ("..ac_char.current_exemplar_point().."/"..ac_char.next_exemplar_point().."="..exemplar_percent.."%)")
 	end
     end
     f:write("\n")
-    f:write("Eminence:"..M.eminence_point.."  Unity:"..M.unity_point.."\n")
+    f:write("Eminence:"..ac_char.eminence_point().."  Unity:"..ac_char.unity_point().."\n")
     --[[
     local jpText = ""
     for job, points in pairs(player.job_points) do
