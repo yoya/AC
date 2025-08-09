@@ -34,7 +34,8 @@ function M.record()
     if namelen < 7 then
 	f:write(string.rep(" ", 7 - namelen))
     end
-    if player.status > 1 then
+    if player.status > 1 and player.status ~= 33 then
+	-- 33: healing??
 	f:write("(status:"..player.status..")")
     end
     f:write(" "..player.main_job..":"..player.main_job_level)
