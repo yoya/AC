@@ -902,21 +902,17 @@ windower.register_event('addon command', function(command, command2)
         else 
             io_chat.print("Usage: aa puller { on | off }")
         end
-    elseif command == 'print' then
-        if command2 == 'char' then
+    elseif command == 'show' then
+	if command2 == 'char' then
 	    ac_char.print()
+	elseif command2 == 'inventory' then
+	    acitem.showInventory()
+	elseif command2 == 'mob' then
+	    showMob()
 	elseif command2 == 'task' then
 	    task.print()
 	else
-	    io_chat.print("ac print { char | task }")
-	end
-    elseif command == 'show' then
-	if command2 == 'mob' then
-	    showMob()
-	elseif command2 == 'inventory' then
-	    acitem.showInventory()
-	else
-	    io_chat.print("ac show { mob | inventory }")
+	    io_chat.print("ac show { char | inventory | mob | task}")
 	end
     elseif command == 'test' then
         print("test command")
@@ -945,13 +941,13 @@ windower.register_event('addon command', function(command, command2)
         io_chat.print('    start              - Starts auto attack')
         io_chat.print('    stop               - Stops auto attack')
         io_chat.print('    attack             - Change attack mode')
-	io_chat.print('    debug info | nearest - Debug')
+	io_chat.print('    debug info | ...   - Debug')
 	io_chat.print('    dropjunk           - Drop JunkItem')
         io_chat.print('    move <route>       - Auto move')
         io_chat.print('    pos|info|nearest   - Debug command')
         io_chat.print('    puller on|off      - Change puller mode')
-        io_chat.print('    show mob | inventory - Show something')
-        io_chat.print('    use silt | beads | scroll - Use Item')
+        io_chat.print('    show mob | ...     - Show something')
+        io_chat.print('    use silt | ...     - Use Item')
         io_chat.print('    ws                 - Change weapon skill')
         io_chat.print('    help               - Displays this help text')
         io_chat.print(' ')
