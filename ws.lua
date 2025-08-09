@@ -16,7 +16,7 @@ local preferWeaponSkill = {
     'manda', 'exen', 'rudra', 'evis',  'dance', 'shadow', -- 短剣
     'savage', 'chant', -- 片手剣
     'reso','ground', -- 両手剣
-    'rui', 'ramp', -- 片手斧
+    'ramp', 'rui', -- 片手斧
     'ukko', 'steel',  --両手斧
     'dai',  -- 両手槍
     'demi', 'spin', 'frost', -- 両手剣
