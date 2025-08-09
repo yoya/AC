@@ -48,6 +48,7 @@ M.zoneTable = {
     [150] = require('zone/150_MonastiCav'), -- 修道窟
     [151] = require('zone/151_Oztroja'),    -- オズトロヤ城
     [152] = require('zone/152_AltarRoom'),  -- 祭壇の間
+    [153] = require('zone/153_Boyahda'),    -- ボヤーダ樹
     [159] = require('zone/159_Uggalepih'),  -- ウガレピ寺院
     [167] = require('zone/167_Bostaunieu'), -- ボストーニュ監獄
     [172] = require('zone/172_Zeruhn'),     -- ツェールン鉱山
