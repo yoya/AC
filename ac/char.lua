@@ -1,25 +1,11 @@
 -- キャラクター情報
 
-local res = require('resources')
-
--- https://wiki.ffo.jp/html/38412.html
-local next_exemplar_table = {
-    [0] = 2500, [1] = 5550, [2] = 8721, [3] = 11919, [4] = 15122,
-    [5] = 18327, [6] = 21532, [7] = 24737, [8] = 27942, [9] = 31147,
-    [10] = 41205, [11] = 48130, [12] = 53677, [13] = 58614, [14] = 63292,
-    [15] = 67848, [16] = 72353, [17] = 76835, [18] = 81307, [19] = 85775,
-    [20] = 109112, [21] = 127014, [22] = 141329, [23] = 153277, [24] = 163663,
-    [25] = 173018, [26] = 181692, [27] = 189917, [28] = 197845, [29] = 205578,
-    [30] = 258409, [31] = 307400, [32] = 353012, [33] = 395651, [34] = 435673,
-    [35] = 473392, [36] = 509085, [37] = 542995, [38] = 575336, [39] = 606296,
-    [40] = 769426, [41] = 951369, [42] = 1154006, [43] = 1379407,
-    [44] = 1629848, [45] = 1907833, [46] = 2216116, [47] = 2557728,
-    [48] = 2936001, [49] = 3354601, [50] = 3817561
-}
-
 local M = {
     charTable = {},
 }
+
+local res = require('resources')
+local ac_data = require('ac/data')
 
 local io_chat = require('io/chat')
 local jobs = res.jobs
@@ -74,7 +60,7 @@ function M.update_job_info(id, main_job, sub_job, char)
 	end
 	if next_exemplar_point ~= nil then
 	    M.charTable[id][main_job].next_exemplar_point = next_exemplar_point
-	    for m, p in pairs(next_exemplar_table) do
+	    for m, p in pairs(ac_data.next_exemplar_table) do
 		if next_exemplar_point == p then
 		    M.charTable[id][main_job].real_master_level = m
 		    break
