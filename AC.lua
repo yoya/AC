@@ -98,6 +98,7 @@ local getSendCommandProbTable = aprob.getSendCommandProbTable
 local aczone = require 'zone'
 local zone_change = require 'zone/change'
 local incoming_chunk = require 'incoming/chunk'
+local incoming_text = require 'incoming/text'
 
 local acmob = require 'mob'
 local getMobPosition = acmob.getMobPosition
@@ -987,6 +988,10 @@ windower.register_event('zone change', function(zone, prevZone)
 
 windower.register_event('incoming chunk', function(id, data, modified, injected, blocked)
     incoming_chunk.incoming_handler(id, data, modified, injected, blocked)
+end)
+
+windower.register_event('incoming text', function(data, modified, original_mode, modified_mode, blocked)
+    incoming_text.incoming_handler(data, modified, original_mode, modified_mode, blocked)
 end)
 
 local loopConf = function()
