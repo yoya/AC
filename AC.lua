@@ -346,18 +346,21 @@ local figtingFunction = function()
         tpMax = 1150
     elseif utils.table.contains(tpJobs, player.main_job) then
         tpMin = 2000
-        tpMax = 2500
+        tpMax = 2300
     end
     local ws_request = false
     local now = os.time()
-    if  player.vitals.tp >= 1000 and (asinspect.ws_time + 3) < os.time() then
+    if  player.vitals.tp >= 1000 and (asinspect.ws_time + 4) < os.time() then
 	if player.vitals.tp >= math.random(tpMin,tpMax) then
 	    ws_request = true
-	elseif (asinspect.ws_time + 3) < now and
-	    now < (asinspect.ws_time + 5) then
+	elseif (asinspect.ws_time + 4) < now and
+	    now < (asinspect.ws_time + 4 + 8) then
 	    -- 連携受付時間なら WS 即打ち
 	    ws_request = true
 	end
+    end
+    if player.vitals.tp >= 3000 then
+	ws_request = true
     end
     if ws_request == true then
 	ws.exec()
