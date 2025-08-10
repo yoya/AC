@@ -3,6 +3,9 @@
 local M = { id = 256 }
 
 M.routes = {
+    moogle = {  -- 開始地点が他にマッチしないように
+	{x=0, y=0, z=0}, {x=0, y=0, z=0},
+    },
     pio = { {x=-105.5,y=-13.5}, {x=-101,y=-11},
 	{x=-96.2,y=15.5}, {x=-88.8,y=15}
     },
@@ -50,14 +53,15 @@ M.routes = {
 }
 
 M.essentialPoints = {
+    moogle = {x=0, y=0, z=0}, -- モグハウス内のモーグル
     wp_mum = {x=-21,y=-79.9,z=-0.2},
     wp_cou = {x=4.9,y=-4.8,z=0},
 }
 
 M.automatic_routes = {
+    moogle = "moogle", -- 動かないように
     wp_mum = "mum",
     wp_cou = "cou",
 }
-
 
 return M
