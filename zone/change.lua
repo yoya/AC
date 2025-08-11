@@ -34,9 +34,10 @@ function M.automatic_routes_handler(zone, automatic_routes)
     if ac_pos.isNear(pos, 1) then
 	for f, t in pairs(automatic_routes) do
 	    local fp = zone_object.essentialPoints[f]
-	    if ac_pos.isNear(fp, 10) then
+	    if ac_pos.isNear(fp, 5) then
 		io_chat.print(f.."から"..t.."に移動")
 		ac_move.moveTo(zone_object.routes[t], zone_object.routes)
+		break
 	    end
 	end
     end
