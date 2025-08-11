@@ -20,6 +20,7 @@ function M.require_child_module(parent, parentname, modname)
     ]]
 end
 
+M.require_child_module(M, 'utils', 'string')
 M.require_child_module(M, 'utils', 'table')
 M.require_child_module(M, 'utils', 'angle')
 
