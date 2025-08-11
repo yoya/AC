@@ -686,6 +686,11 @@ local idleFunction = function()
     end
 end
 
+local tick_new = function()
+    -- print("tick_new")
+    zone_change.warp_handler_tick()
+end
+
 local tickRunning = false
 
 --- 途中での return 抜け禁止。最後でフラグ落とすので。
@@ -697,7 +702,7 @@ local tick = function()
     if tickRunning then -- 二重に動かないガード。(ちゃんと働いているか不明)
         return 
     end
-    zone_change.warp_handler_tick()
+    -- zone_change.warp_handler_tick()
     acjob.tick(player)
     task.tick()
     -- ここからは auto のみ。
@@ -963,7 +968,12 @@ windower.register_event('addon command', function(command, command2)
     end
 end)
 
-windower.register_event('load', 'login', 'logout', function()
+windower.register_event('load', function()
+    tick_new:loop(1.0)
+    ws.init()
+end)
+
+windower.register_event('login', 'logout', function()
 --    local player = windower.ffxi.get_player()
 --    player_id = player and player.id
     ws.init()
