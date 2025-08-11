@@ -18,11 +18,13 @@ M.routes = {
 }
 
 M.essentialPoints = {
-    homepoint_2_M = {x=36,y=8.8,z=0}
+    homepoint_1_E = {x=36,y=8.8,z=0},
+    homepoint_2_M = {x=-155,y=-3,z=-1},
 }
 
 M.automatic_routes = {
-    homepoint_2_M = "shemo"
+    homepoint_1_E = "shemo",
+    homepoint_2_M = "oboro",
 }
 
 return M
