@@ -2,12 +2,13 @@
 
 local M = {}
 
+local io_chat = require'io/chat'
 local command = require 'command'
 local asinspect = require 'inspect'
 
---local MB_magic = "ファイア"
---local MB_magic = "ブリザド"
-local MB_magic = "サンダー"
+-- local MB_magic = "ファイア"
+local MB_magic = "ブリザド"
+--local MB_magic = "サンダー"
 
 function M.magicBurst(player, magickRank)
     if player.status == 1 then -- 戦闘中
@@ -39,6 +40,31 @@ function M.mainTick(player)
     end
     if player.status == 1 then -- 戦闘中
 	M.magicBurst(player, magickRank)
+    end
+end
+
+local magicTable = {
+    fire = "ファイア",
+    ice = "ブリザド",
+    wind = "エアロ",
+    -- light
+    -- dark
+    stone = "ストーン",
+    thunder = "サンダー",
+    water = "ウォータ",
+}
+
+function M.setMagic(magic)
+    print("setMagic("..magic..")")
+    if magic ~= nil then
+	if magicTable[magic] ~= nil then
+	    MB_magic = magicTable[magic]
+	    io_chat.print("set magic "..magic.." -> "..MB_magic)
+	else
+	    print("Unknown magic:"..magic)
+	end
+    else
+	io_chat.print(magicTable)
     end
 end
 

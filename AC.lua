@@ -104,7 +104,7 @@ local acmob = require 'mob'
 local getMobPosition = acmob.getMobPosition
 
 local acjob = require 'job'
-
+local role_Sorcerer = require('role/Sorcerer')
 local ac_defeated = require 'ac/defeated'
 
 local JunkItems = item_data.JunkItems
@@ -879,6 +879,8 @@ windower.register_event('addon command', function(command, command2)
             pushKeys({"down", "enter"})
             coroutine.sleep(3)
         end
+    elseif command == 'magic' then
+	role_Sorcerer.setMagic(command2)
     elseif command == 'move' then
         local zone = windower.ffxi.get_info().zone
 	local routeTable = aczone.getRouteTable(zone)
