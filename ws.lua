@@ -13,7 +13,7 @@ M.weaponskill = 'flat'
 
 local preferWeaponSkill = {
     'victory', 'shishin', 'tokon', 'dragon', 'tackle',-- 格闘
-    'manda', 'exen', 'rudra', 'evis',  'dance', 'shadow', -- 短剣
+    'rudra', 'manda', 'exen', 'evis',  'dance', 'shadow', -- 短剣
     'savage', 'chant', -- 片手剣
     'reso','ground', -- 両手剣
     'ramp', 'rui', -- 片手斧
@@ -142,7 +142,8 @@ M.exec = function()
     local player = windower.ffxi.get_player()
 --    print(player.vitals.tp)
 --    if mob.hpp < math.random(30, 33) and -- 醴泉島かえる
-    if mob.hpp < math.random(3,5) and -- ウォーAPEXかえる
+    --    if mob.hpp < math.random(3,5) and -- ウォーAPEXかえる
+    if mob.hpp < math.random(2,3) and -- ウォーAPEXかえる
         player.vitals.tp < 3000 then
         return
     end
