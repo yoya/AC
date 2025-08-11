@@ -988,6 +988,7 @@ end)
 
 --- ゾーンが変わったら停止する
 windower.register_event('zone change', function(zone, prevZone)
+    ac_stat.init()
     auto = false
     useSilt = false
     useBeads = false
