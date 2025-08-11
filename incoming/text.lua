@@ -11,6 +11,9 @@ local task = require 'task'
 local split_multi = utils.string.split_multi
 local phantom_roll_table = ac_data.phantom_roll_table
 
+-- { {keyword, callback}, ... }
+local listener_table = {}
+
 -- ダブルアップの on/off
 function phantom_roll_double_up(on)
     assert(type(on) == boolean)
@@ -94,12 +97,25 @@ end
 
 function M.incoming_handler(data, modified, original_mode, modified_mode, blocked)
     local player = windower.ffxi.get_player()
-    if string.contains(data, player.name) then
-	local text = windower.from_shift_jis(data)
+    local text = windower.from_shift_jis(data)
+    if string.contains(text, player.name) then
 	if string.contains(text,"ロール") then
 	    COR_handler(player, text)
 	end
     end
+    for i, listener in ipairs(listener_table) do
+	if string.contains(text, listener.keyword) then
+	    listener.callback(player, text)
+	end
+    end
+end
+
+function M.addListener(keyword, callback)
+    assert(type(keyword) == "string")
+    assert(type(callback) == "function")
+    table.insert(listener_table, {keyword=keyword, callback=callback})
+    local idx = #listener_table
+    return idx
 end
 
 return M
