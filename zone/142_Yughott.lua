@@ -16,10 +16,12 @@ M.routes = {
 
 M.essentialPoints = {
     homepoint_1 = {x=434,y=170,z=-40.1},
+    from_horl = {x=437.5,y=68.1,z=-40.1}
 }
 
 M.automatic_routes = {
-    homepoint_1 = "horl"
+    homepoint_1 = "horl",
+    from_horl= "horl",
 }
 
 return M
