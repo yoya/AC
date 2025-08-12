@@ -31,6 +31,9 @@ function M.update_points(id, char)
 end
 
 function M.update_job_info(id, main_job, sub_job, char)
+    local limit_breaker = char.limit_breaker
+    local current_merit_point = char.current_merit_point
+    local max_merit_point = char.max_merit_point
     local current_exp_point = char.current_exp_point
     local next_exp_point = char.next_exp_point
     -- local master_level = char.master_level  -- レベルシンクで変動する
@@ -48,6 +51,15 @@ function M.update_job_info(id, main_job, sub_job, char)
     if sub_job_id ~= nil and sub_job_id > 0 then
 	M.charTable[id].sub_job = sub_job
     end
+    --
+    local limit_breaker = char.limit_breaker
+    local current_merit_point = char.current_merit_point
+    local max_merit_point = char.max_merit_point
+    if limit_breaker ~= nil and limit_breaker == true then
+	M.charTable[id][main_job].current_merit_point = current_merit_point
+	M.charTable[id][main_job].max_merit_point = max_merit_point
+    end
+    -- master level
     if current_exp_point ~= nil then
 	M.charTable[id][main_job].current_exp_point = current_exp_point
     end
@@ -98,9 +110,11 @@ function M.update(id, char)
     M.update_points(id, char)
     if M.charTable[id][main_job] == nil then
 	M.charTable[id][main_job] = {
-	    real_master_level = -1,
+	    current_merit_point = -1,
+	    max_merit_point = -1,
 	    current_exp_point = -1,
 	    next_exp_point = -1,
+	    real_master_level = -1,
 	    current_exemplar_point = -1,
 	    next_exemplar_point = -1,
 	}
@@ -126,7 +140,6 @@ function M.unity_point()
     return M.charTable[player.id].unity_point
 end
 
-
 -- char job info
 
 function get_point(key)
@@ -140,11 +153,19 @@ function get_point(key)
     return M.charTable[player.id][player.main_job][key]
 end
 
-function M.current_exp()
+function M.current_merit_point()
+    return get_point("current_merit_point")
+end
+
+function M.max_merit_point()
+    return get_point("max_merit_point")
+end
+
+function M.current_exp_point()
     return get_point("current_exp_point")
 end
 
-function M.next_exp()
+function M.next_exp_point()
     return get_point("next_exp_point")
 end
 

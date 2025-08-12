@@ -87,6 +87,17 @@ packet_handler[0x061] = function(packet)
     ac_char.update(player.id, char)
 end
 
+-- This packet likely varies based on jobs, but currently I only have it worked out for Monstrosity.
+packet_handler[0x063] = function(packet)
+    local player = windower.ffxi.get_player()
+    local char = {
+	current_merit_point = packet["Merit Points"],
+	limit_breaker = packet["Limit Breaker"],
+	max_merit_point = packet["Max Merit Points"],
+    }
+    ac_char.update(player.id, char)
+end
+
 -- Char Update
 packet_handler[0x0DF] = function(packet)
     local id = packet["ID"]

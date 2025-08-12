@@ -29,9 +29,16 @@ function M.record()
 	f:write("(status:"..player.status..")")
     end
     f:write(" "..player.main_job..":"..player.main_job_level)
+    if player.main_job_level < 99 then
+	f:write(" (exp:"..ac_char.current_exp_point().."/"..ac_char.next_exp_point()..")")
+    end
+    local jobpt = player.job_points[string.lower(player.main_job)]
+    -- マスターレベルなら、きっとメリットポイント気にしないので非表示
+    if player.main_job_level >= 75 and jobpt.jp_spent < 2100 then
+	f:write(" (merit:"..ac_char.current_merit_point().."/"..ac_char.max_merit_point()..")")
+    end
     if player.main_job_level >= 99 then
 	f:write(" Ilv:"..player.item_level)
-	local jobpt = player.job_points[string.lower(player.main_job)]
 	if jobpt.jp_spent < 2100 then
 	    -- ジョブポイント表示
 	    f:write(" JP:"..jobpt.jp_spent.."+"..jobpt.jp.."="..(jobpt.jp_spent+jobpt.jp))
