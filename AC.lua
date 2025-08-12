@@ -913,6 +913,8 @@ windower.register_event('addon command', function(command, command2)
         else 
             io_chat.print("Usage: aa puller { on | off }")
         end
+    elseif command == 'record' then
+	ac_record.record()
     elseif command == 'show' then
 	if command2 == 'char' then
 	    ac_char.print()
@@ -953,10 +955,12 @@ windower.register_event('addon command', function(command, command2)
         io_chat.print('    stop               - Stops auto attack')
         io_chat.print('    attack             - Change attack mode')
 	io_chat.print('    debug info | ...   - Debug')
+	io_chat.print('    defeated           - Defeated Process')
 	io_chat.print('    dropjunk           - Drop JunkItem')
         io_chat.print('    move <route>       - Auto move')
         io_chat.print('    pos|info|nearest   - Debug command')
         io_chat.print('    puller on|off      - Change puller mode')
+	io_chat.print('    record             - Reord Status to LogFile')
         io_chat.print('    show mob | ...     - Show something')
         io_chat.print('    use silt | ...     - Use Item')
         io_chat.print('    ws                 - Change weapon skill')
