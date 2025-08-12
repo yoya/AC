@@ -16,7 +16,7 @@ M.mainJobProbTable = {
     { 50, 900, 'input /ma 猛者のメヌエットIV <me>', 8 },
     { 100, 900, 'input /ma 剣豪のマドリガル <me>', 8 },
     -- { 10, 900, 'input /ma 怪力のエチュード <me>', 8 },
-    { 10, 900, 'input /ma 妙技のエチュード <me>', 8 },
+    { 100, 900/2, 'input /ma 妙技のエチュード <me>', 8 },
     -- { 100, 60, 'input /ma 魔法のフィナーレ <t>', 8, true },
     -- { 200, 120, 'input /ma 修羅のエレジー <t>', 8, true },
     { 1000, 120, 'input /ma 魔物のレクイエムVII <t>', 8, true },
@@ -28,5 +28,9 @@ M.subJobProbTable = {
     { 200, 180/2, 'input /ma 猛者のメヌエットIII <me>', 8 },
     -- { 200, 120, 'input /ma 戦場のエレジー <t>', 8, true },
 }
+
+function M.mainTick(player)
+    do end
+end
 
 return M
