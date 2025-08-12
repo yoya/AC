@@ -42,9 +42,9 @@ M.subJobProbTable = {
     -- { 200, 30, 'input /ma フロスト <t>', 3, true},
 }
 
-function M.mainTick(player)
-    if role_Sorcerer.mainTick ~= nil then
-	role_Sorcerer.mainTick(player)
+function M.main_tick(player)
+    if role_Sorcerer.main_tick ~= nil then
+	role_Sorcerer.main_tick(player)
     end
 end
 

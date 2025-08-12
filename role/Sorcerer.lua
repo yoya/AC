@@ -28,7 +28,7 @@ function M.magicBurst(player, magickRank)
     end
 end
 
-function M.mainTick(player)
+function M.main_tick(player)
     local magickRank = 2
     local main_job = player.main_job
     if main_job == "BLM" then

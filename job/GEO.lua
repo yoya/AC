@@ -63,7 +63,7 @@ M.mainJobProbTable_2 = {
  
 M.subJobProbTable = { }
 
-function M.mainTick(player)
+function M.main_tick(player)
     if player.status == 1 then -- 戦闘中
 	-- 羅盤が戦闘場所から離れてたら消す
 	if math.random(1, 100) <= 30 then
@@ -73,8 +73,8 @@ function M.mainTick(player)
 		command.send('input /ja フルサークル <me>; wait 2; input /ja グローリーブレイズ <me>; wait 2; input /ma '..GEO_geo..' <bt>')
 	    end
 	end
-	if role_Sorcerer.mainTick ~= nil then
-	    role_Sorcerer.mainTick(player)
+	if role_Sorcerer.main_tick ~= nil then
+	    role_Sorcerer.main_tick(player)
 	end
     end
 end

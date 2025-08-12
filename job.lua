@@ -34,13 +34,13 @@ M.jobTable = {
 }
 
 function M.tick(player)
-    local mainTick = M.jobTable[player.main_job].mainTick
-    local subTick = M.jobTable[player.sub_job].subTick
-    if mainTick ~= nil then
-	mainTick(player)
+    local main_tick = M.jobTable[player.main_job].main_tick
+    local sub_tick = M.jobTable[player.sub_job].sub_tick
+    if main_tick ~= nil then
+	main_tick(player)
     end
-    if subTick ~= nil then
-	subTick(player)
+    if sub_tick ~= nil then
+	sub_tick(player)
     end
 end
 

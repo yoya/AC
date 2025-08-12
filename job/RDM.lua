@@ -44,18 +44,18 @@ M.subJobProbTable = {
     -- { 100, 120-30, 'input /ma ヘイスト <p3>', 4 },
 }
 
-function M.mainTick(player)
-    if role_Healer.mainTick ~= nil then
-	role_Healer.mainTick(player)
+function M.main_tick(player)
+    if role_Healer.main_tick ~= nil then
+	role_Healer.main_tick(player)
     end
-    if role_Sorcerer.mainTick ~= nil then
-	role_Sorcerer.mainTick(player)
+    if role_Sorcerer.main_tick ~= nil then
+	role_Sorcerer.main_tick(player)
     end
 end
 
-function M.subTick(player)
-    if role_Healer.subTick ~= nil then
-	role_Healer.subTick(player)
+function M.sub_tick(player)
+    if role_Healer.sub_tick ~= nil then
+	role_Healer.sub_tick(player)
     end
 end
 

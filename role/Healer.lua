@@ -41,7 +41,7 @@ M.cureIfPartyHPisLow = function(hp_need_cure)
     end
 end
 
-function M.mainTick(player)
+function M.main_tick(player)
     local item_level = player.item_level
     if item_level < 117 then
         if math.random(1, 100) < 0 then
@@ -56,7 +56,7 @@ function M.mainTick(player)
     end
 end
 
-function M.subTick(player)
+function M.sub_tick(player)
     local item_level = player.item_level
     if item_level < 117 then
         if math.random(1, 100) < 0 then

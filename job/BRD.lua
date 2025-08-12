@@ -29,7 +29,7 @@ M.subJobProbTable = {
     -- { 200, 120, 'input /ma 戦場のエレジー <t>', 8, true },
 }
 
-function M.mainTick(player)
+function M.main_tick(player)
     do end
 end
 
