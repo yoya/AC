@@ -1,5 +1,5 @@
 _addon.author = 'Yoya'
-_addon.version = '1.2.0'
+_addon.version = '1.3.0'
 _addon.commands = {'accountcluster', 'ac'}
 
 require('functions')
@@ -17,6 +17,8 @@ local defaults = {
 ---    CampRange = 15.0,
     CampRange = 18.0,
     PullMethod = pull.MELEE,
+    Attack = true,
+    Calm = false,
 }
 
 local settings = config.load(defaults)
@@ -24,7 +26,6 @@ local settings = config.load(defaults)
 local auto = false
 -- local player_id
 local start_pos = {x = -1, y = -1, z = -1}
-local attack = true
 local useSilt = false
 local useBeads = false
 local doPointCheer = false
@@ -132,7 +133,7 @@ local leaderFunction = function()
         --- 優先度の高い敵がいない場合は、誰でも良い
         mob = acmob.getNearestFightableMob(start_pos, settings.CampRange, nil)
     end
-    if mob ~= nil and attack then
+    if mob ~= nil and settings.Attack then
         windower.ffxi.run(false)
 ---        io_chat.print(mob.name)
         io_net.targetByMobId(mob.id)
@@ -153,7 +154,7 @@ local leaderFunction = function()
         end
         return
     end
-    if attack then
+    if settings.Attack then
         command.send('input /attack on')
 	aprob.clearProbRecastTime(ProbRecastTime)
 	task.resetByFight()
@@ -215,7 +216,7 @@ local notLeaderFunction = function()
             return
         end
     end
-    if attack then
+    if settings.Attack then
         windower.ffxi.run(false)
         --- p1 がターゲットしてる敵に合わせる
         local p1 = windower.ffxi.get_mob_by_target("p1")
@@ -823,18 +824,46 @@ local showMob = function()
     end
 end
 
+function argument_means_on(s)
+    if utils.table.contains({"on", "yes", "enable", "1"}, s) then
+	return true
+    end
+    if utils.table.contains({"off", "no", "disable", "0"}, s) then
+	return false
+    end
+    return nil
+end
+
 windower.register_event('addon command', function(command, command2)
     command = command and command:lower() or 'help'
     -- start/stop, (諸々ABC順), help の並び
     if command == 'start' then
         start()
 	ac_defeated.done()
-	io_chat.print("attack mode", attack)
+	io_chat.setNextColor(6)
+	io_chat.print("mode attack:", settings.Attack, "  calm:", settings.Calm)
     elseif command == 'stop' then
         stop()
     elseif command == 'attack' then
-        attack = not attack
-        io_chat.print("attack mode", attack)
+	local onoff = argument_means_on(command2)
+	if onoff ~= nil then
+	    settings.Attack = onoff
+	    io_chat.setNextColor(6)
+	    io_chat.print("attack mode "..command2)
+	else
+	    io_chat.setNextColor(3)
+	    io_chat.print("Usage: ac attack (on|off)")
+	end
+    elseif command == 'calm' then
+	local onoff = argument_means_on(command2)
+	if onoff ~= nil then
+	    settings.Calm = onoff
+	    io_chat.setNextColor(6)
+	    io_chat.print("ac calm "..command2)
+	else
+	    io_chat.setNextColor(3)
+	    io_chat.print("Usage: ac calm (on|off)")
+	end
     elseif command == 'camprange' then
         settings.CampRange = tonumber(command2, 10)
         io_chat.print("CampRange:", command2)
@@ -904,14 +933,14 @@ windower.register_event('addon command', function(command, command2)
 ---        print("me potision", " x="..x, "  y="..y, "  z="..z)
         io_chat.print("me potision  x="..x.."  y="..y.."  z="..z)
     elseif command == 'puller' then
-        if command2 == 'on' then
-            puller = true
-            io_chat.print("puller on")
-        elseif command2 == 'off' then
-            puller = false
-            io_chat.print("puller off")
-        else 
-            io_chat.print("Usage: aa puller { on | off }")
+	local onoff = argument_means_on(command2)
+	if onoff ~= nil then
+            puller = onoff
+	    io_chat.setNextColor(6)
+            io_chat.print("ac puller "..command2)
+        else
+	    io_chat.setNextColor(3)
+            io_chat.print("Usage: ac puller (on|off)")
         end
     elseif command == 'record' then
 	ac_record.record()
