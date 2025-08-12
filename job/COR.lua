@@ -3,13 +3,14 @@
 local M = {}
 
 local utils = require('utils')
-local split_multi = utils.string.split_multi
 local io_chat = require('io/chat')
 local ac_data = require('ac/data')
-local phantom_roll_table = ac_data.phantom_roll_table
 local task = require 'task'
-
+local role_Melee = require 'role/Melee'
 local incoming_text = require('incoming/text')
+
+local split_multi = utils.string.split_multi
+local phantom_roll_table = ac_data.phantom_roll_table
 
 M.mainJobProbTable = {
     -- { 200, 60, 'input /ja コルセアズロール <me>; wait 2; input /ja ダブルアップ <me>', 0 },
@@ -32,6 +33,12 @@ M.subJobProbTable = {
     -- { 100, 300, 'input /ja カオスロール  <me>', 3 },
     -- { 100, 300, 'input /ja ファイターズロール  <me>', 3 },
 }
+
+function M.main_tick(player)
+    if role_Melee.main_tick ~= nil then
+	role_Melee.main_tick(player)
+    end
+end
 
 -- ダブルアップの on/off
 function phantom_roll_double_up(on)
