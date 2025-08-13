@@ -76,6 +76,7 @@ M.zoneTable = {
     [244] = require('zone/244_UpJeuno'),    -- ジュノ上層
     [245] = require('zone/245_LowJeuno'),   -- ジュノ下層
     [246] = require('zone/246_PortJeuno'),  -- ジュノ港
+    [247] = require('zone/247_Rabao'),      -- ラバオ
     [249] = require('zone/249_Mhaura'),     -- マウラ
     [251] = require('zone/251_HallOfGods'), -- 神々の間
     [252] = require('zone/252_Norg'),       -- ノーグ
