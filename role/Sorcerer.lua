@@ -6,8 +6,8 @@ local io_chat = require'io/chat'
 local command = require 'command'
 local asinspect = require 'inspect'
 
--- local MB_magic = "ファイア"
-local MB_magic = "ブリザド"
+local MB_magic = "ファイア"
+--local MB_magic = "ブリザド"
 --local MB_magic = "サンダー"
 
 function M.magicBurst(player, magickRank)
@@ -33,7 +33,7 @@ function M.main_tick(player)
     local main_job = player.main_job
     if main_job == "BLM" then
 	magickRank = 5
-    elseif main_job == "GEO" then
+    elseif main_job == "RDM" then
 	magickRank = 3
     elseif main_job == "GEO" then
 	magickRank = 2
