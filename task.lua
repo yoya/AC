@@ -108,6 +108,15 @@ function M.removeTask(level, task)
     return i
 end
 
+M.init = function()
+    taskTable = {
+	[M.PRIORITY_TOP]    = {},
+	[M.PRIORITY_HIGH]   = {},
+	[M.PRIORITY_MIDDLE] = {},
+	[M.PRIORITY_LOW]    = {},
+    }
+end
+
 -- 優先順の高い方から、1つだけタスクを取得
 function M.getTask()
     local now = os.time()
