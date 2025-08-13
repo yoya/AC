@@ -2,6 +2,8 @@
 
 local M = {}
 
+local role_Melee = require 'role/Melee'
+
 M.mainJobProbTable = {
     { 100, 300, 'input /ja ウォークライ <me>', 0 },
     -- { 60, 10, 'input /ja バーサク <me>', 0 },
@@ -18,5 +20,11 @@ M.subJobProbTable = {
     -- { 100, 300, 'input /ja バーサク <me>', 0 },
     { 100, 300, 'input /ja アグレッサー <me>', 0 },
 }
+
+function M.main_tick(player)
+    if role_Melee.main_tick ~= nil then
+	role_Melee.main_tick(player)
+    end
+end
 
 return M
