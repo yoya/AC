@@ -1034,7 +1034,10 @@ end)
 --- ゾーンが変わったら停止する
 windower.register_event('zone change', function(zone, prevZone)
     ac_stat.init()
-    auto = false
+    task.init()
+    if iamLeader() then
+	auto = false
+    end
     useSilt = false
     useBeads = false
     doPointCheer = false
