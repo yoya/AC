@@ -57,7 +57,7 @@ function M.record()
 	elseif jobpt.jp_spent >= 2100 and ac_char.real_master_level() >= 0 then
 	    f:write(" Mlv:"..ac_char.real_master_level())
 	    local exemplar_percent = math.floor(100 * ac_char.current_exemplar_point()/ac_char.next_exemplar_point() + 0.5)
-	    f:write(" ("..ac_char.current_exemplar_point().."/"..ac_char.next_exemplar_point().."="..exemplar_percent.."%)")
+	    f:write("("..ac_char.current_exemplar_point().."/"..ac_char.next_exemplar_point().."="..exemplar_percent.."%)")
 	end
     end
     f:write("\n")
