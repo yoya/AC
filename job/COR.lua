@@ -13,6 +13,7 @@ local split_multi = utils.string.split_multi
 local phantom_roll_table = ac_data.phantom_roll_table
 
 M.mainJobProbTable = {
+    { 100, 20*60, 'input /ja ランダムディール <me>', 3 },
     -- { 200, 60, 'input /ja コルセアズロール <me>; wait 2; input /ja ダブルアップ <me>', 0 },
     { 50, 300, 'input /ja ブリッツァロール <me>', 3 },
     { 100, 300/2, 'input /ja サムライロール  <me>', 3 },
@@ -77,8 +78,8 @@ function COR_phantom_roll_up(roll_name, roll_number)
 	-- TODO: フォールド使える場合は return しない
 	if roll_number == roll_info.unlucky then
 	    io_chat.setNextColor(6)
-	    io_chat.print("アンラッキーロール("..roll_number..")！ > スネークアイ")
-	    local c = "input /ja スネークアイ <me>"
+	    io_chat.print("アンラッキーロール("..roll_number..")！ > スネークアイ&ダブルアップ")
+	    local c = "input /ja スネークアイ <me>; wait 2; input /ja ダブルアップ <me>"
 	    task.setTask(task.PRIORITY_MIDDLE,
 			 -- command, delay, duration, period, eachfight
 			 task.newTask(c, 1, 1, 5, false))
