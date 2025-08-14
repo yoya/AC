@@ -87,10 +87,14 @@ else
     os.exit(1)
 end
 
+charTable = array_slice(charTable, 1, num)
+
+
+if method == 'l' then
+    table.sort(charTable, function(a,b) return a.name < b.name end)
+end
+
 for i, char in pairs(charTable) do
-    if i > num then
-	break
-    end
     if method == 'p' then
 	print(char.name.. " E:"..char.eminence_point.." U:"..char.unity_point)
     else
