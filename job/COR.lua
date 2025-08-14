@@ -49,7 +49,7 @@ function phantom_roll_double_up(on)
     local c = "input /ja ダブルアップ <me>"
     local level = task.PRIORITY_MIDDLE
     -- command, delay, duration, period, eachfight
-    local t = task.newTask(c, 1, 1, 5, false)
+    local t = task.newTask(c, 2, 2, 5, false)
     if on == true then
 	task.setTask(level, t)
     else
