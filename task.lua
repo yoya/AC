@@ -87,14 +87,16 @@ end
 function M.setTask(level, task)
     assertLevel(level)
     assertTask(task)
-    if taskContain(level, task) == false then  -- 重複避け
-	table.insert(taskTable[level], task)
-	local c = task.command
-	local t = os.time() + task.delay
-	if taskPeriodTable[c] == nil or taskPeriodTable[c] < t then
-	    taskPeriodTable[c] = t
-	end
+    if taskContain(level, task) == true then  -- 重複避け
+	return false
     end
+    table.insert(taskTable[level], task)
+    local c = task.command
+    local t = os.time() + task.delay
+    if taskPeriodTable[c] == nil or taskPeriodTable[c] < t then
+	taskPeriodTable[c] = t
+    end
+    return true
 end
 
 -- タスク削除
