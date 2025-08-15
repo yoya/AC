@@ -2,7 +2,6 @@
 
 local io_chat = require("io/chat")
 local ac_char = require("ac/char")
-local utils_table = require "utils/table"
 
 function M.record()
     local player = windower.ffxi.get_player()
@@ -63,15 +62,6 @@ function M.record()
     f:write("\n")
     local items = windower.ffxi.get_items()
     f:write("Eminence:"..ac_char.eminence_point().."  Unity:"..ac_char.unity_point().."  Gil:"..items.gil.."\n")
-    --[[
-    local jpText = ""
-    for job, points in pairs(player.job_points) do
-	if points.jp > 0 then
-	    jpText = jpText .. job .. ": ".. utils_table.tableToString(points).."\n"
-	end
-    end
-    :write("job_points: "..jpText)
-    ]]
     f:close()
 end
 
