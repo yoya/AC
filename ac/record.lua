@@ -30,7 +30,7 @@ function M.record()
     end
     f:write(" "..player.main_job..":"..player.main_job_level)
     if player.main_job_level < 99 then
-	f:write(" (exp:"..ac_char.current_exp_point().."/"..ac_char.next_exp_point()..")")
+	f:write("("..ac_char.current_exp_point().."/"..ac_char.next_exp_point()..")")
     end
     local jobpt = player.job_points[string.lower(player.main_job)]
     -- マスターレベルなら、きっとメリットポイント気にしないので非表示
