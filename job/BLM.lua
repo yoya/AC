@@ -2,6 +2,7 @@
 
 local M = {}
 
+local task = require 'task'
 local role_Sorcerer = require 'role/Sorcerer'
 
 M.mainJobProbTable = {
@@ -21,8 +22,8 @@ M.mainJobProbTable = {
     --{ 200, 10, 'input /ma サンダーIV <t>', 4 },
     --{ 100, 10, 'input /ma サンダーV <t>', 5 },
     --{ 100, 10, 'input /ma サンダーVI <t>', 5 },
-    { 500, 90, 'input /ma バーン <t>', 5, true },
-    { 500, 90, 'input /ma チョーク <t>', 5, true },
+    --{ 500, 90, 'input /ma バーン <t>', 5, true },
+    --{ 500, 90, 'input /ma チョーク <t>', 5, true },
     -- スキル上げ
     -- { 500, 10, 'input /ma ストーン <t>', 2 },
     -- { 200, 10, 'input /ma ファイア <t>', 2 },
@@ -42,9 +43,23 @@ M.subJobProbTable = {
     -- { 200, 30, 'input /ma フロスト <t>', 3, true},
 }
 
+function invoke_magick_debuff(player, magic, need_mp)
+    if player.vitals.mp < need_mp then
+	return
+    end
+    local c = 'input /ma '..magic..' <t>'
+    -- command, delay, duration, period, eachfight
+    local t = task.newTask(c, 2, 4, 90, true)
+    task.setTask(task.PRIORITY_LOW, t)
+end
+
 function M.main_tick(player)
     if role_Sorcerer.main_tick ~= nil then
 	role_Sorcerer.main_tick(player)
+    end
+    if player.status == 1 then -- 戦闘中
+	invoke_magick_debuff(player, 'バーン', 25)
+	invoke_magick_debuff(player, 'チョーク', 25)
     end
 end
 

@@ -1,5 +1,6 @@
 -- 赤魔導士
 
+local task = require 'task'
 local role_Healer = require 'role/Healer'
 local role_Sorcerer = require 'role/Sorcerer'
 local io_chat = require 'io/chat'
@@ -35,14 +36,24 @@ M.subJobProbTable = {
     { 100, 300, 'input /ma ストンスキン <me>', 5},
     { 500, 300-10, 'input /ma リフレシュ <me>', 5},
     { 500, 300-10, 'input /ma リフレシュ <p2>', 5},
-    { 500, 120, 'input /ma ディアII <t>', 4, true },
-    { 500, 120, 'input /ma ディストラ <t>', 5, true },
-    { 500, 120, 'input /ma フラズル <t>', 5, true },
+    -- { 500, 120, 'input /ma ディアII <t>', 4, true },
+    -- { 500, 120, 'input /ma ディストラ <t>', 5, true },
+    -- { 500, 120, 'input /ma フラズル <t>', 5, true },
     { 600/3, 1000, 'input /ja コンバート <me>', 1 },
     { 500, 120-10, 'input /ma ヘイスト <p1>', 4 },
     { 500, 120-10, 'input /ma ヘイスト <p2>', 4 },
     -- { 100, 120-30, 'input /ma ヘイスト <p3>', 4 },
 }
+
+function invoke_magick_debuff(player, magic, need_mp)
+    if player.vitals.mp < need_mp then
+	return
+    end
+    local c = 'input /ma '..magic..' <t>'
+    -- command, delay, duration, period, eachfight
+    local t = task.newTask(c, 2, 4, 90, true)
+    task.setTask(task.PRIORITY_LOW, t)
+end
 
 function M.main_tick(player)
     if role_Healer.main_tick ~= nil then
@@ -56,6 +67,11 @@ end
 function M.sub_tick(player)
     if role_Healer.sub_tick ~= nil then
 	role_Healer.sub_tick(player)
+    end
+    if player.status == 1 then -- 戦闘中
+	invoke_magick_debuff(player, 'ディアII', 30)
+	invoke_magick_debuff(player, 'ディストラ', 32)
+	invoke_magick_debuff(player, 'フラズル', 38)
     end
 end
 
