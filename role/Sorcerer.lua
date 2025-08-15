@@ -29,16 +29,16 @@ function M.magicBurst(player, magickRank)
 end
 
 function M.main_tick(player)
-    local magickRank = 2
-    local main_job = player.main_job
-    if main_job == "BLM" then
-	magickRank = 5
-    elseif main_job == "RDM" then
-	magickRank = 3
-    elseif main_job == "GEO" then
-	magickRank = 2
-    end
     if player.status == 1 then -- 戦闘中
+	local magickRank = 2
+	local main_job = player.main_job
+	if main_job == "BLM" then
+	    magickRank = 5
+	elseif main_job == "RDM" then
+	    magickRank = 3
+	elseif main_job == "GEO" then
+	    magickRank = 2
+	end
 	M.magicBurst(player, magickRank)
     end
 end
