@@ -18,3 +18,7 @@ local split_multi = utils.string.split_multi
 local text = "Upachanのファイターズロール→合計値が5になった！"
 local s = split_multi(text, {'の', 'ロール', 'が', 'に'})
 io_console.print(s)
+
+local gil_str = utils.string.gil_string(123456)
+local gil_str2 = utils.string.gil_string(12345678)
+io_console.print(gil_str, gil_str2)

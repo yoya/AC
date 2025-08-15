@@ -22,4 +22,17 @@ function M.split_multi(text, seps)
     return textArr
 end
 
+function M.gil_string(gil)
+    local gil_str = tostring(gil)
+    local gil_str2 = ''
+    local n = string.len(gil_str)
+    for i = 1, n do
+	gil_str2 = gil_str2 .. string.sub(gil_str,i, i)
+	if (n-i)%3 == 0 and i ~= n then
+	    gil_str2 = gil_str2 .. ','
+	end
+    end
+    return gil_str2
+end
+
 return M
