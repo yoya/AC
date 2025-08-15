@@ -15,7 +15,11 @@ actask.setTask(actask.PRIORITY_TOP, task3)
 actask.setTask(actask.PRIORITY_MIDDLE, task4)
 actask.setTask(actask.PRIORITY_MIDDLE, task5)
 
-repeat
-    local level, task = actask.getTask()
-    io_console.print(level, task)
-until level == 0
+for i = 1,3 do
+    print("tick:", i, "time:"..os.time())
+    repeat
+	local level, task = actask.getTask()
+	io_console.print(level, task)
+    until level == 0
+    (io.popen("sleep 1")):close()
+end
