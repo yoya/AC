@@ -61,7 +61,8 @@ function M.record()
 	end
     end
     f:write("\n")
-    f:write("Eminence:"..ac_char.eminence_point().."  Unity:"..ac_char.unity_point().."\n")
+    local items = windower.ffxi.get_items()
+    f:write("Eminence:"..ac_char.eminence_point().."  Unity:"..ac_char.unity_point().."  Gil:"..items.gil.."\n")
     --[[
     local jpText = ""
     for job, points in pairs(player.job_points) do
