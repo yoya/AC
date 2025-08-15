@@ -48,14 +48,30 @@ end
 local charTable = {}
 
 for i, file in ipairs(files) do
+    -- print("file:"..file)
     local f = io.open(file)
+    -- 一行目
     local line1 = f:read()
-    local line2 = f:read()
     local table1 = split_multi(line1, {" "})
-    local table2 = split_multi(line2, {"Eminence:", "  Unity:"})
     local name = table1[1]
-    local eminence_point = tonumber(table2[2])
-    local unity_point = tonumber(table2[3])
+    -- 二行目
+    local line2 = f:read()
+    local eminence_point = -1
+    local unity_point = -1
+    local gil = -1
+    if line2 ~= nil then
+	local table2 = split_multi(line2, {"Eminence:", "  Unity:", "  Gil:"})
+	if table2 ~= nil then
+	eminence_point = tonumber(table2[2])
+	unity_point = tonumber(table2[3])
+	gil = tonumber(table2[4])
+	elseif table2 == nil then
+	    table2 = split_multi(line2, {"Eminence:", "  Unity:"})
+	    eminence_point = tonumber(table2[2])
+	    unity_point = tonumber(table2[3])
+	    gil = -1
+	end
+    end
     local time, err = lfs.attributes(file, 'modification')
     -- print(name, eminence_point, unity_point, time)
     local char  = {
@@ -64,6 +80,7 @@ for i, file in ipairs(files) do
 	name = name,
 	eminence_point = eminence_point,
 	unity_point = unity_point,
+	gil = gil,
 	time = time,
     }
     charTable[i] = char
@@ -96,7 +113,7 @@ end
 
 for i, char in pairs(charTable) do
     if method == 'p' then
-	print(char.name.. " E:"..char.eminence_point.." U:"..char.unity_point)
+	print(char.name.." E:"..char.eminence_point.." U:"..char.unity_point.." G:"..char.gil)
     else
 	print("  "..char.line1)
 	print(char.line2)
