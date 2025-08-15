@@ -1020,11 +1020,16 @@ windower.register_event('load', function()
     ws.init()
 end)
 
-windower.register_event('login', 'logout', function()
+windower.register_event('login', function()
 --    local player = windower.ffxi.get_player()
 --    player_id = player and player.id
     ws.init()
     ac_stat.init()
+end)
+
+windower.register_event('logout', function()
+--    local player = windower.ffxi.get_player()
+--    player_id = player and player.id
     ac_record.record()
 end)
 
