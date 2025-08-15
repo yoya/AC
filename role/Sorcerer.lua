@@ -10,20 +10,32 @@ local MB_magic = "ファイア"
 --local MB_magic = "ブリザド"
 --local MB_magic = "サンダー"
 
+function within_time(x, a, b)
+    if a <= x and x <= b then
+	return true
+    end
+    return false
+end
+
 function M.magicBurst(player, magickRank)
     if player.status == 1 then -- 戦闘中
 	local ws_time = asinspect.ws_time
 	local now = os.time()
-	if ws_time + 4 < now then
-	    if  now < (ws_time + 5) and magickRank >= 5 then
-		command.send('input /ma '..MB_magic..'V <t>')
-	    elseif now < (ws_time + 6)  and magickRank >= 4 then
-		command.send('input /ma '..MB_magic..'IV <t>')
-	    elseif now < (ws_time + 8) and magickRank >= 3 then
-		command.send('input /ma '..MB_magic..'III <t>')
-	    elseif now < (ws_time + 10) and magickRank >= 2 then
-		command.send('input /ma '..MB_magic..'II <t>')
-	    end
+	if within_time(now, ws_time + 4, ws_time + 5)
+	    and magickRank >= 5 then
+	    command.send('input /ma '..MB_magic..'V <t>')
+	end
+	if within_time(now, ws_time + 6, ws_time + 7)
+	    and magickRank >= 4 then
+	    command.send('input /ma '..MB_magic..'IV <t>')
+	end
+	if within_time(now, ws_time + 7, ws_time + 8)
+	    and magickRank >= 3 then
+	    command.send('input /ma '..MB_magic..'III <t>')
+	end
+	if within_time(now, ws_time + 9, ws_time + 10)
+	    and magickRank >= 2 then
+	    command.send('input /ma '..MB_magic..'II <t>')
 	end
     end
 end
