@@ -2,6 +2,7 @@
 
 local io_chat = require("io/chat")
 local ac_char = require("ac/char")
+local utils = require "utils"
 
 function M.record()
     local player = windower.ffxi.get_player()
@@ -65,7 +66,7 @@ function M.record()
     end
     f:write("\n")
     local items = windower.ffxi.get_items()
-    f:write("Eminence:"..ac_char.eminence_point().."  Unity:"..ac_char.unity_point().."  Gil:"..items.gil.."\n")
+    f:write("Eminence:"..ac_char.eminence_point().."  Unity:"..ac_char.unity_point().."  Gil:"..utils.string.gil_string(items.gil).."\n")
     f:close()
 end
 

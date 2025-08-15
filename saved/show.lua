@@ -64,7 +64,7 @@ for i, file in ipairs(files) do
 	if table2 ~= nil then
 	eminence_point = tonumber(table2[2])
 	unity_point = tonumber(table2[3])
-	gil = tonumber(table2[4])
+	gil = table2[4]
 	elseif table2 == nil then
 	    table2 = split_multi(line2, {"Eminence:", "  Unity:"})
 	    eminence_point = tonumber(table2[2])
