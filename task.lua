@@ -126,7 +126,7 @@ function M.getTask()
 	    local t = taskPeriodTable[c]
 	    if t <= now then
 		taskPeriodTable[c] = os.time() + task.period
-		table.remove(taskTable[level], 1)
+		table.remove(taskTable[level], i)
 		return level, task
 	    end
 	end
