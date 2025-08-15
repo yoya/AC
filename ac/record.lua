@@ -5,6 +5,10 @@ local ac_char = require("ac/char")
 
 function M.record()
     local player = windower.ffxi.get_player()
+    if player == nil then
+	print("record.record: player == nil")
+	return
+    end
     -- addon_path の最後に / がついてる。
     local record_path = windower.addon_path .. "saved"
     if windower.dir_exists(record_path) == false then
