@@ -5,6 +5,7 @@ local M = {}
 local io_chat = require'io/chat'
 local command = require 'command'
 local asinspect = require 'inspect'
+local task = require 'task'
 
 local MB_magic = "ファイア"
 --local MB_magic = "ブリザド"
@@ -15,6 +16,32 @@ function within_time(x, a, b)
 	return true
     end
     return false
+end
+
+local magickParams = {
+    -- rank, duration, period
+    [1] = {rank='', dur=1, per=2},
+    [2] = {rank='II', dur=2, per=6},
+    [3] = {rank='III', dur=4, per=15},
+    [4] = {rank='IV', dur=6, per=30},
+    [5] = {rank='V', dur=8, per=45},
+    [6] = {rank='VI', dur=11, per=60}
+}
+
+function invoke_magic(magicRank, onoff)
+    assert(type(magicRank) == "number")
+    assert(type(onoff) == "boolean")
+    local param = magickParams[magicRank]
+    local level = task.PRIORITY_MIDDLE
+    local magic = MB_magic..param.rank
+    local c = 'input /ma '..magic..' <t>'
+    -- command, delay, duration, period, eachfight
+    local t = task.newTask(c, 0, param.dur, params.per, false)
+    if onoff == true then
+	task.setTask(level, t)
+    else
+	task.removeTask(level, t)
+    end
 end
 
 function M.magicBurst(player, magickRank)
