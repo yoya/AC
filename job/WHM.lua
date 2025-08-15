@@ -39,10 +39,10 @@ M.mainJobProbTable = {
 }
 
 M.subJobProbTable = {
-    { 5, 600-60, 'input /ma アクアベール <me>', 5},
-    { 5, 300-30, 'input /ma ブリンク <me>', 5},
-    { 5, 300-30, 'input /ma ストンスキン <me>', 5},
-    { 100, 120-30, 'input /ma ヘイスト <p1>', 4 },
+    { 5, 600-60, 'input /ma アクアベール <me>', 7},
+    { 5, 300-30, 'input /ma ブリンク <me>', 7},
+    { 5, 300-30, 'input /ma ストンスキン <me>', 8},
+    { 100, 120-30, 'input /ma ヘイスト <p1>', 6 },
 }
 
 function M.main_tick(player)
