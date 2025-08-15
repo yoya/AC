@@ -1025,6 +1025,7 @@ windower.register_event('login', 'logout', function()
 --    player_id = player and player.id
     ws.init()
     ac_stat.init()
+    ac_record.record()
 end)
 
 windower.register_event('job change', function()
