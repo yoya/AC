@@ -961,6 +961,8 @@ windower.register_event('addon command', function(command, command2)
 	    acitem.showInventory()
 	elseif command2 == 'mob' then
 	    showMob()
+	elseif command2 == 'stat' then
+	    ac_stat.print()
 	elseif command2 == 'task' then
 	    task.print()
 	else
