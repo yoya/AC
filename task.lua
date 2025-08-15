@@ -66,12 +66,12 @@ function taskEqual(task1, task2)
 end
 
 function taskIndex(level, task)
-    for i,t in ipairs(taskTable[level]) do
+    for i, t in ipairs(taskTable[level]) do
 	if taskEqual(t, task) then
 	    return i
 	end
     end
-    return 0
+    return 0  -- 1 origin なので 0 を非存在とする
 end
 
 function taskContain(level, task)
