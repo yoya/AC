@@ -12,7 +12,7 @@ local MB_magic = "ファイア"
 --local MB_magic = "サンダー"
 
 function within_time(x, a, b)
-    if a <= x and x <= b then
+    if a <= x and x < b then
 	return true
     end
     return false
@@ -32,11 +32,11 @@ function invoke_magic(magicRank, onoff)
     assert(type(magicRank) == "number")
     assert(type(onoff) == "boolean")
     local param = magickParams[magicRank]
-    local level = task.PRIORITY_MIDDLE
+    local level = task.PRIORITY_HIGH
     local magic = MB_magic..param.rank
     local c = 'input /ma '..magic..' <t>'
     -- command, delay, duration, period, eachfight
-    local t = task.newTask(c, 0, param.dur, params.per, false)
+    local t = task.newTask(c, 0, param.dur, param.per, false)
     if onoff == true then
 	task.setTask(level, t)
     else
@@ -48,21 +48,30 @@ function M.magicBurst(player, magickRank)
     if player.status == 1 then -- 戦闘中
 	local ws_time = asinspect.ws_time
 	local now = os.time()
-	if within_time(now, ws_time + 4, ws_time + 5)
-	    and magickRank >= 5 then
-	    command.send('input /ma '..MB_magic..'V <t>')
+	local mp = player.vitals.mp
+	if within_time(now, ws_time + 4, ws_time + 6)
+	    and magickRank >= 5 and mp >= 306 then
+	    invoke_magic(5, true)
+	else
+	    invoke_magic(5, false)
 	end
-	if within_time(now, ws_time + 6, ws_time + 7)
-	    and magickRank >= 4 then
-	    command.send('input /ma '..MB_magic..'IV <t>')
+	if within_time(now, ws_time + 6, ws_time + 8)
+	    and magickRank >= 4 and mp >= 195 then
+	    invoke_magic(4, true)
+	else
+	    invoke_magic(4, false)
 	end
-	if within_time(now, ws_time + 7, ws_time + 8)
-	    and magickRank >= 3 then
-	    command.send('input /ma '..MB_magic..'III <t>')
+	if within_time(now, ws_time + 8, ws_time + 9)
+	    and magickRank >= 3 and mp >= 91 then
+	    invoke_magic(3, true)
+	else
+	    invoke_magic(3, false)
 	end
 	if within_time(now, ws_time + 9, ws_time + 10)
-	    and magickRank >= 2 then
-	    command.send('input /ma '..MB_magic..'II <t>')
+	    and magickRank >= 2 and mp >= 37 then
+	    invoke_magic(2, true)
+	else
+	    invoke_magic(2, false)
 	end
     end
 end
