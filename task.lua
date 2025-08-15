@@ -55,7 +55,6 @@ M.resetByFight = function()
 	    if task.eachfight == true then
 		local task = taskTable[level][1]  -- 1 origin
 		table.remove(taskTable[level], 1)
-		return level, task
 	    end
 	end
     end
