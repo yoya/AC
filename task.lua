@@ -4,7 +4,6 @@ local M = {}
 
 local utils = require('utils')
 local io_console = require('io/console')
-local io_chat = require('io/chat')
 local command = require 'command'
 
 -- 優先度別、タスク
@@ -153,6 +152,7 @@ M.tick = function()
 end
 
 function M.print()
+    local io_chat = require('io/chat')
     io_chat.print(taskTable)
 end
 
