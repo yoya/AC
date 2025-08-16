@@ -54,11 +54,12 @@ M.resetByFight = function()
 	for i, task in ipairs(taskTable[level]) do
 	    if task.eachfight == true then
 		local task = taskTable[level][1]  -- 1 origin
+		local c = task.command
+		taskPeriodTable[c] = os.time()
 		table.remove(taskTable[level], 1)
 	    end
 	end
     end
-    return 0, nil
 end
 
 function taskEqual(task1, task2)
