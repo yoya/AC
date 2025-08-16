@@ -1022,16 +1022,11 @@ windower.register_event('load', function()
 end)
 
 windower.register_event('login', function()
---    local player = windower.ffxi.get_player()
---    player_id = player and player.id
     ws.init()
     ac_stat.init()
 end)
 
 windower.register_event('logout', function()
---    local player = windower.ffxi.get_player()
---    player_id = player and player.id
-    ac_record.record()
 end)
 
 windower.register_event('job change', function()
@@ -1040,8 +1035,9 @@ windower.register_event('job change', function()
 end)
 
 
---- ゾーンが変わったら停止する
+--- ゾーンが変わったらリーダーだけ停止する
 windower.register_event('zone change', function(zone, prevZone)
+    ac_record.record()
     ac_stat.init()
     task.init()
     if iamLeader() then
