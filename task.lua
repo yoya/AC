@@ -48,6 +48,14 @@ function assertLevel(level)
     assert(PRIORITY_FIRST <= level and level <= PRIORITY_LAST, "unknown level: "..level)
 end
 
+M.allClear = function()
+    for level = PRIORITY_FIRST, PRIORITY_LAST do
+	for i, task in ipairs(taskTable[level]) do
+	    taskTable[level] = {}
+	end
+    end
+end
+
 M.resetByFight = function()
     -- taskPeriodTable から eachfight が true のエントリを削除する
     for level = PRIORITY_FIRST, PRIORITY_LAST do
