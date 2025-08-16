@@ -318,9 +318,8 @@ local figtingFunction = function()
             -- 向きが悪くて戦闘が開始しない問題への対策
             command.send('setkey numpad5 down; wait 0.05; setkey numpad5 up')
             return
-        else
-            windower.ffxi.run(false)
-            sendCommandProb({
+        elseif settings.Calm == false then
+	    sendCommandProb({
                 { 150, 0, 'setkey a down; wait 0.05; setkey a up', 0 }, -- 左
                 { 150, 0, 'setkey d down; wait 0.05; setkey d up', 0 }, -- 右
                 { 150, 0, 'setkey a down; wait 0.1; setkey a up', 0 }, 
@@ -333,7 +332,9 @@ local figtingFunction = function()
                 { 300, 0, 'setkey d down; wait 0.25; setkey d up', 0 },
                 { 500, 0, 'setkey s down; wait 0.01; setkey s up', 0 }, -- 後ろ
          }, 1.0, ProbRecastTime)
-         --- 一回だけなので 1 を入れる。
+	    --- 一回だけなので 1 を入れる。
+	else
+	    windower.ffxi.run(false)
         end
     end
     --- 止まって戦闘開始
