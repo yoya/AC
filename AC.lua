@@ -363,11 +363,11 @@ local figtingFunction = function()
     end
     local ws_request = false
     local now = os.time()
-    if  player.vitals.tp >= 1000 and (asinspect.ws_time + 4) < os.time() then
+    if  player.vitals.tp >= 1000 and (asinspect.ws_time + 3) < os.time() then
 	if player.vitals.tp >= math.random(tpMin,tpMax) then
 	    ws_request = true
-	elseif (asinspect.ws_time + 4) < now and
-	    now < (asinspect.ws_time + 4 + 8) then
+	elseif (asinspect.ws_time + 3) < now and
+	    now < (asinspect.ws_time + 3 + 6) then
 	    -- 連携受付時間なら WS 即打ち
 	    ws_request = true
 	end
