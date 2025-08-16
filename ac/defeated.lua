@@ -5,11 +5,13 @@ local M = {}
 local ac_stat = require('ac/stat')
 local io_chat =  require('io/chat')
 local ac_record =  require('ac/record')
+local task = require 'task'
 
 -- 敵を倒した時に呼ばれる関数
 function M.done()
     ac_stat.print()
     ac_record.record()
+    task.allClear() -- 戦闘後の動きが不自然なので、一旦タスク削除
     local player = windower.ffxi.get_player()
     local jobpt = player.job_points[string.lower(player.main_job)]
     if jobpt.jp > 0 then
