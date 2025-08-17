@@ -46,28 +46,28 @@ end
 
 function M.magicBurst(player, magickRank)
     if player.status == 1 then -- 戦闘中
-	local ws_time = asinspect.ws_time
+	local ws_time = asinspect.ws_time -- + 4
 	local now = os.time()
 	local mp = player.vitals.mp
-	if within_time(now, ws_time + 4, ws_time + 6)
+	if within_time(now, ws_time, ws_time + 2)
 	    and magickRank >= 5 and mp >= 306 then
 	    invoke_magic(5, true)
 	else
 	    invoke_magic(5, false)
 	end
-	if within_time(now, ws_time + 6, ws_time + 8)
+	if within_time(now, ws_time + 2, ws_time + 3)
 	    and magickRank >= 4 and mp >= 195 then
 	    invoke_magic(4, true)
 	else
 	    invoke_magic(4, false)
 	end
-	if within_time(now, ws_time + 8, ws_time + 9)
+	if within_time(now, ws_time + 3, ws_time + 4)
 	    and magickRank >= 3 and mp >= 91 then
 	    invoke_magic(3, true)
 	else
 	    invoke_magic(3, false)
 	end
-	if within_time(now, ws_time + 9, ws_time + 10)
+	if within_time(now, ws_time + 4, ws_time + 5)
 	    and magickRank >= 2 and mp >= 37 then
 	    invoke_magic(2, true)
 	else
