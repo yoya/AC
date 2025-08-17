@@ -90,6 +90,9 @@ end
 -- This packet likely varies based on jobs, but currently I only have it worked out for Monstrosity.
 packet_handler[0x063] = function(packet)
     local player = windower.ffxi.get_player()
+    if player == nil then
+	return
+    end
     local char = {
 	current_merit_point = packet["Merit Points"],
 	limit_breaker = packet["Limit Breaker"],
