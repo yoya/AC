@@ -154,7 +154,7 @@ M.tick = function()
     end
     -- auto run の時。/ma の command は実行せず setTask し直す
     windower.ffxi.run(false)
-    coroutine.sleep(0.5)
+    coroutine.sleep(0.25)
     command.send(task.command)
     tickNextTime = os.time() + task.duration
 end
