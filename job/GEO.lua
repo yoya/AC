@@ -65,7 +65,6 @@ M.mainJobProbTable_2 = {
  
 M.subJobProbTable = { }
 
-
 function geo_setup()
     local level = task.PRIORITY_MIDDLE
     local c = 'input /ja グローリーブレイズ <me>; wait 2; input /ma '..GEO_geo..' <bt>'
@@ -92,11 +91,21 @@ function geo_release()
 end
 
 function M.main_tick(player)
-    local petdist = ac_pos.targetDistance("pet")
+    local pet = windower.ffxi.get_mob_by_target("<pet>")
+    local mob = windower.ffxi.get_mob_by_target("<t>")
+    local mobpetdist = ac_pos.distance(pet, mob)
     if player.status == 1 then -- 戦闘中
-	-- 羅盤がなかっら設置する
-	if petdist == nil then
-	    geo_setup()
+	-- 羅盤がなくて戦闘中の敵がいる時は設置する
+	if mob ~= nil then
+	    if pet == nil then
+		geo_setup()
+	    elseif mobpetdist > math.random(30, 40) then
+		-- 羅盤が戦闘場所から離れてたら消す
+		io_chat.setNextColor(4) -- ピンク
+		local pd = math.floor(mobpetdist * 100 + 0.5) / 100;
+		io_chat.print("ラバンの距離:"..pd)
+		geo_release()
+	    end
 	end
 	if player.vitals.mp >= 1000 then  -- MP に余裕があれば
 	    if role_Sorcerer.main_tick ~= nil then
@@ -104,10 +113,11 @@ function M.main_tick(player)
 	    end
 	end
     end
-    if petdist ~= nil and petdist > math.random(30, 40) then
+    if pet ~= nil and mobpetdist > math.random(30, 40) then
 	-- 羅盤が戦闘場所から離れてたら消す
 	io_chat.setNextColor(4) -- ピンク
-	io_chat.print("ラバンの距離:"..petdist)
+	local pd = math.floor(mobpetdist * 100 + 0.5) / 100;
+	io_chat.print("ラバンの距離:"..pd)
 	geo_release()
     end
 end
