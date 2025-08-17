@@ -92,11 +92,11 @@ end
 
 function M.main_tick(player)
     local pet = windower.ffxi.get_mob_by_target("<pet>")
-    local mob = windower.ffxi.get_mob_by_target("<t>")
-    local mobpetdist = ac_pos.distance(pet, mob)
     if player.status == 1 then -- 戦闘中
-	-- 羅盤がなくて戦闘中の敵がいる時は設置する
+	local mob = windower.ffxi.get_mob_by_target("<t>")
+	local mobpetdist = ac_pos.distance(pet, mob)
 	if mob ~= nil then
+	    -- 羅盤がなくて戦闘中の敵がいる時は設置する
 	    if pet == nil then
 		geo_setup()
 	    elseif mobpetdist > math.random(30, 40) then
@@ -112,13 +112,6 @@ function M.main_tick(player)
 		role_Sorcerer.main_tick(player)
 	    end
 	end
-    end
-    if pet ~= nil and mobpetdist > math.random(30, 40) then
-	-- 羅盤が戦闘場所から離れてたら消す
-	io_chat.setNextColor(4) -- ピンク
-	local pd = math.floor(mobpetdist * 100 + 0.5) / 100;
-	io_chat.print("ラバンの距離:"..pd)
-	geo_release()
     end
 end
 
