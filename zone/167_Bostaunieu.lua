@@ -12,6 +12,10 @@ M.routes = {
 	{x=-13.5,y=20,z=-18}, {x=-19,y=18,z=-18},
 	{a="f8touch"}, {a="wait"}, {a="up"}, {a="enter"}
     },
+    -- 本 {x=-12.7,y=25.4,z=0}
+    frigit = {  -- Frigid Confluence
+	{x=99.6,y=72.9,z=-24}, {x=100.9,y=5.3}, {x=100,y=-55.6,z=-24},
+    },
 }
 
 return M

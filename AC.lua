@@ -226,10 +226,20 @@ local notLeaderFunction = function()
             return
         end
     end
+    -- ワープギミックは target まで追随する。
+    local p1 = windower.ffxi.get_mob_by_target("p1")
+    if p1 ~= nil and p1.target_index ~= 0 then
+	local target = windower.ffxi.get_mob_by_index(p1.target_index)
+	local target_name = target.name
+	if string.find(target_name, "Home Point") or
+	    string.find(target_name, "Survival Guide") or
+	    string.find(target_name, "Waypoint") then
+	    io_net.targetByMobIndex(p1.target_index)
+	end
+    end
     if settings.Attack then
         windower.ffxi.run(false)
         --- p1 がターゲットしてる敵に合わせる
-        local p1 = windower.ffxi.get_mob_by_target("p1")
         if p1 == nil or p1.status ~= 1 or p1.target_index == 0 then
             return
         end

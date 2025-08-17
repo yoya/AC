@@ -3,6 +3,11 @@
 local M = { id = 230 }
 
 M.routes = {
+    -- HP#2(A)
+    sgate = {  -- 南門
+	{x=45,y=-34,z=2}, {x=45,y=-29}, {x=53,y=-25},
+	{x=65.5,y=-25.5}, {x=75,y=-35}
+    },
     -- HP#4
     hina = {
 	{x=-164,y=11,z=-1}, {x=-188,y=45},
@@ -14,5 +19,12 @@ M.routes = {
     },
 }
 
-return M
+M.essentialPoints = {
+    hp2_a = {x=45,y=-34,z=2},
+}
 
+M.automatic_routes = {
+    hp2_a = "sgate"
+}
+
+return M
