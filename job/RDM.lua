@@ -10,9 +10,9 @@ local M = {}
 M.mainJobProbTable = {
     { 500, 300*2, 'input /ja コンポージャー <me>', 2 },
     -- { 100, 30, 'input /ma ディスペル <t>', 3 },
-    { 500, 180, 'input /ma ディアIII <t>', 3, true },
-    { 500, 300, 'input /ma ディストラII <t>', 4, true },
-    { 500, 120, 'input /ma フラズルII <t>', 4, true },
+    --{ 500, 180, 'input /ma ディアIII <t>', 3, true },
+    --{ 500, 300, 'input /ma ディストラII <t>', 4, true },
+    --{ 500, 120, 'input /ma フラズルII <t>', 4, true },
     { 100, 180*3, 'input /ma ストライII <me>', 4 },
     { 100, 300*3, 'input /ma ゲインデック <me>', 4 },
     { 100, 150*3, 'input /ma リフレシュIII <me>', 4 },
@@ -61,6 +61,13 @@ function M.main_tick(player)
     end
     if role_Sorcerer.main_tick ~= nil then
 	role_Sorcerer.main_tick(player)
+    end
+    if player.status == 1 then -- 戦闘中
+	invoke_magick_debuff(player, 'ディアIII', 45)
+	-- invoke_magick_debuff(player, 'ディストラII', 58)
+	-- invoke_magick_debuff(player, 'フラズルII', 64)
+	invoke_magick_debuff(player, 'ディストラIII', 84)
+	invoke_magick_debuff(player, 'フラズルIII', 90)
     end
 end
 
