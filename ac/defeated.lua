@@ -10,7 +10,7 @@ local task = require 'task'
 -- 敵を倒した時に呼ばれる関数
 function M.done()
     ac_stat.print()
-    ac_record.record()
+    ac_record.record_char()
     task.allClear() -- 戦闘後の動きが不自然なので、一旦タスク削除
     local player = windower.ffxi.get_player()
     local jobpt = player.job_points[string.lower(player.main_job)]

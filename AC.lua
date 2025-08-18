@@ -964,7 +964,11 @@ windower.register_event('addon command', function(command, command2)
             io_chat.print("Usage: ac puller (on|off)")
         end
     elseif command == 'record' then
-	ac_record.record()
+	if command2 == 'char' then
+	    ac_record.record_char()
+	elseif command2 == 'spells' then
+	    ac_record.record_spells()
+	end
     elseif command == 'show' then
 	if command2 == 'char' then
 	    ac_char.print()
@@ -977,7 +981,7 @@ windower.register_event('addon command', function(command, command2)
 	elseif command2 == 'task' then
 	    task.print()
 	else
-	    io_chat.print("ac show { char | inventory | mob | task}")
+	    io_chat.print("ac show { char | inventory | mob | spells | stat | task}")
 	end
     elseif command == 'test' then
         print("test command")
@@ -1047,7 +1051,8 @@ end)
 
 --- ゾーンが変わったらリーダーだけ停止する
 windower.register_event('zone change', function(zone, prevZone)
-    ac_record.record()
+    ac_record.record_char()
+    ac_record.record_spells()
     ac_stat.init()
     task.init()
     if iamLeader() then
