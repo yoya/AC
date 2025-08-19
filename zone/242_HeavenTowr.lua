@@ -12,7 +12,6 @@ M.routes = {
 
 M.essentialPoints = {
     from_win = {x=0,y=-22.4,z=0},
-
 }
 
 M.automatic_routes = {
@@ -20,4 +19,3 @@ M.automatic_routes = {
 }
 
 return M
-
