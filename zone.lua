@@ -74,6 +74,7 @@ M.zoneTable = {
     [238] = require('zone/238_WindWaters'), -- ウィンダス水の区
     [239] = require('zone/239_WindWalls'),  -- ウィンダス石の区
     [240] = require('zone/240_PortWind'),   -- ウィンダス港
+    [241] = require('zone/241_WindWoods'),  -- ウィンダス森の区
     [242] = require('zone/242_HeavenTowr'), -- 天の塔
     [243] = require('zone/243_RuLudeGard'), -- ル・ルデの庭
     [244] = require('zone/244_UpJeuno'),    -- ジュノ上層
