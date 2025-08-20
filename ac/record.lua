@@ -7,6 +7,7 @@ local ac_char = require("ac/char")
 local utils = require "utils"
 
 function M.record_char()
+    print("ac/record:record_char")
     local player = windower.ffxi.get_player()
     if player == nil then
 	print("record.record: player == nil")
@@ -83,6 +84,7 @@ function M.unity(pt)
 end
 
 function M.record_spells()
+    print("ac/record:record_spells")
     local spells = windower.ffxi.get_spells()
     local white_spells = {}
     local black_spells = {}
