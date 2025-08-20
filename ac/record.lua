@@ -13,6 +13,11 @@ function M.record_char()
 	print("record.record: player == nil")
 	return
     end
+    if player.main_job_level == 0 then
+	-- 実際 0 の時があった。条件不明。
+	print("player.main_job_level == 0")
+	return
+    end
     -- addon_path の最後に / がついてる。
     local record_path = windower.addon_path .. "saved"
     if windower.dir_exists(record_path) == false then
