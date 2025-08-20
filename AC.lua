@@ -632,6 +632,8 @@ end
 
 local idleFunctionSouthSand = function()
     idleFunctionTradeItems("Gondebaud", cipher_ids, 5, {10,10})
+    -- 盟-マルグレートで失敗するので、以下の調整をしてみたがダメだった
+    -- idleFunctionTradeItems("Gondebaud", cipher_ids, 7, {14,14})
 end
 
 local idleFunctionSandPort = function()
