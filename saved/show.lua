@@ -113,10 +113,10 @@ end
 
 for i, char in pairs(charTable) do
     if method == 'p' then
-	print(char.name.." E:"..char.eminence_point.." U:"..char.unity_point.." G:"..char.gil)
+	print(string.format("%7s E:%5s U:%5s G:%11s", char.name, char.eminence_point, char.unity_point, char.gil))
     else
-	print("  "..char.line1)
-	print(char.line2)
+	print(char.line1)
+	print("  "..char.line2)
     end
 end
 
