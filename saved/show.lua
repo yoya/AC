@@ -15,9 +15,11 @@ function array_slice(arr, i1, i2)
 end
 
 function usage()
-    print("Usage: ./show.lua <order> <num>")
+    print("Usage: ./show.lua <l|p|a|d> <num>")
     print("    ./show.lua l 4 # latest 4 entries")
-    print("    ./show.lua p 4 # point(eminence&unity ) least 4 entries")
+    print("    ./show.lua p   # point(eminence&unity)")
+    print("    ./show.lua p 4 # point(ambus)")
+    print("    ./show.lua d 4 # point(dp|mogseg|gallimau)")
 end
 
 function parseArgs()
@@ -56,23 +58,42 @@ for i, file in ipairs(files) do
     local name = table1[1]
     -- 二行目
     local line2 = f:read()
+    local line3 = f:read()
+    local line4 = f:read()
     local eminence_point = -1
     local unity_point = -1
     local gil = -1
+    local hallmark = -1
+    local total_hallmark = -1
+    local gallantry = -1
+    local domain_point = -1
+    local mog_segments = -1
+    local gallimaufry = -1
     if line2 ~= nil then
 	local table2 = split_multi(line2, {"Eminence:", "  Unity:", "  Gil:"})
 	if table2 ~= nil then
-	eminence_point = tonumber(table2[2])
-	unity_point = tonumber(table2[3])
-	gil = table2[4]
-	elseif table2 == nil then
-	    table2 = split_multi(line2, {"Eminence:", "  Unity:"})
 	    eminence_point = tonumber(table2[2])
 	    unity_point = tonumber(table2[3])
-	    gil = -1
+	    gil = table2[4]
 	end
     end
-    local time, err = lfs.attributes(file, 'modification')
+    if line3 ~= nil then
+	local table3 = split_multi(line3, {"Hallmark:", "  Total:", "  Gallantry:"})
+	if table3 ~= nil then
+	    hallmark = tonumber(table3[2])
+	    total_hallmark = tonumber(table3[3])
+	    gallantry = tonumber(table3[4])
+	end
+    end
+    if line4 ~= nil then
+	local table4 = split_multi(line4, {"DomainP:", "  MogSeg:", "  Gallimau:"})
+	if table4 ~= nil then
+	    domain_point = tonumber(table4[2])
+	    mog_segments = tonumber(table4[3])
+	    gallimaufry = tonumber(table4[4])
+	end
+    end
+local time, err = lfs.attributes(file, 'modification')
     -- print(name, eminence_point, unity_point, time)
     local char  = {
 	line1 = line1,
@@ -81,6 +102,13 @@ for i, file in ipairs(files) do
 	eminence_point = eminence_point,
 	unity_point = unity_point,
 	gil = gil,
+	hallmark = hallmark,
+	total_hallmark = total_hallmark,
+	gallantry = gallantry,
+	domain_point = domain_point,
+	mog_segments = mog_segments,
+	gallimaufry = gallimaufry,
+	--
 	time = time,
     }
     charTable[i] = char
@@ -95,10 +123,30 @@ function compPoint(a, b)
     end
 end
 
-if method == 'p' then
-    table.sort(charTable, compPoint)
-elseif method == 'l' then
+function compAmbus(a, b)
+    if (a.hallmark + a.gallantry) < (b.hallmark + b.gallantry) then
+	return true
+    else
+	return false
+    end
+end
+
+function compDomain(a, b)
+    if (a.domain_point + a.mog_segments + a.gallimaufry) <  (b.domain_point + b.mog_segments + b.gallimaufry) then
+	return true
+    else
+	return false
+    end
+end
+
+if method == 'l' then
     table.sort(charTable, function(a,b) return a.time > b.time end)
+elseif method == 'p' then
+    table.sort(charTable, compPoint)
+elseif method == 'a' then
+    table.sort(charTable, compAmbus)
+elseif method == 'd' then
+    table.sort(charTable, compDomain)
 else
     print("Unknown method:"..method)
     os.exit(1)
@@ -112,11 +160,17 @@ if method == 'l' then
 end
 
 for i, char in pairs(charTable) do
-    if method == 'p' then
-	print(string.format("%7s E:%5s U:%5s G:%11s", char.name, char.eminence_point, char.unity_point, char.gil))
-    else
+    if method == 'l' then
 	print(char.line1)
-	print("  "..char.line2)
+	print(string.format("  Emi:%5s Uni:%5s Gil:%11s", char.eminence_point, char.unity_point, char.gil))
+    elseif method == 'p' then
+	print(string.format("%7s Emi:%5s Uni:%5s Gil:%11s", char.name, char.eminence_point, char.unity_point, char.gil))
+    elseif method == 'a' then
+	print(string.format("%7s HM:%5s Total:%5s Gal:%5s", char.name, char.hallmark, char.total_hallmark, char.gallantry))
+    elseif method == 'd' then
+	print(string.format("%7s DP:%5s MogS:%5s GF:%5s", char.name, char.domain_point, char.mog_segments, char.gallimaufry))
+    else
+	print("Error: Wrong method:"..method)
     end
 end
 
