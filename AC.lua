@@ -10,6 +10,7 @@ local config = require 'config'
 local command = require 'command'
 local task = require 'task'
 local works = require 'works'
+local contents = require 'contents'
 local pull = require 'pull'
 
 local defaults = {
@@ -728,6 +729,7 @@ local tick = function()
     end
     -- zone_change.warp_handler_tick()
     acjob.tick(player)
+    contents.tick(player)
     task.tick()
     -- ここからは auto のみ。
     if not auto then
@@ -1035,6 +1037,8 @@ end)
 windower.register_event('load', function()
     tick_new:loop(1.0)
     ws.init()
+    local zone = windower.ffxi.get_info().zone
+    zone_change.zone_in_handler(zone, nil)
 end)
 
 windower.register_event('login', function()
