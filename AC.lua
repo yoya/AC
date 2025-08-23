@@ -434,7 +434,7 @@ local idleFunctionTradeItems = function(tname, items, wait, enterWaits)
 ---    command.send('input /targetnpc')
     local mob = windower.ffxi.get_mob_by_name(tname)
     if mob == nil then
-        print("idleFunctionTradeItems: mob not found")
+        -- print("idleFunctionTradeItems: mob not found")
         return 
     end
     if mob.name == tname then
