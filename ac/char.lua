@@ -20,13 +20,15 @@ function M.init(id, char)
 end
 
 function M.update_points(id, char)
-    local eminence_point = char.eminence_point
-    local unity_point = char.unity_point
-    if eminence_point ~= nil then
-	M.charTable[id].eminence_point = eminence_point
-    end
-    if unity_point ~= nil then
-	M.charTable[id].unity_point = unity_point
+    local point_keys = {
+	"eminence_point", "unity_point",
+	"hallmark", "total_hallmark",  "gallantry",
+	"domain_point", "mog_segments", "gallimaufry"
+    }
+    for i, key in ipairs(point_keys) do
+	if char[key] ~= nil then
+	    M.charTable[id][key] = char[key]
+	end
     end
 end
 
@@ -87,6 +89,12 @@ function M.update(id, char)
 	M.charTable[id] = {
 	    eminence_point = -1,
 	    unity_point = -1,
+	    hallmark = -1,
+	    total_hallmark = -1,
+	    gallantry = -1,
+	    domain_point = -1,
+	    mog_segments = -1,
+	    gallimaufry = -1,
 	}
     end
     local player = windower.ffxi.get_player()
@@ -124,25 +132,50 @@ end
 
 -- char point
 
-function M.eminence_point()
+function get_char_point(key)
     local player = windower.ffxi.get_player()
     if M.charTable[player.id] == nil then
 	return -1
     end
-    return M.charTable[player.id].eminence_point
+    return M.charTable[player.id][key]
+end
+
+
+function M.eminence_point()
+    return get_char_point("eminence_point")
 end
 
 function M.unity_point()
-    local player = windower.ffxi.get_player()
-    if M.charTable[player.id] == nil then
-	return -1
-    end
-    return M.charTable[player.id].unity_point
+    return get_char_point("unity_point")
+end
+
+function M.hallmark()
+    return get_char_point("hallmark")
+end
+
+function M.total_hallmark()
+    return get_char_point("total_hallmark")
+end
+
+function M.gallantry()
+    return get_char_point("gallantry")
+end
+
+function M.domain_point()
+    return get_char_point("domain_point")
+end
+
+function M.mog_segments()
+    return get_char_point("mog_segments")
+end
+
+function M.gallimaufry()
+    return get_char_point("gallimaufry")
 end
 
 -- char job info
 
-function get_point(key)
+function get_char_point_by_job(key)
     local player = windower.ffxi.get_player()
     if M.charTable[player.id] == nil then
 	return -1
@@ -154,31 +187,31 @@ function get_point(key)
 end
 
 function M.current_merit_point()
-    return get_point("current_merit_point")
+    return get_char_point_by_job("current_merit_point")
 end
 
 function M.max_merit_point()
-    return get_point("max_merit_point")
+    return get_char_point_by_job("max_merit_point")
 end
 
 function M.current_exp_point()
-    return get_point("current_exp_point")
+    return get_char_point_by_job("current_exp_point")
 end
 
 function M.next_exp_point()
-    return get_point("next_exp_point")
+    return get_char_point_by_job("next_exp_point")
 end
 
 function M.real_master_level()
-    return get_point("real_master_level")
+    return get_char_point_by_job("real_master_level")
 end
 
 function M.current_exemplar_point()
-    return get_point("current_exemplar_point")
+    return get_char_point_by_job("current_exemplar_point")
 end
 
 function M.next_exemplar_point()
-    return get_point("next_exemplar_point")
+    return get_char_point_by_job("next_exemplar_point")
 end
 
 function M.print()

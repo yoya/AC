@@ -68,13 +68,15 @@ function M.record_char()
 	    f:write("(next:"..next_jp..")")
 	elseif jobpt.jp_spent >= 2100 and ac_char.real_master_level() >= 0 then
 	    f:write(" Mlv:"..ac_char.real_master_level())
-	    local exemplar_percent = math.floor(100 * ac_char.current_exemplar_point()/ac_char.next_exemplar_point() + 0.5)
+	    local exemplar_percent = math.floor(100 * ac_char.current_exemplar_point()/ac_char.next_exemplar_point()) -- 切り捨て
 	    f:write("("..ac_char.current_exemplar_point().."/"..ac_char.next_exemplar_point().."="..exemplar_percent.."%)")
 	end
     end
     f:write("\n")
     local items = windower.ffxi.get_items()
     f:write("Eminence:"..ac_char.eminence_point().."  Unity:"..ac_char.unity_point().."  Gil:"..utils.string.gil_string(items.gil).."\n")
+    f:write(string.format("Hallmark:%d  Total:%d  Gallantry:%d\n", ac_char.hallmark(), ac_char.total_hallmark(), ac_char.gallantry()))
+    f:write(string.format("DomainP:%d  MogSeg:%d  Gallimau:%d\n", ac_char.domain_point(), ac_char.mog_segments(), ac_char.gallimaufry()))w
     f:close()
 end
 
