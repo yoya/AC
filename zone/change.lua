@@ -3,6 +3,10 @@ local ac_pos = require 'ac/pos'
 local ac_move = require 'ac/move'
 local ac_stat = require 'ac/stat'
 local io_chat = require 'io/chat'
+local command = require 'command'
+local ac_party = require 'ac/party'
+local iamLeader = ac_party.iamLeader
+local task = require 'task'
 
 local M = {}
 
@@ -43,22 +47,70 @@ function M.automatic_routes_handler(zone, automatic_routes)
     end
 end
 
-function M.zone_change_handler(zone, prevZone)
-    print("zone/change zone_change_handler", zone, prevZone)
-    ac_stat.init()
-    -- zone 毎の処理
+function M.automatic_trust_handler(zone, automatic_trust)
+    io_chat.print("automatic_trust")
     local zone_object = aczone.zoneTable[zone]
     if zone_object == nil then
 	return
     end
-    local change_handler = zone_object.zone_change_handler
-    if change_handler ~= nil then
-	print("zone_change_handler found")
-	change_handler(zone, prevZone)
+    coroutine.sleep(3)
+    for i, f in pairs(automatic_trust) do
+	io_chat.print("automatic_trust:".. f)
+	local c = string.format('input /ma %s <me>', f)
+	command.send(c)
+	coroutine.sleep(7)
     end
-    local automatic_routes = zone_object.automatic_routes
-    if automatic_routes ~= nil then
-	M.automatic_routes_handler(zone, automatic_routes)
+end
+
+function M.zone_in_handler(zone, prevZone)
+    -- zone in の処理
+    local zone_object = aczone.zoneTable[zone]
+    if zone_object ~= nil then
+	local zone_in = zone_object.zone_in
+	if zone_in ~= nil then
+	    zone_in()
+	end
+	local automatic_routes = zone_object.automatic_routes
+	if automatic_routes ~= nil then
+	    M.automatic_routes_handler(zone, automatic_routes)
+	end
+	if iamLeader() then
+	    local automatic_trust = zone_object.automatic_trust
+	    if automatic_trust ~= nil then
+		io_chat.setNextColor(6)
+		io_chat.print("automatic_trust", automatic_trust);
+		M.automatic_trust_handler(zone, automatic_trust)
+	    end
+	end
+    end
+end
+
+function M.zone_change_handler(zone, prevZone)
+    -- zone 毎の処理
+    print("zone/change zone_change_handler", zone, prevZone)
+    ac_stat.init()
+    task.allClear()
+    -- zone out の処理
+    if prevZone == nil then
+	print("ERROR: prevZone == nil")  -- 普通はありえない
+    else
+	local zone_out_object = aczone.zoneTable[prevZone]
+	if zone_out_object ~= nil then
+	    local zone_out = zone_out_object.zone_out
+	    if zone_out ~= nil then
+		zone_out()
+	    end
+	end
+    end
+    -- zone in の処理
+    local zone_object = aczone.zoneTable[zone]
+    if zone_object ~= nil then
+	M.zone_in_handler(zone, prevZone)
+	local change_handler = zone_object.zone_change_handler
+	if change_handler ~= nil then
+	    print("zone_change_handler found")
+	    change_handler(zone, prevZone)
+	end
     end
 end
 
@@ -85,9 +137,27 @@ end
 -- 同じ zone でワープした時。WP や AMANトローブ
 function M.warp_handler(zone, pos, prevZone, prevPos, dist)
     print("zone/change:warp " .. zone .. ":" .. posStr(pos) .. " << " .. prevZone .. ":" ..  posStr(prevPos) .. " dist:" ..  math.round(dist, 2))
+    task.allClear()
+    -- warp out の処理
+    if prevZone == nil then
+	print("ERROR: prevZone == nil")  -- 普通はありえない
+    else
+	local zone_out_object = aczone.zoneTable[prevZone]
+	if zone_out_object ~= nil then
+	    local warp_out = zone_out_object.warp_out
+	    if warp_out ~= nil then
+		warp_out()
+	    end
+	end
+    end
+    -- warp in の処理
     local zone_object = aczone.zoneTable[zone]
     if zone_object == nil then
 	return
+    end
+    local warp_in = zone_object.warp_in
+    if warp_in ~= nil then
+	warp_in()
     end
     local automatic_routes = zone_object.automatic_routes
     if automatic_routes ~= nil then
