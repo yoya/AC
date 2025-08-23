@@ -23,9 +23,9 @@ function M.setNextColor(col)
     textColorOnce = true
 end
 
-function M.print(...)
+function _print(args)
     local text = ""
-    for i, v in pairs({...}) do
+    for i, v in pairs(args) do
 	local t = type(v) == "string" and v or utils_table.tableToString(v)
 	if i == 1 then
 	    text = text .. t
@@ -41,6 +41,17 @@ function M.print(...)
 	textColorOnce = false
     end
     windower.add_to_chat(17, windower.to_shift_jis(text))
+end
+
+function M.print(...)
+    local args = {...}
+    _print(args)
+end
+
+function M.printf(...)
+    local f = {...}()
+    local s = string.format(f, ...)
+    _print()
 end
 
 return M
