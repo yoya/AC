@@ -121,6 +121,30 @@ packet_handler[0x110] = function(packet)
     ac_char.update(player.id, char)
 end
 
+-- Currency Info (Currencies I)
+packet_handler[0x113] = function(packet)
+    local player = windower.ffxi.get_player()
+    local char = {
+	eminence_point = packet["Sparks of Eminence"],
+	unity_point = packet["Unity Accolades"],
+    }
+    ac_char.update(player.id, char)
+end
+
+-- Currency Info (Currencies2)
+packet_handler[0x118] = function(packet)
+    local player = windower.ffxi.get_player()
+    local char = {
+	hallmark = packet["Hallmarks"],
+	total_hallmark = packet["Total Hallmarks"],
+	gallantry = packet["Badges of Gallantry"],
+	domain_point = packet["Domain Points"],
+	mog_segments = packet["Mog Segments"],
+	gallimaufry = packet["Gallimaufry"],
+    }
+    ac_char.update(player.id, char)
+end
+
 function M.incoming_handler(id, data, modified, injected, blocked)
     local handler = packet_handler[id]
     --print("incoming_handler:",id)
