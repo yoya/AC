@@ -7,7 +7,7 @@ local ac_char = require("ac/char")
 local utils = require "utils"
 
 function M.record_char()
-    print("ac/record:record_char")
+    -- print("ac/record:record_char")
     local player = windower.ffxi.get_player()
     if player == nil then
 	print("record.record: player == nil")
@@ -36,8 +36,9 @@ function M.record_char()
     if namelen < 7 then
 	f:write(string.rep(" ", 7 - namelen))
     end
-    if player.status > 1 and player.status ~= 33 then
-	-- 33: healing??
+    -- https://github.com/Windower/Resources/blob/master/resources_data/statuses.lua
+    if 2 <= player.status  and player.status <= 3 then
+	-- k2 Dead, 3: Engaged Dead
 	f:write("(status:"..player.status..")")
     end
     f:write(" "..player.main_job..":"..player.main_job_level)
@@ -91,7 +92,7 @@ function M.unity(pt)
 end
 
 function M.record_spells()
-    print("ac/record:record_spells")
+    -- print("ac/record:record_spells")
     local spells = windower.ffxi.get_spells()
     local white_spells = {}
     local black_spells = {}
