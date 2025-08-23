@@ -2,10 +2,19 @@
 
 local M = {}
 
+M.leader_id = nil
+
 function M.iamLeader()
     local player = windower.ffxi.get_player()
     local party = windower.ffxi.get_party()
-    if party.party1_leader == player.id then
+    local party1_leader = party.party1_leader
+    -- print("ac_party.iamLeader", party.party1_leader, player.id)
+    if party1_leader == nil then
+	party1_leader = M.leader_id
+    else
+	M.leader_id = party1_leader
+    end
+    if party1_leader == player.id then
         return true
     end
     return false
