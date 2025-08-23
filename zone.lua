@@ -101,6 +101,7 @@ M.zoneTable = {
     [274] = require('zone/274_OutRaKaz'),   -- ラ・カザナル宮外郭
     [277] = require('zone/277_RaKazTurris'), -- ラ・カザナル宮天守
     [281] = require('zone/281_Leafallia'),  -- リファーリア
+    [287] = require('zone/287_LegionB'),     -- アブダルスの模型-レギオンB
     [291] = require('zone/291_ReisenHenge'),  -- 醴泉島-秘境
 }
 
