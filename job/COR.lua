@@ -13,6 +13,7 @@ local split_multi = utils.string.split_multi
 local phantom_roll_table = ac_data.phantom_roll_table
 
 M.mainJobProbTable = {
+    { 100, 60*10, 'input /ja クルケットカード <me>', 3 }, -- 駄目元で
     { 100, 20*60, 'input /ja ランダムディール <me>', 3 },
     -- { 200, 60, 'input /ja コルセアズロール <me>; wait 2; input /ja ダブルアップ <me>', 0 },
     { 50, 300, 'input /ja ブリッツァロール <me>', 3 },
