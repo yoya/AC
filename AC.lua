@@ -971,8 +971,10 @@ windower.register_event('addon command', function(command, command2)
         end
     elseif command == 'record' then
 	if command2 == 'char' then
+	    io_chat.print("record char")
 	    ac_record.record_char()
 	elseif command2 == 'spells' then
+	    io_chat.print("record spells")
 	    ac_record.record_spells()
 	end
     elseif command == 'show' then
