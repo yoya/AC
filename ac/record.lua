@@ -77,7 +77,7 @@ function M.record_char()
     local items = windower.ffxi.get_items()
     f:write("Eminence:"..ac_char.eminence_point().."  Unity:"..ac_char.unity_point().."  Gil:"..utils.string.gil_string(items.gil).."\n")
     f:write(string.format("Hallmark:%d  Total:%d  Gallantry:%d\n", ac_char.hallmark(), ac_char.total_hallmark(), ac_char.gallantry()))
-    f:write(string.format("DomainP:%d  MogSeg:%d  Gallimau:%d\n", ac_char.domain_point(), ac_char.mog_segments(), ac_char.gallimaufry()))w
+    f:write(string.format("DomainP:%d  MogSeg:%d  Gallimau:%d\n", ac_char.domain_point(), ac_char.mog_segments(), ac_char.gallimaufry()))
     f:close()
 end
 
