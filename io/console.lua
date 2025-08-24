@@ -15,5 +15,10 @@ function M.print(...)
     print(text)
 end
 
+function M.printf(...)
+    local s = string.format(...)
+    M.print(s)
+end
+
 return M
 
