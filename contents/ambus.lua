@@ -7,6 +7,9 @@ local io_chat = require 'io/chat'
 local ac_party = require 'ac/party'
 local iamLeader = ac_party.iamLeader
 
+local keyboard = require 'keyboard'
+local pushKeys = keyboard.pushKeys
+
 -- これらの敵と戦っていて、それ以外の敵が現れた時は、
 -- それ以外の方にターゲットを移す
 
@@ -85,6 +88,10 @@ function M.tick(player)
 		io_net.targetByMobIndex(nextMob.index)
 		command.send('wait 1; input /attack <t>')
 	    end
+	end
+	-- 敵から距離があると近づく処理。飛ばされた後用
+	if 5 < mob.distance then
+            pushKeys({"w", "w", "w"})
 	end
     end
 end
