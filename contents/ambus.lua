@@ -50,7 +50,7 @@ function searchEnemy(range, excludeEmemy)
     -- 何故かアンバスでは常に空っぽが返る
     -- local mobArr = windower.ffxi.get_mob_array()
     local mobArr = searchPreferEnemy()
-    io_chat.print("searchEnemy: #mobArr", #mobArr)
+    -- io_chat.print("searchEnemy: #mobArr", #mobArr)
     for i, mob in ipairs(mobArr) do
 	io_chat.setNextColor(8) -- 明るい赤紫
 	io_chat.print("searchEnemy name", excludeEmemy, mob.name)
