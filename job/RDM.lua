@@ -31,6 +31,7 @@ M.mainJobProbTable = {
 }
 
 M.subJobProbTable = {
+    { 10, 60, 'input /ma ケアル <p1>', 3},
     -- { 5, 600-60, 'input /ma アクアベール <me>', 5},
     { 100, 300, 'input /ma ブリンク <me>', 5},
     { 100, 300, 'input /ma ストンスキン <me>', 5},
