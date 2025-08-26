@@ -519,6 +519,7 @@ end
 
 local sellJunkItemsInInventory = function()
     local total_count = countJunkItemsInInventory()
+    io_chat.setNextColor(5)
     io_chat.print(total_count.."回売却 start")
     local remain_count = total_count
     for index = 1, 80 do
@@ -534,12 +535,14 @@ local sellJunkItemsInInventory = function()
                 break
             end
             if remain_count % 5 == 0 then
+		io_chat.setNextColor(6)
                 io_chat.print("# "..remain_count.."/"..total_count)
             end
             coroutine.sleep(math.random(6,8)/4)
         end
     end
     print("junk sold out", total_count)
+    io_chat.setNextColor(5)
     io_chat.print(total_count.."回売却 end")
 ---  stop() ---何故か動かない
     auto = false
@@ -658,6 +661,7 @@ local idleFunctionWestAdoulin = function()
         auto = false
     elseif mob.name == "Nunaarl Bthtrogg" then
         n = acitem.inventoryFreespaceNum()
+	io_chat.setNextColor(6)
         io_chat.print("かばんの空きは"..n.."*99 = "..(n*99))
         auto = false
     end
@@ -981,9 +985,11 @@ windower.register_event('addon command', function(command, command2)
         end
     elseif command == 'record' then
 	if command2 == 'char' then
+	    io_chat.setNextColor(6)
 	    io_chat.print("record char")
 	    ac_record.record_char()
 	elseif command2 == 'spells' then
+	    io_chat.setNextColor(6)
 	    io_chat.print("record spells")
 	    ac_record.record_spells()
 	end
