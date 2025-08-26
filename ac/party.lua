@@ -2,6 +2,8 @@
 
 local M = {}
 
+local io_chat = require 'io/chat'
+
 M.leader_id = nil
 
 M.member_table = { }
@@ -52,6 +54,29 @@ function M.hasJobMemberInParty(jobName)
 	end
     end
     return false
+end
+
+function createMemberInfo()
+    return { id = -1, buffs = {} }
+end
+
+function  object_assign(obj1, obj2)
+    for k, v in pairs(obj2) do
+	data[k] = v
+    end
+end
+
+-- incoming/chunk から呼ばれる
+function M.updatePartyMemberInfo(id, info)
+    if M.member_table[id] == nil then
+	M.member_table[id] = createMemberInfo()
+    end
+    object_assign(M.member_table[id], info)
+end
+
+function M.showPartyMembers()
+    io_chat.setNextColor(6)
+    io_chat.print(M.member_table)
 end
 
 return M
