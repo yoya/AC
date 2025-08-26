@@ -100,6 +100,34 @@ packet_handler[0x063] = function(packet)
     ac_char.update(player.id, char)
 end
 
+-- Party status icon update
+packet_handler[0x076] = function(packet)
+    --[[ packets/fields.lua を見ると以下の構造っぽいけど駄目
+    for i, member in ipairs(packet["Party Buffs"]) do
+	local index = member["Index"]
+	ac_party.updatePartyMemberInfo({
+	    id = packet["ID"],
+	    index = member["Index"],
+	    buffs = member["Buffs"],
+	})
+    end
+    ]]
+end
+
+-- Party member update
+packet_handler[0x0DD] = function(packet)
+    local id = packet["ID"]
+    local info = {
+	index = packet["Index"],
+	main_job = packet["Main job"],
+	main_job_level = packet["Main job level"],
+	sub_job = packet["Sub job"],
+	sub_job_level = packet["Sub job level"],
+	master_level = packet["Master Level"],
+	name = packet["Name"],
+    }
+    ac_party.updatePartyMemberInfo(id, info)
+end
 -- Char Update
 packet_handler[0x0DF] = function(packet)
     local id = packet["ID"]
