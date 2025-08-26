@@ -6,7 +6,7 @@ require('functions')
 local res = require 'resources'
 local socket = require 'socket'
 local config = require 'config'
-
+local packets = require 'packets'
 local command = require 'command'
 local task = require 'task'
 local works = require 'works'
@@ -935,6 +935,16 @@ windower.register_event('addon command', function(command, command2)
             pushKeys({"down", "enter"})
             coroutine.sleep(3)
         end
+    elseif command == 'inject' then
+	if command2 == 'currinfo1' then
+	    local p = packets.new('outgoing', 0x10F, {}) -- Curr Info
+	    packets.inject(p)
+	elseif command2 == 'currinfo2' then
+	    local p = packets.new('outgoing', 0x115, {}) -- Curr Info 2
+	    packets.inject(p)
+	else
+	    print("ac inject currinfo1 | currinfo2")
+	end
     elseif command == 'magic' then
 	role_Sorcerer.setMagic(command2)
     elseif command == 'move' then
