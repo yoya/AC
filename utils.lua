@@ -44,6 +44,7 @@ M.rankInJob = function()
     end
 end
 
+--[[
 M.cureIfPartyHPisLow = function()
     local player = windower.ffxi.get_player()
     local mainJob = player.main_job
@@ -99,6 +100,7 @@ M.cureIfPartyHPisLow = function()
         end
     end
 end
+]]
 
 M.target_lockon = function(b)
     local player = windower.ffxi.get_player()
