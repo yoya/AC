@@ -3,6 +3,8 @@
 local task = require 'task'
 local role_Healer = require 'role/Healer'
 local role_Sorcerer = require 'role/Sorcerer'
+local role_Melee = require 'role/Melee'
+
 local io_chat = require 'io/chat'
 
 local M = {}
@@ -62,6 +64,9 @@ function M.main_tick(player)
     end
     if role_Sorcerer.main_tick ~= nil then
 	role_Sorcerer.main_tick(player)
+    end
+    if role_Melee.main_tick ~= nil then
+	role_Melee.main_tick(player)
     end
     if player.status == 1 then -- 戦闘中
 	invoke_magick_debuff(player, 'ディアIII', 45)
