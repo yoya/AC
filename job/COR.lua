@@ -16,10 +16,10 @@ M.mainJobProbTable = {
     { 100, 60*10, 'input /ja クルケットカード <me>', 3 }, -- 駄目元で
     { 100, 20*60, 'input /ja ランダムディール <me>', 3 },
     -- { 200, 60, 'input /ja コルセアズロール <me>; wait 2; input /ja ダブルアップ <me>', 0 },
-    { 50, 300, 'input /ja ブリッツァロール <me>', 3 },
-    { 100, 300/2, 'input /ja サムライロール  <me>', 3 },
-    { 100, 300/2, 'input /ja カオスロール  <me>', 3 },
-    { 100, 300, 'input /ja ファイターズロール  <me>', 3 },
+--    { 50, 300, 'input /ja ブリッツァロール <me>', 3 },
+--    { 100, 300/2, 'input /ja サムライロール  <me>', 3 },
+--    { 100, 300/2, 'input /ja カオスロール  <me>', 3 },
+--    { 100, 300, 'input /ja ファイターズロール  <me>', 3 },
     -- { 100, 300/2, 'input /ja メガスズロール  <me>', 3 },
     -- { 100, 300/2, 'input /ja ウィザーズロール  <me>', 3 },
     --[[
@@ -36,22 +36,71 @@ M.subJobProbTable = {
     -- { 100, 300, 'input /ja ファイターズロール  <me>', 3 },
 }
 
+function phantom_roll(roll_name, on, delay)
+    local c = "input /ja "..roll_name.." <me>"
+    local level = task.PRIORITY_MIDDLE
+    local period = 300 / 2
+    if roll_name == "コルセアズロール" then
+	level = task.PRIORITY_HIGH
+	period = 20
+    end
+    -- command, delay, duration, period, eachfight
+    local t = task.newTask(c, delay, 3, period, true)
+    if on then
+	--io_chat.setNextColor(6)
+	--io_chat.print("phantom_roll", roll_name)
+	task.setTask(level, t)
+    else
+	task.removeTask(level, t)
+    end
+end
+
 function M.main_tick(player)
     if role_Melee.main_tick ~= nil then
 	role_Melee.main_tick(player)
     end
+    local cors_roll = false
+    if player.status == 1 then -- 戦闘中
+	local mob = windower.ffxi.get_mob_by_target("t")
+	if mob ~= nil then
+	    -- print(mob.hpp)
+	    local war_roll = false
+	    local sam_roll = false
+	    local drk_roll = false
+	    local cor_roll = false
+	    local blitzer_roll = false
+	    -- コルセアロール使えるように 33% でストップ
+	    if 33 <= mob.hpp and mob.hpp <= 100 then
+		war_roll = true
+		sam_roll = true
+		drk_roll = true
+		blitzer_roll = true
+	    end
+	    -- 敵の HP が3%〜15% で、可能ならコルセアズロール
+	    -- Apex で3%未満だと戦闘終了と同時に動く可能性がそこそこある
+	    if 3 <= mob.hpp and mob.hpp <= 15 then
+		cor_roll = true
+	    end
+	    phantom_roll("ファイターズロール", sam_roll, 61*3)
+	    phantom_roll("サムライロール", war_roll, 61)
+	    phantom_roll("カオスロール", drk_roll, 61*2)
+	    phantom_roll("ブリッツァロール", blitzer_roll, 0)
+	    phantom_roll("コルセアズロール", cor_roll, 0)
+	end
+    end
+    -- ロールrecastを考慮してないので、駄目元のコルセアズロール。
 end
 
 -- ダブルアップの on/off
 function phantom_roll_double_up(on)
-    io_chat.setNextColor(3)
-    io_chat.print("phantom_roll_double_up", on)
     assert(type(on) == "boolean")
     local c = "input /ja ダブルアップ <me>"
     local level = task.PRIORITY_MIDDLE
     -- command, delay, duration, period, eachfight
     local t = task.newTask(c, 2, 2, 5, false)
     if on == true then
+	io_chat.setNextColor(6)
+	io_chat.print("phantom_roll_double_up")
 	task.setTask(level, t)
     else
 	task.removeTask(level, t)
