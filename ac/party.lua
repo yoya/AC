@@ -4,6 +4,8 @@ local M = {}
 
 M.leader_id = nil
 
+M.member_table = { }
+
 function M.iamLeader()
     local player = windower.ffxi.get_player()
     local party = windower.ffxi.get_party()
