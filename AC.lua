@@ -1000,12 +1000,14 @@ windower.register_event('addon command', function(command, command2)
 	    acitem.showInventory()
 	elseif command2 == 'mob' then
 	    showMob()
+	elseif command2 == 'party' then
+	    ac_party.showPartyMembers()
 	elseif command2 == 'stat' then
 	    ac_stat.print()
 	elseif command2 == 'task' then
 	    task.print()
 	else
-	    io_chat.print("ac show { char | inventory | mob | spells | stat | task}")
+	    io_chat.print("ac show { char | inventory | mob | party | stat | task}")
 	end
     elseif command == 'test' then
         print("test command")
