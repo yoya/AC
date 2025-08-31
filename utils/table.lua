@@ -146,4 +146,13 @@ function M.tableToString(data)
     return (string.gsub(str, "^%s*(.-)%s*$", "%1"))  -- trim
 end
 
+
+function M.convertArrayToTrueTable(arr)
+    local t = {}
+    for i, v in ipairs(arr) do
+	t[v] = true
+    end
+    return t
+end
+
 return M
