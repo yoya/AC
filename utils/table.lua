@@ -42,12 +42,12 @@ function M.merge_tables(t1, t2)
 end
 
 function M.contains(arr, val)
-   for i=1,#arr do
-      if arr[i] == val then 
-         return true
-      end
-   end
-   return false
+    for i=1,#arr do
+	if arr[i] == val then
+	    return true
+	end
+    end
+    return false
 end
 
 function M.isNumericalIndexedTable(table)
