@@ -57,38 +57,53 @@ function phantom_roll(roll_name, on, delay)
     end
 end
 
+function roll_tick(player)
+    local zone = windower.ffxi.get_info().zone
+    local me = windower.ffxi.get_mob_by_target("me")
+    local mob = windower.ffxi.get_mob_by_target("t")
+    -- 醴泉島(291)のかえる池
+    if zone == 291 and aczone.isNear(291, "toad_pond", 100) then
+	phantom_roll("ダンサーロール", true, 0)  -- リジェネ
+	phantom_roll("ガランツロール", true, 61)  -- 防御
+	-- phantom_roll("ニンジャロール", true, 61*3)  -- 回避
+	-- phantom_roll("メガスズロール", true, 61*4)  -- 魔防御
+	phantom_roll("ルーニストロール", true, 61*6)  -- 魔回避
+	return
+    end
+    if mob ~= nil then
+	-- print(mob.hpp)
+	local war_roll = false
+	local sam_roll = false
+	local drk_roll = false
+	local cor_roll = false
+	local blitzer_roll = false
+	-- コルセアロール使えるように 33% でストップ
+	if 33 <= mob.hpp and mob.hpp <= 100 then
+	    war_roll = true
+	    sam_roll = true
+	    drk_roll = true
+	end
+	-- 敵の HP が3%〜15% で、可能ならコルセアズロール
+	-- Apex で3%未満だと戦闘終了と同時に動く可能性がそこそこある
+	if 3 <= mob.hpp and mob.hpp <= 20 then
+	    cor_roll = true
+	    blitzer_roll = true
+	end
+	phantom_roll("サムライロール", sam_roll, 0)
+	phantom_roll("カオスロール", drk_roll, 61)
+	phantom_roll("ファイターズロール", war_roll, 61*2)
+	phantom_roll("コルセアズロール", cor_roll, 0)
+	phantom_roll("ブリッツァロール", blitzer_roll, 61)
+    end
+end
+
 function M.main_tick(player)
     if role_Melee.main_tick ~= nil then
 	role_Melee.main_tick(player)
     end
     local cors_roll = false
     if player.status == 1 then -- 戦闘中
-	local mob = windower.ffxi.get_mob_by_target("t")
-	if mob ~= nil then
-	    -- print(mob.hpp)
-	    local war_roll = false
-	    local sam_roll = false
-	    local drk_roll = false
-	    local cor_roll = false
-	    local blitzer_roll = false
-	    -- コルセアロール使えるように 33% でストップ
-	    if 33 <= mob.hpp and mob.hpp <= 100 then
-		war_roll = true
-		sam_roll = true
-		drk_roll = true
-		blitzer_roll = true
-	    end
-	    -- 敵の HP が3%〜15% で、可能ならコルセアズロール
-	    -- Apex で3%未満だと戦闘終了と同時に動く可能性がそこそこある
-	    if 3 <= mob.hpp and mob.hpp <= 15 then
-		cor_roll = true
-	    end
-	    phantom_roll("ファイターズロール", sam_roll, 61*3)
-	    phantom_roll("サムライロール", war_roll, 61)
-	    phantom_roll("カオスロール", drk_roll, 61*2)
-	    phantom_roll("ブリッツァロール", blitzer_roll, 0)
-	    phantom_roll("コルセアズロール", cor_roll, 0)
-	end
+	roll_tick(player)
     end
     -- ロールrecastを考慮してないので、駄目元のコルセアズロール。
 end
