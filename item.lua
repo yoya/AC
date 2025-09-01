@@ -150,6 +150,17 @@ local inventoryHasItem = function(id)
 end
 M.inventoryHasItem = inventoryHasItem
 
+function M.inventoryHasItemT(idT)
+    local items = windower.ffxi.get_items()
+    local inventory = items.inventory
+    for i, item in ipairs(inventory) do
+        if idT[item.id] == true then
+            return true
+        end
+    end
+    return false
+end
+
 M.safesHasItem = function(id)
     local items = windower.ffxi.get_items()
     for bname, bagid in pairs(SafesList) do
