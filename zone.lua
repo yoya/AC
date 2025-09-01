@@ -1,6 +1,8 @@
 ---
 --- Zone 毎の情報
 
+local ac_pos = require 'ac/pos'
+
 local M = {}
 
 M.zoneTable = {
@@ -119,6 +121,36 @@ function M.getRouteTable(zone)
 	return t.routes
     end
     return nil
+end
+
+function M.tick(player)
+    local zone = windower.ffxi.get_info().zone
+    local z = M.zoneTable[zone]
+    if z ~= nil then
+	local tick = z.tick
+	if tick ~= nil then
+	    tick(player)
+	end
+    end
+end
+
+function M.isNear(zone, name, distance)
+    if zone ~= windower.ffxi.get_info().zone then
+	return false
+    end
+    local z = M.zoneTable[zone]
+    if z ~= nil then
+	local points = z.essentialPoints
+	local me = windower.ffxi.get_mob_by_target("me")
+	if points ~= nil and me ~= nil then
+	    for name, pos in pairs(points) do
+		if ac_pos.distance(me, pos) <= distance then
+		    return true
+		end
+	    end
+	end
+    end
+    return false
 end
 
 return M
