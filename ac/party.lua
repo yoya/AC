@@ -2,7 +2,10 @@
 
 local M = {}
 
+local res = require('resources')
 local io_chat = require 'io/chat'
+
+local jobs = res.jobs
 
 M.leader_id = nil
 
@@ -57,12 +60,12 @@ function M.hasJobMemberInParty(jobName)
 end
 
 function createMemberInfo()
-    return { id = -1, buffs = {} }
+    return { buffs = {} }
 end
 
 function  object_assign(obj1, obj2)
     for k, v in pairs(obj2) do
-	data[k] = v
+	obj1[k] = v
     end
 end
 
@@ -71,13 +74,23 @@ function M.updatePartyMemberInfo(id, info)
     if M.member_table[id] == nil then
 	M.member_table[id] = createMemberInfo()
     end
+    if info.main_job ~= nil then
+	info.main_job = jobs[info.main_job].ens
+    end
+    if info.sub_job ~= nil then
+	info.sub_job = jobs[info.sub_job].ens
+    end
     object_assign(M.member_table[id], info)
 end
 
 function M.showPartyMembers()
-    io_chat.setNextColor(6)
-    io_chat.print(M.member_table)
+    io_chat.setNextColor(5)
+    io_chat.print("=== showPartyMembers")
+    for id, info in pairs(M.member_table) do
+	io_chat.setNextColor(6)
+	io_chat.print(id, info.name, info.main_job, info.sub_job)
+	io_chat.print(info)
+    end
 end
 
 return M
-    
