@@ -7,6 +7,9 @@ local M = {}
 
 M.cureIfPartyHPisLow = function(hp_need_cure)
     local player = windower.ffxi.get_player()
+    if player.status ~= 1 then
+	return  -- 戦闘してなければ、何もしない
+    end
     local main_job = player.main_job
     local player_mp = player.vitals.mp
     if player_mp < 8 then
