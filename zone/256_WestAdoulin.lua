@@ -2,6 +2,12 @@
 
 local M = { id = 256 }
 
+local acitem = require 'item'
+local utils = require 'utils'
+local io_net = require 'io/net'
+local ac_move = require 'ac/move'
+local turnToPos = ac_move.turnToPos
+
 M.routes = {
     moogle = {  -- 開始地点が他にマッチしないように
 	{x=0, y=0, z=0}, {x=0, y=0, z=0},
@@ -63,5 +69,29 @@ M.automatic_routes = {
     wp_mum = "mum",
     wp_cou = "cou",
 }
+
+local sell_items = {
+    5945, -- プライズパウダー
+    12305, -- アイスシールド
+    12385, -- アケロンシールド
+    12387, -- ケーニヒシールド
+}
+
+local sell_itemsT = utils.table.convertArrayToTrueTable(sell_items)
+
+function M.tick(player)
+    if acitem.inventoryHasItemT(sell_itemsT) then
+	local mob = windower.ffxi.get_mob_by_name("Defliaa")
+	if mob ~= nil and mob.distance < 240 then
+	    local me = windower.ffxi.get_mob_by_target("me")
+	    turnToPos(me.x, me.y, mob.x, mob.y)
+	    windower.ffxi.run(true)
+	    if mob ~= nil and mob.distance < 25 then
+		windower.ffxi.run(false)
+		io_net.targetByMobId(mob.id)
+	    end
+	end
+    end
+end
 
 return M
