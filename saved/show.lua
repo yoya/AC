@@ -162,7 +162,14 @@ if method == 'l' then
     table.sort(charTable, function(a,b) return a.name < b.name end)
 end
 
+total_gil = 0
+
 for i, char in pairs(charTable) do
+    local gil_str = string.gsub(char.gil, ',', '')
+    gil_num = tonumber(gil_str)
+    if gil_num ~= nil and gil_num > 0 then
+	total_gil = total_gil + gil_num
+    end
     if method == 'l' then
 	print(char.line1)
 	print(string.format("  Emi:%5s Uni:%5s Gil:%11s", char.eminence_point, char.unity_point, char.gil))
@@ -177,5 +184,10 @@ for i, char in pairs(charTable) do
     end
 end
 
-os.exit (0)
+if method == 'p' then
+    local gil3 = utils.string.gil_string(total_gil)
+    local gil4 = utils.string.gil_string(total_gil, 4)
+    print(string.format("Total Gil:%11s(=%11s)", gil3, gil4))
+end
 
+os.exit (0)
