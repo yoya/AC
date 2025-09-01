@@ -33,6 +33,24 @@ M.jobTable = {
     RUN = require('job/RUN'), -- 魔導剣士
 }
 
+
+-- https://wiki.ffo.jp/html/33806.html
+local needCapacityPoints = {
+    --{ 200, 15*60/3, 'input /item キャパシティリング <me>', 1 },
+    { 200, 2*60*60/4, 'input /item トリゼックリング <me>', 1 },
+    --{ 200, 15*60/3, 'input /item ファシリティリング <me>', 1 },
+    --{ 200, 2*60*60/4, 'input /item エンドースリング <me>', 1 },
+}
+
+-- https://wiki.ffo.jp/html/487.html 専心
+local needExperiencePoints = {
+    --{ 200, 15*60/3, 'input /item 皇帝の指輪 <me>', 1 },
+    --{ 200, 15*60/3, 'input /item クポフリートリング <me>', 1 },
+    --{ 200, 60*60/4, 'input /item アニバーサリリング <me>', 1 },
+    { 200, 2*60*60/4, 'input /item エチャドリング <me>', 1 },
+    --{ 200, 15*60/3, 'input /item カリバーリング <me>', 1 },
+}
+
 function M.tick(player)
     local main_tick = M.jobTable[player.main_job].main_tick
     local sub_tick = M.jobTable[player.sub_job].sub_tick
