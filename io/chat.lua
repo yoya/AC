@@ -45,7 +45,7 @@ end
 
 function M.printf(...)
     local s = string.format(...)
-    _print(s)
+    M.print(s)
 end
 
 return M
