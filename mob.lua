@@ -25,8 +25,8 @@ end
 
 --- 多分、戦える敵 (レイド戦には未対応)+
 function isMobAttackable(mob)
-    if (mob.status == 0 or mob.status == 1) and
-        mob.spawn_type == 16 and
+    if mob.valid_target and mob.is_npc and mob.spawn_type == 16 and
+	(mob.status == 0 or mob.status == 1) and
         isMobAttackableTargetIndex(mob.target_index) then
         return true
     end
