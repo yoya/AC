@@ -12,7 +12,7 @@ local M = {}
 M.weaponskill = 'flat'
 
 local preferWeaponSkill = {
-    'victory', 'shishin', 'tokon', 'dragon', 'tackle',-- 格闘
+    'victory', 'shishin', 'tokon', 'dragon', 'rangeki', 'combo', -- 格闘
     'rudra', 'manda', 'exen', 'evis',  'dance', 'shadow', -- 短剣
     'savage', 'chant', -- 片手剣
     'reso','ground', -- 両手剣
@@ -31,7 +31,9 @@ local preferWeaponSkill = {
 
 M.weaponskillTable = {
     -- 格闘
-    tackle = 'タックル',
+    -- tackle = 'タックル',
+    combo = 'コンボ',
+    rangeki = '乱撃',
     shishin = '四神円舞',
     victory = 'ビクトリースマイト',
     tokon = '闘魂旋風脚',
