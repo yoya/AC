@@ -1,5 +1,7 @@
 local M = {}
 
+local utils = require 'utils'
+
 -- 参考) https://raw.githubusercontent.com/Windower/Resources/master/resources_data/items.lua
 
 M.crystal_ids = {
@@ -503,7 +505,7 @@ M.JunkItems = {
     4138, -- スーパーエーテル+2
     4140, -- プロエーテル
     4150, -- 目薬
-    4164, -- プリズムパウダー
+--  4164, -- プリズムパウダー
 --  4272, -- 龍の肉 -- 1D 15万
 --  4274, -- ペルシコス -- 飼育餌
     4276, -- フリントキャビア
@@ -728,5 +730,7 @@ for i=-3559,-3583,-1 do table.insert(M.JunkItems, i) end
 -- 8782-8786, -- 神竜の免罪符 -- カマイン装備 赤ナ暗狩竜青コ剣(Ilv119)
 -- 8787-8791, -- 深海の免罪符 -- アポジ装備 召(Ilv119)
 -- 9105-9129, -- *星の免罪符 -- (Ilv119)
+
+M.JunkItemsT = utils.table.convertArrayToTrueTable(M.JunkItems)
 
 return M
