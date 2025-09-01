@@ -5,6 +5,15 @@ local command = require 'command'
 
 local M = {}
 
+--[[
+    local run = windower.ffxi.run
+windower.ffxi.run = function(...)
+    run(...)
+    local a = {...}()
+    if not a then print(debug.traceback()) end
+end
+]]
+
 -- utils/*.lua メソッドのマージ
 function M.require_child_module(parent, parentname, modname)
     local mod = require(parentname..'/'..modname)
