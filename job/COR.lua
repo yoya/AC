@@ -41,7 +41,7 @@ M.subJobProbTable = {
 function phantom_roll(roll_name, on, delay)
     local c = "input /ja "..roll_name.." <me>"
     local level = task.PRIORITY_MIDDLE
-    local period = 300 / 2
+    local period = 300 / 4
     if roll_name == "コルセアズロール" then
 	level = task.PRIORITY_HIGH
 	period = 20
