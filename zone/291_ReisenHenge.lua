@@ -18,6 +18,7 @@ M.routes = {
 M.essentialPoints = {
     ingress = {x=-390.2,y=-835.1,z=-439.8},
     from_omen = {x=-378,y=-820,z=-441.3},
+    toad_pond = {x=-440,y=-36,z=-41.4},
 }
 
 M.automatic_routes = {
