@@ -22,7 +22,7 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    from_Zeruhn = "junction"  -- はじめの分岐点
+    from_Zeruhn = { route="junction" },  -- はじめの分岐点
 }
 
 return M

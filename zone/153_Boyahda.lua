@@ -27,7 +27,7 @@ M.essentialPoints = {
 
 
 M.automatic_routes = {
-    hp_1 = "i11",
+    hp_1 = { route="i11" },
 }
 
 

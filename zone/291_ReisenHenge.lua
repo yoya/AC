@@ -22,8 +22,8 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    ingress = "omen",
-    from_omen = "incant",
+    ingress = { route="omen" },
+    from_omen = { route="incant" },
 }
 
 return M

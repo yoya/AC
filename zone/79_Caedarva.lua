@@ -23,7 +23,7 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    book_warp = "arra"
+    book_warp = { route="arra" },
 }
 
 return M

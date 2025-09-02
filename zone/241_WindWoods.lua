@@ -31,7 +31,7 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    hp1 = "nana",
+    hp1 = { route="nana" },
 }
 
 return M

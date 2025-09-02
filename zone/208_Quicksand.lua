@@ -16,7 +16,7 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    ent_d12 = "ent"
+    ent_d12 = { route="ent" },
 }
 
 return M

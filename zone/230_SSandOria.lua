@@ -24,7 +24,7 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    hp2_a = "sgate"
+    hp2_a = { route="sgate"},
 }
 
 return M

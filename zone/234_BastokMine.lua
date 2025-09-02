@@ -29,7 +29,7 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
---    hp_1_A = "gumbah",
+--    hp_1_A = { route="gumbah" },
 }
 
 return M

@@ -34,7 +34,7 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    from_mariami = "raive"
+    from_mariami = { route="raive" },
 }
 
 return M

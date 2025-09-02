@@ -14,7 +14,7 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    entrance = "conf",
+    entrance = { route="conf" },
 }
 
 return M

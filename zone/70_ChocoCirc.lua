@@ -17,7 +17,7 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    wand_warp_point = "ent"
+    wand_warp_point = { route="ent" },
 }
 
 return M

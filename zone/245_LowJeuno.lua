@@ -4,7 +4,7 @@ local M = { id = 245 }
 
 M.routes = {
     -- HP (M)
-    tensho = { {x=19,y=-53}, {x=17.2,y=31.7},  -- 天晶堂
+    tensho = {-- {x=19,y=-53}, {x=17.2,y=31.7},  -- 天晶堂
 	--{x=10.3,y=25.1}, {x=6,y=18.1}, {x=4,y=8.2},
 	--{x=12.6,y=-1.5}, {a="f8touch"}, {x=35.9,y=-15.4},
 	--{a="f8touch"}
@@ -29,7 +29,7 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    hp1 = "grey"
+    hp1 = { route="grey" },
 }
 
 return M

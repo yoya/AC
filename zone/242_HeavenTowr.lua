@@ -15,7 +15,7 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    from_win = "kupipi",
+    from_win = { route="kupipi" },
 }
 
 return M

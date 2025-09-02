@@ -24,7 +24,7 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    wp_warp = "woh"
+    wp_warp = { route="woh", need_level=20 },
 }
 
 

@@ -24,7 +24,7 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    hp1 = "ambus",
+    hp1 = { route="ambus", leader_only=true},
 }
 
 return M

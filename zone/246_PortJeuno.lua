@@ -23,8 +23,8 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    homepoint_1_E = "shemo",
-    homepoint_2_M = "oboro",
+    homepoint_1_E = { route="shemo" },
+    homepoint_2_M = { route="oboro" },
 }
 
 return M

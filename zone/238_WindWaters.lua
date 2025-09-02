@@ -36,7 +36,7 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    hp_1 = "tosuka",
+    hp_1 = { route="tosuka" },
 }
 
 return M

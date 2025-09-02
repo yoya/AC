@@ -65,9 +65,9 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    moogle = "moogle", -- 動かないように
-    wp_mum = "mum",
-    wp_cou = "cou",
+    moogle = { route="moogle" }, -- 動かないように
+    wp_mum = { route="mum" },
+    wp_cou = { route="cou" },
 }
 
 local sell_items = {

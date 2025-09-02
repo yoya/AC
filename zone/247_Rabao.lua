@@ -20,8 +20,8 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    from_odyssey = "odymog",
-    hp2 = "hp2ody",
+    from_odyssey = { route="odymog" },
+    hp2 = { route="hp2ody" },
 }
 
 return M

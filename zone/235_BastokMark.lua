@@ -16,7 +16,6 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
---    from_bas = "gumbah",
 }
 
 return M

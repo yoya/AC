@@ -49,8 +49,7 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    book = "korro",  -- コロロカ
---    from_bas = "gumbah",
+    book = { route="korro" },  -- コロロカ
 }
 
 return M

@@ -38,9 +38,18 @@ function M.automatic_routes_handler(zone, automatic_routes)
     if ac_pos.isNear(pos, 1) then
 	for f, t in pairs(automatic_routes) do
 	    local fp = zone_object.essentialPoints[f]
-	    if ac_pos.isNear(fp, 5) then
-		io_chat.print(f.."から"..t.."に移動")
-		ac_move.moveTo(zone_object.routes[t], zone_object.routes)
+	    local route = t.route
+	    local exec_auto_route = ac_pos.isNear(fp, 5)
+	    if t.leader_only == true then
+		exec_auto_route = false
+	    end
+	    local level = player.main_job_level
+	    if t.need_level ~= nil and level < t.need_level then
+		exec_auto_route = false
+	    end
+	    if exec_auto_route then
+		io_chat.print(f.."から"..route.."に移動")
+		ac_move.moveTo(zone_object.routes[route], zone_object.routes)
 		break
 	    end
 	end
