@@ -32,6 +32,8 @@ function M.automatic_routes_handler(zone, automatic_routes)
     if zone_object == nil then
 	return
     end
+    local player = windower.ffxi.get_player()
+    local level = player.main_job_level
     coroutine.sleep(2)
     local pos = ac_pos.currentPos()
     coroutine.sleep(3)
@@ -43,7 +45,6 @@ function M.automatic_routes_handler(zone, automatic_routes)
 	    if t.leader_only == true then
 		exec_auto_route = false
 	    end
-	    local level = player.main_job_level
 	    if t.need_level ~= nil and level < t.need_level then
 		exec_auto_route = false
 	    end
