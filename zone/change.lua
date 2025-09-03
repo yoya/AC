@@ -42,10 +42,14 @@ function M.automatic_routes_handler(zone, automatic_routes)
 	    local fp = zone_object.essentialPoints[f]
 	    local route = t.route
 	    local exec_auto_route = ac_pos.isNear(fp, 5)
-	    if t.leader_only == true then
+	    if t.leader_only == true and not iamLeader() then
+		io_chat.setNextColor(4) -- ピンク
+		io_chat.print("移動するのはリーダーだけ")
 		exec_auto_route = false
 	    end
 	    if t.need_level ~= nil and level < t.need_level then
+		io_chat.setNextColor(4) -- ピンク
+		io_chat.print("移動するのに level 20 必要")
 		exec_auto_route = false
 	    end
 	    if exec_auto_route then
