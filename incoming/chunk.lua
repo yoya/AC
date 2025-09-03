@@ -24,6 +24,11 @@ packet_handler[0x028] = function(packet) -- Action Message
     elseif cate == 7 then
 	-- io_chat.print("0x028 cate:7 Weapon Skill start")
 	acinspect.ws()
+	local id = packet["Actor"]
+	local player = windower.ffxi.get_player()
+	if player.id == id then
+	    ac_stat.ws()
+	end
     else
 	-- io_chat.print("XXX 0x028 cate:"..cate)
     end
@@ -32,24 +37,28 @@ end
 packet_handler[0x029] = function(packet) -- Action Message
     -- io_chat.print(packet)
     local mesg = packet.Message
-    if mesg == 6 then  -- defeated enemy
+    -- 自分もしくは味方が敵を倒した時の処理
+    -- 自分もしくは味方が敵を倒した時の処理
+    if (mesg == 6 or mesg == 20) then
 	-- io_chat.print(packet)
 	local actor_index = packet["Actor Index"]
 	local target_index = packet["Target Index"]
 	-- io_chat.print("defeated enemy: actor:"..actor_index .. " target:"..target_index)
-	-- 敵を倒した時の処理
-	if ac_party.isMemberIndex(actor_index) then
-	    local mob = windower.ffxi.get_mob_by_index(target_index)
-	    ac_stat.defeat(mob.name)
-	    -- defeated 表示/保存処理は queue に乗せる予定
-	    ac_defeated.done() -- setTask だと表示しない時があるので、一旦戻す
-	    -- command, delay, duration, period, eachfight)
-	    task.setTask(task.PRIORITY_LOW,
-			 task.newTask("ac defeated", 3, 3, 3, true))
+	if not ac_party.isMemberIndex(actor_index) then
+	    return  -- 恐らく他パーティが倒してるのでスルー
 	end
-    elseif mesg == 20 then
-	io_chat.setNextColor(3)
-	io_chat.print("XXX: action message: Fall???")
+	local mob = windower.ffxi.get_mob_by_index(target_index)
+	if mesg == 6 then  -- defeated enemy
+	    ac_stat.defeat(mob.name)
+	elseif mesg == 20 then  -- falling enemy (イリュージョン)
+	    ac_stat.falling(mob.name)
+	    io_chat.setNextColor(3)
+	    io_chat.print("XXX: action message: Fall???")
+	end
+	-- ac_defeated.done() -- setTask で表示しない時に戻せるよう残す
+	-- command, delay, duration, period, eachfight)
+	task.setTask(task.PRIORITY_LOW,
+		     task.newTask("ac defeated", 3, 3, 1, true))
     elseif mesg == 206 then
 	do end -- (味方の？)強化切れ
     else
