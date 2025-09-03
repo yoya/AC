@@ -186,7 +186,7 @@ end
 
 if method == 'p' then
     local gil3 = utils.string.gil_string(total_gil)
-    local gil4 = utils.string.gil_string(total_gil, 4)
+    local gil4 = utils.string.gil_string(total_gil, '_', 4)
     print(string.format("Total Gil:%11s(=%11s)", gil3, gil4))
 end
 
