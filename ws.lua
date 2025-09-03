@@ -17,7 +17,7 @@ local preferWeaponSkill = {
     'savage', 'chant', -- 片手剣
     'reso','ground', -- 両手剣
     'ramp', 'rui', -- 片手斧
-    'ukko', 'steel',  --両手斧
+    'ukko', 'steel', 'uph', --両手斧
     'dai',  -- 両手槍
     'demi', 'spin', 'frost', -- 両手剣
     'shoha', 'hocho', 'gekko', 'kagero', 'yuki', -- 両手刀
@@ -65,6 +65,7 @@ M.weaponskillTable = {
     -- 両手斧
     ukko = 'ウッコフューリー',
     steel = 'スチールサイクロン',
+    uph = 'アップヒーバル',
     -- 両手槍
     dai = '大車輪',
     -- 両手鎌
