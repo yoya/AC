@@ -20,8 +20,12 @@ local taskTable = {
     [M.PRIORITY_MIDDLE] = {},
     [M.PRIORITY_LOW]    = {},
 }
+--ex) [M.PRIORITY_HIGH]   = { task1, task2, ... },
+
 local taskPeriodTable = {}
--- ex) [M.PRIORITY_HIGH]   = { task1, task2, ... },
+-- ex) command => time
+
+
 
 -- newTask
 ---  command: コマンド。/input  挑発 <t> 等々
@@ -63,7 +67,7 @@ M.resetByFight = function()
 	    if task.eachfight == true then
 		local task = taskTable[level][1]  -- 1 origin
 		local c = task.command
-		taskPeriodTable[c] = os.time()
+		taskPeriodTable[c] = os.time() - 1
 		table.remove(taskTable[level], 1)
 	    end
 	end
@@ -100,7 +104,8 @@ function M.setTask(level, task)
     table.insert(taskTable[level], task)
     local c = task.command
     local t = os.time() + task.delay
-    if taskPeriodTable[c] == nil or taskPeriodTable[c] < t then
+    --if taskPeriodTable[c] == nil or taskPeriodTable[c] < t then
+    if taskPeriodTable[c] == nil then
 	taskPeriodTable[c] = t
     end
     return true
@@ -115,6 +120,14 @@ function M.removeTask(level, task)
 	table.remove(taskTable[level], i)
     end
     return i
+end
+
+-- ある程度決め打ちの設定でタスク生成
+function M.setTaskSimple(c, delay, duration)
+    local level = M.PRIORITY_HIGH
+    -- command, delay, duration, period, eachfight
+    local t = M.newTask(c, delay, duration, 10, false)
+    M.setTask(level, t)
 end
 
 M.init = function()
@@ -153,15 +166,26 @@ M.tick = function()
 	return
     end
     -- auto run の時。/ma の command は実行せず setTask し直す
-    windower.ffxi.run(false)
-    coroutine.sleep(0.25)
+    -- windower.ffxi.run(false)
+    -- coroutine.sleep(0.25)
+    -- io_chat.print("TASK command:"..task.command, task.duration)
     command.send(task.command)
     tickNextTime = os.time() + task.duration
 end
 
 function M.print()
     local io_chat = require('io/chat')
-    io_chat.print(taskTable)
+    io_chat.setNextColor(5)
+    io_chat.print("=== task print")
+    for l, taskArr in pairs(taskTable) do
+	io_chat.setNextColor(6)
+	io_chat.print("level:"..l)
+	for i, task in ipairs(taskArr) do
+	    local c = task.command
+	    local t = taskPeriodTable[c]
+	    io_chat.print(task, t <= os.time())
+	end
+    end
 end
 
 return M
