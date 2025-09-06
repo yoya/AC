@@ -44,13 +44,13 @@ end
 
 function M.print()
     local total = 0
-    local time = os.date("%X", os.time())
+    local datetime = os.date("%X", os.time())
     -- if #M.DefeatedEnemyTable == 0 then -- 駄目
     if tableHasData(M.DefeatedEnemyTable) == false then
-	io_chat.print("=== Defeated Enemy Zero === "..time);
+	io_chat.print("=== Defeated Enemy Zero === "..datetime);
     else
 	io_chat.setNextColor(5)
-	io_chat.print("=== Defeated Enemy Table === " .. time);
+	io_chat.print("=== Defeated Enemy Table === " .. datetime);
 	for name, count in pairs(M.DefeatedEnemyTable) do
 	    io_chat.setNextColor(6)
 	    io_chat.print(name .. ": "..count);
