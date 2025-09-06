@@ -25,8 +25,6 @@ local taskTable = {
 local taskPeriodTable = {}
 -- ex) command => time
 
-
-
 -- newTask
 ---  command: コマンド。/input  挑発 <t> 等々
 ---  delay 開始するまでの遅延
@@ -130,6 +128,13 @@ function M.setTaskSimple(c, delay, duration)
     M.setTask(level, t)
 end
 
+function M.removeTaskSimple(c)
+    local level = M.PRIORITY_HIGH
+    -- command, delay, duration, period, eachfight
+    local t = M.newTask(c, 0, 0, 0, false)
+    M.removeTask(level, t)
+end
+
 M.init = function()
     taskTable = {
 	[M.PRIORITY_TOP]    = {},
@@ -165,11 +170,21 @@ M.tick = function()
     if task == nil then
 	return
     end
+    local c = task.command
     -- auto run の時。/ma の command は実行せず setTask し直す
     -- windower.ffxi.run(false)
     -- coroutine.sleep(0.25)
     -- io_chat.print("TASK command:"..task.command, task.duration)
-    command.send(task.command)
+    local o = string.find(c, '//')  -- 頭が // のコマンドは特別扱い
+    if o == nil or o > 1 then
+	command.send(c)
+    else
+	if string.find(c, '//echo ') == 1 then
+	    local io_chat = require('io/chat')
+	    io_chat.setNextColor(5)
+	    io_chat.print(string.sub(c, 8))
+	end
+    end
     tickNextTime = os.time() + task.duration
 end
 
