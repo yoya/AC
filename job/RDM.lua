@@ -2,8 +2,8 @@
 
 local task = require 'task'
 local role_Healer = require 'role/Healer'
-local role_Sorcerer = require 'role/Sorcerer'
 local role_Melee = require 'role/Melee'
+local role_Sorcerer = require 'role/Sorcerer'
 
 local io_chat = require 'io/chat'
 
@@ -29,7 +29,7 @@ M.mainJobProbTable = {
     { 5, 600, 'input /ma アクアベール <me>', 5},
     { 5, 300, 'input /ma ブリンク <me>', 5},
     { 5, 300, 'input /ma ストンスキン <me>', 5},
-    { 600/2, 1000, 'input /ja コンバート <me>', 1 },
+    { 10, 600/2, 'input /ja コンバート <me>', 1 },
 }
 
 M.subJobProbTable = {
@@ -37,43 +37,54 @@ M.subJobProbTable = {
     -- { 5, 600-60, 'input /ma アクアベール <me>', 5},
     { 100, 300, 'input /ma ブリンク <me>', 5},
     { 100, 300, 'input /ma ストンスキン <me>', 5},
-    { 500, 300-10, 'input /ma リフレシュ <me>', 5},
-    { 500, 300-10, 'input /ma リフレシュ <p2>', 5},
+    { 100, 300-10, 'input /ma リフレシュ <me>', 5},
+    { 100, 300-10, 'input /ma リフレシュ <p2>', 5},
     -- { 500, 120, 'input /ma ディアII <t>', 4, true },
     -- { 500, 120, 'input /ma ディストラ <t>', 5, true },
     -- { 500, 120, 'input /ma フラズル <t>', 5, true },
-    { 600/3, 1000, 'input /ja コンバート <me>', 1 },
-    { 500, 120-10, 'input /ma ヘイスト <p1>', 4 },
-    { 500, 120-10, 'input /ma ヘイスト <p2>', 4 },
+    { 100, 600/3, 'input /ja コンバート <me>', 1 },
+    { 100, 120-10, 'input /ma ヘイスト <p1>', 4 },
+    { 100, 120-10, 'input /ma ヘイスト <p2>', 4 },
     -- { 100, 120-30, 'input /ma ヘイスト <p3>', 4 },
 }
 
-function invoke_magick_debuff(player, magic, need_mp)
+function invoke_magick_debuff(player, magic, onoff, need_mp)
     if player.vitals.mp < need_mp then
 	return
     end
+    local level = task.PRIORITY_LOW
     local c = 'input /ma '..magic..' <t>'
     -- command, delay, duration, period, eachfight
     local t = task.newTask(c, 2, 4, 90, true)
-    task.setTask(task.PRIORITY_LOW, t)
+    if onoff then
+	task.setTask(level, t)
+    else
+	task.removeTask(level, t)
+    end
 end
 
 function M.main_tick(player)
-    if role_Healer.main_tick ~= nil then
-	role_Healer.main_tick(player)
+    if role_Melee.main_tick ~= nil then
+	role_Melee.main_tick(player)
     end
     if role_Sorcerer.main_tick ~= nil then
 	role_Sorcerer.main_tick(player)
     end
-    if role_Melee.main_tick ~= nil then
-	role_Melee.main_tick(player)
+    if role_Healer.main_tick ~= nil then
+	role_Healer.main_tick(player)
     end
     if player.status == 1 then -- 戦闘中
-	invoke_magick_debuff(player, 'ディアIII', 45)
-	-- invoke_magick_debuff(player, 'ディストラII', 58)
-	-- invoke_magick_debuff(player, 'フラズルII', 64)
-	invoke_magick_debuff(player, 'ディストラIII', 84)
-	invoke_magick_debuff(player, 'フラズルIII', 90)
+	invoke_magick_debuff(player, 'ディアIII', true, 45)
+	-- invoke_magick_debuff(player, 'ディストラII', true, 58)
+	-- invoke_magick_debuff(player, 'フラズルII', true, 64)
+	invoke_magick_debuff(player, 'ディストラIII', true, 84)
+	invoke_magick_debuff(player, 'フラズルIII', true, 90)
+    else
+	invoke_magick_debuff(player, 'ディアIII', false, 45)
+	-- invoke_magick_debuff(player, 'ディストラII', false, 58)
+	-- invoke_magick_debuff(player, 'フラズルII', false, 64)
+	invoke_magick_debuff(player, 'ディストラIII', false, 84)
+	invoke_magick_debuff(player, 'フラズルIII', false, 90)
     end
 end
 
@@ -82,9 +93,13 @@ function M.sub_tick(player)
 	role_Healer.sub_tick(player)
     end
     if player.status == 1 then -- 戦闘中
-	invoke_magick_debuff(player, 'ディアII', 30)
-	invoke_magick_debuff(player, 'ディストラ', 32)
-	invoke_magick_debuff(player, 'フラズル', 38)
+	invoke_magick_debuff(player, 'ディアII', true, 30)
+	invoke_magick_debuff(player, 'ディストラ', true, 32)
+	invoke_magick_debuff(player, 'フラズル', true, 38)
+    else
+	invoke_magick_debuff(player, 'ディアII', false, 30)
+	invoke_magick_debuff(player, 'ディストラ', false, 32)
+	invoke_magick_debuff(player, 'フラズル', false, 38)
     end
 end
 
