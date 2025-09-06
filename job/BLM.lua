@@ -6,24 +6,6 @@ local task = require 'task'
 local role_Sorcerer = require 'role/Sorcerer'
 
 M.mainJobProbTable = {
-    -- { 200, 10, 'input /ma ブリザド <t>', 2 },
-    -- { 500, 10, 'input /ma ブリザドII <t>', 2 },
-    -- { 200, 5, 'input /ma ブリザドIII <t>', 3 },
-    -- { 200, 10, 'input /ma ブリザドIV <t>', 4 },
-    --{ 100, 10, 'input /ma ブリザドV <t>', 5 },
-    --{ 100,10, 'input /ma ファイア <t>', 2 },
-    --{ 200,10, 'input /ma ファイアII <t>', 2 },
-    -- { 300, 10, 'input /ma ファイアIII <t>', 3 },
-    --{ 200, 10, 'input /ma ファイアIV <t>', 4 },
-    --{ 300, 10, 'input /ma ファイアV <t>', 5 },
-    --{ 100,10, 'input /ma サンダー <t>', 2 },
-    --{ 200, 5, 'input /ma サンダーII <t>', 2 },
-    --{ 300, 5, 'input /ma サンダーIII <t>', 3 },
-    --{ 200, 10, 'input /ma サンダーIV <t>', 4 },
-    --{ 100, 10, 'input /ma サンダーV <t>', 5 },
-    --{ 100, 10, 'input /ma サンダーVI <t>', 5 },
-    --{ 500, 90, 'input /ma バーン <t>', 5, true },
-    --{ 500, 90, 'input /ma チョーク <t>', 5, true },
     -- スキル上げ
     -- { 500, 10, 'input /ma ストーン <t>', 2 },
     -- { 200, 10, 'input /ma ファイア <t>', 2 },
@@ -38,19 +20,21 @@ M.mainJobProbTable = {
     -- { 100, 180, 'input /ma ショックスパイク <me>', 5 },
 }
 
-M.subJobProbTable = {
-    -- { 100, 30, 'input /ma サンダーII <t>', 2},
-    -- { 200, 30, 'input /ma フロスト <t>', 3, true},
-}
+M.subJobProbTable = { }
 
-function invoke_magick_debuff(player, magic, need_mp)
+function invoke_magick_debuff(player, magic, onoff, need_mp)
     if player.vitals.mp < need_mp then
 	return
     end
+    local level = task.PRIORITY_LOW
     local c = 'input /ma '..magic..' <t>'
     -- command, delay, duration, period, eachfight
     local t = task.newTask(c, 2, 4, 90, true)
-    task.setTask(task.PRIORITY_LOW, t)
+    if onoff then
+	task.setTask(level, t)
+    else
+	task.removeTask(level, t)
+    end
 end
 
 function M.main_tick(player)
@@ -58,8 +42,11 @@ function M.main_tick(player)
 	role_Sorcerer.main_tick(player)
     end
     if player.status == 1 then -- 戦闘中
-	invoke_magick_debuff(player, 'バーン', 25)
-	invoke_magick_debuff(player, 'チョーク', 25)
+	invoke_magick_debuff(player, 'バーン', true, 25)
+	invoke_magick_debuff(player, 'チョーク', true, 25)
+    else
+	invoke_magick_debuff(player, 'バーン', false, 25)
+	invoke_magick_debuff(player, 'チョーク', false, 25)
     end
 end
 
