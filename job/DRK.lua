@@ -3,6 +3,7 @@
 local M = {}
 
 local role_Melee = require 'role/Melee'
+local role_Sorcerer = require 'role/Sorcerer'
 
 M.mainJobProbTable = {
     { 100, 180-30, 'input /ma エンダークII <me>', 3 },
@@ -28,6 +29,9 @@ M.subJobProbTable = {
 function M.main_tick(player)
     if role_Melee.main_tick ~= nil then
 	role_Melee.main_tick(player)
+    end
+    if role_Sorcerer.main_tick ~= nil then
+	role_Sorcerer.main_tick(player)
     end
 end
 
