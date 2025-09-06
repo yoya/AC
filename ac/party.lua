@@ -27,6 +27,22 @@ function M.iamLeader()
     return false
 end
 
+function M.isMemberId(id)
+    local party = windower.ffxi.get_party()
+    for _, x in pairs({"p", "a1", "a2"}) do -- アライアンス全員
+        for i = 0, 5 do -- 自分含めて全員
+            local member = party[x..i]
+	    -- 該当メンバーがいる。かつエリア内にいる
+            if member ~= nil and member.mob ~= nil then
+		if  member.mob.id == id then
+                    return true
+                end
+            end
+        end
+    end
+    return false
+end
+
 function M.isMemberIndex(index)
     local party = windower.ffxi.get_party()
     for _, x in pairs({"p", "a1", "a2"}) do -- アライアンス全員
