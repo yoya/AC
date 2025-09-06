@@ -167,7 +167,20 @@ packet_handler[0x076] = function(packet)
     ]]
 end
 
--- Party member update
+-- Alliance status update
+packet_handler[0x0C8] = function(packet)
+    local alliance_table = {}
+    for i =1, 18 do
+	local id = packet["ID "..i]
+	local index = packet["Index "..i]
+	local flags = packet["Flags "..i]
+	local zone = packet["Zone "..i]
+	alliance_table[id] = { id=id, index=index, flags=flags, zone=zone }
+    end
+    acinspect.party_update(alliance_table)
+end
+
+-- Party member update  (0x00D と似てる)
 packet_handler[0x0DD] = function(packet)
     local id = packet["ID"]
     local info = {
