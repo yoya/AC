@@ -33,10 +33,17 @@ function song(song_name, onoff, delay)
     end
 end
 
+function isDefensive()
+    if aczone.isNear(291, "toad_pond", 120) then
+	return true
+    end
+    return false
+end
+
 function song_tick(player)
     local zone = windower.ffxi.get_info().zone
     local onoff = player.status > 0
-    if aczone.isNear(291, "toad_pond", 120) then
+    if isDefensive() then
 	song("重装騎兵のミンネV", onoff, 2)
 	song("闘龍士のマンボ", onoff, 12)
 	-- song("活力のエチュード", onoff, 12*2)
