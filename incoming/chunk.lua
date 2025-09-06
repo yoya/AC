@@ -14,9 +14,25 @@ local ac_stat = require('ac/stat')
 
 local packet_handler = { }
 
-packet_handler[0x028] = function(packet) -- Action Message
+-- PC Update (0x0DD と似てる)
+packet_handler[0x00D] = function(packet)
+    local id = packet["Player"]
+    local info = {
+	index = packet["Index"],
+	name = packet["Character Name"],
+    }
+    ac_party.updatePartyMemberInfo(id, info)
+end
+
+-- Status flags (古くからある)
+packet_handler[0x00E] = function(packet)
+--    io_chat.printf("0x00E Status Flags NPC:%d Index:%d",
+--		   packet["NPC"], packet["Index"])
+end
+
+  -- Action Message
+packet_handler[0x028] = function(packet)
     local cate = packet.Category
-    -- io_chat.print("0x028: " .. cate)
     if cate == 1 then
 	-- auto attack
     elseif cate == 3 then
