@@ -1,6 +1,7 @@
 --- Job 毎の情報
 
 local M = {}
+local task = require 'task'
 
 M.jobTable = {
     -- スタンダードジョブ
@@ -33,6 +34,9 @@ M.jobTable = {
     RUN = require('job/RUN'), -- 魔導剣士
 }
 
+local foodTable = {
+    BLM = 'ペアクレープ',
+}
 
 -- https://wiki.ffo.jp/html/33806.html
 local needCapacityPoints = {
@@ -59,6 +63,16 @@ function M.tick(player)
     end
     if sub_tick ~= nil then
 	sub_tick(player)
+    end
+    if player.status == 1 then
+	local food = foodTable[player.main_job]
+	if food ~= nil then
+	    local c = "input /item "..food.." <me>"
+	    local level = task.PRIORITY_LOW
+	    -- command, delay, duration, period, eachfight
+	    local t = task.newTask(c, 1, 3, 30*60/10, false)
+	    task.setTask(level, t)
+	end
     end
 end
 
