@@ -45,12 +45,34 @@ packet_handler[0x028] = function(packet)
 	if player.id == id then
 	    ac_stat.ws()
 	end
+    elseif cate == 8 then
+	-- io_chat.print("XXX 魔法開始？"..packet.Actor..">"..packet.Param)
     else
 	-- io_chat.print("XXX 0x028 cate:"..cate)
     end
+    -- 連携の検知。battlemod を参考にした。
+    if packet["Target 1 Action 1 Added Effect Message"] ~= nil then
+	local id = packet["Target 1 ID"]
+	local mob = windower.ffxi.get_mob_by_target("t")
+	-- 戦闘中でない恐らく他パーティが戦っている敵への連携
+	if mob == nil or mob.id ~= id then
+	    return
+	end
+	local message = packet["Target 1 Action 1 Added Effect Message"]
+	if  287 < message and message < 303 then
+	    acinspect.sc(message, message - 287)
+	elseif 384 < message and message < 399 then
+	    acinspect.sc(message, message - 384)
+	elseif 766 < message and message < 769 then
+	    acinspect.sc(message, message - 752)
+	elseif 768 < message and message < 771 then
+	    acinspect.sc(message, message - 754)
+	end
+    end
 end
 
-packet_handler[0x029] = function(packet) -- Action Message
+-- Action Message
+packet_handler[0x029] = function(packet)
     -- io_chat.print(packet)
     local mesg = packet.Message
     -- 自分もしくは味方が敵を倒した時の処理
