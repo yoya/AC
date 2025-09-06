@@ -147,6 +147,12 @@ packet_handler[0x063] = function(packet)
     ac_char.update(player.id, char)
 end
 
+-- Pet Info
+packet_handler[0x067] = function(packet)
+    --io_chat.printf("0x067 Pet Info MessageType:%d OwnerIndex:%d",
+    -- packet["Message Type"], packet["Owner Index"])
+end
+
 -- Party status icon update
 packet_handler[0x076] = function(packet)
     --[[ packets/fields.lua を見ると以下の構造っぽいけど駄目
