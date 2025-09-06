@@ -194,6 +194,7 @@ packet_handler[0x0DD] = function(packet)
     }
     ac_party.updatePartyMemberInfo(id, info)
 end
+
 -- Char Update
 packet_handler[0x0DF] = function(packet)
     local id = packet["ID"]
