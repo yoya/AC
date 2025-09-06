@@ -51,9 +51,9 @@ M.getNearestFightableMob = function(pos, dist, preferMobs)
             local dx = m.x - pos.x
             local dy = m.y - pos.y
             local dz = m.z - pos.z
-            d = math.sqrt(dx*dx + dy*dy)
+            d = math.sqrt(dx*dx + dy*dy + dz*dz*5)
             --- 高さが８違うのは無視。
-            if m.x ~= 0 and m.y ~= 0 and m.z ~= 0 and d < dist and math.abs(dz) < 1 then
+            if m.x ~= 0 and m.y ~= 0 and m.z ~= 0 and d < dist then
 --             if m.name == "Water Elemental" then
 --                    io_chat.print(i .. ": name:" .. m.name ..", dist:".. m.distance .. ", status:".. m.status ..", d:".. d)
 --                io_chat.print(m)
