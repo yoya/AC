@@ -132,6 +132,10 @@ function moveTo(route, routeTable)
                 windower.ffxi.run(true)
                 break
             end
+	    if p.w ~= nil then
+		print("wait:"..p.w)
+		coroutine.sleep(p.w)
+	    end
             if p.a == "mount" then
                 command.send('input /mount ラプトル')
                 coroutine.sleep(2.0)
