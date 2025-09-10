@@ -36,7 +36,7 @@ function M.automatic_routes_handler(zone, automatic_routes)
     local level = player.main_job_level
     coroutine.sleep(2)
     local pos = ac_pos.currentPos()
-    coroutine.sleep(3)
+    coroutine.sleep(4)
     if ac_pos.isNear(pos, 1) then
 	for f, t in pairs(automatic_routes) do
 	    local fp = zone_object.essentialPoints[f]
