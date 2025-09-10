@@ -4,6 +4,7 @@ local M = {}
 
 local task = require 'task'
 local role_Sorcerer = require 'role/Sorcerer'
+local ac_party = require 'ac/party'
 
 M.mainJobProbTable = {
     -- スキル上げ
@@ -40,6 +41,22 @@ end
 function M.main_tick(player)
     if role_Sorcerer.main_tick ~= nil then
 	role_Sorcerer.main_tick(player)
+    end
+    if player.status == 1 then -- 戦闘中
+	invoke_magick_debuff(player, 'バーン', true, 25)
+	invoke_magick_debuff(player, 'チョーク', true, 25)
+    else
+	invoke_magick_debuff(player, 'バーン', false, 25)
+	invoke_magick_debuff(player, 'チョーク', false, 25)
+    end
+end
+
+function M.sub_tick(player)
+    if role_Sorcerer.main_tick ~= nil then
+	role_Sorcerer.main_tick(player)
+    end
+    if ac_party.count_member( { main_job="BLM" } ) >= 1 then
+	return  -- 本職に任せる
     end
     if player.status == 1 then -- 戦闘中
 	invoke_magick_debuff(player, 'バーン', true, 25)
