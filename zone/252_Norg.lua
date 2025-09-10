@@ -9,10 +9,22 @@ M.routes = {
 	-- {x=73.3,y=-9.8}, {x=99,y=-12.5},
 	-- {a="f8touch"}
     },
-    oseem = { {x=-25.9,y=-46.2}, {x=-5.8,y=-20.1},
+    oseem = { {x=-25.9,y=-46.2}, {x=-5.8,y=-20.1}, {x=1,y=-4},
 	{x=13.2,y=22.4}
     },
+    foot_of_stairs = {
+	{x=-25.9,y=-46.2}, {x=0,y=-11},
+    }
 }
+
+M.essentialPoints = {
+    hp_1 = {x=-25.9,y=-46.2},
+}
+
+M.automatic_routes = {
+    hp_1 = { route="foot_of_stairs" },
+}
+
 
 return M
 
