@@ -47,6 +47,14 @@ for i=6041,6061 do table.insert(M.magicScrolls, i) end
 -- 風水(インデリジェネ〜ジオヘイスト)
 for i=6073,6132 do table.insert(M.magicScrolls, i) end
 
+M.soulStoneSacks = {
+    6486,  -- 古い袋【白魂石】
+    6487,  -- 古い袋【緑魂石】
+    6488,  -- 古い袋【黒魂石】
+} -- 石の袋
+
+M.soulStoneSacksT = utils.table.convertArrayToTrueTable(M.soulStoneSacks)
+
 M.JunkItems = {
     90, -- 錆びたバケツ
     505, -- 大羊の毛皮
