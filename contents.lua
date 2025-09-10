@@ -5,9 +5,10 @@ M.Idle = 0
 M.Leveling = 1
 M.Ambus = 2
 M.Works = 3
-M.Mission = 4
-M.AbysYellow = 5
-M.MogGarden = 6
+M.Trove = 4
+M.Mission = 5
+M.AbysYellow = 6
+M.MogGarden = 7
 -- M.allContents = {M.Leveling, M.Ambus, M.Works, M.Mission, M.MogGarden}
 
 M.contentsTable = {
