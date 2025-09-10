@@ -16,12 +16,14 @@ local packet_handler = { }
 
 -- PC Update (0x0DD と似てる)
 packet_handler[0x00D] = function(packet)
+--[[  他パーティの情報も含むので、updateParty しちゃ駄目
     local id = packet["Player"]
     local info = {
 	index = packet["Index"],
 	name = packet["Character Name"],
     }
     ac_party.updatePartyMemberInfo(id, info)
+]]
 end
 
 -- Status flags (古くからある)
