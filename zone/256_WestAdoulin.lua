@@ -56,6 +56,15 @@ M.routes = {
 	{x=141.9,y=37.2,z=12}, {x=145.4,y=37.1,z=12},
 	{x=145.1,y=4.8,z=20}, {x=142,y=4.4,z=20}, {}
     },
+    -- Defliaa から
+    def2nuna = {--  Nunaarl(子ミスラ)へ
+	{x=41,y=-117,z=2}, {x=32,y=-121,z=0,d=1},
+	{x=24,y=-121,d=1}, {x=15,y=-112,z=-0.1,d=1}
+    },
+    def2mog = { -- モグハウスへ
+	{x=41,y=-117,z=2}, {x=32,y=-121,z=0,d=1},
+	{x=5,y=-133}, {x=0,y=-137}, {}
+    },
 }
 
 M.essentialPoints = {
@@ -82,11 +91,11 @@ local sell_itemsT = utils.table.convertArrayToTrueTable(sell_items)
 function M.tick(player)
     if acitem.inventoryHasItemT(sell_itemsT) then
 	local mob = windower.ffxi.get_mob_by_name("Defliaa")
-	if mob ~= nil and mob.distance < 240 then
+	if mob ~= nil and mob.distance < 400 then
 	    local me = windower.ffxi.get_mob_by_target("me")
 	    turnToPos(me.x, me.y, mob.x, mob.y)
 	    windower.ffxi.run(true)
-	    if mob ~= nil and mob.distance < 25 then
+	    if mob ~= nil and mob.distance < 50 then
 		windower.ffxi.run(false)
 		io_net.targetByMobId(mob.id)
 	    end
