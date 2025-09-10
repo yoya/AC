@@ -99,6 +99,16 @@ function M.updatePartyMemberInfo(id, info)
     object_assign(M.member_table[id], info)
 end
 
+function M.count_member(cond)
+    local count = 0
+    for id, info in pairs(M.member_table) do
+	if info.main_job == cond.main_job then
+	    count = count + 1
+	end
+    end
+    return count
+end
+
 function M.showPartyMembers()
     io_chat.setNextColor(5)
     io_chat.print("=== showPartyMembers")
