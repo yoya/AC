@@ -39,8 +39,8 @@ function M.ws()
     local now = os.time()
     local datetime = os.date("%X", now)
     M.ws_time = now
-    io_chat.setNextColor(6)
-    io_chat.printf("-%s- WeaponSkill", datetime)
+    -- io_chat.setNextColor(6)
+    -- io_chat.printf("-%s- WeaponSkill", datetime)
 end
 
 function M.sc(message, attr)
@@ -68,7 +68,7 @@ M.alliance_table = {}
 function is_alliance_joined(alliance_table)
     for id, member in pairs(alliance_table) do
 	if M.alliance_table[id] == nil then
-	    print("found", id)
+	    -- print("found", id)
 	    return true  -- メンバーが増えてる
 	end
     end
