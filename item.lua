@@ -174,12 +174,38 @@ M.safesHasItem = function(id)
     return false
 end
 
+M.safesHasItemsT = function(idsT)
+    local items = windower.ffxi.get_items()
+    for bname, bagid in pairs(SafesList) do
+        local bag = items[bname]
+        for i, item in ipairs(bag) do
+            if idsT[item.id] == true then
+                return true
+            end
+        end
+    end
+    return false
+end
+
 M.bagsHasItem = function(id)
     local items = windower.ffxi.get_items()
     for bname, bagid in pairs(BagsList) do
         local bag = items[bname]
         for i, item in ipairs(bag) do
             if item.id == id then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+M.bagsHasItemsT = function(idsT)
+    local items = windower.ffxi.get_items()
+    for bname, bagid in pairs(BagsList) do
+        local bag = items[bname]
+        for i, item in ipairs(bag) do
+            if isdT[item.id] == true then
                 return true
             end
         end
