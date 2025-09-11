@@ -118,6 +118,7 @@ local getMobPosition = acmob.getMobPosition
 local acjob = require 'job'
 local role_Sorcerer = require('role/Sorcerer')
 local ac_defeated = require 'ac/defeated'
+local ac_equip = require 'ac/equip'
 
 local JunkItems = item_data.JunkItems
 
@@ -719,7 +720,9 @@ end
 
 local tick_new = function()
     -- print("tick_new")
+    local player = windower.ffxi.get_player()
     zone_change.warp_handler_tick()
+    ac_equip.tick(player)
 end
 
 local tickRunning = false
@@ -939,6 +942,14 @@ windower.register_event('addon command', function(command, command2)
             pushKeys({"down", "enter"})
             coroutine.sleep(3)
         end
+    elseif command == 'equip' then
+	if command2 == 'save' then
+	    ac_equip.equip_save()
+	elseif command2 == 'restore' then
+	    ac_equip.equip_restore()
+	else
+	    print("ac equip (save|restore)")
+	end
     elseif command == 'inject' then
 	if command2 == 'currinfo1' then
 	    local p = packets.new('outgoing', 0x10F, {}) -- Curr Info
