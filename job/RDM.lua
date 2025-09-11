@@ -4,6 +4,7 @@ local task = require 'task'
 local role_Healer = require 'role/Healer'
 local role_Melee = require 'role/Melee'
 local role_Sorcerer = require 'role/Sorcerer'
+local ac_party = require 'ac/party'
 
 local io_chat = require 'io/chat'
 
@@ -91,6 +92,9 @@ end
 function M.sub_tick(player)
     if role_Healer.sub_tick ~= nil then
 	role_Healer.sub_tick(player)
+    end
+    if ac_party.count_member( { main_job="RDM" } ) >= 1 then
+	return  -- 本職に任せる
     end
     if player.status == 1 then -- 戦闘中
 	invoke_magick_debuff(player, 'ディアII', true, 30)
