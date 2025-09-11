@@ -120,16 +120,17 @@ function M.removeTask(level, task)
     return i
 end
 
+local PRIORITY_SIMPLE = M.PRIORITY_MIDDLE
 -- ある程度決め打ちの設定でタスク生成
 function M.setTaskSimple(c, delay, duration)
-    local level = M.PRIORITY_MIDDLE
+    local level = PRIORITY_SIMPLE
     -- command, delay, duration, period, eachfight
     local t = M.newTask(c, delay, duration, 10, false)
     M.setTask(level, t)
 end
 
 function M.removeTaskSimple(c)
-    local level = M.PRIORITY_HIGH
+    local level = PRIORITY_SIMPLE
     -- command, delay, duration, period, eachfight
     local t = M.newTask(c, 0, 0, 0, false)
     M.removeTask(level, t)
