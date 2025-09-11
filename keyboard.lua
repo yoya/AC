@@ -15,5 +15,14 @@ function M.pushKeys(keys)
     coroutine.sleep(wait)
 end
 
+
+function M.longpushKey(key, wait)
+    assert(type(key) == "string")
+    assert(type(wait) == "number")
+    command = "setkey "..key.." down; wait "..wait.."; setkey "..key.." up"
+    windower.send_command(command)
+    coroutine.sleep(wait)
+end
+
 return M
 
