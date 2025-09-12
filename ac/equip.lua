@@ -31,7 +31,7 @@ function M.equip_save()
     end
 end
 
--- 記録してある装束を装着し直す
+-- 記録してある装束を装着する
 function M.equip_restore()
     for name, e in pairs(equip_set) do
 	windower.ffxi.set_equip(e.inv_id, e.slot, e.bag)
@@ -39,6 +39,7 @@ function M.equip_restore()
 end
 
 function M.tick(player)
+    if player == nil then return end
     if player.status == 1 then
 	-- 118 は 妖蟲の髪飾り+1 用に許容する
 	if player.item_level >= 118 then
