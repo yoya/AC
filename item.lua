@@ -86,6 +86,27 @@ local safesToInventory = function(id)
 end
 M.safesToInventory = safesToInventory
 
+function M.safesToInventoryT(idsT)
+    -- print("safesToInventoryT")
+    local count = 0
+    for bname, bagid in pairs(SafesList) do
+        local items = windower.ffxi.get_items()
+        local inventory = items.inventory
+        if inventory.count < inventory.max then
+            local bag = items[bname]
+            for i, item in ipairs(bag) do
+                if idsT[item.id] == true then
+		    if M.checkInventoryFreespace() then
+			windower.ffxi.get_item(bagid, item.slot, item.count)
+			count = count + 1
+		    end
+                end
+            end
+	end
+    end
+    return count
+end
+
 --- 持ち歩きバッグの空き
 local checkBagsFreespace = function()
     local items = windower.ffxi.get_items()
@@ -120,6 +141,27 @@ local bagsToInventory = function(id)
     return result
 end
 M.bagsToInventory = bagsToInventory
+
+function M.bagsToInventoryT(idsT)
+    -- print("bagsToInventoryT")
+    local count = 0
+    for bname, bagid in pairs(BagsList) do
+        local items = windower.ffxi.get_items()
+        local inventory = items.inventory
+        if inventory.count < inventory.max then
+            local bag = items[bname]
+            for i, item in ipairs(bag) do
+                if idsT[item.id] == true then
+		    if M.checkInventoryFreespace() then
+			windower.ffxi.get_item(bagid, item.slot, item.count)
+			count = count + 1
+		    end
+                end
+            end
+        end
+    end
+    return count
+end
 
 M.moveToBags = function(id)
 ---    print("moveToBags")
