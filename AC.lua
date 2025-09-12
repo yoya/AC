@@ -100,7 +100,7 @@ local iamLeader = ac_party.iamLeader
 local io_net = require 'io/net'
 local io_chat = require 'io/chat'
 local ac_stat = require 'ac/stat'
-local asinspect = require 'inspect'
+local acinspect = require 'inspect'
 
 local acitem = require 'item'
 local ws = require 'ws'
@@ -377,16 +377,13 @@ local figtingFunction = function()
     end
     local ws_request = false
     local now = os.time()
-    if  player.vitals.tp >= 1000 and (asinspect.ws_time + 3) < os.time() then
-	if player.vitals.tp >= math.random(tpMin,tpMax) then
-	    ws_request = true
-	elseif (asinspect.ws_time + 3) < now and
-	    now < (asinspect.ws_time + 3 + 6) then
-	    -- 連携受付時間なら WS 即打ち
-	    ws_request = true
-	end
+    -- 連携になるよう 3秒あける。MB を邪魔しないよう 連携から 8秒あける。
+    if  player.vitals.tp >= 1000 and (acinspect.ws_time + 3) < now and
+	(acinspect.sc_time + 8) < now then
+	-- io_chat.print("time", (acinspect.sc_time + 8) , now, (acinspect.sc_time + 8) - now)
+	ws_request = true
     end
-    if player.vitals.tp >= 3000 then
+    if player.vitals.tp >= 3000 and (acinspect.ws_time + 3) < now then
 	ws_request = true
     end
     if ws_request == true then
