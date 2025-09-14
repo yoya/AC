@@ -121,6 +121,7 @@ local ac_defeated = require 'ac/defeated'
 local ac_equip = require 'ac/equip'
 
 local JunkItems = item_data.JunkItems
+local JunkItemsT = item_data.JunkItemsT
 
 local isFar = false
 local fightingMobName = nil
@@ -445,26 +446,39 @@ local idleFunctionTradeItems = function(tname, items, wait, enterWaits)
                 coroutine.sleep(1)
             end
         end
+	io_chat.print("↓ トレード開始 ↓")
         for i, id in pairs(items) do
             if acitem.inventoryHasItem(id) then
                 acitem.tradeByItemId(mob, id)
+		print("trade item:"..id)
                 coroutine.sleep(1)
                 io_net.targetByMobId(mob.id)
                 coroutine.sleep(wait-1)
-                for w in pairs(enterWaits) do
+                for i, w in ipairs(enterWaits) do
                     pushKeys({"enter"})
+		    print("push enter > sleep:"..w)
                     coroutine.sleep(1)
                     io_net.targetByMobId(mob.id)
                     coroutine.sleep(w-1)
                 end
             end
         end
+	io_chat.print("↑ トレード終了 ↑")
     end
     coroutine.sleep(1)
 end
 
 -- ジャンクアイテムをかばんに集める
 local aggregateJunkItemsToInventory = function()
+    local count = 0
+    count = count + acitem.safesToInventoryT(JunkItemsT)
+    count = count + acitem.bagsToInventoryT(JunkItemsT)
+    -- print("aggregateJunkItemsToInventoryT: "..count)
+    return count
+end
+
+-- ジャンクアイテムをかばんに集める (多分、ここが重たい)
+local aggregateJunkItemsToInventory___ = function()
     local count = 0
     for i, id in pairs(JunkItems) do
         if acitem.checkInventoryFreespace() == false then
@@ -505,12 +519,15 @@ end
 -- かばん内のジャンクアイテムを数える
 local countJunkItemsInInventory = function ()
     local count = 0
-        for index = 1, 80 do
-        local item = windower.ffxi.get_items(0, index)
-	-- io_chat.print({"item:", item.status, item.id, res.items[item.id].ja })
-        if item and utils.table.contains(JunkItems, item.id) then
-            count = count + 1
-        end
+    for index = 1, 80 do
+	local item = windower.ffxi.get_items(0, index)
+	if item and item.id ~= 0 then
+	    -- io_chat.print({"item:", item.status, item.id,
+	    -- res.items[item.id].ja })
+	    if JunkItemsT[item.id] == true then
+		count = count + 1
+	    end
+	end
     end
     return count
 end
@@ -523,7 +540,7 @@ local sellJunkItemsInInventory = function()
     for index = 1, 80 do
         local item = windower.ffxi.get_items(0, index)
 	-- io_chat.print({ "item:", item.status, item.id, res.items[item.id].ja })
-        if item and utils.table.contains(JunkItems, item.id) then
+        if item and JunkItemsT[item.id] == true then
             windower.packets.inject_outgoing(0x084,string.char(0x084,0x06,0,0,item.count,0,0,0,
                                         item.id%256,math.floor(item.id/256)%256,index,0))
             windower.packets.inject_outgoing(0x085,string.char(0x085,0x04,0,0,1,0,0,0))
@@ -565,11 +582,12 @@ local idleFunctionSellJunkItems = function()
 end
 
 function dropJunkItemsInInventory()
+    print("dropJunkItemsInInventory")
     local remain_count = total_count
     for index = 1, 80 do
         local item = windower.ffxi.get_items(0, index)
 --        io_chat.print({"item:", windower.to_shift_jis(res.items[item.id].ja), item.id, item.status})
-        if item and utils.table.contains(JunkItems, -item.id) then
+        if item and JunkItemsT[-item.id] == true then
             -- print("drop???:"..item.id.."("..index..") x "..item.count)
             windower.ffxi.drop_item(index, item.count)
             coroutine.sleep(math.random(6,8)/5)
