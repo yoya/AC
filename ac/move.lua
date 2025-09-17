@@ -127,7 +127,7 @@ function moveTo(route, routeTable)
         stop()
         return false
     end
---    print("#route", #route)
+    local prevPos= nil
     for i, p in ipairs(route) do
 	if i <= 1 then
 	     do end
@@ -189,6 +189,19 @@ function moveTo(route, routeTable)
 		x = x + math.random(-d*100,d*100)/100
 		y = y + math.random(-d*100,d*100)/100
 		local dpos = {x=x,y=y,z=p.z}
+		local currPos = currentPos()
+		if prevPos ~= nil then
+		    local vec1 = {x=currPos.x-prevPos.x,y=currPos.y-prevPos.y}
+		    local vec2 = {x=dpos.x-currPos.x,y=dpos.y-currPos.y}
+		    local similality = utils.angle.CosineSimilarity(vec1, vec2)
+		    if similality < 0.5 then
+			windower.ffxi.run(false)
+			local t = (0.5 - similality) * 2
+			-- print("similality:"..similality.." => sleep "..t)
+			coroutine.sleep(t)
+		    end
+		end
+		prevPos = {x=currPos.x, y=currPos.y}
                 while (distance(currentPos(), dpos) > 0.5 and moveToRunning == true) do
                     if distance(currentPos(), dpos) > 6468 and false then
                         print("not near position")
@@ -200,9 +213,7 @@ function moveTo(route, routeTable)
                     windower.ffxi.run(dpos.x - pos.x, dpos.y - pos.y)
                     coroutine.sleep(0.1)
                 end
-                windower.ffxi.run(false)
-                local t = math.random(0,2)/10
-                coroutine.sleep(t)
+		windower.ffxi.run(false)
             end
             if p.t ~= nil then
                 command.send('input /target '..p.t)
