@@ -90,9 +90,13 @@ function moveTo(route, routeTable)
 	print("routeTable == nil")
 	return
     end
+    -- io_chat.print(route)
     for i, p in ipairs(route) do
-        if p.r ~= nil then
-            print("p.r="..(p.r))
+	if p.route == nil and p.r ~= nil then
+	    p.route = p.r
+	end
+        if p.route ~= nil then
+            print("p.r="..(p.route))
 	    -- moveTo(p.r, routeTable)
 	    --[[
             local r = routeTable[p.r]
@@ -106,6 +110,11 @@ function moveTo(route, routeTable)
         local idx = nearest_idx(pos, r1List)
         local name = r1ListName[idx]
         local r = routeTable[name]
+	if r == nil then
+	    io_chat.setNextColor(3)
+	    io_chat.printf("route name:%s is not found", name)
+	    return
+	end
         print(idx, name, r)
         moveTo(r, routeTable)
     end
@@ -125,8 +134,9 @@ function moveTo(route, routeTable)
 	elseif i < start_idx then
             print("skip route idx:", i)
         else
-	    if p.r ~= nil then
-		moveTo(p.r, routeTable)
+	    if p.route ~= nil then
+		local r = routeTable[p.route]
+		moveTo(r, routeTable)
 	    end
 	    if p.x == nil and p.a == nil then
                 windower.ffxi.run(true)
@@ -251,6 +261,11 @@ function autoMoveTo(zone_id, dest, routeTable, reverse)
         end
     else
         route = routeTable[dest]
+	if route == nil then
+	    io_chat.setNextColor(3)
+	    io_chat.printf("route dest:%s is not found", dest)
+	    return
+	end
         if reverse == true then
             route = array_reverse(route)
         end
