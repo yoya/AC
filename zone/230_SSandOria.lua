@@ -3,6 +3,10 @@
 local M = { id = 230 }
 
 M.routes = {
+    -- HP#1(E)
+    vw = { -- void watch
+	{x=-84.5,y=-65.5,z=1}, {x=-101.1,y=-18.5,z=2}
+    },
     -- HP#2(A)
     sgate = {  -- 南門
 	{x=45,y=-34,z=2}, {x=45,y=-29}, {x=53,y=-25},
@@ -20,10 +24,12 @@ M.routes = {
 }
 
 M.essentialPoints = {
+    hp1_e = {x=-84.5,y=-65.5,z=1},
     hp2_a = {x=45,y=-34,z=2},
 }
 
 M.automatic_routes = {
+    hp1_e = { route="vw"},
     hp2_a = { route="sgate"},
 }
 
