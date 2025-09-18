@@ -2,6 +2,9 @@
 
 local M = {}
 
+local command = require 'command'
+local io_chat = require 'io/chat'
+
 M.mainJobProbTable = {
     { 200, 45, 'input /ma フラッシュ <t>', 1 },
     -- { 100, 60, 'input /ma ホーリーII <t>', 2 },
@@ -21,5 +24,16 @@ M.subJobProbTable = {
     { 100, 300, 'input /ja センチネル <me>', 0 },
     { 100, 180, 'input /ja かばう <p1>', 0 },
 }
+
+function M.main_tick(player)
+    if player.status == 1 then -- 戦闘中
+	local hp = player.vitals.hp
+	if hp < 300 then
+	    io_chat.setNextColor(3)
+	    io_chat.printf("HP: %d < 300 => インビンシブル", hp)
+	    command.send("input /ja インビンシブル <me>")
+	end
+    end
+end
 
 return M
