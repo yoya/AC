@@ -276,9 +276,9 @@ M.tradeByItemId = function(mob, id)
         ind[#ind+1] = 0
         cnt[#cnt+1] = 0
     end 
-    for i, index in ipairs(ind) do
-        local item = inventory[index]
-    end
+--    for i, index in ipairs(ind) do
+--        local item = inventory[index]
+--    end
     if #ind > 0 then
         local menu_item = 'C4I11C10HI':pack(0x36,0x20,0x00,0x00,mob.id,
                cnt[1],cnt[2],cnt[3],cnt[4],cnt[5],cnt[6],cnt[7],cnt[8],0,0x00,
