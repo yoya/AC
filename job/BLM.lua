@@ -52,8 +52,8 @@ function M.main_tick(player)
 end
 
 function M.sub_tick(player)
-    if role_Sorcerer.main_tick ~= nil then
-	role_Sorcerer.main_tick(player)
+    if role_Sorcerer.sub_tick ~= nil then
+	role_Sorcerer.sub_tick(player)
     end
     if ac_party.count_member( { main_job="BLM" } ) >= 1 then
 	return  -- 本職に任せる
