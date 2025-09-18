@@ -32,6 +32,7 @@ end
 M.require_child_module(M, 'utils', 'string')
 M.require_child_module(M, 'utils', 'table')
 M.require_child_module(M, 'utils', 'angle')
+M.require_child_module(M, 'utils', 'vector')
 
 M.distance = function(target)
     local mob = windower.ffxi.get_mob_by_target(target)

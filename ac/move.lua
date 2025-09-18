@@ -193,7 +193,7 @@ function moveTo(route, routeTable)
 		if prevPos ~= nil then
 		    local vec1 = {x=currPos.x-prevPos.x,y=currPos.y-prevPos.y}
 		    local vec2 = {x=dpos.x-currPos.x,y=dpos.y-currPos.y}
-		    local similality = utils.angle.CosineSimilarity(vec1, vec2)
+		    local similality = utils.vector.CosineSimilarity(vec1, vec2)
 		    if similality < 0.5 then
 			windower.ffxi.run(false)
 			local t = (0.5 - similality) * 2
