@@ -13,6 +13,10 @@ M.member_table = { }
 
 function M.iamLeader()
     local player = windower.ffxi.get_player()
+    if player == nil then
+	print("ac/party.iamLeader player == nul")
+	return nil
+    end
     local party = windower.ffxi.get_party()
     local party1_leader = party.party1_leader
     -- print("ac_party.iamLeader", party.party1_leader, player.id)
@@ -74,6 +78,16 @@ function M.hasJobMemberInParty(jobName)
     end
     return false
 end
+
+function M.hasTankJobMemberInParty()
+    if M.count_member( { main_job="PLD" } ) +
+	M.count_member( { main_job="RUN" } ) +
+	M.count_member( { main_job="WAR" } ) >= 1 then
+	return true
+    end
+    return false
+end
+
 
 function createMemberInfo()
     return { buffs = {} }
