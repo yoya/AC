@@ -6,6 +6,7 @@ require('functions')
 local res = require 'resources'
 local socket = require 'socket'
 local config = require 'config'
+local control = require 'control'
 local packets = require 'packets'
 local command = require 'command'
 local task = require 'task'
@@ -19,7 +20,7 @@ local defaults = {
     CampRange = 18.0,
     PullMethod = pull.MELEE,
     Attack = true,
-    Calm = false,
+    Calm = true,
 }
 
 local settings = config.load(defaults)
@@ -109,6 +110,7 @@ local sendCommandProb = aprob.sendCommandProb
 local getSendCommandProbTable = aprob.getSendCommandProbTable
 local aczone = require 'zone'
 local zone_change = require 'zone/change'
+local outgoing_chunk = require 'outgoing/chunk'
 local incoming_chunk = require 'incoming/chunk'
 local incoming_text = require 'incoming/text'
 
@@ -140,7 +142,7 @@ local leaderFunction = function()
 ---    print("nearest prefered mob", mob)
     if mob == nil then
         --- メンバーが戦っている敵がいれば、そちら優先
---        mob = ac_mob.PartyTargetMob()
+        -- mob = ac_mob.PartyTargetMob()
     end
     if mob == nil then
         --- 優先度の高い敵がいない場合は、誰でも良い
@@ -198,6 +200,17 @@ local notLeaderFunction = function()
     getMobPosition(me_pos, "me")
     --- p1 がリーダーだと仮定。(リーダーというよりフォローする対象が p1)
     local target_leader = "p1"
+    local p1 = windower.ffxi.get_mob_by_target("p1")
+    if p1 == nil then
+	return  -- リーダーがいない
+    end
+    -- リーダーがマウントしてたら、自分もマウント
+    if p1.status == 85 and player.status ~= 85 then
+	command.send('input /mount ラプトル')
+    end
+    if p1.status ~= 85 and player.status == 85 then
+	command.send('input /dismount')
+    end
     getMobPosition(leader_pos, target_leader)
     if leader_pos.x == nil then
         return 
@@ -205,7 +218,7 @@ local notLeaderFunction = function()
     local dx = leader_pos.x - me_pos.x
     local dy = leader_pos.y - me_pos.y
     local dist =  math.sqrt(dx*dx + dy*dy)
-    --- リーダーと離れたのを確率的に気づくように
+        --- リーダーと離れたのを確率的に気づくように
     if math.random(1, 3) <= 1 and dist > math.random(3, 5) then
         isFar = true
     elseif dist > math.random(6, 7) then -- 離れすぎたらすぐ気付く
@@ -319,19 +332,25 @@ local figtingFunction = function()
     local dx = enemy_pos.x - me_pos.x
     local dy = enemy_pos.y - me_pos.y
     local dist =  math.sqrt(dx*dx + dy*dy)
-
-    --- リーダー以外は離れてると気付くのを遅らせる
-    if iamLeader() or math.random(1, 2*settings.Period) <= 1 then
-        if dist > math.random(2, 5) then
-            isFar = true
-        end
+    local enemy_space = 1
+    if control.enemy_space == control.ENEMY_SPACE_NEAR then
+	enemy_space = 2
+    elseif control.enemy_space ==  control.ENEMY_SPACE_MAGIC then
+	enemy_space = 4
+    elseif control.enemy_space ==  control.ENEMY_SPACE_MANUAL then
+	enemy_space = 99999
+    end
+    if iamLeader() then
+	if dist > enemy_space then
+	    isFar = true
+	end
     end
     if isFar then
         --　戦闘中でないときは、WSやMAを自粛。フェイスが動かないので。
-        if dist / mob.model_size > math.random(4,7)/2 or player.status == 0 then
+        if dist / mob.model_size > enemy_space or player.status == 0 then
             windower.ffxi.run(dx, dy)
             -- 向きが悪くて戦闘が開始しない問題への対策
-            command.send('setkey numpad5 down; wait 0.05; setkey numpad5 up')
+            -- command.send('setkey numpad5 down; wait 0.05; setkey numpad5 up')
             return
         elseif settings.Calm == false then
 	    sendCommandProb({
@@ -405,12 +424,14 @@ local figtingFunction = function()
         end
     end
     --- たまに左や右にずれる。前や後にも。
-    sendCommandProb({
-        { 10, 10, 'setkey a down; wait 0.1; setkey a up', 0 }, -- left
-        { 10, 10, 'setkey d down; wait 0.1; setkey d up', 0 }, -- right
-        { 20, 10, 'setkey w down; wait 0.1; setkey w up', 0 }, -- forward
-        { 20, 10, 'setkey s down; wait 0.1; setkey s up', 0 }, -- back
-    }, settings.Period, ProbRecastTime)
+    if not settings.Calm then
+	sendCommandProb({
+		{ 10, 10, 'setkey a down; wait 0.1; setkey a up', 0 }, -- left
+		{ 10, 10, 'setkey d down; wait 0.1; setkey d up', 0 }, -- right
+		{ 20, 10, 'setkey w down; wait 0.1; setkey w up', 0 }, -- forward
+		{ 20, 10, 'setkey s down; wait 0.1; setkey s up', 0 }, -- back
+			}, settings.Period, ProbRecastTime)
+    end
     if acitem.checkBagsFreespace() then
         for i, id in pairs(crystal_ids) do
             if acitem.inventoryHasItem(id) then
@@ -653,7 +674,7 @@ local idleFunctionJeunoPort = function()
 end
 
 local idleFunctionSouthSand = function()
-    idleFunctionTradeItems("Gondebaud", cipher_ids, 5, {10,10})
+    idleFunctionTradeItems("Gondebaud", cipher_ids, 4, {15,2})
     -- 盟-マルグレートで失敗するので、以下の調整をしてみたがダメだった
     -- idleFunctionTradeItems("Gondebaud", cipher_ids, 7, {14,14})
 end
@@ -737,6 +758,8 @@ local tick_new = function()
     -- print("tick_new")
     local player = windower.ffxi.get_player()
     zone_change.warp_handler_tick()
+    aczone.tick(player)
+    task.tick()
     ac_equip.tick(player)
 end
 
@@ -754,13 +777,13 @@ local tick = function()
     -- zone_change.warp_handler_tick()
     acjob.tick(player)
     contents.tick(player)
-    task.tick()
     -- ここからは auto のみ。
     if not auto then
         return
     end
     tickRunning = true
-    if player.status == 0 then
+    -- 待機、マウント(85)
+    if player.status == 0 or player.status == 85 then
 	--- 待機中
 	idleFunction()
 	if iamLeader() or puller then
@@ -893,7 +916,7 @@ windower.register_event('addon command', function(command, command2)
 	io_chat.print("mode attack:", settings.Attack, "  calm:", settings.Calm)
     elseif command == 'stop' then
         stop()
-    elseif command == 'attack' then
+    elseif command == 'attack' or command == 'at' then
 	local onoff = argument_means_on(command2)
 	if onoff ~= nil then
 	    settings.Attack = onoff
@@ -941,6 +964,21 @@ windower.register_event('addon command', function(command, command2)
 	io_chat.print("アイテム廃棄開始")
 	dropJunkItemsInInventory()
 	io_chat.print("アイテム廃棄終わり")
+    elseif command == 'echo' then
+	io_chat.setNextColor(6)
+	io_chat.print(command2)
+    elseif command == 'enemyspace' or command == 'es' then
+	if command2 == 'near' then
+	    control.enemy_space = control.ENEMY_SPACE_NEAR
+	elseif command2 == 'manual' then
+	    control.enemy_space = control.ENEMY_SPACE_MANUAL
+	elseif command2 == 'magic' then
+	    control.enemy_space = control.ENEMY_SPACE_MAGIC
+	elseif command2 == 'role' then
+	    control.enemy_space = control.ENEMY_SPACE_ROKE
+	else
+	    print("ac enemyspace (near|manual|magic|role)")
+	end
     elseif command == 'enterloop' then
         auto = true
         local i = 0
@@ -965,6 +1003,8 @@ windower.register_event('addon command', function(command, command2)
 	else
 	    print("ac equip (save|restore)")
 	end
+    elseif command == 'finish' then
+	-- setFinish 
     elseif command == 'inject' then
 	if command2 == 'currinfo1' then
 	    local p = packets.new('outgoing', 0x10F, {}) -- Curr Info
@@ -972,10 +1012,13 @@ windower.register_event('addon command', function(command, command2)
 	elseif command2 == 'currinfo2' then
 	    local p = packets.new('outgoing', 0x115, {}) -- Curr Info 2
 	    packets.inject(p)
+	elseif command2 == 'partylist' then  -- 落ちる
+	    --local p = packets.new('outgoing', 0x078, {}) -- Party list request
+	    --packets.inject(p)
 	else
 	    print("ac inject currinfo1 | currinfo2")
 	end
-    elseif command == 'magic' then
+    elseif command == 'magic' or command == 'magick' then
 	role_Sorcerer.setMagic(command2)
     elseif command == 'move' then
         local zone = windower.ffxi.get_info().zone
@@ -1009,7 +1052,7 @@ windower.register_event('addon command', function(command, command2)
 	    io_chat.setNextColor(3)
             io_chat.print("Usage: ac puller (on|off)")
         end
-    elseif command == 'record' then
+    elseif command == 'record' or command == 'rec' then
 	if command2 == 'char' then
 	    io_chat.setNextColor(6)
 	    io_chat.print("record char")
@@ -1038,6 +1081,13 @@ windower.register_event('addon command', function(command, command2)
     elseif command == 'test' then
         print("test command")
         ac_mob.PartyTargetMob()
+    elseif command == 'tick' then
+	local period = tonumber(command2, 10)
+	if period ~= nil and 0.1 < period and period < 10 then
+	    settings.Period = period
+	else
+	    print("ac tick <period> illegal:"..command2)
+	end
     elseif command == 'use' then
 	if command2 == 'silt' then
 	    useSilt = not useSilt
@@ -1051,8 +1101,22 @@ windower.register_event('addon command', function(command, command2)
 		acitem.useItemIncludeBags(id)
 	    end
 	    io_chat.print("スクロール学習終わり")
+	elseif command2 == 'soulstonesack' then
+	    io_chat.print("石の袋開き開始")
+	    auto = true
+	    while auto and
+		acitem.inventoryHasItemT(item_data.soulStoneSacksT) do
+		for i,id in ipairs(item_data.soulStoneSacks) do
+		    if not acitem.checkBagsFreespace() then
+			io_chat.print("アイテム満杯")
+			break
+		    end
+		    acitem.useItemIncludeBags(id)
+		end
+	    end
+	    io_chat.print("石の袋開き終わり")
 	else
-	    io_chat.print("ac use { silt | beads | scroll }")
+	    io_chat.print("ac use { silt | beads | scroll | soulstonesack}")
 	end
     elseif command == 'ws' then
         changeWS(command2)
@@ -1065,7 +1129,10 @@ windower.register_event('addon command', function(command, command2)
 	io_chat.print('    debug ...          - Debug information')
 	io_chat.print('    defeated           - Defeated Process')
 	io_chat.print('    dropjunk           - Drop JunkItem')
+	io_chat.print('    echo               - Echo Arbitrary Text to Chat')
 	io_chat.print('    enterloop          - Enter press loop')
+	io_chat.print('    finish             - Finish method for fight')
+	io_chat.print('    inject             - Inject Packet')
 	io_chat.print('    magic fire|ice|... - Set MB Magic attribute')
         io_chat.print('    move <route>       - Auto move')
 	io_chat.print('    moverev <route>    - Auto move reverse')
@@ -1073,6 +1140,7 @@ windower.register_event('addon command', function(command, command2)
         io_chat.print('    puller on|off      - Change puller mode')
 	io_chat.print('    record char|spells - Reord Status to LogFile')
         io_chat.print('    show mob|...       - Show something')
+	io_chat.print('    tick <period>      - Change tick period')
         io_chat.print('    use silt|...       - Use Item')
         io_chat.print('    ws any|...         - Change weapon skill')
         io_chat.print('    help               - Displays this help text')
@@ -1090,11 +1158,42 @@ windower.register_event('load', function()
     ws.init()
     local zone = windower.ffxi.get_info().zone
     zone_change.zone_in_handler(zone, nil)
+    task.setTaskSimple("ac inject currinfo1", 5, 1)
+    task.setTaskSimple("ac inject currinfo2", 6, 1)
+    local incoming_text_handler = function(text)
+	if not auto then
+	    return
+	end
+	if string.contains(text, "コマンドが実行できない") and
+	    control.enemy_space == control.ENEMY_SPACE_NEAR then
+	    if string.contains(text, "近づかないとコマンドが") or
+		string.contains(text, "遠くにいるため、コマンドが")then
+		--io_chat.setNextColor(6)
+		--io_chat.print("前に詰める")
+		keyboard.longpushKey("w", 0.5)  -- 前に詰める
+	    elseif string.contains(text, "姿が見えないためコマンドが") then
+		--io_chat.setNextColor(6)
+		--io_chat.print("左後ろに回る")
+		pushKeys({"numpad*"})  -- ターゲットを一瞬外して
+		pushKeys({"a", "s"})  -- 左後ろ
+		pushKeys({"numpad*"})  -- ターゲットを戻す
+	    end
+	elseif string.contains(text, "の詠唱は中断された") then
+	    -- io_chat.setNextColor(3)
+	    -- io_chat.print("詠唱の中断を検知")
+	elseif string.contains(text, "魔法を唱えることができない") then
+	    -- io_chat.setNextColor(3)
+	    -- io_chat.print("魔法唱える失敗を検知")
+	end
+    end
+    incoming_text.addListener("", incoming_text_handler)
 end)
 
 windower.register_event('login', function()
-    ws.init()
+    -- ws.init()  -- このタイミングだと前のキャラのジョブが反映される
     ac_stat.init()
+    -- task.setTaskSimple("ac inject currinfo1", 5, 1)
+    -- task.setTaskSimple("ac inject currinfo2", 6, 1)
 end)
 
 windower.register_event('logout', function()
@@ -1119,11 +1218,18 @@ windower.register_event('zone change', function(zone, prevZone)
     useBeads = false
     doPointCheer = false
     zone_change.zone_change_handler(zone, prevZone)
+    ws.init()
+    task.setTaskSimple("ac inject currinfo1", 5, 1)
+    task.setTaskSimple("ac inject currinfo2", 6, 1)
  end)
 
 
 windower.register_event('incoming chunk', function(id, data, modified, injected, blocked)
     incoming_chunk.incoming_handler(id, data, modified, injected, blocked)
+end)
+
+windower.register_event('outgoing chunk', function(id, data, modified, injected, blocked)
+    outgoing_chunk.outgoing_handler(id, data, modified, injected, blocked)
 end)
 
 windower.register_event('incoming text', function(data, modified, original_mode, modified_mode, blocked)
