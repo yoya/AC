@@ -34,7 +34,7 @@ function M.automatic_routes_handler(zone, automatic_routes)
     end
     local player = windower.ffxi.get_player()
     local level = player.main_job_level
-    coroutine.sleep(2)
+    coroutine.sleep(3)
     local pos = ac_pos.currentPos()
     coroutine.sleep(4)
     if ac_pos.isNear(pos, 1) then
