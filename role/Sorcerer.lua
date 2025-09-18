@@ -112,6 +112,15 @@ function M.main_tick(player)
     M.magicBurst(player, magickRank)
 end
 
+function M.sub_tick(player)
+    local magickRank = 2
+    local sub_job = player.sub_job
+    if sub_job == "BLM" then
+	magickRank = 2
+    end
+    M.magicBurst(player, magickRank)
+end
+
 local magicTable = {
     fire = "ファイア",
     ice = "ブリザド",
