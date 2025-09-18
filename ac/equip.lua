@@ -27,7 +27,9 @@ function M.equip_save()
     for name, slot  in pairs(equip_slots) do
 	local id = items.equipment[name]  -- bag 内 id
 	local bag = items.equipment[name.."_bag"]  -- どの bag か
-	equip_set[name] = { inv_id=id, slot=slot, bag=bag }
+	if id > 0 then  -- 装備している場合
+	    equip_set[name] = { inv_id=id, slot=slot, bag=bag }
+	end
     end
 end
 
@@ -47,6 +49,8 @@ function M.tick(player)
 	else
 	    M.equip_restore()
 	end
+    else
+	equip_set = {}
     end
 end
 
