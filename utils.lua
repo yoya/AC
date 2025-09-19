@@ -144,4 +144,8 @@ function M.split(inputstr, sep)
   return t
 end
 
+function M.tonumber(s)
+    return tonumber(string.match(s, "[0-9]+"))
+end
+
 return M
