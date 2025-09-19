@@ -104,9 +104,10 @@ M.zoneTable = {
     [273] = require('zone/273_WohGates'),   -- ウォーの門
     [274] = require('zone/274_OutRaKaz'),   -- ラ・カザナル宮外郭
     [277] = require('zone/277_RaKazTurris'), -- ラ・カザナル宮天守
+    [280] = require('zone/280_MogGarden'),  -- モグガーデン
     [281] = require('zone/281_Leafallia'),  -- リファーリア
-    [287] = require('zone/287_LegionB'),     -- アブダルスの模型-レギオンB
-    [291] = require('zone/291_ReisenHenge'),  -- 醴泉島-秘境
+    [287] = require('zone/287_LegionB'),    -- アブダルスの模型-レギオンB
+    [291] = require('zone/291_ReisenHenge'), -- 醴泉島-秘境
 }
 
 for z, m in pairs(M.zoneTable) do
