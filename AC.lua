@@ -1067,6 +1067,8 @@ windower.register_event('addon command', function(command, command2)
 	    ac_char.print()
 	elseif command2 == 'inventory' then
 	    acitem.showInventory()
+	elseif command2 == 'listener' then
+	    incoming_text.showListener()
 	elseif command2 == 'mob' then
 	    showMob()
 	elseif command2 == 'party' then
