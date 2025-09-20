@@ -1065,6 +1065,11 @@ windower.register_event('addon command', function(command, command2)
     elseif command == 'show' then
 	if command2 == 'char' then
 	    ac_char.print()
+	elseif command2 == 'chatcolor' then
+	    for i, desc in ipairs({"白", "赤紫", "オレンジ", "ピンク","水色", "エメラルド","紫", "明赤紫", "白", "肌色"}) do
+		io_chat.setNextColor(i)
+		io_chat.printf("Color:%d => %s", i, desc)
+	    end
 	elseif command2 == 'inventory' then
 	    acitem.showInventory()
 	elseif command2 == 'listener' then
@@ -1078,7 +1083,7 @@ windower.register_event('addon command', function(command, command2)
 	elseif command2 == 'task' then
 	    task.print()
 	else
-	    io_chat.print("ac show { char | inventory | mob | party | stat | task}")
+	    io_chat.print("ac show { char | chatcolor | inventory | listener | mob | party | stat | task }")
 	end
     elseif command == 'test' then
         print("test command")
