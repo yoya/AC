@@ -399,11 +399,12 @@ local figtingFunction = function()
     local now = os.time()
     -- 連携になるよう 3秒あける。MB を邪魔しないよう 連携から 8秒あける。
     if  player.vitals.tp >= 1000 and (acinspect.ws_time + 3) < now and
-	(acinspect.sc_time + 8) < now then
-	-- io_chat.print("time", (acinspect.sc_time + 8) , now, (acinspect.sc_time + 8) - now)
+	(acinspect.sc_time + 10) < now then
+	-- print("(now - sc_time):"..(now - acinspect.sc_time), "(now - ws_time):"..(now - acinspect.ws_time), acinspect.sc_time)
 	ws_request = true
     end
-    if player.vitals.tp >= 3000 and (acinspect.ws_time + 3) < now then
+    if player.vitals.tp >= 2500 and (acinspect.sc_time + 7) < now then
+	-- print("(now - sc_time):"..(now - acinspect.sc_time), acinspect.sc_time)
 	ws_request = true
     end
     if ws_request == true then
