@@ -5,6 +5,7 @@ local M = {}
 local role_Melee = require 'role/Melee'
 local task = require 'task'
 local ac_party = require 'ac/party'
+local io_chat = require('io/chat')
 
 M.mainJobProbTable = {
     { 100, 300, 'input /ja ウォークライ <me>', 0 },
