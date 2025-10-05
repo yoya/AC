@@ -898,16 +898,18 @@ local showMob = function()
 end
 
 function argument_means_on(s)
-    if utils.table.contains({"on", "yes", "enable", "1"}, s) then
+    if utils.table.contains({"on", "yes", "y", "enable", "1"}, s) then
 	return true
     end
-    if utils.table.contains({"off", "no", "disable", "0"}, s) then
+    if utils.table.contains({"off", "of", "no", "n", "disable", "0"}, s) then
 	return false
     end
     return nil
 end
 
-windower.register_event('addon command', function(command, command2)
+windower.register_event('addon command', function(...)
+    local command = select(1, ...)
+    local command2 = select(2, ...)
     command = command and command:lower() or 'help'
     -- start/stop, (諸々ABC順), help の並び
     if command == 'start' then
@@ -917,7 +919,7 @@ windower.register_event('addon command', function(command, command2)
 	io_chat.print("mode attack:", settings.Attack, "  calm:", settings.Calm)
     elseif command == 'stop' then
         stop()
-    elseif command == 'attack' or command == 'at' then
+    elseif command == 'attack' or command == 'att' or command == 'at' then
 	local onoff = argument_means_on(command2)
 	if onoff ~= nil then
 	    settings.Attack = onoff
