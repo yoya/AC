@@ -40,7 +40,7 @@ function M.record_char()
 	-- k2 Dead, 3: Engaged Dead
 	f:write("(status:"..player.status..")")
     end
-    f:write(" "..player.main_job..":"..player.main_job_level)
+    f:write(" "..player.main_job..":"..player.main_job_level.."/"..player.sub_job)
     if player.main_job_level < 99 then
 	f:write("("..ac_char.current_exp_point().."/"..ac_char.next_exp_point()..")")
     end
