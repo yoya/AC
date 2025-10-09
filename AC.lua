@@ -403,7 +403,7 @@ local figtingFunction = function()
 	-- print("(now - sc_time):"..(now - acinspect.sc_time), "(now - ws_time):"..(now - acinspect.ws_time), acinspect.sc_time)
 	ws_request = true
     end
-    if player.vitals.tp >= 2500 and (acinspect.sc_time + 7) < now then
+    if player.vitals.tp >= 2500 and (acinspect.sc_time + 8) < now then
 	-- print("(now - sc_time):"..(now - acinspect.sc_time), acinspect.sc_time)
 	ws_request = true
     end
