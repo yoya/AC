@@ -84,6 +84,7 @@ local sell_items = {
     12305, -- アイスシールド
     12385, -- アケロンシールド
     12387, -- ケーニヒシールド
+    4101, -- 水のクリスタル
 }
 
 local sell_itemsT = utils.table.convertArrayToTrueTable(sell_items)
@@ -91,13 +92,18 @@ local sell_itemsT = utils.table.convertArrayToTrueTable(sell_items)
 function M.tick(player)
     if acitem.inventoryHasItemT(sell_itemsT) then
 	local mob = windower.ffxi.get_mob_by_name("Defliaa")
-	if mob ~= nil and mob.distance < 400 then
-	    local me = windower.ffxi.get_mob_by_target("me")
-	    turnToPos(me.x, me.y, mob.x, mob.y)
-	    windower.ffxi.run(true)
-	    if mob ~= nil and mob.distance < 50 then
+	if mob ~= nil then
+	    if mob.distance < 40 then
 		windower.ffxi.run(false)
-		io_net.targetByMobId(mob.id)
+	    else
+		local me = windower.ffxi.get_mob_by_target("me")
+		if mob ~= nil and mob.distance < 500 then
+		    turnToPos(me.x, me.y, mob.x, mob.y)
+		    windower.ffxi.run(true)
+		end
+		if mob ~= nil and mob.distance < 100 then
+		    turnToPos(me.x, me.y, mob.x, mob.y)
+		end
 	    end
 	end
     end

@@ -72,7 +72,10 @@ end
 
 function M.zone_out()
     print("M.zone_out")
-    incoming_text.removeListener(listener_idx)
+    if listener_idx > 0 then
+	incoming_text.removeListener(listener_idx)
+	listener_idx = 0
+    end
 end
 
 M.essentialPoints = {

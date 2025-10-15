@@ -165,7 +165,7 @@ end
 -- ロールの文字列を見つけたら動く。
 function incoming_text_handler(text)
     local player = windower.ffxi.get_player()
-    if string.contains(text, player.name) == false then
+    if player == nil or string.contains(text, player.name) == false then
 	return
     end
     -- Upachanのダブルアップ\n→ファイターズロールの合計値が5になった！

@@ -1,4 +1,4 @@
---ウィンダス森の区
+-- ウィンダス森の区
 
 local M = { id = 241 }
 
@@ -31,7 +31,7 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    hp1 = { route="nana" },
+    -- hp1 = { route="nana" },
 }
 
 return M

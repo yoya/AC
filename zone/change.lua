@@ -82,6 +82,7 @@ function M.zone_in_handler(zone, prevZone)
     if zone_object ~= nil then
 	local zone_in = zone_object.zone_in
 	if zone_in ~= nil then
+	    print("zone_in:", zone)
 	    zone_in()
 	end
 	local automatic_routes = zone_object.automatic_routes
@@ -112,6 +113,7 @@ function M.zone_change_handler(zone, prevZone)
 	if zone_out_object ~= nil then
 	    local zone_out = zone_out_object.zone_out
 	    if zone_out ~= nil then
+		print("zone_out:", prevZone)
 		zone_out()
 	    end
 	end
@@ -160,6 +162,7 @@ function M.warp_handler(zone, pos, prevZone, prevPos, dist)
 	if zone_out_object ~= nil then
 	    local warp_out = zone_out_object.warp_out
 	    if warp_out ~= nil then
+		print("warp_out:", prevZone)
 		warp_out()
 	    end
 	end

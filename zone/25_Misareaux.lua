@@ -15,6 +15,19 @@ M.routes = {
 	{x=264.5,y=-423.3}, {a="dismount"},
 	{x=260.6,y=-436.5}, {a="f8touch"}
     },
+    -- HP#1
+    esca = { -- Undulating Confluence
+	{x=-66,y=562,z=-17.3}, {x=-64,y=571,z=-18.8,d=1}, {x=-54,y=571,z=-21.8},
+	{w=5}, {a="tab"},
+    },
+}
+
+M.essentialPoints = {
+    homepoint_1 = {x=-66,y=562,z=-17.3},
+}
+
+M.automatic_routes = {
+    homepoint_1 = { route="esca" },
 }
 
 return M
