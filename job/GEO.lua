@@ -47,8 +47,8 @@ function inde_setup(jobRank)
     -- 戦闘開始で硬直してる可能性があるので、3秒待つ
     local done = task.setTask(level, t)
     if done then
-	io_chat.setNextColor(6)
-	io_chat.print("インデ展開")
+	-- io_chat.setNextColor(6)
+	-- io_chat.print("インデ展開")
     end
     -- エントラスト TODO:実行可能な時に狙って処理する
     c = 'input /ja エントラスト <me>; wait 2; input /ma '..GEO_entrust..' <p2>'
@@ -56,8 +56,8 @@ function inde_setup(jobRank)
     t = task.newTask(c, 2, 7, 600, false)
     local done = task.setTask(level, t)
     if done then
-	io_chat.setNextColor(6)
-	io_chat.print("エントラストインデ展開")
+	-- io_chat.setNextColor(6)
+	-- io_chat.print("エントラストインデ展開")
     end
 end
 
@@ -85,8 +85,8 @@ function geo_setup(jobRank)
     -- 戦闘開始で硬直してる可能性があるので、3秒待つ
     local done = task.setTask(level, t)
     if done then
-	io_chat.setNextColor(6)
-	io_chat.print("ラバン設置します")
+	-- io_chat.setNextColor(6)
+	-- io_chat.print("ラバン設置します")
     end
 end
 
@@ -97,8 +97,8 @@ function geo_release(name)
     local t = task.newTask(c, 1, 2, 0, false)
     local done = task.setTask(level, t)
     if done then
-	io_chat.setNextColor(4) -- ピンク
-	io_chat.print("ラバン消去します")
+	-- io_chat.setNextColor(4) -- ピンク
+	-- io_chat.print("ラバン消去します")
     end
 end
 
@@ -107,9 +107,9 @@ function geo_release_with_contexte(player, pet, mob)
     local mobpetdist = ac_pos.distance(pet, mob)
     if mobpetdist >= 6 then
 	-- 羅盤が戦闘場所から離れてたら消す
-	io_chat.setNextColor(4) -- ピンク
-	local pd = math.floor(mobpetdist * 100 + 0.5) / 100;
-	io_chat.print("羅盤と敵の距離="..pd)
+	-- io_chat.setNextColor(4) -- ピンク
+	-- local pd = math.floor(mobpetdist * 100 + 0.5) / 100;
+	-- io_chat.print("羅盤と敵の距離="..pd)
 	geo_release("フルサークル")
     elseif player.vitals.mp < 100 then  -- TODO: パーティのMPを考慮
 	geo_release("レイディアルアルカナ")
