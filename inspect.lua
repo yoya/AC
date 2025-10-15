@@ -35,27 +35,35 @@ M.skillchain_table = {
     {en="Umbra", ja="黒闇", magic="ブリザド"},
 }
 
-function M.ws()
+function M.ws(id)
     local now = os.time()
-    local datetime = os.date("%X", now)
     M.ws_time = now
-    -- io_chat.setNextColor(6)
-    -- io_chat.printf("-%s- WeaponSkill", datetime)
+    if not ac_party.isMemberId(id) then
+	return
+    end
+    local mob = windower.ffxi.get_mob_by_id(id)
+    if mob.name == "Monberaux" then
+	return
+    end
+    local datetime = os.date("%X", now)
+    io_chat.setNextColor(6)
+    io_chat.printf("[%s] ws(%s) ", datetime, mob.name)
 end
 
 function M.sc(message, attr)
     local now = os.time()
-    local datetime = os.date("%X", now)
     M.sc_time = now
     M.sc_attr = attr
+    local datetime = os.date("%X", now)
     local sc = M.skillchain_table[attr]
     if sc == nil then
 	io_chat.setNextColor(3)
-	io_chat.printf("-%d- mesg(%d) 連携(%d)", datetime, message, attr)
+	io_chat.printf("[%s] mesg(%d) 連携(%d) sc == nil",
+		       datetime, message, attr)
 	return
     end
     io_chat.setNextColor(6)
-    io_chat.printf("-%s- mesg(%d) 連携(%d:%s) => %s",
+    io_chat.printf("[%s] mesg(%d) 連携(%d:%s) => %s",
 		   datetime, message, attr, sc.ja, sc.magic)
 end
 
