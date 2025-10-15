@@ -46,8 +46,8 @@ function M.ws(id)
 	return
     end
     local datetime = os.date("%X", now)
-    io_chat.setNextColor(6)
-    io_chat.printf("[%s] ws(%s) ", datetime, mob.name)
+    -- io_chat.setNextColor(6)
+    --io_chat.printf("[%s] ws(%s) ", datetime, mob.name)
 end
 
 function M.sc(message, attr)
