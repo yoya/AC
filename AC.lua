@@ -40,6 +40,9 @@ local crystal_ids = item_data.crystal_ids -- クリスタル/塊
 local seal_ids = item_data.seal_ids -- 印章
 local cipher_ids = item_data.cipher_ids --  盟スクロール
 
+
+local enemyFilter = nil
+
 -- (他と戦闘中でも中断して)先に倒すべき敵
 local firstDefeatedEnemyList = {
     -- カオス戦
@@ -54,6 +57,17 @@ local firstDefeatedEnemyList = {
     "Bozzetto Trainer",      -- 獣使い (あやつる)
     -- 醴泉島
     "Wretched Poroggo", "Water Elemental",
+    -- ドメインベーション
+    "Azi Dahaka's Dragon",
+    "Naga Raja's Lamia", "Naga Raja",
+    -- Void Watch
+    "Gloam Servitor", -- ルフェーゼ
+    "Bloodswiller Fly", -- "Tsui-Goab", -- ミザレオ
+    "Little Wingman", -- ウルガラン
+    "Bloody Skull", -- アットワ
+    -- "Primordial Pugil", -- ビビキー
+    -- プロマシア
+    "Gargoyle",
 }
 
 -- 優先して釣る敵
@@ -73,6 +87,17 @@ local preferedEnemyList = {
     -- 醴泉島
     "Wretched Poroggo", "Water Elemental",
     "Indomitable Faaz", "Devouring Mosquito",
+    -- ドメインベーション
+    "Azi Dahaka's Dragon", "Azi Dahaka",
+    "Naga Raja's Lamia", "Naga Raja",
+    -- VoidWatch
+    "Gloam Servitor", -- ルフェーゼ
+    "Bloodswiller Fly", -- ミザレオ
+    "Little Wingman", -- ウルガラン
+    "Bloody Skull", -- アットワ
+    -- "Primordial Pugil", -- ビビキー
+    -- プロマシア
+    "Gargoyle",
     -- 実験
     "Apex Toad",  -- ウォーの門、トード。
     "Mourioche",  -- マンドラ
@@ -138,7 +163,13 @@ local leaderFunction = function()
     end
 --    print("mid_pos:", mid_pos.x, mid_pos.y)
     -- 優先する敵
-    local mob =  acmob.getNearestFightableMob(start_pos, settings.CampRange, preferedEnemyList)
+	local condition = {
+	    range = settings.CampRange,
+	    preferMobs = preferedEnemyList,
+	    nameMatch = enemyFilter,
+	}
+	local mob = acmob.searchNearestMob(start_pos, condition)
+	-- local mob = acmob.getNearestFightableMob(start_pos, settings.CampRange, )
 ---    print("nearest prefered mob", mob)
     if mob == nil then
         --- メンバーが戦っている敵がいれば、そちら優先
@@ -146,7 +177,12 @@ local leaderFunction = function()
     end
     if mob == nil then
         --- 優先度の高い敵がいない場合は、誰でも良い
-        mob = acmob.getNearestFightableMob(start_pos, settings.CampRange, nil)
+	local condition = {
+	    range = settings.CampRange,
+	    nameMatch = enemyFilter,
+	}
+	local mob = acmob.searchNearestMob(start_pos, condition)
+        -- mob = acmob.getNearestFightableMob(start_pos, settings.CampRange, nil)
     end
     if mob ~= nil and settings.Attack then
         windower.ffxi.run(false)
@@ -257,14 +293,27 @@ local notLeaderFunction = function()
     end
     if settings.Attack then
         windower.ffxi.run(false)
-        --- p1 がターゲットしてる敵に合わせる
-        if p1 == nil or p1.status ~= 1 or p1.target_index == 0 then
-            return
-        end
-	local target = windower.ffxi.get_mob_by_index(p1.target_index)
-	if target == nil or target.status ~= 1 then
-	    -- 敵と戦闘開始してなければ様子見
-	    return
+	local condition = {
+	    range = settings.CampRange,
+	    linkedOnly = true,
+	    nameMatch = enemyFilter,
+	}
+	local mob = acmob.searchNearestMob(me_pos, condition)
+	if mob ~= nil then
+	    io_net.targetByMobIndex(mob.index)
+	else
+	    --- p1 がターゲットしてる敵に合わせる
+	    if p1 == nil or p1.status ~= 1 or p1.target_index == 0 then
+		return
+	    end
+	    local target = windower.ffxi.get_mob_by_index(p1.target_index)
+	    if target == nil or target.status ~= 1 then
+		-- 敵と戦闘開始してなければ様子見
+		return
+	    end
+	    -- p1 が戦闘している敵にターゲット
+	    io_net.targetByMobIndex(p1.target_index)
+	    mob = windower.ffxi.get_mob_by_target("t")
 	end
 	-- p1 が戦闘している敵にターゲット
         io_net.targetByMobIndex(p1.target_index)
@@ -295,7 +344,13 @@ local figtingFunction = function()
     local subJob = player.sub_job
 ---    print("XXX", preferedEnemyList)
     -- 優先する敵は、索敵範囲を半分に。
-    local preferMob =  acmob.getNearestFightableMob(start_pos, settings.CampRange/2, preferedEnemyList)
+    local condition = {
+	range = settings.CampRange/2,
+	preferMobs = preferedEnemyList,
+	nameMatch = enemyFilter,
+    }
+    local preferMob = acmob.searchNearestMob(start_pos, condition)
+    -- local  preferMob =  acmob.getNearestFightableMob(start_pos, preferedEnemyList)
 ---    print("prefereMob", preferMob)
     if preferMob ~= nil and mob.name ~= preferMob.name then
 --        print("preferMob:", mob.name)
@@ -910,6 +965,7 @@ end
 windower.register_event('addon command', function(...)
     local command = select(1, ...)
     local command2 = select(2, ...)
+    local command3 = select(3, ...)
     command = command and command:lower() or 'help'
     -- start/stop, (諸々ABC順), help の並び
     if command == 'start' then
@@ -947,8 +1003,11 @@ windower.register_event('addon command', function(...)
 	    io_chat.print(acitem.checkInventoryFreespace())
 	    io_chat.print(acitem.checkBagsFreespace())
 	elseif command2 == 'nearest' then
-	    local preferMob =  acmob.getNearestFightableMob(start_pos, settings.CampRange, preferedEnemyList)
-	    local mob =  acmob.getNearestFightableMob(start_pos, settings.CampRange, nil)
+	    local condition = {
+		range = settings.CampRange,
+		nameMatch = enemyFilter,
+	    }
+	    local mob = acmob.searchNearestFightableMob(start_pos, condition)
 	    io_chat.print("nearest preferMob=====================")
 	    io_chat.print(preferMob)
 	    io_chat.print("nearest mob =====================")
@@ -970,6 +1029,14 @@ windower.register_event('addon command', function(...)
     elseif command == 'echo' then
 	io_chat.setNextColor(6)
 	io_chat.print(command2)
+    elseif command == 'enemy' then
+	if command2 == 'filter' then
+	    enemyFilter = command3
+	    io_chat.setNextColor(6)
+	    io_chat.print("ac enemy filter", enemyFilter)
+	else
+	    print("ac enemy filter <enemy substring>")
+	end
     elseif command == 'enemyspace' or command == 'es' then
 	if command2 == 'near' then
 	    control.enemy_space = control.ENEMY_SPACE_NEAR
@@ -1231,7 +1298,8 @@ windower.register_event('zone change', function(zone, prevZone)
     ws.init()
     task.setTaskSimple("ac inject currinfo1", 5, 1)
     task.setTaskSimple("ac inject currinfo2", 6, 1)
- end)
+    enemyFilter = nil
+end)
 
 
 windower.register_event('incoming chunk', function(id, data, modified, injected, blocked)
