@@ -1277,6 +1277,8 @@ windower.register_event('load', function()
 	elseif string.contains(text, "魔法を唱えることができない") then
 	    -- io_chat.setNextColor(3)
 	    -- io_chat.print("魔法唱える失敗を検知")
+	elseif string.contains(text, "の命のカウントダウン") then
+	    command.send('input /item 聖水 <me>')
 	end
     end
     incoming_text.addListener("", incoming_text_handler)
