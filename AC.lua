@@ -901,6 +901,7 @@ local stop2 = function()
     auto = false
     ac_move.stop()
     works.stop()
+    task.allClear()
 end
 
 local start = function()
