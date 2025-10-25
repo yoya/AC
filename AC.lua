@@ -842,7 +842,10 @@ local tickRunning = false
 --- 途中での return 抜け禁止。最後でフラグ落とすので。
 local tick = function()
     local player = windower.ffxi.get_player()
-    if player == nil then   --- ログインし直す時に nil
+    local me = windower.ffxi.get_mob_by_target("me")
+    if player == nil or me == nil then
+	-- ログイン時に player は nil
+	-- エリアチェンジ時に me ターゲットできない
 	return
     end
     if tickRunning then -- 二重に動かないガード。(ちゃんと働いているか不明)
