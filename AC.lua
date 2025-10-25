@@ -469,6 +469,10 @@ local figtingFunction = function()
 	-- print("(now - sc_time):"..(now - acinspect.sc_time), acinspect.sc_time)
 	ws_request = true
     end
+    -- ドメインベーションはTP1000即撃ち
+    if player.vitals.tp >= 1000 and utils.table.contains({"Azi Dahaka", "Naga Raja", "Quetzalcoatl", "Mireu"}, mob.name) then
+	ws_request = true
+    end
     if ws_request == true then
 	ws.exec()
 	return
