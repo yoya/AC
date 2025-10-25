@@ -142,7 +142,7 @@ M.exec = function()
         return
     end        
     local mob = windower.ffxi.get_mob_by_target("t")
-    if mob == nil or mob.distance/mob.model_size > 10 then
+    if mob == nil or mob.distance/mob.model_size > 12 then
         return
     end
     local player = windower.ffxi.get_player()
