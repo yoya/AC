@@ -125,6 +125,7 @@ local iamLeader = ac_party.iamLeader
 
 local io_net = require 'io/net'
 local io_chat = require 'io/chat'
+local io_ipc = require 'io/ipc'
 local ac_stat = require 'ac/stat'
 local acinspect = require 'inspect'
 
@@ -888,35 +889,21 @@ end
 
 local start = function()
     if iamLeader() then
-        windower.send_ipc_message('AutoA:start')
+        io_ipc.send("*", "AC", "start")
     end
     start2()
 end
 
 local stop = function()
     if iamLeader() then
-        windower.send_ipc_message('AutoA:stop')
+	io_ipc.send("*", "AC", "stop")
     end
     stop2()
 end
 
 windower.register_event('ipc message', function(message)
---    print("IPC:"..message)
-    if message:sub(1, 5) == '__AutoA:' then
-        command =  message:sub(6)
-        io_chat.print("command:"..command)
-        if command == 'start' then
-            if iamLeader() == false then
-                print("before start2")
-                start2()
-                print("after start2")
-            end
-        elseif command == 'stop' then
-            if iamLeader() == false then
-                stop2()
-            end
-        end
-    end
+    --    print("IPC:"..message)
+    io_ipc.recieve(message)
 end)
 
 
@@ -1102,6 +1089,12 @@ windower.register_event('addon command', function(...)
         local zone = windower.ffxi.get_info().zone
 	local routeTable = aczone.getRouteTable(zone)
         ac_move.autoMoveTo(zone, command2, routeTable, true)
+    elseif command == 'party' then
+	if command2 == 'build' then
+	    io_ipc.send("*", "party", "build")
+	else
+	    print("ac party build")
+	end
     elseif command == 'point' then
         doPointCheer = not doPointCheer
         io_chat.print({"do point&cheer for ambus", doPointCheer})
