@@ -58,14 +58,29 @@ function M.distance(a, b)
     return  math.sqrt(dx*dx + dy*dy + dz*dz*5)
 end
 
+function isPreferMob(mob)
+    if condition.preferMobs == nil then
+	return false
+    end
+    if utils.table.contains(condition.preferMobs, mob.name) then
+	return  true
+    end
+    return false
+end
+
 -- condition
 -- { fightable: bool, range: number,
 --   nameMatch:string, preferMobs: string[],
---   ignoreMobs: string[], linkedOnly: boolean }
+--  linkedOnly: boolean }
 function M.conditionMatch(pos, condition, mob)
     local d = M.distance(mob, pos)
     if condition.range ~= nil and condition.range <= d then
 	return false
+    end
+    if condition.preferMobs ~= nil then
+	if not utils.table.contains(condition.preferMobs, mob.name) then
+	    return false
+	end
     end
     if condition.fightable == true and
 	not isMobAttackableTargetIndex(mob.index) then
@@ -83,16 +98,6 @@ function M.conditionMatch(pos, condition, mob)
     return true
 end
 
-function isPreferMob(mob)
-    if condition.preferMobs == nil then
-	return false
-    end
-    if utils.table.contains(condition.preferMobs, mob.name) then
-	return  true
-    end
-    return false
-end
-
 function M.searchNearestMob(pos, condition)
     local mobArr = windower.ffxi.get_mob_array()
     local mob = nil
@@ -102,7 +107,8 @@ function M.searchNearestMob(pos, condition)
 	if M.conditionMatch(pos, condition, m) and isMobAttackable(m) then
 	    local d = M.distance(m, pos)
 	    -- ヘイトが自分らに向いてる敵がいる場合、そっちを優先
-	    if d < dist or (linked == false and m.claim_id > 0) then
+	    if d < dist or (linked == false and m.claim_id > 0) and
+		not utils.table.contains(ignoreMobs, m.name) then
 		dist = d
 		mob = m
 		if m.claim_id > 0 then
