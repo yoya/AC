@@ -12,15 +12,15 @@ local M = {}
 M.weaponskill = 'flat'
 
 local preferWeaponSkill = {
-    'victory', 'shishin', 'tokon', 'dragon', 'rangeki', 'combo', -- 格闘
-    'rudra', 'manda', 'exen', 'evis',  'dance', 'shadow', -- 短剣
+    'dragon', 'victory', 'asyura', 'shishin', 'tokon', 'rangeki', 'combo', -- 格闘
+    'rudra', 'manda', 'evis', 'exen',  'dance', 'shadow', -- 短剣
     'chant', 'savage', -- 片手剣
     'reso','ground', -- 両手剣
     'ramp', 'rui', -- 片手斧
     'ukko', 'steel', 'uph', 'shield', --両手斧
     'dai',  -- 両手槍
     'demi', 'spin', 'frost', -- 両手剣
-    'shoha', 'hocho', 'gekko', 'kagero', 'yuki', -- 両手刀
+    'kasha', 'shoha', 'hocho', 'gekko', 'kagero', 'yuki', -- 両手刀
     'shun', -- 片手刀
     'moon', 'realm', 'hexa', 'shine', 'circle', -- 片手棍
     'myrkr', 'spirit', 'full', 'heavy', -- 両手棍
@@ -38,6 +38,7 @@ M.weaponskillTable = {
     victory = 'ビクトリースマイト',
     tokon = '闘魂旋風脚',
     dragon = 'ドラゴンブロウ',
+    asyura = '夢想阿修羅拳',
     -- 短剣
     manda = 'マンダリクスタッブ',
     rudra = 'ルドラストーム',
@@ -74,6 +75,7 @@ M.weaponskillTable = {
     cross = 'クロスリーパー',
     ent = 'エントロピー',
     -- 両手刀
+    kasha = '九之太刀・花車', -- 核熱
     kagero = '四之太刀・陽炎', -- 溶解
     yuki = '七之太刀・雪風', -- 硬化、炸裂
     gekko = '八之太刀・月光', -- 貫通、衝撃
