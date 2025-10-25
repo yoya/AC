@@ -27,4 +27,3 @@ M.routes = {
 }
 
 return M
-

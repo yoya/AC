@@ -102,7 +102,10 @@ function M.tick(player)
 		    windower.ffxi.run(true)
 		end
 		if mob ~= nil and mob.distance < 100 then
-		    turnToPos(me.x, me.y, mob.x, mob.y)
+		    io_net.targetByMobId(mob.id)
+		    coroutine.sleep(0.5)
+		    utils.target_lockon(true)
+		    ac_move.turnToTarget("t")
 		end
 	    end
 	end

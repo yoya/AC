@@ -3,12 +3,19 @@
 local M = { id = 6 }
 
 M.routes = {
-    wind = { -- Wind Pillar
-	{x=-679.8, y=-540, z=18.5}, {x=-694.8,y=-537},
+    wind = { -- Wind Pillar (迎え火 BC)
+	{x=-679.8, y=-540.7, z=18.5}, {x=-694.8,y=-537},
 	{x=-700,y=-518.6}, {x=-701.5,y=-496.2}, {x=-701,y=-482.5},
 	{x=-702.1,y=-461.6}, {x=-717.5,y=-443}
     },
 }
 
+M.essentialPoints = {
+    from_hp2 = {x=-679.8, y=-540.7, z=18.5},
+}
+
+M.automatic_routes = {
+    from_hp2 = { route="wind" },
+}
 return M
 

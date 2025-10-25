@@ -43,9 +43,8 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    hp_1 = { route="tower" },
+    -- hp_1 = { route="tower" },
     hp_3 = { route="shant" },
 }
 
 return M
-
