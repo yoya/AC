@@ -552,6 +552,7 @@ local idleFunctionTradeItems = function(tname, items, wait, enterWaits)
             end
         end
 	io_chat.print("↑ トレード終了 ↑")
+	auto = false
     end
     coroutine.sleep(1)
 end
