@@ -158,7 +158,8 @@ local leaderFunction = function()
 ---    print("I am a reader")
     local me_pos = {}
     if getMobPosition(me_pos, "me") ~= true then
-        print("getMobPosition failed ???")
+	-- zone チェンジでよくある
+        -- print("getMobPosition failed ???")
         return
     end
 --    print("mid_pos:", mid_pos.x, mid_pos.y)
@@ -315,11 +316,8 @@ local notLeaderFunction = function()
 	    io_net.targetByMobIndex(p1.target_index)
 	    mob = windower.ffxi.get_mob_by_target("t")
 	end
-	-- p1 が戦闘している敵にターゲット
-        io_net.targetByMobIndex(p1.target_index)
----        command.send('input /target <bt>')
-        local mob = windower.ffxi.get_mob_by_target("t")
-        if mob ~= nil and mob.hpp < 100 then
+	---        command.send('input /target <bt>')
+	if mob ~= nil and mob.hpp < 100 then
             coroutine.sleep(math.random(0,2)/4)
             command.send('input /attack <t>')
 	    task.resetByFight()
@@ -621,7 +619,7 @@ local sellJunkItemsInInventory = function()
             windower.packets.inject_outgoing(0x084,string.char(0x084,0x06,0,0,item.count,0,0,0,
                                         item.id%256,math.floor(item.id/256)%256,index,0))
             windower.packets.inject_outgoing(0x085,string.char(0x085,0x04,0,0,1,0,0,0))
---          io_chat.print({"item:", windower.to_shift_jis(res.items[item.id].ja), item.id, item.status})
+	    -- io_chat.print({"item:", windower.to_shift_jis(res.items[item.id].ja), item.id, item.status})
             remain_count = remain_count - 1
             if remain_count <= 0 then
                 break
@@ -813,6 +811,12 @@ end
 local tick_new = function()
     -- print("tick_new")
     local player = windower.ffxi.get_player()
+    local me = windower.ffxi.get_mob_by_target("me")
+    if player == nil or me == nil then
+	-- ログイン時に player は nil
+	-- エリアチェンジ時に me ターゲットできない
+	return
+    end
     zone_change.warp_handler_tick()
     aczone.tick(player)
     task.tick()
@@ -1213,7 +1217,9 @@ windower.register_event('addon command', function(...)
 	io_chat.print('    magic fire|ice|... - Set MB Magic attribute')
         io_chat.print('    move <route>       - Auto move')
 	io_chat.print('    moverev <route>    - Auto move reverse')
-        io_chat.print('    pos                - Show current position')
+        io_chat.print('    party build        - Party build')
+	io_chat.print('    point              - point action for ambus')
+	io_chat.print('    pos                - Show current position')
         io_chat.print('    puller on|off      - Change puller mode')
 	io_chat.print('    record char|spells - Reord Status to LogFile')
         io_chat.print('    show mob|...       - Show something')
