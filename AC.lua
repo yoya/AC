@@ -1015,7 +1015,7 @@ windower.register_event('addon command', function(...)
 		range = settings.CampRange,
 		nameMatch = enemyFilter,
 	    }
-	    local mob = acmob.searchNearestFightableMob(start_pos, condition)
+	    local mob = acmob.searchNearestMob(start_pos, condition)
 	    io_chat.print("nearest preferMob=====================")
 	    io_chat.print(preferMob)
 	    io_chat.print("nearest mob =====================")
