@@ -52,9 +52,7 @@ end
 
 M.allClear = function()
     for level = PRIORITY_FIRST, PRIORITY_LAST do
-	for i, task in ipairs(taskTable[level]) do
-	    taskTable[level] = {}
-	end
+	taskTable[level] = {}
     end
 end
 
