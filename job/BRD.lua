@@ -20,10 +20,9 @@ M.subJobProbTable = {
     -- { 200, 120, 'input /ma 戦場のエレジー <t>', 8, true },
 }
 
-function song(song_name, onoff, delay)
+function song(song_name, onoff, period, delay)
     local c = "input /song "..song_name.." <me>"
     local level = task.PRIORITY_MIDDLE
-    local period = 15*60 / 3
     -- command, delay, duration, period, eachfight
     local t = task.newTask(c, delay, 10, period, true)
     if onoff then
@@ -44,20 +43,20 @@ function song_tick(player)
     local zone = windower.ffxi.get_info().zone
     local onoff = player.status > 0
     if isDefensive() then
-	song("重装騎兵のミンネV", onoff, 2)
-	song("闘龍士のマンボ", onoff, 12)
-	-- song("活力のエチュード", onoff, 12*2)
-	song("戦士達のピーアンVI", onoff, 12*3)
-	song("栄光の凱旋マーチ", onoff, 12)
+	song("重装騎兵のミンネV", onoff, 15*60 / 3, 2)
+	song("闘龍士のマンボ", onoff, 15*60 / 2, 12)
+	-- song("活力のエチュード", onoff, 15*60 / 3, 12*2)
+	song("戦士達のピーアンVI", onoff, 15*60 / 3, 12*3)
+	song("栄光の凱旋マーチ", onoff, 15*60 / 3, 12)
 	return
     end
     -- TODO auto かつ街中以外で以下を実行。status 1 で弱体系実行
-    song("無敵の進撃マーチ", onoff, 12)
-    song("栄光の凱旋マーチ", onoff, 12*2)
-    song("猛者のメヌエットV", onoff, 12*3)
-    -- song("剣豪のマドリガル", onoff, 12*4)
-    -- song("怪力のエチュード", onoff, 12*4)
-    song("妙技のエチュード", onoff, 12*4)
+    song("無敵の進撃マーチ", onoff, 15*60 / 3, 12)
+    song("栄光の凱旋マーチ", onoff, 15*60 / 3, 12*2)
+    song("猛者のメヌエットV", onoff, 15*60 / 2, 12*3)
+    -- song("剣豪のマドリガル", onoff, 15*60 / 3, 12*4)
+    -- song("怪力のエチュード", onoff, 15*60 / 3, 12*4)
+    song("妙技のエチュード", onoff, 15*60 / 2, 12*4)
 end
 
 function M.main_tick(player)
