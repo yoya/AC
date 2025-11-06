@@ -58,8 +58,13 @@ function M.main_tick(player)
 end
 
 function M.sub_tick(player)
+    local acjob = M.parent
     if role_Sorcerer.sub_tick ~= nil then
 	role_Sorcerer.sub_tick(player)
+    end
+    if utils.table.contains(acjob.tankJobs, player.main_job) or
+	utils.table.contains(acjob.meleeJobs, player.main_job) then
+	return  -- 前衛は精霊弱体しない。時間が勿体無い
     end
     if ac_party.count_member( { main_job="BLM" } ) >= 1 then
 	return  -- 本職に任せる
