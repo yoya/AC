@@ -41,8 +41,10 @@ packet_handler[0x028] = function(packet)
 	-- io_chat.print("0x028 cate:3 Weapon Skill finish")
     elseif cate == 7 then
 	-- io_chat.print("0x028 cate:7 Weapon Skill start")
-	acinspect.ws()
 	local id = packet["Actor"]
+	--local target = packet["Target 1 ID"]
+	--io_chat.print(target)
+	acinspect.ws(id)
 	local player = windower.ffxi.get_player()
 	if player.id == id then
 	    ac_stat.ws()
