@@ -151,7 +151,7 @@ function M.getTask()
 	    local c = task.command
 	    local t = taskPeriodTable[c]
 	    if t <= now then
-		taskPeriodTable[c] = os.time() + task.period
+		taskPeriodTable[c] = now + task.period
 		table.remove(taskTable[level], i)
 		return level, task
 	    end
@@ -162,7 +162,8 @@ end
 
 local tickNextTime = os.time()
 M.tick = function()
-    if os.time() < tickNextTime then
+    local now = os.time()
+    if now < tickNextTime then
 	return
     end
     local level, task = M.getTask()
@@ -176,6 +177,9 @@ M.tick = function()
     -- io_chat.print("TASK command:"..task.command, task.duration)
     local o = string.find(c, '//')  -- 頭が // のコマンドは特別扱い
     if o == nil or o > 1 then
+	local io_chat = require('io/chat')
+	local datetime = os.date("%X", now)
+	io_chat.printf("[%s]task.command: %s", datetime, c)
 	command.send(c)
     else
 	if string.find(c, '//echo ') == 1 then
@@ -184,7 +188,7 @@ M.tick = function()
 	    io_chat.print(string.sub(c, 8))
 	end
     end
-    tickNextTime = os.time() + task.duration
+    tickNextTime = now + task.duration
 end
 
 function M.print()
