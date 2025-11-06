@@ -34,6 +34,22 @@ M.jobTable = {
     RUN = require('job/RUN'), -- 魔導剣士
 }
 
+for name, job in pairs(M.jobTable) do
+    job.parent = M
+end
+
+M.tankJobs = {
+    "WAR", "MNK", "PLD", "SAM",
+    "RUN"
+}
+
+M.meleeJobs = {
+    "WAR", "MNK", "THF", "RDM",
+    "DRK", "DRG", "SAM",
+    "BLU", "COR",
+    "PUP", "RUN"
+}
+
 local foodTable = {
     BLM = 'ペアクレープ',
     SCH = 'ペアクレープ',
