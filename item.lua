@@ -135,6 +135,7 @@ local bagsToInventory = function(id)
                 end
             end
         else
+	    print("maybe Inventry full", inventory.count, inventory.max)
             return true
         end
     end
@@ -272,6 +273,11 @@ M.tradeByItemId = function(mob, id)
         end
     end
     num = #ind
+    if num == 0 then
+	io_chat.setNextColor(3)
+	io_chat.printf("you have not item id:%d", id)
+	return
+    end
     for i = num+1, 8 do
         ind[#ind+1] = 0
         cnt[#cnt+1] = 0
