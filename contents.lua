@@ -21,6 +21,9 @@ function M.tick(player)
     if M.type == M.Idle then
 	return
     end
+    if M.contentsTable[M.type] == nil then
+	return  -- 未対応
+    end
     local tick = M.contentsTable[M.type].tick
     if tick ~= nil then
 	tick(player)
