@@ -18,21 +18,28 @@ function within_time(x, a, b)
     return false
 end
 
+-- local fc = 0.8
+-- local haste = 0.8
+local fc = 3.0
+local haste = 1.0
+
 local magickParams = {
     -- rank, duration, period
-    [1] = {rank='', dur=1, per=2},
-    [2] = {rank='II', dur=2, per=6},
-    [3] = {rank='III', dur=4, per=15},
-    [4] = {rank='IV', dur=6, per=30},
-    [5] = {rank='V', dur=8, per=45},
-    [6] = {rank='VI', dur=11, per=60}
+    [1] = {rank='', dur=0.5*fc, per=2*haste},
+    [2] = {rank='II', dur=1.5*fc, per=6*haste},
+    [3] = {rank='III', dur=3*fc, per=15*haste},
+    [4] = {rank='IV', dur=5*fc, per=30*haste},
+    [5] = {rank='V', dur=7.5*fc, per=45*haste},
+    [6] = {rank='VI', dur=10.5*fc, per=60*haste}
 }
 
-function invoke_magic(magicRank, onoff)
+function invoke_magic(magicRank, onoff, level)
     assert(type(magicRank) == "number")
     assert(type(onoff) == "boolean")
     local param = magickParams[magicRank]
-    local level = task.PRIORITY_HIGH
+    if level == nil then
+	level = task.PRIORITY_HIGH
+    end
     local magic = MB_magic
     if magicRank > 1 then
 	magic = magic .. param.rank
@@ -46,6 +53,7 @@ function invoke_magic(magicRank, onoff)
 	task.removeTask(level, t)
     end
 end
+M.invoke_magic = invoke_magic
 
 function M.magicBurst(player, magickRank)
     if player.status == 1 then -- 戦闘中
@@ -102,7 +110,7 @@ end
 function M.main_tick(player)
     local magickRank = 3
     local main_job = player.main_job
-    if main_job == "BLM" then
+    if main_job == "BLM" or main_job == "SCH" then
 	magickRank = 5
     elseif main_job == "RDM" then
 	magickRank = 4
