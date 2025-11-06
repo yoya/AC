@@ -131,13 +131,19 @@ function M.zone_change_handler(zone, prevZone)
 end
 
 function M.warp_handler_tick()
+    -- print("M.warp_handler_tick()")
     local zone = windower.ffxi.get_info().zone
     local pos = ac_pos.currentPos()
     if zone == nil or pos == nil then
 	return
     end
-    -- print("warp tick", zone, pos.x, pos.y)
-    -- print("M.warp_handler_tick", zone,  ac_pos.distance(pos, prevPos))
+    if prevPos == nil then
+	-- print("warp tick zone:"..zone, pos.x..","..pos.y, "prevPos==nil")
+    else
+	-- print("warp tick zone:"..zone, pos.x..","..pos.y, M.prevPos.x..","..M.prevPos.y)
+    end
+
+    -- print("M.warp_handler_tick", zone,  ac_pos.distance(pos, M.prevPos))
     if M.prevZone == zone and M.prevPos ~= nil then
 	local dist = ac_pos.distance(pos, M.prevPos)
 	-- print("dist:", dist)
