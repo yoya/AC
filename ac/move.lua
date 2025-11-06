@@ -55,6 +55,9 @@ end
 -- 指定した方向に向く
 local turnTo = function(pos)
     local me = currentPos()
+    if me == nil then
+	return
+    end
     local dx = pos.x - me.x
     local dy = pos.y - me.y
     --- atan2 のままだと右を向くので、90度の補正
@@ -196,7 +199,7 @@ function moveTo(route, routeTable)
 		    local similality = utils.vector.CosineSimilarity(vec1, vec2)
 		    if similality < 0.5 then
 			windower.ffxi.run(false)
-			local t = (0.5 - similality) * 2
+			local t = (0.5 - similality) / 3
 			-- print("similality:"..similality.." => sleep "..t)
 			coroutine.sleep(t)
 		    end
