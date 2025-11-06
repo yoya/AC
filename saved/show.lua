@@ -18,6 +18,7 @@ function usage()
     print("Usage: ./show.lua <l|p|a|d> <num>")
     print("    ./show.lua l 4 # latest 4 entries")
     print("    ./show.lua p   # point(eminence&unity)")
+    print("    ./show.lua e   # point(eminence)")
     print("    ./show.lua p 4 # point(ambus)")
     print("    ./show.lua d 4 # point(dp|mogseg|gallimau)")
 end
@@ -55,6 +56,10 @@ local charTable = {}
 for i, file in ipairs(files) do
     -- print("file:"..file)
     local f = io.open(dirname..file)
+    if f == nil then
+	print("Can't open file:"..dirname..file)
+	exit(1)
+    end
     -- 一行目
     local line1 = f:read()
     local table1 = split_multi(line1, {" "})
@@ -144,6 +149,8 @@ end
 
 if method == 'l' then
     table.sort(charTable, function(a,b) return a.time > b.time end)
+elseif method == 'e' then
+    table.sort(charTable, function(a,b) return a.name > b.name end)
 elseif method == 'p' then
     table.sort(charTable, compPoint)
 elseif method == 'a' then
@@ -157,8 +164,7 @@ end
 
 charTable = array_slice(charTable, 1, num)
 
-
-if method == 'l' then
+if method == 'l' or method == 'e' then
     table.sort(charTable, function(a,b) return a.name < b.name end)
 end
 
@@ -173,6 +179,8 @@ for i, char in pairs(charTable) do
     if method == 'l' then
 	print(char.line1)
 	print(string.format("  Emi:%5s Uni:%5s Gil:%11s", char.eminence_point, char.unity_point, char.gil))
+    elseif method == 'e' then
+	print(char.line1)
     elseif method == 'p' then
 	print(string.format("%7s Emi:%5s Uni:%5s Gil:%11s", char.name, char.eminence_point, char.unity_point, char.gil))
     elseif method == 'a' then
