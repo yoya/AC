@@ -36,6 +36,8 @@ M.jobTable = {
 
 local foodTable = {
     BLM = 'ペアクレープ',
+    SCH = 'ペアクレープ',
+    GEO = 'ペアクレープ',
 }
 
 -- https://wiki.ffo.jp/html/33806.html
