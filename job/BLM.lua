@@ -45,9 +45,15 @@ function M.main_tick(player)
     if player.status == 1 then -- 戦闘中
 	invoke_magick_debuff(player, 'バーン', true, 25)
 	invoke_magick_debuff(player, 'チョーク', true, 25)
+	if player.vitals.mp >= 1500 then
+	    role_Sorcerer.invoke_magic(2, true, task.PRIORITY_LOW)
+	    role_Sorcerer.invoke_magic(3, true, task.PRIORITY_LOW)
+	end
     else
 	invoke_magick_debuff(player, 'バーン', false, 25)
 	invoke_magick_debuff(player, 'チョーク', false, 25)
+	role_Sorcerer.invoke_magic(2, false, task.PRIORITY_LOW)
+	role_Sorcerer.invoke_magic(3, false, task.PRIORITY_LOW)
     end
 end
 
