@@ -1,9 +1,10 @@
 -- 全共通のグローバルな制御フラグ/データ
 -- config/settings とは分けたい
 
-local M = {}
-
-M.auto = false
+local M = {
+    auto = false,
+    debug = false,
+}
 
 M.ENEMY_SPACE_NEAR = 1
 M.ENEMY_SPACE_MANUAL = 2 -- 動かない。手動操作
