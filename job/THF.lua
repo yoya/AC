@@ -3,6 +3,8 @@
 local M = {}
 
 local role_Melee = require 'role/Melee'
+local command = require 'command'
+local task = require 'task'
 
 M.mainJobProbTable = {
     { 10, 300, 'input /ja ぬすむ <t>', 0 },
@@ -22,6 +24,10 @@ M.subJobProbTable = {
 }
 
 function M.main_tick(player)
+    if player.status == 1 and player.vitals.hp < 300 then  -- 緊急回復
+	local c = "input /ja 絶対回避 <me>"
+	task.setTaskSimple(c, 0, 2)
+    end
     if role_Melee.main_tick ~= nil then
 	role_Melee.main_tick(player)
     end
