@@ -50,8 +50,14 @@ end
 local spell_type = arg[1]
 local chara_name = arg[2]
 
+path = debug.getinfo(1,"S").source:sub(2)
+local dirname, filename = path:match('^(.*/)([^/]-)$')
+
+-- print("spell_type:"..spell_type, "chara_name:"..chara_name, "dirname:"..dirname)
+
+
 local files = {}
-for entry in lfs.dir(".") do
+for entry in lfs.dir(dirname) do
     if entry: match "%-spells.json$" then
 	table.insert(files, entry)
     end
@@ -61,7 +67,7 @@ local all_spell_table = {}
 
 for i, file in ipairs(files) do
     -- print("file:"..file)
-    local f = io.input(file);
+    local f = io.input(dirname..file);
     local text = f:read("*all")
     local data = json.decode(text)
     all_spell_table = table_union(all_spell_table, data[spell_type])
@@ -71,7 +77,7 @@ end
 for i, file in ipairs(files) do
     if string.find(file, chara_name) then
 	print("==== "..file)
-	local f = io.input(file);
+	local f = io.input(dirname..file);
 	local text = f:read("*all")
 	local data = json.decode(text)
 	spell_table = table_diff(all_spell_table, data[spell_type])	
