@@ -55,7 +55,8 @@ function M.recieve_party(source, arg)
     elseif arg == "submit" then
 	local c = "input /pcmd add "..source
 	-- print("io/ipc.recieve_party", c)
-	task.setTaskSimple(c, 5, 1)
+	--  command, delay, period
+	task.setTaskSimple(c, 1, 2)
     else
 	print("io/ipc.recieve_party: unknown arg"..arg)
     end
