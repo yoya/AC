@@ -30,10 +30,11 @@ M.mainJobProbTable = {
     { 5, 600, 'input /ma アクアベール <me>', 5},
     { 5, 300, 'input /ma ブリンク <me>', 5},
     { 5, 300, 'input /ma ストンスキン <me>', 5},
-    { 10, 600/2, 'input /ja コンバート <me>', 1 },
+    { 10, 600/4, 'input /ja コンバート <me>', 1 },
 }
 
 M.subJobProbTable = {
+--[[
     { 10, 60, 'input /ma ケアル <p1>', 3},
     -- { 5, 600-60, 'input /ma アクアベール <me>', 5},
     { 100, 300, 'input /ma ブリンク <me>', 5},
@@ -43,10 +44,12 @@ M.subJobProbTable = {
     -- { 500, 120, 'input /ma ディアII <t>', 4, true },
     -- { 500, 120, 'input /ma ディストラ <t>', 5, true },
     -- { 500, 120, 'input /ma フラズル <t>', 5, true },
-    { 100, 600/3, 'input /ja コンバート <me>', 1 },
     { 100, 120-10, 'input /ma ヘイスト <p1>', 4 },
     { 100, 120-10, 'input /ma ヘイスト <p2>', 4 },
-    -- { 100, 120-30, 'input /ma ヘイスト <p3>', 4 },
+--]]
+    { 100, 120-30, 'input /ma ヘイスト <p1>', 5 },
+    { 100, 120-30, 'input /ma ヘイスト <p3>', 5 },
+    { 100, 600/3, 'input /ja コンバート <me>', 1 },
 }
 
 function invoke_magick_debuff(player, magic, onoff, need_mp)
@@ -56,7 +59,7 @@ function invoke_magick_debuff(player, magic, onoff, need_mp)
     local level = task.PRIORITY_LOW
     local c = 'input /ma '..magic..' <t>'
     -- command, delay, duration, period, eachfight
-    local t = task.newTask(c, 2, 4, 90, true)
+    local t = task.newTask(c, 2, 5, 90, true)
     if onoff then
 	task.setTask(level, t)
     else
