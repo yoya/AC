@@ -50,6 +50,15 @@ function M.contains(arr, val)
     return false
 end
 
+function M.containsSubstr(arr, text)
+    for i=1,#arr do
+	if string.find(arr[i], text) ~= nil then
+	    return true
+	end
+    end
+    return false
+end
+
 function M.isNumericalIndexedTable(table)
     for k, v in pairs(table) do
         if type(k) ~= "number" then
