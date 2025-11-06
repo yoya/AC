@@ -65,6 +65,9 @@ function defender(player) -- ディフェンダー
 end
 
 function M.main_tick(player)
+    if player.status ~= 1 then
+	return  -- 戦闘中でなければ、何もしない
+    end
     if role_Melee.main_tick ~= nil then
 	role_Melee.main_tick(player)
     end
@@ -74,8 +77,17 @@ function M.main_tick(player)
 end
 
 function M.sub_tick(player)
+    if player.status ~= 1 then
+	return  -- 戦闘中でなければ、何もしない
+    end
     if 119 <= player.item_level then
-	if ac_party.hasTankJobMemberInParty() then
+	local main_job = player.main_job
+	-- if main_job == "PLD" or main_job == "MNK" or main_job == "SAM" then
+	if main_job == "PLD" or main_job == "SAM" then
+	    -- 頑丈なジョブは挑発もアタッカーアビも使う
+	    attacker(player)
+	    provoke(player)
+	elseif ac_party.hasTankJobMemberInParty() then
 	    -- パーティに盾ジョブがいる場合は、安心してアタッカーアビを使う
 	    attacker(player)
 	else
