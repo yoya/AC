@@ -149,10 +149,12 @@ M.exec = function()
 --    print(player.vitals.tp)
 --    if mob.hpp < math.random(30, 33) and -- 醴泉島かえる
     --    if mob.hpp < math.random(3,5) and -- ウォーAPEXかえる
+    --[[
     if mob.hpp < math.random(2,3) and -- ウォーAPEXかえる
         player.vitals.tp < 3000 then
         return
-    end
+	end
+    ]]
     wsname = M.weaponskillTable[M.weaponskill]
     local target = "<t>"
     if utils.table.contains(M.weaponskillTargetMeTable, M.weaponskill) then
