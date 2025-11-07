@@ -2,6 +2,7 @@
 
 local M = {}
 
+local utils = require 'utils'
 local task = require 'task'
 local role_Sorcerer = require 'role/Sorcerer'
 local ac_party = require 'ac/party'
