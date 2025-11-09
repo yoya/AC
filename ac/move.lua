@@ -141,9 +141,9 @@ function moveTo(route, routeTable)
 		local r = routeTable[p.route]
 		moveTo(r, routeTable)
 	    end
-	    if p.x == nil and p.a == nil then
-                windower.ffxi.run(true)
-                break
+	    if utils.table.count_keys(p) == 0 then
+                -- {} の時はオートラン
+		windower.ffxi.run(true)
             end
 	    if p.w ~= nil then
 		print("wait:"..p.w)
