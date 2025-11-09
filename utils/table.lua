@@ -3,6 +3,14 @@
 
 local M = {}
 
+function M.count_keys(t)
+    local count = 0
+    for key, _ in pairs(t) do
+	count = count + 1
+    end
+    return count
+end
+
 function M.get_keys(t)
     local keys={}
     for key, _ in pairs(t) do
