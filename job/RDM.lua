@@ -47,19 +47,19 @@ M.subJobProbTable = {
     { 100, 120-10, 'input /ma ヘイスト <p1>', 4 },
     { 100, 120-10, 'input /ma ヘイスト <p2>', 4 },
 --]]
-    { 100, 120-30, 'input /ma ヘイスト <p1>', 5 },
-    { 100, 120-30, 'input /ma ヘイスト <p3>', 5 },
-    { 100, 600/3, 'input /ja コンバート <me>', 1 },
+    { 10, 120-30, 'input /ma ヘイスト <p1>', 5 },
+    { 10, 120-30, 'input /ma ヘイスト <p3>', 5 },
+    { 10, 600/3, 'input /ja コンバート <me>', 1 },
 }
 
-function invoke_magick_debuff(player, magic, onoff, need_mp)
+function M.invoke_magick_debuff(player, magic, onoff, duration, need_mp)
     if player.vitals.mp < need_mp then
 	return
     end
     local level = task.PRIORITY_LOW
     local c = 'input /ma '..magic..' <t>'
     -- command, delay, duration, period, eachfight
-    local t = task.newTask(c, 2, 5, 90, true)
+    local t = task.newTask(c, 2, duration, 90, true)
     if onoff then
 	task.setTask(level, t)
     else
@@ -78,17 +78,17 @@ function M.main_tick(player)
 	role_Healer.main_tick(player)
     end
     if player.status == 1 then -- 戦闘中
-	invoke_magick_debuff(player, 'ディアIII', true, 45)
-	-- invoke_magick_debuff(player, 'ディストラII', true, 58)
-	-- invoke_magick_debuff(player, 'フラズルII', true, 64)
-	invoke_magick_debuff(player, 'ディストラIII', true, 84)
-	invoke_magick_debuff(player, 'フラズルIII', true, 90)
+	M.invoke_magick_debuff(player, 'ディアIII', true, 5, 45)
+	-- M.invoke_magick_debuff(player, 'ディストラII', true, 5, 58)
+	-- M.invoke_magick_debuff(player, 'フラズルII', true, 5, 64)
+	M.invoke_magick_debuff(player, 'ディストラIII', true, 5, 84)
+	M.invoke_magick_debuff(player, 'フラズルIII', true, 5, 90)
     else
-	invoke_magick_debuff(player, 'ディアIII', false, 45)
-	-- invoke_magick_debuff(player, 'ディストラII', false, 58)
-	-- invoke_magick_debuff(player, 'フラズルII', false, 64)
-	invoke_magick_debuff(player, 'ディストラIII', false, 84)
-	invoke_magick_debuff(player, 'フラズルIII', false, 90)
+	M.invoke_magick_debuff(player, 'ディアIII', false, 5, 45)
+	-- M.invoke_magick_debuff(player, 'ディストラII', false, 5, 58)
+	-- M.invoke_magick_debuff(player, 'フラズルII', false, 5, 64)
+	M.invoke_magick_debuff(player, 'ディストラIII', false, 5, 84)
+	M.invoke_magick_debuff(player, 'フラズルIII', false, 5, 90)
     end
 end
 
@@ -100,13 +100,13 @@ function M.sub_tick(player)
 	return  -- 本職に任せる
     end
     if player.status == 1 then -- 戦闘中
-	invoke_magick_debuff(player, 'ディアII', true, 30)
-	invoke_magick_debuff(player, 'ディストラ', true, 32)
-	invoke_magick_debuff(player, 'フラズル', true, 38)
+	M.invoke_magick_debuff(player, 'ディアII', true, 5, 30)
+	M.invoke_magick_debuff(player, 'ディストラ', true, 7, 32)
+	M.invoke_magick_debuff(player, 'フラズル', true, 7, 38)
     else
-	invoke_magick_debuff(player, 'ディアII', false, 30)
-	invoke_magick_debuff(player, 'ディストラ', false, 32)
-	invoke_magick_debuff(player, 'フラズル', false, 38)
+	M.invoke_magick_debuff(player, 'ディアII', false, 5, 30)
+	M.invoke_magick_debuff(player, 'ディストラ', false, 7, 32)
+	M.invoke_magick_debuff(player, 'フラズル', false, 7, 38)
     end
 end
 

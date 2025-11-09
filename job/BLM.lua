@@ -13,25 +13,25 @@ M.mainJobProbTable = {
     -- { 200, 10, 'input /ma ファイア <t>', 2 },
     -- { 500, 10, 'input /ma ブリザド <t>', 2 },
     -- { 500, 10, 'input /ma サンダー <t>', 2 },
-    -- { 300,10, 'input /ma バイオ <t>', 2 },
-    -- { 300,40, 'input /ma ドレイン <t>',  4},
-    -- { 200,10, 'input /ma スタン <t>', 2 },
+    -- { 100,10, 'input /ma バイオ <t>', 3 },
+    -- { 100,40, 'input /ma ドレイン <t>',  4},
+    -- { 200,10, 'input /ma スタン <t>', 3 },
     -- { 200,10, 'input /ma アスピル <t>', 2 },
     -- { 200,10, 'input /ma アスピルII <t>', 2 },
-    -- { 200,10, 'input /ma ディア <t>', 2, true },
-    -- { 100, 180, 'input /ma ショックスパイク <me>', 5 },
+    -- { 200,10, 'input /ma ディア <t>', 5, true },
+    { 100, 180, 'input /ma ショックスパイク <me>', 5 },
 }
 
 M.subJobProbTable = { }
 
-function invoke_magick_debuff(player, magic, onoff, need_mp)
+function M.invoke_magick_debuff(player, magic, onoff, need_mp)
     if player.vitals.mp < need_mp then
 	return
     end
     local level = task.PRIORITY_LOW
     local c = 'input /ma '..magic..' <t>'
     -- command, delay, duration, period, eachfight
-    local t = task.newTask(c, 2, 4, 90, true)
+    local t = task.newTask(c, 2, 5, 90, true)
     if onoff then
 	task.setTask(level, t)
     else
@@ -44,15 +44,15 @@ function M.main_tick(player)
 	role_Sorcerer.main_tick(player)
     end
     if player.status == 1 then -- 戦闘中
-	invoke_magick_debuff(player, 'バーン', true, 25)
-	invoke_magick_debuff(player, 'チョーク', true, 25)
-	if player.vitals.mp >= 1500 then
+	M.invoke_magick_debuff(player, 'バーン', true, 25)
+	M.invoke_magick_debuff(player, 'チョーク', true, 25)
+	if player.vitals.mp >= 1200 then
 	    role_Sorcerer.invoke_magic(2, true, task.PRIORITY_LOW)
 	    role_Sorcerer.invoke_magic(3, true, task.PRIORITY_LOW)
 	end
     else
-	invoke_magick_debuff(player, 'バーン', false, 25)
-	invoke_magick_debuff(player, 'チョーク', false, 25)
+	M.invoke_magick_debuff(player, 'バーン', false, 25)
+	M.invoke_magick_debuff(player, 'チョーク', false, 25)
 	role_Sorcerer.invoke_magic(2, false, task.PRIORITY_LOW)
 	role_Sorcerer.invoke_magic(3, false, task.PRIORITY_LOW)
     end
@@ -71,11 +71,11 @@ function M.sub_tick(player)
 	return  -- 本職に任せる
     end
     if player.status == 1 then -- 戦闘中
-	invoke_magick_debuff(player, 'バーン', true, 25)
-	invoke_magick_debuff(player, 'チョーク', true, 25)
+	M.invoke_magick_debuff(player, 'バーン', true, 25)
+	M.invoke_magick_debuff(player, 'チョーク', true, 25)
     else
-	invoke_magick_debuff(player, 'バーン', false, 25)
-	invoke_magick_debuff(player, 'チョーク', false, 25)
+	M.invoke_magick_debuff(player, 'バーン', false, 25)
+	M.invoke_magick_debuff(player, 'チョーク', false, 25)
     end
 end
 
