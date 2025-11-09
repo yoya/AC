@@ -20,7 +20,7 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    hp2 = { route="castle" },
+    -- hp2 = { route="castle" },
     hp3_M = { route="daiseido" },
 }
 
