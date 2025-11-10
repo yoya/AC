@@ -54,6 +54,20 @@ M.routes = {
         {x=114.2,y=30.3}, {x=125.2,y=31.8},
         {x=125,y=60.2}, {a="f8touch"}
     },
+    -- HP#4(A)
+    choco = {
+	{x=-107,y=108,z=-6}, {x=-103,y=102,z=-6}, {x=-83,y=102,z=0},
+	{x=-81.2,y=105.6,z=0}, {a="opendoor"},
+	{a="wait"},{a="up"}, {a="wait"}, {a="enter"}
+    },
+}
+
+M.essentialPoints = {
+    hp_4_a = {x=-107,y=108,z=-6},
+}
+
+M.automatic_routes = {
+    hp_4_a = { route="choco" }
 }
 
 return M
