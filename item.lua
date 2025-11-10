@@ -310,5 +310,45 @@ M.useItemIncludeBags = function(item_id)
     return ret
 end
 
+local equip_bags = {  -- TODO: equip.lua かどっちかにまとめる
+    inventory = 0,
+    wardrobe = 8,
+    wardrobe2 = 10,
+    wardrobe3 = 11,
+    wardrobe4 = 12,
+    wardrobe5 = 13,
+    wardrobe6 = 14,
+    wardrobe7 = 15,
+    wardrobe8 = 16,
+}
+
+function M.searchEquipItem(item_id)  -- 未テスト
+    local items = windower.ffxi.get_items()
+    for name, bag_id in pairs(equip_bags) do
+	bag = items[name]
+	if bag ~= nil then
+	    for i, e in ipairs(bag) do
+		if e.id == item_id then
+		    return equip_bags[name], e.slot
+		end
+	    end
+	end
+    end
+end
+
+-- useEquipItem(14, 28540, 'デジョンリング', 9)
+-- 右指にデジョンリングをつけて使用
+function M.useEquipItem(slot, item_id, item_name, delay)
+    local ac_equip = require('ac/equip')
+    local task = require('task')
+    ac_equip.equip_save()
+    ac_equip.equip_item(slot, item_id)
+    local c = "input /item "..item_name.." <me>"
+    coroutine.sleep(10)
+    task.setTaskSimple(c, 1, 2)
+    coroutine.sleep(3)
+    ac_equip.equip_restore()
+end
+
 return M
 

@@ -1,6 +1,7 @@
 -- 装備関連
 
 local M = {}
+local acitem = require 'item'
 
 -- 装束を装着する部位 (slot)
 local equip_slots = {
@@ -10,6 +11,7 @@ local equip_slots = {
     left_ring = 13, right_ring = 14, back = 15
 }
 
+--[[
 -- 装束の装着を指定できる bag の種類
 local equip_bags = {
     0, -- inventory
@@ -18,6 +20,17 @@ local equip_bags = {
     11, -- wardrobe3
     12, -- wardrobe4
 }
+]]
+
+-- Usage: equip_item("right_ring")
+function M.equip_item_by_slot_name(slot_name)
+    local items = windower.ffxi.get_items()
+    local id = items.equipment[slot_name]  -- bag 内 id
+    local bag = items.equipment[slot_name.."_bag"]  -- どの bag か
+    local items = windower.ffxi.get_items(bag)
+    local item_id = items[id].id
+    return item_id
+end
 
 local equip_set = {}
 
@@ -38,6 +51,12 @@ function M.equip_restore()
     for name, e in pairs(equip_set) do
 	windower.ffxi.set_equip(e.inv_id, e.slot, e.bag)
     end
+end
+
+function M.equip_item(slot, item_id)
+    bag, inv_id = acitem.searchEquipItem(item_id)
+    -- print("ac/equip", slot, item_id, bag, inv_id)
+    windower.ffxi.set_equip(inv_id, slot, bag)
 end
 
 function M.tick(player)
