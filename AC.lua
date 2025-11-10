@@ -43,8 +43,8 @@ local cipher_ids = item_data.cipher_ids --  盟スクロール
 
 local enemyFilter = nil
 
--- (他と戦闘中でも中断して)先に倒すべき敵
-local firstDefeatedEnemyList = {
+-- 他との戦闘を中断してでも先に倒すべき敵
+local moreAttractiveEnemyList = {
     -- カオス戦
     "Profane Circle",
     -- アンバス
@@ -57,15 +57,12 @@ local firstDefeatedEnemyList = {
     "Bozzetto Trainer",      -- 獣使い (あやつる)
     -- 醴泉島
     "Wretched Poroggo", "Water Elemental",
-    -- ドメインベーション
-    "Azi Dahaka's Dragon",
-    "Naga Raja's Lamia", "Naga Raja",
     -- Void Watch
     "Gloam Servitor", -- ルフェーゼ
     "Bloodswiller Fly", -- "Tsui-Goab", -- ミザレオ
     "Little Wingman", -- ウルガラン
     "Bloody Skull", -- アットワ
-    -- "Primordial Pugil", -- ビビキー
+    "Primordial Pugil", -- ビビキー
     -- プロマシア
     "Gargoyle",
 }
@@ -73,15 +70,7 @@ local firstDefeatedEnemyList = {
 -- 優先して釣る敵
 local preferedEnemyList = {
     -- カオス戦
-    "Profane Circle", "Chaos",
-    -- アンバス
-    "Tyny Lycopodium",
-    "Skullcap", "Bozzetto Elemental",
-    -- アンバス-巨人回
-    "Bozzetto Marshal",      -- 戦士   (マイティストライク)
-    "Bozzetto Swiftshooter", -- 狩人   (イーグルアイ)
-    "Bozzetto Fistfighter",  -- モンク (百烈拳)
-    "Bozzetto Trainer",      -- 獣使い (あやつる)
+    "Chaos",
     -- コロナイズ
     "Knotted Root", "Bedrock Crag", "Icy Palisade",
     -- 醴泉島
@@ -90,14 +79,8 @@ local preferedEnemyList = {
     -- ドメインベーション
     "Azi Dahaka's Dragon", "Azi Dahaka",
     "Naga Raja's Lamia", "Naga Raja",
-    -- VoidWatch
-    "Gloam Servitor", -- ルフェーゼ
-    "Bloodswiller Fly", -- ミザレオ
-    "Little Wingman", -- ウルガラン
-    "Bloody Skull", -- アットワ
-    -- "Primordial Pugil", -- ビビキー
-    -- プロマシア
-    "Gargoyle",
+    "Quetzalcoatl's Sibilus", "Quetzalcoatl",
+    "Mireu",
     -- 実験
     "Apex Toad",  -- ウォーの門、トード。
     "Mourioche",  -- マンドラ
@@ -167,7 +150,7 @@ local leaderFunction = function()
     -- 優先する敵
 	local condition = {
 	    range = settings.CampRange,
-	    preferMobs = preferedEnemyList,
+	    preferMobs = utils.table.merge_lists(moreAttractiveEnemyList, preferedEnemyList),
 	    nameMatch = enemyFilter,
 	}
 	local mob = acmob.searchNearestMob(start_pos, condition)
@@ -350,10 +333,10 @@ local figtingFunction = function()
     local mainJob = player.main_job
     local subJob = player.sub_job
 ---    print("XXX", preferedEnemyList)
-    -- 優先する敵は、索敵範囲を半分に。
+    -- 中断してでも優先する敵
     local condition = {
-	range = settings.CampRange/2,
-	preferMobs = preferedEnemyList,
+	range = settings.CampRange,
+	preferMobs = moreAttractiveEnemyList,
 	nameMatch = enemyFilter,
     }
     local preferMob = acmob.searchNearestMob(start_pos, condition)
