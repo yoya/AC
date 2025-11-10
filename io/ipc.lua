@@ -63,15 +63,14 @@ function M.recieve_party(source, arg)
 	if me == nil or not me.in_party then
 	    return  -- パーティに入っていない
 	end
-	io_chat.print("デジョン10秒前")
-	coroutine.sleep(10+math.random(0,8)/4)
+	io_chat.print("デジョン10-12秒前")
+	coroutine.sleep(math.random(0,8)/4)
 	local slot_right_ring = 14
 	local warpring_id = 28540
 	acitem.useEquipItem(slot_right_ring, warpring_id, 'デジョンリング', 9)
     else
-	print("io/ipc.recieve_party: unknown arg"..arg)
+	print("io/ipc.recieve_party: unknown arg:"..arg)
     end
 end
-
 
 return M

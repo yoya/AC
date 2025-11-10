@@ -1110,9 +1110,10 @@ windower.register_event('addon command', function(...)
 	if command2 == 'build' then
 	    io_ipc.send("*", "party", "build")
 	elseif command2 == 'warp' then
-	    io_chat.print("デジョン14秒前")
+	    io_chat.print("デジョン15秒前")
 	    io_ipc.send("*", "party", "warp")
-	    coroutine.sleep(3)
+	    coroutine.sleep(5)
+	    io_chat.print("デジョン10秒前")
 	    local slot_right_ring = 14
 	    local warpring_id = 28540
 	    acitem.useEquipItem(slot_right_ring, warpring_id, 'デジョンリング', 9)
