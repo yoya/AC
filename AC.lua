@@ -822,7 +822,8 @@ local idleFunction = function()
     end
 end
 
-local tick_new = function()
+local tickRunning = false
+function tick()
     -- print("tick_new")
     local player = windower.ffxi.get_player()
     local me = windower.ffxi.get_mob_by_target("me")
@@ -833,24 +834,12 @@ local tick_new = function()
     end
     zone_change.warp_handler_tick()
     aczone.tick(player)
-    task.tick()
     ac_equip.tick(player)
-end
-
-local tickRunning = false
-
---- 途中での return 抜け禁止。最後でフラグ落とすので。
-local tick = function()
-    local player = windower.ffxi.get_player()
-    local me = windower.ffxi.get_mob_by_target("me")
-    if player == nil or me == nil then
-	-- ログイン時に player は nil
-	-- エリアチェンジ時に me ターゲットできない
-	return
-    end
+    --- 途中での return 抜け禁止。最後でフラグ落とすので。
     if tickRunning then -- 二重に動かないガード。(ちゃんと働いているか不明)
         return 
     end
+    task.tick()
     -- zone_change.warp_handler_tick()
     acjob.tick(player)
     contents.tick(player)
@@ -875,12 +864,6 @@ local tick = function()
     tickRunning = false -- 二重に動かないガード終了
 end
 
-
---- ループの終了条件
-local loopCnd = function()
-    return auto
-end
-
 local start2 = function()
     io_chat.print('### AutoA  START')
     io_chat.print("CampRange: " .. settings.CampRange)
@@ -893,7 +876,6 @@ local start2 = function()
     end
     settings = config.load(defaults)
     auto = true
-    tick:loop(settings.Period, loopCnd)
 end
 
 local stop2 = function()
@@ -1255,7 +1237,7 @@ windower.register_event('addon command', function(...)
 end)
 
 windower.register_event('load', function()
-    tick_new:loop(1.0)
+    tick:loop(1.0)
     ws.init()
     local zone = windower.ffxi.get_info().zone
     zone_change.zone_in_handler(zone, nil)
