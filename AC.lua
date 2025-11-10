@@ -863,9 +863,9 @@ local tick = function()
     if player.status == 0 or player.status == 85 then
 	--- 待機中
 	idleFunction()
-	if iamLeader() or puller then
+	if iamLeader() == true or puller then
 	    leaderFunction()
-	else
+	elseif iamLeader() == false then
 	    notLeaderFunction()
 	end
     elseif player.status == 1 then
