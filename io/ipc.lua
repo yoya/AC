@@ -7,6 +7,7 @@ local io_chat = require("io/chat")
 local utils = require('utils')
 local split = utils.split
 local task = require 'task'
+local acitem = require 'item'
 
 --[[
     AC.*.Upaupa.WS.1
@@ -57,6 +58,16 @@ function M.recieve_party(source, arg)
 	-- print("io/ipc.recieve_party", c)
 	--  command, delay, period
 	task.setTaskSimple(c, 1, 2)
+    elseif arg == "warp" then
+	local me = windower.ffxi.get_mob_by_target("me")
+	if me == nil or not me.in_party then
+	    return  -- パーティに入っていない
+	end
+	io_chat.print("デジョン10秒前")
+	coroutine.sleep(10+math.random(0,8)/4)
+	local slot_right_ring = 14
+	local warpring_id = 28540
+	acitem.useEquipItem(slot_right_ring, warpring_id, 'デジョンリング', 9)
     else
 	print("io/ipc.recieve_party: unknown arg"..arg)
     end

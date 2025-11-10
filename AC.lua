@@ -1109,8 +1109,15 @@ windower.register_event('addon command', function(...)
     elseif command == 'party' then
 	if command2 == 'build' then
 	    io_ipc.send("*", "party", "build")
+	elseif command2 == 'warp' then
+	    io_chat.print("デジョン14秒前")
+	    io_ipc.send("*", "party", "warp")
+	    coroutine.sleep(3)
+	    local slot_right_ring = 14
+	    local warpring_id = 28540
+	    acitem.useEquipItem(slot_right_ring, warpring_id, 'デジョンリング', 9)
 	else
-	    print("ac party build")
+	    print("ac party build | warp")
 	end
     elseif command == 'point' then
         doPointCheer = not doPointCheer
