@@ -948,6 +948,18 @@ windower.register_event('addon command', function(...)
 	io_chat.print("mode attack:", settings.Attack, "  calm:", settings.Calm)
     elseif command == 'stop' then
         stop()
+    elseif command == 'all' then
+	if command2 == 'warp' then
+	    io_chat.print("デジョン15秒前")
+	    io_ipc.send("*", "all", "warp")
+	    coroutine.sleep(5)
+	    io_chat.print("デジョン10秒前")
+	    local slot_right_ring = 14
+	    local warpring_id = 28540
+	    acitem.useEquipItem(slot_right_ring, warpring_id, 'デジョンリング', 9)
+	else
+	    print("ac all warp")
+	end
     elseif command == 'attack' or command == 'att' or command == 'at' then
 	local onoff = argument_means_on(command2)
 	if onoff ~= nil then
@@ -1189,7 +1201,8 @@ windower.register_event('addon command', function(...)
         io_chat.print('//ac [options]')
         io_chat.print('    start              - Starts auto attack')
         io_chat.print('    stop               - Stops auto attack')
-        io_chat.print('    attack on|off      - Change attack mode')
+        io_chat.print('    all warp           - All member action')
+	io_chat.print('    attack on|off      - Change attack mode')
 	io_chat.print('    debug ...          - Debug information')
 	io_chat.print('    defeated           - Defeated Process')
 	io_chat.print('    dropjunk           - Drop JunkItem')
@@ -1200,8 +1213,8 @@ windower.register_event('addon command', function(...)
 	io_chat.print('    magic fire|ice|... - Set MB Magic attribute')
         io_chat.print('    move <route>       - Auto move')
 	io_chat.print('    moverev <route>    - Auto move reverse')
-        io_chat.print('    party build        - Party build')
-	io_chat.print('    point              - point action for ambus')
+        io_chat.print('    party build|warp   - Party action')
+	io_chat.print('    point              - Point action for ambus')
 	io_chat.print('    pos                - Show current position')
         io_chat.print('    puller on|off      - Change puller mode')
 	io_chat.print('    record char|spells - Reord Status to LogFile')
