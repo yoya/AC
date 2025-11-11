@@ -949,7 +949,24 @@ windower.register_event('addon command', function(...)
     elseif command == 'stop' then
         stop()
     elseif command == 'all' then
-	if command2 == 'warp' then
+	if command2 == 'dim' or command2 == 'holla' or command2 == 'mea' then
+	    local item_name = "Ｄ．ホラリング"
+	    local item_id = 26176
+	    if arg == "dim" then
+		item_name = "Ｄ．デムリング"
+		item_id = 26177
+	    elseif arg == "mea" then
+		item_name = "Ｄ．メアリング"
+		item_id = 26178
+	    end
+	    io_chat.print(item_name.."10秒前")
+	    io_ipc.send("*", "all", command2)
+	    local slot_right_ring = 14
+	    acitem.useEquipItem(slot_right_ring, item_id, item_id, 10)
+	elseif command2 == 'reload' then
+	    io_ipc.send("*", "all", "reload")
+	    task.setTaskSimple("lua r AC", 1, 1)
+	elseif command2 == 'warp' then
 	    io_chat.print("デジョン15秒前")
 	    io_ipc.send("*", "all", "warp")
 	    coroutine.sleep(5)

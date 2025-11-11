@@ -44,11 +44,43 @@ function M.recieve(message)
     if target ~= '*' and (player == nil or player.name ~= target) then
 	return  -- 自分向けじゃない
     end
-    if method == 'party' then
+    if method == 'all' then
+	M.recieve_all(source, arg)
+    elseif method == 'party' then
 	M.recieve_party(source, arg)
+    else
+	print("io/ipc.recieve: unknown method:"..method)
     end
 end
 
+function M.recieve_all(source, arg)
+    if arg == "dim" or arg == "holla" or arg == "mea" then
+	local item_name = "Ｄ．ホラリング"
+	local item_id = 26176
+	if arg == "dim" then
+	    item_name = "Ｄ．デムリング"
+	    item_id = 26177
+	elseif arg == "mea" then
+	    item_name = "Ｄ．メアリング"
+	    item_id = 26178
+	end
+	io_chat.print(item_name.."10-12秒前")
+	coroutine.sleep(math.random(0,8)/4)
+	local slot_right_ring = 14
+	acitem.useEquipItem(slot_right_ring, item_id, item_name, 10)
+    elseif arg == "reload" then
+	task.setTaskSimple("lua r AC", 1, 1)
+    elseif arg == "warp" then
+	local me = windower.ffxi.get_mob_by_target("me")
+	io_chat.print("デジョン10-12秒前")
+	coroutine.sleep(math.random(0,8)/4)
+	local slot_right_ring = 14
+	local warpring_id = 28540
+	acitem.useEquipItem(slot_right_ring, warpring_id, 'デジョンリング', 10)
+    else
+	print("io/ipc.recieve_all: unknown arg:"..arg)
+    end
+end
 function M.recieve_party(source, arg)
 --     io_chat.print("io/ipc.recieve_party", arg)
     if arg == "build" then
@@ -59,15 +91,15 @@ function M.recieve_party(source, arg)
 	--  command, delay, period
 	task.setTaskSimple(c, 1, 2)
     elseif arg == "warp" then
-	local me = windower.ffxi.get_mob_by_target("me")
-	if me == nil or not me.in_party then
+	local party = windower.ffxi.get_party()
+	if party.party1_leader == nil then
 	    return  -- パーティに入っていない
 	end
 	io_chat.print("デジョン10-12秒前")
 	coroutine.sleep(math.random(0,8)/4)
 	local slot_right_ring = 14
 	local warpring_id = 28540
-	acitem.useEquipItem(slot_right_ring, warpring_id, 'デジョンリング', 9)
+	acitem.useEquipItem(slot_right_ring, warpring_id, 'デジョンリング', 10)
     else
 	print("io/ipc.recieve_party: unknown arg:"..arg)
     end
