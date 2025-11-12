@@ -20,6 +20,7 @@ local preferWeaponSkill = {
     'ukko', 'steel', 'uph', 'shield', --両手斧
     'dai',  -- 両手槍
     'demi', 'spin', 'frost', -- 両手剣
+    'jin', 'ten', -- 片手等
     'kasha', 'shoha', 'hocho', 'gekko', 'kagero', 'yuki', -- 両手刀
     'shun', -- 片手刀
     'moon', 'realm', 'hexa', 'shine', 'circle', -- 片手棍
@@ -40,18 +41,18 @@ M.weaponskillTable = {
     dragon = 'ドラゴンブロウ',
     asyura = '夢想阿修羅拳',
     -- 短剣
+    evis = 'エヴィサレーション',
     manda = 'マンダリクスタッブ',
     rudra = 'ルドラストーム',
     dance = 'ダンシングエッジ',
     shadow = 'シャドーステッチ',
-    evis = 'エヴィサレーション',
     wasp = 'ワスプスティング',
     energy = 'エナジードレイン',
     aeolian = 'イオリアンエッジ',
     exen = 'エクゼンテレター',
     -- 片手剣
-    chant = 'シャンデュシニュ',
     savage = 'サベッジブレード',
+    chant = 'シャンデュシニュ',
     flat = 'フラットブレード',
     circle = 'サークルブレード',
     -- 両手剣
@@ -74,6 +75,9 @@ M.weaponskillTable = {
     spiral = 'スパイラルヘル',
     cross = 'クロスリーパー',
     ent = 'エントロピー',
+    -- 片手刀
+    jin = '迅',
+    ten = '天',
     -- 両手刀
     kasha = '九之太刀・花車', -- 核熱
     kagero = '四之太刀・陽炎', -- 溶解
