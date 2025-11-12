@@ -5,6 +5,10 @@ local M = { id = 257 }
 local io_chat = require 'io/chat'
 
 M.routes = {
+    -- モグハウス
+    hp2m = {
+	{x=-53.7,y=-128.5,z=-0.1}, {x=-54,y=-100,z=0,d=1},
+    },
     -- HP#2(M)
     moghouse = {
 	-- {x=-50.5,y=-95,z=-0.1}, {x=-54,y=-100},
@@ -40,14 +44,24 @@ M.routes = {
 	{x=-109,y=-56.8}, {x=-77.9,y=-63.9},
 	{a="f8touch"}
     },
+    -- ヤッセの船着場
+    ionis = {
+	{x=-57.8,y=85.2,z=-0.1}, {x=-54.3,y=85,z=-0.1}, {w=1},
+	{a="f8touch"}, {a="enter"}, {a="enter"},{a="up"}, {a="enter"},
+	{w=5}, {x=-57.6,y=85.1}, {a="f8touch"}
+    }
 }
 
 M.essentialPoints = {
+    from_moghouse = {x=-53.7,y=-128.5,z=-0.1},
     homepoint_2_M = {x=-50.5,y=-95,z=-0.1},
+    yahse_dock = {x=-57.8,y=85.2,z=-0.1}
 }
 
 M.automatic_routes = {
+    from_moghouse = { route="hp2m" },
     homepoint_2_M = { route="moghouse" },
+    yahse_dock = { route="ionis" }
 }
 
 return M
