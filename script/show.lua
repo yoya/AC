@@ -41,9 +41,10 @@ end
 
 path = debug.getinfo(1,"S").source:sub(2)
 local dirname, filename = path:match('^(.*/)([^/]-)$')
+local savedDir = dirname.."/../saved/"
 
 local files = {}
-for entry in lfs.dir(dirname) do
+for entry in lfs.dir(savedDir) do
     if entry: match "%.txt$" then
 	table.insert(files, entry)
     end
@@ -55,9 +56,9 @@ local charTable = {}
 
 for i, file in ipairs(files) do
     -- print("file:"..file)
-    local f = io.open(dirname..file)
+    local f = io.open(savedDir..file)
     if f == nil then
-	print("Can't open file:"..dirname..file)
+	print("Can't open file:"..savedDir..file)
 	exit(1)
     end
     -- 一行目
@@ -101,7 +102,7 @@ for i, file in ipairs(files) do
 	    gallimaufry = tonumber(table4[4])
 	end
     end
-local time, err = lfs.attributes(dirname..file, 'modification')
+local time, err = lfs.attributes(savedDir..file, 'modification')
     -- print(name, eminence_point, unity_point, time)
     local char  = {
 	line1 = line1,
