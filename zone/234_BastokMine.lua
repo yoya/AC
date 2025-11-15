@@ -21,7 +21,10 @@ M.routes = {
 	{x=-170,y=-18,z=-6.8}, {x=-173,y=-16,z=-7.5},
 	{x=-180,y=-16,z=-8,3}, {x=-185,y=-22,z=-8.5},
 	{x=-190,y=-22}, {}
-    }
+    },
+    diver = {
+	{x=38.2,y=-42.6,z=0}, {x=9.4,y=-115.2,z=0}
+    },
 }
 
 M.essentialPoints = {
@@ -29,7 +32,8 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
---    hp_1_A = { route="gumbah" },
+    -- hp_1_A = { route="gumbah" },
+    hp1_A = { route="diver", leader_only=true },
 }
 
 return M
