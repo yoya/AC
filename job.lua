@@ -54,6 +54,8 @@ local foodTable = {
     BLM = 'ペアクレープ',
     SCH = 'ペアクレープ',
     GEO = 'ペアクレープ',
+    NIN = 'カルボナーラ',
+    BST = 'カルボナーラ',
 }
 
 -- https://wiki.ffo.jp/html/33806.html
