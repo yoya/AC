@@ -65,18 +65,24 @@ M.routes = {
 	{x=41,y=-117,z=2}, {x=32,y=-121,z=0,d=1},
 	{x=5,y=-133}, {x=0,y=-137}, {}
     },
+    unity = {  -- 子ミスラ
+	{x=31,y=-163,z=0}, {x=23,y=-151}, {x=18,y=-113},
+	{x=15.2,y=-111.3,z=-0.1}, {a="f8touch"}
+    }
 }
 
 M.essentialPoints = {
     moogle = {x=0, y=0, z=0}, -- モグハウス内のモーグル
     wp_mum = {x=-21,y=-79.9,z=-0.2},
     wp_cou = {x=4.9,y=-4.8,z=0},
+    hp_2_M = {x=31,y=-163,z=0},
 }
 
 M.automatic_routes = {
     moogle = { route="moogle" }, -- 動かないように
     wp_mum = { route="mum" },
     wp_cou = { route="cou" },
+    hp_2_M = { route="unity" },
 }
 
 local sell_items = {
