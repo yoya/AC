@@ -8,7 +8,7 @@ local M = {}
 -- 敵のヘイトが自分のパーティ/アライアンスに向いてるか
 function isMobLinked(mob)
     local party = windower.ffxi.get_party()
-    for x in pairs({"p", "a1", "a2"}) do -- アライアンス全員
+    for _, x in pairs({"p", "a1", "a2"}) do -- アライアンス全員
         for i = 0, 5 do -- 自分含めて全員
             local member = party[x..i]
             if member ~= nil and member.mob ~= nil then
@@ -37,7 +37,7 @@ function isMobAttackable(mob)
 	not utils.table.contains(nonAttackableMobs, mob.name) then
 	-- 敵が平常、または味方にヘイトを向けている
 	if mob.status == 0 or mob.claim_id == 0 or
-	    isMobLinked(mob.claim_id) or
+	    isMobLinked(mob) or
 	    utils.table.contains(alwaysAttackableMobs, mob.name) then
 	    return true
 	end
