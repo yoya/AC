@@ -146,8 +146,12 @@ function moveTo(route, routeTable)
 		windower.ffxi.run(true)
             end
 	    if p.w ~= nil then
-		print("wait:"..p.w)
-		coroutine.sleep(p.w)
+		p.wait = p.w
+		p.w = nil
+	    end
+	    if p.wait ~= nil then
+		print("wait:"..p.wait)
+		coroutine.sleep(p.wait)
 	    end
             if p.a == "mount" then
                 command.send('input /mount ラプトル')
@@ -194,6 +198,10 @@ function moveTo(route, routeTable)
 		local dpos = {x=x,y=y,z=p.z}
 		local currPos = currentPos()
 		if prevPos ~= nil then
+		    if distance(prevPos, currPos) > 64 then
+			print("too far next move point")
+			return
+		    end
 		    local vec1 = {x=currPos.x-prevPos.x,y=currPos.y-prevPos.y}
 		    local vec2 = {x=dpos.x-currPos.x,y=dpos.y-currPos.y}
 		    local similality = utils.vector.CosineSimilarity(vec1, vec2)
