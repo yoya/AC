@@ -58,14 +58,20 @@ function M.record_char()
 	    local cp_jp_list = {5,25,55,95,145,205,275,355,445,545,655,775,905,1045,1195,1355,2100}
 	    local prev_jp = 0
 	    local next_jp = 5
+	    local next_jp_list = {}
 	    for i, p in ipairs(cp_jp_list) do
-		if prev_jp <= jobpt.jp_spent and jobpt.jp_spent < p then
+		if prev_jp <= jobpt.jp_spent +jobpt.jp and jobpt.jp_spent < p then
 		    next_jp = p
-		    break
+		    table.insert(next_jp_list, p)
+--		    break
 		end
 		prev_jp = p
 	    end
-	    f:write("(next:"..next_jp..")")
+	    if #next_jp_list == 0 then
+		next_jp_list = {5}
+	    end
+	    local next_jps = table.concat(next_jp_list, ",")
+	    f:write("(next:"..next_jps..")")
 	elseif jobpt.jp_spent >= 2100 and ac_char.real_master_level() >= 0 then
 	    f:write(" Mlv:"..ac_char.real_master_level())
 	    local exemplar_percent = math.floor(100 * ac_char.current_exemplar_point()/ac_char.next_exemplar_point()) -- 切り捨て
