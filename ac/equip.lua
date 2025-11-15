@@ -2,6 +2,7 @@
 
 local M = {}
 local acitem = require 'item'
+local io_chat = require 'io/chat'
 
 -- 装束を装着する部位 (slot)
 local equip_slots = {
@@ -11,16 +12,18 @@ local equip_slots = {
     left_ring = 13, right_ring = 14, back = 15
 }
 
---[[
 -- 装束の装着を指定できる bag の種類
 local equip_bags = {
-    0, -- inventory
-    8, -- wardrobe
-    10, -- wardrobe2
-    11, -- wardrobe3
-    12, -- wardrobe4
+    inventory = 0,
+    wardrobe = 8,
+    wardrobe2 = 10,
+    wardrobe3 = 11,
+    wardrobe4 = 12,
+    wardrobe5 = 13,
+    wardrobe6 = 14,
+    wardrobe7 = 15,
+    wardrobe8 = 16,
 }
-]]
 
 -- Usage: equip_item("right_ring")
 function M.equip_item_by_slot_name(slot_name)
@@ -35,13 +38,19 @@ end
 local equip_set = {}
 
 -- 装備中の装束を記録する
-function M.equip_save()
+function M.equip_save(force)
     local items = windower.ffxi.get_items()
     for name, slot  in pairs(equip_slots) do
 	local id = items.equipment[name]  -- bag 内 id
 	local bag = items.equipment[name.."_bag"]  -- どの bag か
 	if id > 0 then  -- 装備している場合
-	    equip_set[name] = { inv_id=id, slot=slot, bag=bag }
+	    if force then
+		equip_set[name] = { inv_id=id, slot=slot, bag=bag }
+	    else
+		if equip_set[name] == nil then  -- 保存されてない装備だけ
+		    equip_set[name] = { inv_id=id, slot=slot, bag=bag }
+		end
+	    end
 	end
     end
 end
@@ -54,9 +63,23 @@ function M.equip_restore()
 end
 
 function M.equip_item(slot, item_id)
-    bag, inv_id = acitem.searchEquipItem(item_id)
+    bag, inv_id = M.searchEquipItem(item_id)
     -- print("ac/equip", slot, item_id, bag, inv_id)
     windower.ffxi.set_equip(inv_id, slot, bag)
+end
+
+function M.searchEquipItem(item_id)
+    local items = windower.ffxi.get_items()
+    for name, bag_id in pairs(equip_bags) do
+	bag = items[name]
+	if bag ~= nil then
+	    for i, e in ipairs(bag) do
+		if e.id == item_id then
+		    return equip_bags[name], e.slot
+		end
+	    end
+	end
+    end
 end
 
 function M.tick(player)
@@ -64,7 +87,7 @@ function M.tick(player)
     if player.status == 1 then
 	-- 118 は 妖蟲の髪飾り+1 用に許容する
 	if player.item_level >= 118 then
-	    M.equip_save()
+	    M.equip_save(false)
 	else
 	    M.equip_restore()
 	end
