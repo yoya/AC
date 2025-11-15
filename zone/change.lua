@@ -40,8 +40,12 @@ function M.automatic_routes_handler(zone, automatic_routes)
     if ac_pos.isNear(pos, 0.5) then
 	for f, t in pairs(automatic_routes) do
 	    local fp = zone_object.essentialPoints[f]
+	    if fp == nil or fp.x == nil then
+		print("maybe esseialPoints illegal format")
+		return
+	    end
 	    local route = t.route
-	    local exec_auto_route = ac_pos.isNear(fp, 5)
+	    local exec_auto_route = ac_pos.isNear(fp, 2)
 	    if t.leader_only == true and not iamLeader() then
 		io_chat.setNextColor(4) -- ピンク
 		io_chat.print("移動するのはリーダーだけ")
