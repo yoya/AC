@@ -7,10 +7,12 @@ local role_Melee = require 'role/Melee'
 local aczone = require('zone')
 local io_chat = require('io/chat')
 
+local piani_prefix = "input /ja ピアニッシモ <me>; wait 1; "
+
 M.mainJobProbTable = {
     -- { 100, 60, 'input /ma 魔法のフィナーレ <t>', 8, true },
     -- { 200, 120, 'input /ma 修羅のエレジー <t>', 8, true },
-    { 1000, 120, 'input /ma 魔物のレクイエムVII <t>', 8, true },
+    { 1000, 120, piani_prefix..'input /ma 魔物のレクイエムVII <t>', 8, true },
     -- { 200, 120, 'input /ma 光のスレノディII <t>', 8, true },
 }
 
@@ -54,8 +56,8 @@ function song_tick(player)
     song("無敵の進撃マーチ", onoff, 15*60 / 3, 12)
     song("栄光の凱旋マーチ", onoff, 15*60 / 3, 12*2)
     song("猛者のメヌエットV", onoff, 15*60 / 2, 12*3)
-    -- song("剣豪のマドリガル", onoff, 15*60 / 3, 12*4)
-    -- song("怪力のエチュード", onoff, 15*60 / 3, 12*4)
+    song("剣豪のマドリガル", onoff, 15*60 / 4, 12*4)
+    song("怪力のエチュード", onoff, 15*60 / 3, 12*4)
     song("妙技のエチュード", onoff, 15*60 / 2, 12*4)
 end
 
