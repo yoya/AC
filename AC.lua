@@ -50,11 +50,6 @@ local moreAttractiveEnemyList = {
     -- アンバス
     "Tyny Lycopodium",
     "Skullcap", "Bozzetto Elemental",
-    -- アンバス-巨人回 https://wiki.ffo.jp/html/35730.html
-    "Bozzetto Marshal",      -- 戦士   (マイティストライク)
-    "Bozzetto Swiftshooter", -- 狩人   (イーグルアイ)
-    "Bozzetto Fistfighter",  -- モンク (百烈拳)
-    "Bozzetto Trainer",      -- 獣使い (あやつる)
     -- 醴泉島
     "Wretched Poroggo", "Water Elemental",
     -- Void Watch

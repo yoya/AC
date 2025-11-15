@@ -16,12 +16,16 @@ local pushKeys = keyboard.pushKeys
 local postponeEnemies = {
     ["Bozzetto Enceladus"] = true, -- 巨人族
     ["Dastardly Banneret"] = true, -- アルカナ類 イヴィルウェポン
+    ["Bozzetto Necronura"] = true, -- ボロッゴ族(かえる)
+    ["Possessed Heartwing"] = true, -- リフキン
 }
 
 local preferEnemyTable = {
     -- 巨人族
-    "Bozzetto Swiftshooter",
-    "Bozzetto Marshal",
+    "Bozzetto Marshal",      -- 戦士   (マイティストライク)
+    "Bozzetto Swiftshooter", -- 狩人   (イーグルアイ)
+    "Bozzetto Fistfighter",  -- モンク (百烈拳)
+    "Bozzetto Trainer",      -- 獣使い (あやつる)
     -- アルカナ類 イヴィルウェポン
     "Iniquitous Axes",
     "Iniquitous Staves",
@@ -31,6 +35,15 @@ local preferEnemyTable = {
     "Iniquitous Spears",
     "Iniquitous Katana",
     "Bozzetto Golden Bomb",
+    -- ボロッゴ族(かえる)
+    "Bozzetto Croaker",
+    -- リフキン
+    "Keen Leafkin",
+    "Tenacious Umbril",
+    "Alacritous Leafkin",
+    "Brawny Umbril",
+    "Vital Leafkin",
+    "Shifty Umbril",
 }
 
 function searchPreferEnemy()
