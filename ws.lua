@@ -14,9 +14,9 @@ M.weaponskill = 'flat'
 local preferWeaponSkill = {
     'dragon', 'victory', 'asyura', 'shishin', 'tokon', 'rangeki', 'combo', -- 格闘
     'evis', 'rudra', 'manda', 'exen',  'dance', 'shadow', -- 短剣
-    'savage', 'chant', -- 片手剣
+    'requ', 'savage', 'chant', -- 片手剣
     'reso','ground', -- 両手剣
-    'ramp', 'rui', -- 片手斧
+    'rui', 'ramp', -- 片手斧
     'ukko', 'steel', 'uph', 'shield', --両手斧
     'dai',  -- 両手槍
     'demi', 'spin', 'frost', -- 両手剣
@@ -51,6 +51,7 @@ M.weaponskillTable = {
     aeolian = 'イオリアンエッジ',
     exen = 'エクゼンテレター',
     -- 片手剣
+    requ = 'レクイエスカット',
     savage = 'サベッジブレード',
     chant = 'シャンデュシニュ',
     flat = 'フラットブレード',
