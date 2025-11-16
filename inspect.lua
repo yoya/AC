@@ -18,7 +18,7 @@ utils.inspect = M
 
 M.skillchain_table = {
     {en="Light", ja="光", magic="サンダー"}, -- 1
-    {en="Darkness", ja="闇", magic="ストーン"}, -- 2
+    {en="Darkness", ja="闇", magic="ブリザド"}, -- 2
     {en="Gravitation", ja="重力", magic="ストーン"}, -- 3
     {en="Fragmentation", ja="分解", magic="サンダー"} , -- 4
     {en="Distortion", ja="湾曲", magic="ブリザド"}, -- 5
