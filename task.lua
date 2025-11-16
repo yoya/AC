@@ -179,7 +179,7 @@ M.tick = function()
     if o == nil or o > 1 then
 	local io_chat = require('io/chat')
 	local datetime = os.date("%X", now)
-	io_chat.printf("[%s]task.command: %s", datetime, c)
+	-- io_chat.printf("[%s]task.command: %s", datetime, c)
 	command.send(c)
     else
 	if string.find(c, '//echo ') == 1 then
