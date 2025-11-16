@@ -69,11 +69,10 @@ function M.hasJobMemberInParty(jobName)
     local party = windower.ffxi.get_party()
     for i = 0, 5 do -- 自分含めて全員
 	local member = party["p"..i]
+	local info = M.member_table[id]
 	-- 該当メンバーがいる。かつエリア内にいる
-	if member ~= nil and member.mob ~= nil then
-	    if  member.mob.main_job == jobName then -- 間違ってそう。要調査
-		return true
-	    end
+	if info ~= nil and info.main_job == jobName then -- 間違ってそう。要調査
+	    return true
 	end
     end
     return false
