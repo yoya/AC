@@ -198,7 +198,7 @@ function moveTo(route, routeTable)
 		local dpos = {x=x,y=y,z=p.z}
 		local currPos = currentPos()
 		if prevPos ~= nil then
-		    if distance(prevPos, currPos) > 64 then
+		    if distance(prevPos, currPos) > 128 then
 			print("too far next move point")
 			return
 		    end
