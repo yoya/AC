@@ -1349,6 +1349,7 @@ windower.register_event('zone change', function(zone, prevZone)
     task.setTaskSimple("ac inject currinfo2", 4, 1)
     task.setTaskSimple("ac record char", 6, 1)
     enemyFilter = nil
+    puller = false
 end)
 
 
