@@ -145,8 +145,15 @@ local leaderFunction = function()
         -- print("getMobPosition failed ???")
         return
     end
---    print("mid_pos:", mid_pos.x, mid_pos.y)
+    -- リンクしてる敵
+    local condition = {
+	range = settings.CampRange,
+	linkedOnly = true,
+	-- nameMatch = enemyFilter,
+    }
+    local mob = acmob.searchNearestMob(me_pos, condition)
     -- 優先する敵
+    if mob == nil then
 	local condition = {
 	    range = settings.CampRange,
 	    preferMobs = utils.table.merge_lists(moreAttractiveEnemyList, preferedEnemyList),
@@ -154,7 +161,8 @@ local leaderFunction = function()
 	}
 	local mob = acmob.searchNearestMob(start_pos, condition)
 	-- local mob = acmob.getNearestFightableMob(start_pos, settings.CampRange, )
----    print("nearest prefered mob", mob)
+	---    print("nearest prefered mob", mob)
+    end
     if mob == nil then
         --- メンバーが戦っている敵がいれば、そちら優先
         -- mob = ac_mob.PartyTargetMob()
@@ -165,12 +173,11 @@ local leaderFunction = function()
 	    range = settings.CampRange,
 	    nameMatch = enemyFilter,
 	}
-	local mob = acmob.searchNearestMob(start_pos, condition)
+	mob = acmob.searchNearestMob(start_pos, condition)
         -- mob = acmob.getNearestFightableMob(start_pos, settings.CampRange, nil)
     end
     if mob ~= nil and settings.Attack then
         windower.ffxi.run(false)
----        io_chat.print(mob.name)
         io_net.targetByMobId(mob.id)
         command.send('wait 0.5; input /attack <t>')
     else 
@@ -288,7 +295,7 @@ local notLeaderFunction = function()
 	local condition = {
 	    range = settings.CampRange,
 	    linkedOnly = true,
-	    nameMatch = enemyFilter,
+	    -- nameMatch = enemyFilter,
 	}
 	local mob = acmob.searchNearestMob(me_pos, condition)
 	if mob ~= nil then
@@ -1003,6 +1010,13 @@ windower.register_event('addon command', function(...)
 	if command2 == 'checkbags' then
 	    io_chat.print(acitem.checkInventoryFreespace())
 	    io_chat.print(acitem.checkBagsFreespace())
+	elseif command2 == 'linked' then
+	    local mob = windower.ffxi.get_mob_by_target("t")
+	    if mob == nil then
+		print("no target")
+	    else
+		print("ac linked => ", isMobLinked(mob))
+	    end
 	elseif command2 == 'nearest' then
 	    local condition = {
 		range = settings.CampRange,
@@ -1018,7 +1032,7 @@ windower.register_event('addon command', function(...)
 		io_chat.print("same name monster")
 	    end
 	else
-	    print("ac debug checkbags|neaest")
+	    print("ac debug checkbags|linked|neaest")
 	end
     elseif command == 'defeated' then
 	-- 戦闘終了時の処理
