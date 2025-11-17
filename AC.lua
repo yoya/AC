@@ -1287,7 +1287,7 @@ windower.register_event('load', function()
 		string.contains(text, "遠くにいるため、コマンドが")then
 		--io_chat.setNextColor(6)
 		--io_chat.print("前に詰める")
-		keyboard.longpushKey("w", 0.5)  -- 前に詰める
+		keyboard.longpushKey("w", 1.0)  -- 前に詰める
 	    elseif string.contains(text, "姿が見えないためコマンドが") then
 		--io_chat.setNextColor(6)
 		--io_chat.print("左後ろに回る")
