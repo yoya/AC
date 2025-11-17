@@ -60,6 +60,8 @@ local moreAttractiveEnemyList = {
     "Primordial Pugil", -- ビビキー
     -- プロマシア
     "Gargoyle",
+    -- アルタナM
+    "Atomos",
 }
 
 -- 優先して釣る敵
@@ -79,6 +81,8 @@ local preferedEnemyList = {
     -- 実験
     "Apex Toad",  -- ウォーの門、トード。
     "Mourioche",  -- マンドラ
+    -- アルタナM
+    "Cait Sith Ceithir",
 }
 
 command.send('bind ^d ac start')
