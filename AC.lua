@@ -289,6 +289,7 @@ local notLeaderFunction = function()
 		-- print("p1 target Found", p1.target_index, target.index)
 		io_net.targetByMobIndex(p1.target_index)
 		-- io_net.targetByMobId(target.id)
+		windower.ffxi.run(true)
 	    end
 	end
     end
