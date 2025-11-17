@@ -1273,8 +1273,10 @@ windower.register_event('load', function()
     ws.init()
     local zone = windower.ffxi.get_info().zone
     zone_change.zone_in_handler(zone, nil)
-    task.setTaskSimple("ac inject currinfo1", 5, 1)
-    task.setTaskSimple("ac inject currinfo2", 6, 1)
+    -- command, delay, duration
+    task.setTaskSimple("ac inject currinfo1", 2, 1)
+    task.setTaskSimple("ac inject currinfo2", 4, 1)
+    task.setTaskSimple("ac record char", 6, 1)
     local incoming_text_handler = function(text)
 	if not auto then
 	    return
@@ -1309,16 +1311,22 @@ end)
 windower.register_event('login', function()
     -- ws.init()  -- このタイミングだと前のキャラのジョブが反映される
     ac_stat.init()
-    -- task.setTaskSimple("ac inject currinfo1", 5, 1)
-    -- task.setTaskSimple("ac inject currinfo2", 6, 1)
 end)
 
 windower.register_event('logout', function()
+    -- command, delay, duration
+    task.setTaskSimple("ac inject currinfo1", 2, 1)
+    task.setTaskSimple("ac inject currinfo2", 4, 1)
+    task.setTaskSimple("ac record char", 6, 1)
 end)
 
 windower.register_event('job change', function()
     ws.init()
     ac_stat.init()
+    -- command, delay, duration
+    task.setTaskSimple("ac inject currinfo1", 2, 1)
+    task.setTaskSimple("ac inject currinfo2", 4, 1)
+    task.setTaskSimple("ac record char", 6, 1)
 end)
 
 
@@ -1336,8 +1344,10 @@ windower.register_event('zone change', function(zone, prevZone)
     doPointCheer = false
     zone_change.zone_change_handler(zone, prevZone)
     ws.init()
-    task.setTaskSimple("ac inject currinfo1", 5, 1)
-    task.setTaskSimple("ac inject currinfo2", 6, 1)
+    -- command, delay, duration
+    task.setTaskSimple("ac inject currinfo1", 2, 1)
+    task.setTaskSimple("ac inject currinfo2", 4, 1)
+    task.setTaskSimple("ac record char", 6, 1)
     enemyFilter = nil
 end)
 
