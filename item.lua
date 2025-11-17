@@ -9,6 +9,8 @@ local M = {}
 
 -- アイテムの量
 
+M.warpring_id = 28540  -- でジョンリング
+
 local inventoryTotalNum = function()
     local items = windower.ffxi.get_items()
     local item = items.inventory
@@ -316,14 +318,14 @@ function M.useEquipItem(slot, item_id, item_name, delay)
     local ac_equip = require('ac/equip')
     local task = require('task')
     ac_equip.equip_save(true)
+    coroutine.sleep(1)
     ac_equip.equip_item(slot, item_id)
     local c = "input /item "..item_name.." <me>"
     coroutine.sleep(10)
     -- command, delay, duration
     task.setTaskSimple(c, 0, 5)  -- delay が信用できないので一旦 sleep で。
-    coroutine.sleep(3)
+    coroutine.sleep(2)
     ac_equip.equip_restore()
 end
 
 return M
-
