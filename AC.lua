@@ -350,8 +350,8 @@ local figtingFunction = function()
     }
     local preferMob = acmob.searchNearestMob(start_pos, condition)
     -- local  preferMob =  acmob.getNearestFightableMob(start_pos, preferedEnemyList)
----    print("prefereMob", preferMob)
-    if preferMob ~= nil and mob.name ~= preferMob.name then
+    ---    print("prefereMob", preferMob)
+    if not utils.table.contains(moreAttractiveEnemyList, mob.name) and preferMob ~= nil and mob.name ~= preferMob.name then
 --        print("preferMob:", mob.name)
         if iamLeader() then
             io_net.targetByMobId(preferMob.id)
