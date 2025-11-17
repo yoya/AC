@@ -111,19 +111,17 @@ function M.tick(player)
     if acitem.inventoryHasItemT(sell_itemsT) then
 	local mob = windower.ffxi.get_mob_by_name("Defliaa")
 	if mob ~= nil then
-	    if mob.distance < 40 then
+	    if mob.distance < 30 then
 		windower.ffxi.run(false)
 	    else
 		local me = windower.ffxi.get_mob_by_target("me")
-		if mob ~= nil and mob.distance < 500 then
-		    turnToPos(me.x, me.y, mob.x, mob.y)
-		    windower.ffxi.run(true)
-		end
-		if mob ~= nil and mob.distance < 100 then
+		if mob.distance < 500 then
 		    io_net.targetByMobId(mob.id)
+		    turnToPos(me.x, me.y, mob.x, mob.y)
 		    coroutine.sleep(0.5)
-		    utils.target_lockon(true)
 		    ac_move.turnToTarget("t")
+		    utils.target_lockon(true)
+		    windower.ffxi.run(true)
 		end
 	    end
 	end
