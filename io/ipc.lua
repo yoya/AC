@@ -64,6 +64,7 @@ function M.recieve_all(source, arg)
 	    item_name = "Ｄ．メアリング"
 	    item_id = 26178
 	end
+	task.allClear()
 	io_chat.print(item_name.."10-12秒前")
 	coroutine.sleep(math.random(0,8)/4)
 	local slot_right_ring = 14
@@ -72,6 +73,7 @@ function M.recieve_all(source, arg)
 	task.setTaskSimple("lua r AC", 1, 1)
     elseif arg == "warp" then
 	local me = windower.ffxi.get_mob_by_target("me")
+	task.allClear()
 	io_chat.print("デジョン10-12秒前")
 	coroutine.sleep(math.random(0,8)/4)
 	local slot_right_ring = 14
