@@ -245,8 +245,10 @@ local notLeaderFunction = function()
     local dx = leader_pos.x - me_pos.x
     local dy = leader_pos.y - me_pos.y
     local dist =  math.sqrt(dx*dx + dy*dy)
-        --- リーダーと離れたのを確率的に気づくように
-    if math.random(1, 3) <= 1 and dist > math.random(3, 5) then
+    -- リーダーと離れたのを確率的に気づくように
+    -- あと離れすぎたり、エリアが違う時や、やめる。
+    if math.random(1, 3) <= 1 and dist > math.random(3, 5) and
+	dist < 24 and p1.hpp > 0 then
         isFar = true
     elseif dist > math.random(6, 7) then -- 離れすぎたらすぐ気付く
         isFar = true
