@@ -968,10 +968,11 @@ windower.register_event('addon command', function(...)
 		item_name = "Ｄ．メアリング"
 		item_id = 26178
 	    end
+	    task.allClear()
 	    io_chat.print(item_name.."10秒前")
 	    io_ipc.send("*", "all", command2)
 	    local slot_right_ring = 14
-	    acitem.useEquipItem(slot_right_ring, item_id, item_id, 10)
+	    acitem.useEquipItem(slot_right_ring, item_id, item_name, 10)
 	elseif command2 == 'reload' then
 	    io_ipc.send("*", "all", "reload")
 	    task.setTaskSimple("lua r AC", 1, 1)
@@ -979,6 +980,7 @@ windower.register_event('addon command', function(...)
 	    io_chat.print("デジョン15秒前")
 	    io_ipc.send("*", "all", "warp")
 	    coroutine.sleep(5)
+	    task.allClear()
 	    io_chat.print("デジョン10秒前")
 	    local slot_right_ring = 14
 	    local warpring_id = 28540
@@ -1085,7 +1087,7 @@ windower.register_event('addon command', function(...)
         end
     elseif command == 'equip' then
 	if command2 == 'save' then
-	    ac_equip.equip_save()
+	    ac_equip.equip_save(true)
 	elseif command2 == 'restore' then
 	    ac_equip.equip_restore()
 	else
@@ -1123,6 +1125,7 @@ windower.register_event('addon command', function(...)
 	    io_chat.print("デジョン15秒前")
 	    io_ipc.send("*", "party", "warp")
 	    coroutine.sleep(5)
+	    task.allClear()
 	    io_chat.print("デジョン10秒前")
 	    local slot_right_ring = 14
 	    local warpring_id = 28540
