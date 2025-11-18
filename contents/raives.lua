@@ -14,8 +14,9 @@ M.preferredEnemyList = {
 function M.arise()
     for i, name in ipairs(M.preferredEnemyList) do
 	local mob = windower.ffxi.get_mob_by_name(name)
-	if mob ~= nil and mob.distance < 1000 then
-	    print("raives arised: " .. mob.name .. " found")
+	-- status:3 は隠れてる
+	if mob ~= nil and mob.status <= 1 and mob.distance < 1000 then
+	    print("raives arised: name=" .. mob.name .. " found status="..mob.status)
 	    return true
 	end
     end
