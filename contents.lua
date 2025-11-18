@@ -10,14 +10,17 @@ M.Mission = 5
 M.AbysYellow = 6
 M.MogGarden = 7
 M.Trial = 8  -- 試練(各属性プロトクリスタル)
--- M.allContents = {M.Leveling, M.Ambus, M.Works, M.Mission, M.MogGarden}
+M.Raives = 9
+-- M.allContents = {M.Leveling, M.Ambus, M.Works, M.Mission, M.MogGarden, M.Trial, M.Raives}
 
 M.ambus = require 'contents/ambus'
 M.trial = require 'contents/trial'
+M.raives = require 'contents/raives'
 
 M.contentsTable = {
     [M.Ambus] = M.ambus,
     [M.Trial] = M.trial,
+    [M.Raives] = M.raives,
 }
 
 M.type = M.Idle
