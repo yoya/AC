@@ -10,6 +10,7 @@ local keyboard = require 'keyboard'
 local pushKeys = keyboard.pushKeys
 local command = require 'command'
 local io_chat = require 'io/chat'
+local contents = require 'contents'
 local ac_pos = require 'ac/pos'
 local distance = ac_pos.distance
 
@@ -168,6 +169,14 @@ function moveTo(route, routeTable, nextRoute)
 	    if p.wait ~= nil then
 		print("wait:"..p.wait)
 		coroutine.sleep(p.wait)
+	    end
+	    if p.stop ~= nil then
+		if p.stop == "raives" then
+		    windower.ffxi.run(false)
+		    if contents.raives.arise() then
+			return -- レイヴ発生中なら移動終了
+		    end
+		end
 	    end
             if p.a == "mount" then
                 command.send('input /mount ラプトル')
