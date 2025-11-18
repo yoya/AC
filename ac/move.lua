@@ -10,6 +10,8 @@ local keyboard = require 'keyboard'
 local pushKeys = keyboard.pushKeys
 local command = require 'command'
 local io_chat = require 'io/chat'
+local ac_pos = require 'ac/pos'
+local distance = ac_pos.distance
 
 local turnToFront = function(target)
     local push_numpad5 = 'setkey numpad5 down; wait 0.1; setkey numpad5 up'
@@ -85,7 +87,21 @@ function stop()
 end
 M.stop = stop
 
-function moveTo(route, routeTable)
+
+function containPos(route, pos)
+    for i, p in ipairs(route) do
+	local d = 1
+	if p.d ~= nil then
+	    d = p.d + 1
+	end
+	if p.x ~= nil and distance(p, pos) < d then
+	    return true
+	end
+    end
+    return false
+end
+
+function moveTo(route, routeTable, nextRoute)
     local pos = currentPos()
     local r1List = {}  -- 各routeの一個目をリスト化
     local r1ListName = {}
@@ -225,6 +241,9 @@ function moveTo(route, routeTable)
                     coroutine.sleep(0.1)
                 end
 		windower.ffxi.run(false)
+		if nextRoute ~= nil and containPos(nextRoute, p) then
+		    return  -- 次のルートに重なるのでこのルートは終了
+		end
             end
             if p.t ~= nil then
                 command.send('input /target '..p.t)
@@ -272,8 +291,8 @@ function moveTo(route, routeTable)
 end
 M.moveTo = moveTo
 
-function autoMoveTo(zone_id, dest, routeTable, reverse)
-    if dest == nil then
+function autoMoveTo(zone_id, destTable, routeTable)
+    if destTable[1] == nil then
         if routeTable == nil then
             print("not defined zone route", zone_id)
         else
@@ -282,18 +301,35 @@ function autoMoveTo(zone_id, dest, routeTable, reverse)
             end
         end
     else
-        route = routeTable[dest]
-	if route == nil then
+	for i, dest in ipairs(destTable) do
 	    io_chat.setNextColor(3)
-	    io_chat.printf("route dest:%s is not found", dest)
-	    return
+	    io_chat.print("["..i.."] dest: "..dest)
+	    if dest:sub(1,1) == '-' then
+		dest = dest:sub(2)
+		reverse = true
+	    else
+		reverse = false
+	    end
+	    local nextDest = destTable[i+1]
+	    _autoMoveTo(zone_id, dest, routeTable, reverse, nextDest)
 	end
-        if reverse == true then
-            route = array_reverse(route)
-        end
-        moveTo(route, routeTable)
     end
 end
 M.autoMoveTo = autoMoveTo
+
+function _autoMoveTo(zone_id, dest, routeTable, reverse, nextDest)
+    local route = routeTable[dest]
+    local nextRoute = routeTable[nextDest]
+    if route == nil then
+	io_chat.setNextColor(3)
+	io_chat.printf("route dest:%s is not found", dest)
+	return
+    end
+    if reverse == true then
+	route = array_reverse(route)
+    end
+    moveTo(route, routeTable, nextRoute)
+end
+
 
 return M

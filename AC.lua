@@ -1113,11 +1113,11 @@ windower.register_event('addon command', function(...)
     elseif command == 'move' then
         local zone = windower.ffxi.get_info().zone
 	local routeTable = aczone.getRouteTable(zone)
-        ac_move.autoMoveTo(zone, command2, routeTable, false)
+        ac_move.autoMoveTo(zone, {command2, command3}, routeTable)
     elseif command == 'moverev' then
         local zone = windower.ffxi.get_info().zone
 	local routeTable = aczone.getRouteTable(zone)
-        ac_move.autoMoveTo(zone, command2, routeTable, true)
+        ac_move.autoMoveTo(zone, {"-"..command2}, routeTable)
     elseif command == 'party' then
 	if command2 == 'build' then
 	    io_ipc.send("*", "party", "build")
