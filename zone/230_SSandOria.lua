@@ -26,17 +26,23 @@ M.routes = {
 	{x=-95,y=42}, {x=-92,y=53}, {x=-94,y=72}, {x=-99,y=80},
 	{x=-97,y=83}, {a="opendoor"}, {x=-94,y=86}, {x=-88,y=88},
 	{x=-86,y=89.6,z=-6.9}, {a="f8touch"}
-    }
+    },
+    -- HP#3(M)
+    trust = {
+	{x=140,y=124,z=-2}, {x=125.2,y=94.3,z=0}, {a="f8"}
+    },
 }
 
 M.essentialPoints = {
-    hp1_e = {x=-84.5,y=-65.5,z=1},
-    hp2_a = {x=45,y=-34,z=2},
+    hp1_E = {x=-84.5,y=-65.5,z=1},
+    hp2_A = {x=45,y=-34,z=2},
+    hp3_M = {x=140,y=124,z=-2},
 }
 
 M.automatic_routes = {
-    hp1_e = { route="vw"},
-    hp2_a = { route="sgate"},
+    hp1_E = { route="vw" },
+    hp2_A = { route="sgate" },
+    hp3_M = { route="trust" },
 }
 
 return M
