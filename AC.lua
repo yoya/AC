@@ -1317,7 +1317,7 @@ windower.register_event('logout', function()
     -- command, delay, duration
     task.setTaskSimple("ac inject currinfo1", 2, 1)
     task.setTaskSimple("ac inject currinfo2", 4, 1)
-    task.setTaskSimple("ac record char", 6, 1)
+    task.setTaskSimple("//record char", 6, 1)
 end)
 
 windower.register_event('job change', function()

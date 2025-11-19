@@ -5,6 +5,7 @@ local M = {}
 local utils = require('utils')
 local io_console = require('io/console')
 local command = require 'command'
+local ac_record = require 'ac/record'
 
 -- 優先度別、タスク
 -- 優先度
@@ -186,6 +187,9 @@ M.tick = function()
 	    local io_chat = require('io/chat')
 	    io_chat.setNextColor(5)
 	    io_chat.print(string.sub(c, 8))
+	elseif string.find(c, '//record char') == 1 then
+	    -- print("//record char")
+	    ac_record.record_char()
 	end
     end
     tickNextTime = now + task.duration
