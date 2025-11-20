@@ -13,7 +13,7 @@ local task = require 'task'
 local works = require 'works'
 local contents = require 'contents'
 local pull = require 'pull'
-
+local puller = false
 local defaults = {
     Period = 1.0,
 ---    CampRange = 15.0,
@@ -954,7 +954,7 @@ windower.register_event('addon command', function(...)
         start()
 	ac_defeated.done()
 	io_chat.setNextColor(6)
-	io_chat.print("mode attack:", settings.Attack, "  calm:", settings.Calm)
+	io_chat.printf("mode attack=%s puller=%s calm=%s", tostring(settings.Attack), tostring(puller), tostring(settings.Calm))
     elseif command == 'stop' then
         stop()
     elseif command == 'all' then
