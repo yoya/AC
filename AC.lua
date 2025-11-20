@@ -1276,7 +1276,7 @@ windower.register_event('load', function()
     -- command, delay, duration
     task.setTaskSimple("ac inject currinfo1", 2, 1)
     task.setTaskSimple("ac inject currinfo2", 4, 1)
-    task.setTaskSimple("ac record char", 6, 1)
+    task.setTaskSimple("//record char", 6, 1)
     local incoming_text_handler = function(text)
 	if not auto then
 	    return
@@ -1326,7 +1326,7 @@ windower.register_event('job change', function()
     -- command, delay, duration
     task.setTaskSimple("ac inject currinfo1", 2, 1)
     task.setTaskSimple("ac inject currinfo2", 4, 1)
-    task.setTaskSimple("ac record char", 6, 1)
+    task.setTaskSimple("//record char", 6, 1)
 end)
 
 
@@ -1347,7 +1347,7 @@ windower.register_event('zone change', function(zone, prevZone)
     -- command, delay, duration
     task.setTaskSimple("ac inject currinfo1", 2, 1)
     task.setTaskSimple("ac inject currinfo2", 4, 1)
-    task.setTaskSimple("ac record char", 6, 1)
+    task.setTaskSimple("//record char", 6, 1)
     enemyFilter = nil
     puller = false
 end)
