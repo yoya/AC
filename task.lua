@@ -6,6 +6,7 @@ local utils = require('utils')
 local io_console = require('io/console')
 local command = require 'command'
 local ac_record = require 'ac/record'
+local ws = require 'ws'
 
 -- 優先度別、タスク
 -- 優先度
@@ -190,6 +191,8 @@ M.tick = function()
 	elseif string.find(c, '//record char') == 1 then
 	    -- print("//record char")
 	    ac_record.record_char()
+	elseif string.find(c, '//ws exec') == 1 then
+	    ws.exec()
 	end
     end
     tickNextTime = now + task.duration

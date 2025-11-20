@@ -466,7 +466,7 @@ local figtingFunction = function()
 	ws_request = true
     end
     if ws_request == true then
-	ws.exec()
+	task.setTaskSimple("//ws exec", 0, 2)
 	return
     else
         if player.item_level > 99 then
