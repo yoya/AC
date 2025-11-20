@@ -37,13 +37,17 @@ local preferEnemyTable = {
     "Bozzetto Golden Bomb",
     -- ボロッゴ族(かえる)
     "Bozzetto Croaker",
-    -- リフキン
-    "Keen Leafkin",
-    "Tenacious Umbril",
-    "Alacritous Leafkin",
-    "Brawny Umbril",
-    "Vital Leafkin",
+    -- ハートウィンド
+    "Tenacious Umbril",  -- アンブリルははやく倒す
     "Shifty Umbril",
+    "Brawny Umbril",
+    "Resilient Umbril",
+    "Tireless Umbril",
+    -- "Alacritous Leafkin", -- リフキンは残した方が良い
+    -- "Vital Leafkin",
+    -- "Keen Leafkin",
+    -- "Eldritch Leafkin",
+    -- "Rejuvenating Leafkin",
 }
 
 function searchPreferEnemy()
