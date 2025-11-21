@@ -2,6 +2,7 @@
 
 local M = {}
 
+local control = require 'control'
 local utils = require('utils')
 local io_console = require('io/console')
 local command = require 'command'
@@ -181,7 +182,9 @@ M.tick = function()
     if o == nil or o > 1 then
 	local io_chat = require('io/chat')
 	local datetime = os.date("%X", now)
-	-- io_chat.printf("[%s]task.command: %s", datetime, c)
+	if control.debug then
+	    io_chat.printf("[%s]task.command: %s", datetime, c)
+	end
 	command.send(c)
     else
 	if string.find(c, '//echo ') == 1 then

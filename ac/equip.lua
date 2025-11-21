@@ -1,6 +1,8 @@
 -- 装備関連
 
 local M = {}
+
+local control = require 'control'
 local acitem = require 'item'
 local io_chat = require 'io/chat'
 
@@ -39,6 +41,12 @@ local equip_set = {}
 
 -- 装備中の装束を記録する
 function M.equip_save(force)
+    if force then
+	if control.debug then
+	    io_chat.setNextColor(6)
+	    io_chat.print("equip_save", force)
+	end
+    end
     local items = windower.ffxi.get_items()
     for name, slot  in pairs(equip_slots) do
 	local id = items.equipment[name]  -- bag 内 id
@@ -57,6 +65,10 @@ end
 
 -- 記録してある装束を装着する
 function M.equip_restore()
+    if control.debug then
+    io_chat.setNextColor(6)
+	io_chat.print("equip_restore")
+    end
     for name, e in pairs(equip_set) do
 	windower.ffxi.set_equip(e.inv_id, e.slot, e.bag)
     end

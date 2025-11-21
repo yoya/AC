@@ -1011,6 +1011,15 @@ windower.register_event('addon command', function(...)
     elseif command == 'camprange' then
         settings.CampRange = tonumber(arg1, 10)
         io_chat.print("CampRange:", arg1)
+    elseif command == 'control' or command == 'cnt' then
+	if arg1 == 'debug' and arg2 ~= nil then
+	    local onoff = argument_means_on(arg2)
+	    control.debug = onoff
+	    io_chat.setNextColor(6)
+	    io_chat.print("ac control debug "..tostring(onoff))
+	else
+	    print("ac control debug on|off")
+	end
     elseif command == 'debug' then
 	if arg1 == 'checkbags' then
 	    io_chat.print(acitem.checkInventoryFreespace())
