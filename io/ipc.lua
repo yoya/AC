@@ -45,7 +45,7 @@ function M.recieve(message)
 	return  -- 自分向けじゃない
     end
     if method == 'all' then
-	M.recieve_all(source, arg)
+	M.recieve_all(arg)
     elseif method == 'party' then
 	M.recieve_party(source, arg)
     else
@@ -53,55 +53,61 @@ function M.recieve(message)
     end
 end
 
-function M.recieve_all(source, arg)
-    if arg == "dim" or arg == "holla" or arg == "mea" then
+function M.warp_with_ring(arg)
+    task.allClear()
+    local item_name = 'デジョンリング'
+    local item_id = 28540
+    io_chat.print(item_name.."発動 10-12秒前")
+    if arg == "holla" then
 	local item_name = "Ｄ．ホラリング"
 	local item_id = 26176
-	if arg == "dim" then
-	    item_name = "Ｄ．デムリング"
-	    item_id = 26177
-	elseif arg == "mea" then
-	    item_name = "Ｄ．メアリング"
-	    item_id = 26178
-	end
-	task.allClear()
-	io_chat.print(item_name.."10-12秒前")
-	coroutine.sleep(math.random(0,8)/4)
-	local slot_right_ring = 14
-	acitem.useEquipItem(slot_right_ring, item_id, item_name, 10)
+    elseif arg == "dim" then
+	item_name = "Ｄ．デムリング"
+	item_id = 26177
+    elseif arg == "mea" then
+	item_name = "Ｄ．メアリング"
+	item_id = 26178
+    end
+    task.allClear()
+    io_chat.print(item_name.."10-12秒前")
+    coroutine.sleep(math.random(0,8)/6)
+    local slot_right_ring = 14
+    acitem.useEquipItem(slot_right_ring, item_id, item_name, 10)
+end
+    
+function M.recieve_all(arg)
+    if arg == "dim" or arg == "holla" or arg == "mea" or arg == "warp" then
+	M.warp_with_ring(arg)
     elseif arg == "reload" then
 	task.setTaskSimple("lua r AC", 1, 1)
-    elseif arg == "warp" then
-	local me = windower.ffxi.get_mob_by_target("me")
-	task.allClear()
-	io_chat.print("デジョン10-12秒前")
-	coroutine.sleep(math.random(0,8)/4)
-	local slot_right_ring = 14
-	local warpring_id = 28540
-	acitem.useEquipItem(slot_right_ring, warpring_id, 'デジョンリング', 10)
     else
 	print("io/ipc.recieve_all: unknown arg:"..arg)
     end
 end
+
+function M.inParty()
+    local party = windower.ffxi.get_party()
+    if party.party1_leader == nil then
+	return false -- パーティに入っていない
+    end
+    return true -- パーティに入ってる
+end
+
 function M.recieve_party(source, arg)
 --     io_chat.print("io/ipc.recieve_party", arg)
     if arg == "build" then
-	M.send(source, "party", "submit")
+	if not M.inParty() then
+	    M.send(source, "party", "submit")
+	end
     elseif arg == "submit" then
 	local c = "input /pcmd add "..source
 	-- print("io/ipc.recieve_party", c)
 	--  command, delay, period
 	task.setTaskSimple(c, 1, 2)
-    elseif arg == "warp" then
-	local party = windower.ffxi.get_party()
-	if party.party1_leader == nil then
-	    return  -- パーティに入っていない
+    elseif arg == "dim" or arg == "holla" or arg == "mea" or arg == "warp" then
+	if M.inParty() then
+	    M.warp_with_ring(arg)
 	end
-	io_chat.print("デジョン10-12秒前")
-	coroutine.sleep(math.random(0,8)/4)
-	local slot_right_ring = 14
-	local warpring_id = 28540
-	acitem.useEquipItem(slot_right_ring, warpring_id, 'デジョンリング', 10)
     else
 	print("io/ipc.recieve_party: unknown arg:"..arg)
     end
