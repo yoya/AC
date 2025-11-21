@@ -4,6 +4,7 @@ local M = {}
 
 local control = require 'control'
 local acitem = require 'item'
+local acitem_data = require 'item/data'
 local io_chat = require 'io/chat'
 
 -- 装束を装着する部位 (slot)
@@ -33,7 +34,7 @@ function M.equip_item_by_slot_name(slot_name)
     local id = items.equipment[slot_name]  -- bag 内 id
     local bag = items.equipment[slot_name.."_bag"]  -- どの bag か
     local items = windower.ffxi.get_items(bag)
-    local item_id = items[id].id
+    local item_id = items[id].id  --(items[id] が nilのエラーが出た事がある)
     return item_id
 end
 
@@ -65,8 +66,12 @@ end
 
 -- 記録してある装束を装着する
 function M.equip_restore()
-    if control.debug then
+    local main_weapon_item_id = M.equip_item_by_slot_name("main")
+    if acitem_data.trialWeaponT[main_weapon_item_id] == true then
+	return
+    end
     io_chat.setNextColor(6)
+    if control.debug then
 	io_chat.print("equip_restore")
     end
     for name, e in pairs(equip_set) do
