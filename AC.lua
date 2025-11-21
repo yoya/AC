@@ -946,8 +946,8 @@ end
 
 windower.register_event('addon command', function(...)
     local command = select(1, ...)
-    local command2 = select(2, ...)
-    local command3 = select(3, ...)
+    local arg1 = select(2, ...)
+    local arg2 = select(3, ...)
     command = command and command:lower() or 'help'
     -- start/stop, (諸々ABC順), help の並び
     if command == 'start' then
@@ -958,7 +958,7 @@ windower.register_event('addon command', function(...)
     elseif command == 'stop' then
         stop()
     elseif command == 'all' then
-	if command2 == 'dim' or command2 == 'holla' or command2 == 'mea' then
+	if arg1 == 'dim' or arg1 == 'holla' or arg1 == 'mea' then
 	    local item_name = "Ｄ．ホラリング"
 	    local item_id = 26176
 	    if arg == "dim" then
@@ -970,13 +970,13 @@ windower.register_event('addon command', function(...)
 	    end
 	    task.allClear()
 	    io_chat.print(item_name.."10秒前")
-	    io_ipc.send("*", "all", command2)
+	    io_ipc.send("*", "all", arg1)
 	    local slot_right_ring = 14
 	    acitem.useEquipItem(slot_right_ring, item_id, item_name, 10)
-	elseif command2 == 'reload' then
+	elseif arg1 == 'reload' then
 	    io_ipc.send("*", "all", "reload")
 	    task.setTaskSimple("lua r AC", 1, 1)
-	elseif command2 == 'warp' then
+	elseif arg1 == 'warp' then
 	    io_chat.print("デジョン15秒前")
 	    io_ipc.send("*", "all", "warp")
 	    coroutine.sleep(5)
@@ -989,40 +989,40 @@ windower.register_event('addon command', function(...)
 	    print("ac all warp")
 	end
     elseif command == 'attack' or command == 'att' or command == 'at' then
-	local onoff = argument_means_on(command2)
+	local onoff = argument_means_on(arg1)
 	if onoff ~= nil then
 	    settings.Attack = onoff
 	    io_chat.setNextColor(6)
-	    io_chat.print("attack mode "..command2)
+	    io_chat.print("attack mode "..arg1)
 	else
 	    io_chat.setNextColor(3)
 	    io_chat.print("Usage: ac attack (on|off)")
 	end
     elseif command == 'calm' then
-	local onoff = argument_means_on(command2)
+	local onoff = argument_means_on(arg1)
 	if onoff ~= nil then
 	    settings.Calm = onoff
 	    io_chat.setNextColor(6)
-	    io_chat.print("ac calm "..command2)
+	    io_chat.print("ac calm "..arg1)
 	else
 	    io_chat.setNextColor(3)
 	    io_chat.print("Usage: ac calm (on|off)")
 	end
     elseif command == 'camprange' then
-        settings.CampRange = tonumber(command2, 10)
-        io_chat.print("CampRange:", command2)
+        settings.CampRange = tonumber(arg1, 10)
+        io_chat.print("CampRange:", arg1)
     elseif command == 'debug' then
-	if command2 == 'checkbags' then
+	if arg1 == 'checkbags' then
 	    io_chat.print(acitem.checkInventoryFreespace())
 	    io_chat.print(acitem.checkBagsFreespace())
-	elseif command2 == 'linked' then
+	elseif arg1 == 'linked' then
 	    local mob = windower.ffxi.get_mob_by_target("t")
 	    if mob == nil then
 		print("no target")
 	    else
 		print("ac linked => ", isMobLinked(mob))
 	    end
-	elseif command2 == 'nearest' then
+	elseif arg1 == 'nearest' then
 	    local condition = {
 		range = settings.CampRange,
 		nameMatch = enemyFilter,
@@ -1048,23 +1048,23 @@ windower.register_event('addon command', function(...)
 	io_chat.print("アイテム廃棄終わり")
     elseif command == 'echo' then
 	io_chat.setNextColor(6)
-	io_chat.print(command2)
+	io_chat.print(arg1)
     elseif command == 'enemy' then
-	if command2 == 'filter' then
-	    enemyFilter = command3
+	if arg1 == 'filter' then
+	    enemyFilter = arg2
 	    io_chat.setNextColor(6)
 	    io_chat.print("ac enemy filter", enemyFilter)
 	else
 	    print("ac enemy filter <enemy substring>")
 	end
     elseif command == 'enemyspace' or command == 'es' then
-	if command2 == 'near' then
+	if arg1 == 'near' then
 	    control.enemy_space = control.ENEMY_SPACE_NEAR
-	elseif command2 == 'manual' then
+	elseif arg1 == 'manual' then
 	    control.enemy_space = control.ENEMY_SPACE_MANUAL
-	elseif command2 == 'magic' then
+	elseif arg1 == 'magic' then
 	    control.enemy_space = control.ENEMY_SPACE_MAGIC
-	elseif command2 == 'role' then
+	elseif arg1 == 'role' then
 	    control.enemy_space = control.ENEMY_SPACE_ROKE
 	else
 	    print("ac enemyspace (near|manual|magic|role)")
@@ -1086,9 +1086,9 @@ windower.register_event('addon command', function(...)
             coroutine.sleep(3)
         end
     elseif command == 'equip' then
-	if command2 == 'save' then
+	if arg1 == 'save' then
 	    ac_equip.equip_save(true)
-	elseif command2 == 'restore' then
+	elseif arg1 == 'restore' then
 	    ac_equip.equip_restore()
 	else
 	    print("ac equip (save|restore)")
@@ -1096,32 +1096,32 @@ windower.register_event('addon command', function(...)
     elseif command == 'finish' then
 	-- setFinish 
     elseif command == 'inject' then
-	if command2 == 'currinfo1' then
+	if arg1 == 'currinfo1' then
 	    local p = packets.new('outgoing', 0x10F, {}) -- Curr Info
 	    packets.inject(p)
-	elseif command2 == 'currinfo2' then
+	elseif arg1 == 'currinfo2' then
 	    local p = packets.new('outgoing', 0x115, {}) -- Curr Info 2
 	    packets.inject(p)
-	elseif command2 == 'partylist' then  -- 落ちる
+	elseif arg1 == 'partylist' then  -- 落ちる
 	    --local p = packets.new('outgoing', 0x078, {}) -- Party list request
 	    --packets.inject(p)
 	else
 	    print("ac inject currinfo1 | currinfo2")
 	end
     elseif command == 'magic' or command == 'magick' then
-	role_Sorcerer.setMagic(command2)
+	role_Sorcerer.setMagic(arg1)
     elseif command == 'move' then
         local zone = windower.ffxi.get_info().zone
 	local routeTable = aczone.getRouteTable(zone)
-        ac_move.autoMoveTo(zone, {command2, command3}, routeTable)
+        ac_move.autoMoveTo(zone, {arg1, arg2}, routeTable)
     elseif command == 'moverev' then
         local zone = windower.ffxi.get_info().zone
 	local routeTable = aczone.getRouteTable(zone)
-        ac_move.autoMoveTo(zone, {"-"..command2}, routeTable)
+        ac_move.autoMoveTo(zone, {"-"..arg1}, routeTable)
     elseif command == 'party' then
-	if command2 == 'build' then
+	if arg1 == 'build' then
 	    io_ipc.send("*", "party", "build")
-	elseif command2 == 'warp' then
+	elseif arg1 == 'warp' then
 	    io_chat.print("デジョン15秒前")
 	    io_ipc.send("*", "party", "warp")
 	    coroutine.sleep(5)
@@ -1148,44 +1148,44 @@ windower.register_event('addon command', function(...)
 ---        print("me potision", " x="..x, "  y="..y, "  z="..z)
         io_chat.print("me potision  x="..x.."  y="..y.."  z="..z)
     elseif command == 'puller' then
-	local onoff = argument_means_on(command2)
+	local onoff = argument_means_on(arg1)
 	if onoff ~= nil then
             puller = onoff
 	    io_chat.setNextColor(6)
-            io_chat.print("ac puller "..command2)
+            io_chat.print("ac puller "..arg1)
         else
 	    io_chat.setNextColor(3)
             io_chat.print("Usage: ac puller (on|off)")
         end
     elseif command == 'record' or command == 'rec' then
-	if command2 == 'char' then
+	if arg1 == 'char' then
 	    io_chat.setNextColor(6)
 	    io_chat.print("record char")
 	    ac_record.record_char()
-	elseif command2 == 'spells' then
+	elseif arg1 == 'spells' then
 	    io_chat.setNextColor(6)
 	    io_chat.print("record spells")
 	    ac_record.record_spells()
 	end
     elseif command == 'show' then
-	if command2 == 'char' then
+	if arg1 == 'char' then
 	    ac_char.print()
-	elseif command2 == 'chatcolor' then
+	elseif arg1 == 'chatcolor' then
 	    for i, desc in ipairs({"白", "赤紫", "オレンジ", "ピンク","水色", "エメラルド","紫", "明赤紫", "白", "肌色"}) do
 		io_chat.setNextColor(i)
 		io_chat.printf("Color:%d => %s", i, desc)
 	    end
-	elseif command2 == 'inventory' then
+	elseif arg1 == 'inventory' then
 	    acitem.showInventory()
-	elseif command2 == 'listener' then
+	elseif arg1 == 'listener' then
 	    incoming_text.showListener()
-	elseif command2 == 'mob' then
+	elseif arg1 == 'mob' then
 	    showMob()
-	elseif command2 == 'party' then
+	elseif arg1 == 'party' then
 	    ac_party.showPartyMembers()
-	elseif command2 == 'stat' then
+	elseif arg1 == 'stat' then
 	    ac_stat.print()
-	elseif command2 == 'task' then
+	elseif arg1 == 'task' then
 	    task.print()
 	else
 	    io_chat.print("ac show { char | chatcolor | inventory | listener | mob | party | stat | task }")
@@ -1194,26 +1194,26 @@ windower.register_event('addon command', function(...)
         print("test command")
         ac_mob.PartyTargetMob()
     elseif command == 'tick' then
-	local period = tonumber(command2, 10)
+	local period = tonumber(arg1, 10)
 	if period ~= nil and 0.1 < period and period < 10 then
 	    settings.Period = period
 	else
-	    print("ac tick <period> illegal:"..command2)
+	    print("ac tick <period> illegal:"..arg1)
 	end
     elseif command == 'use' then
-	if command2 == 'silt' then
+	if arg1 == 'silt' then
 	    useSilt = not useSilt
 	    io_chat.print({"item silt using start", useSilt})
-	elseif command2 == 'beads' then
+	elseif arg1 == 'beads' then
 	    useBeads = not useBeads
 	    io_chat.print({"item beads using start", useBeads})
-	elseif command2 == 'scroll' then
+	elseif arg1 == 'scroll' then
 	    io_chat.print("スクロール学習開始")
 	    for i,id in ipairs(item_data.magicScrolls) do
 		acitem.useItemIncludeBags(id)
 	    end
 	    io_chat.print("スクロール学習終わり")
-	elseif command2 == 'soulstonesack' then
+	elseif arg1 == 'soulstonesack' then
 	    io_chat.print("石の袋開き開始")
 	    auto = true
 	    while auto and
@@ -1231,7 +1231,7 @@ windower.register_event('addon command', function(...)
 	    io_chat.print("ac use { silt | beads | scroll | soulstonesack}")
 	end
     elseif command == 'ws' then
-        changeWS(command2)
+        changeWS(arg1)
     elseif command == 'help' then
         io_chat.print('AC (AccountCluster)  v' .. _addon.version .. 'commands:')
         io_chat.print('//ac [options]')
