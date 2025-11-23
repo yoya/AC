@@ -82,9 +82,15 @@ for _, name in ipairs(chara_name_list) do
 	    local item = res_items[id]
 	    if item ~= nil then
 		if string.find(item.ja, keyword) ~= nil then
-		    io_console.printf("%s %s %s",
+		    local count_str = ""
+		    if count > 1 then
+			count_str = "("..count..")"
+		    end
+		    io_console.printf("%s %s %s%s",
 				      strspacepad(name, 7),
-				      strspacepad(bag_name_ja, 12), item.ja)
+				      strspacepad(bag_name_ja, 12), item.ja,
+				      count_str
+		    )
 		end
 	    end
 	end
