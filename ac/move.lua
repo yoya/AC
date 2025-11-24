@@ -303,15 +303,17 @@ M.moveTo = moveTo
 function autoMoveTo(zone_id, destTable, routeTable)
     if destTable[1] == nil then
         if routeTable == nil then
+	    io_chat.setNextColor(3) -- 赤
             print("not defined zone route", zone_id)
         else
             for i, dest in pairs(routeTable) do
+		io_chat.setNextColor(6) -- 緑
                 io_chat.print(i)
             end
         end
     else
 	for i, dest in ipairs(destTable) do
-	    io_chat.setNextColor(3)
+	    io_chat.setNextColor(6) -- 緑
 	    io_chat.print("["..i.."] dest: "..dest)
 	    if dest:sub(1,1) == '-' then
 		dest = dest:sub(2)
@@ -330,7 +332,7 @@ function _autoMoveTo(zone_id, dest, routeTable, reverse, nextDest)
     local route = routeTable[dest]
     local nextRoute = routeTable[nextDest]
     if route == nil then
-	io_chat.setNextColor(3)
+	io_chat.setNextColor(3) -- 赤
 	io_chat.printf("route dest:%s is not found", dest)
 	return
     end
