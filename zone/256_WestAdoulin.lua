@@ -78,6 +78,11 @@ M.routes = {
     unity = {  -- 子ミスラ
 	{x=31,y=-163,z=0}, {x=23,y=-151}, {x=18,y=-113},
 	{x=15.2,y=-111.3,z=-0.1}, {a="f8touch"}
+    },
+    -- モグハウスから出たとこ
+    eminence = {  -- エニメンスのガルカ
+	{x=7.7,y=-147.1,z=0.7}, {x=5,y=-141},
+	{x=12,y=-123,d=1},
     }
 }
 
@@ -87,6 +92,8 @@ M.essentialPoints = {
     wp_cou = {x=4.9,y=-4.8,z=0},
     wp_inv = {x=91.5,y=-49,z=-0.2},
     hp_2_M = {x=31,y=-163,z=0},
+    moghouse1 = {x=-1.9,y=-141.6,z=0.7},
+    moghouse2 = {x=7.7,y=-147.1,z=0.7},
 }
 
 M.automatic_routes = {
@@ -95,6 +102,8 @@ M.automatic_routes = {
     wp_cou = { route="cou" },
     wp_inv = { route="inv" },
     hp_2_M = { route="unity" },
+    moghouse1 = { route="eminence" }, -- エミネンスのガルカ
+    moghouse2 = { route="eminence" }, -- エミネンスのガルカ
 }
 
 local sell_items = {
@@ -109,15 +118,15 @@ local sell_itemsT = utils.table.convertArrayToTrueTable(sell_items)
 
 function M.tick(player)
     if acitem.inventoryHasItemT(sell_itemsT) then
+	local me = windower.ffxi.get_mob_by_target("me")
 	local mob = windower.ffxi.get_mob_by_name("Defliaa")
-	if mob ~= nil then
+	if mob ~= nil and me ~= nil and me.x > 25.5 then
 	    if mob.distance < 30 then
 		windower.ffxi.run(false)
 	    else
-		local me = windower.ffxi.get_mob_by_target("me")
-		if mob.distance < 500 then
+		if mob.distance < 600 then
 		    io_net.targetByMobId(mob.id)
-		    turnToPos(me.x, me.y, mob.x, mob.y)
+--		    turnToPos(me.x, me.y, mob.x, mob.y)
 		    coroutine.sleep(0.5)
 		    ac_move.turnToTarget("t")
 		    utils.target_lockon(true)
