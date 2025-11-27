@@ -168,7 +168,7 @@ M.exec = function()
     end
     windower.ffxi.run(false)
     command.send('input /ws ' .. wsname .. ' ' .. target)
-    coroutine.sleep(1)
+    coroutine.sleep(2) -- 1秒だと次唱える魔法に失敗する
 end
 
 M.init = function()
