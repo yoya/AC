@@ -172,8 +172,9 @@ M.exec = function()
 end
 
 M.init = function()
+    local prevWS = M.weaponskill
     M.weaponskill = M.getAnyWeaponSkill()
-    if M.weaponskill ~= nil then
+    if M.weaponskill ~= nil and M.weaponskill ~= prevWS then
 	io_chat.print('set any ' .. M.weaponskill .. ' => ' .. M.weaponskillTable[M.weaponskill])
     end
 end
