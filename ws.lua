@@ -16,7 +16,7 @@ local preferWeaponSkill = {
     'evis', 'rudra', 'manda', 'exen',  'dance', 'shadow', -- 短剣
     'savage', 'chant', 'requ', -- 片手剣
     'reso','ground', -- 両手剣
-    'rui', 'ramp', -- 片手斧
+    'rui', 'ramp', 'deci', -- 片手斧
     'ukko', 'steel', 'uph', 'shield', --両手斧
     'dai',  -- 両手槍
     'demi', 'spin', 'frost', -- 両手剣
@@ -65,6 +65,7 @@ M.weaponskillTable = {
     -- 片手斧
     rui = 'ルイネーター',
     ramp = 'ランページ',
+    deci = 'デシメーション',
     -- 両手斧
     shield = 'シールドブレイク',
     ukko = 'ウッコフューリー',
