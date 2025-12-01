@@ -816,7 +816,17 @@ end
 
 local tickRunning = false
 function tick()
-    -- print("tick_new")
+    if tickRunning then -- 二重に動かないガード。(ちゃんと働いているか不明)
+	print("tick tickRunning:", tickRunning)
+        return
+    end
+    tickRunning = true
+    tick_serial()
+    tickRunning = false
+end
+
+function tick_serial()
+    -- print("tick_serial").
     local player = windower.ffxi.get_player()
     local me = windower.ffxi.get_mob_by_target("me")
     if player == nil or me == nil then
@@ -826,21 +836,16 @@ function tick()
     end
     zone_change.warp_handler_tick()
     aczone.tick(player)
-    ac_equip.tick(player)
-    --- 途中での return 抜け禁止。最後でフラグ落とすので。
-    if tickRunning then -- 二重に動かないガード。(ちゃんと働いているか不明)
-        return 
-    end
-    task.tick()
-    -- zone_change.warp_handler_tick()
-    acjob.tick(player)
     contents.tick(player)
-    -- ここからは auto のみ。
+    task.tick()
     if not auto then
         return
     end
-    tickRunning = true
+    -- ここからは auto のみ
+    ac_equip.tick(player)
+    acjob.tick(player)
     -- 待機、マウント(85)
+    -- https://github.com/Windower/Resources/blob/master/resources_data/statuses.lua
     if player.status == 0 or player.status == 85 then
 	--- 待機中
 	idleFunction()
@@ -852,44 +857,30 @@ function tick()
     elseif player.status == 1 then
 	--- 戦闘中
 	figtingFunction()
+    elseif player.status == 4 then
+	-- イベント中
+    elseif player.status == 33 then
+	-- 休憩中
+    else
+	print("player.status: "..player.status)
     end
-    tickRunning = false -- 二重に動かないガード終了
 end
 
-local start2 = function()
-    io_chat.print('### AutoA  START')
+local start = function()
+    io_chat.print('### AC START')
     io_chat.print("CampRange: " .. settings.CampRange)
     getMobPosition(start_pos, "me")
     io_chat.print("save start_pos: {x:" .. math.round(start_pos.x,2) .. " y:"..math.round(start_pos.y,2)  .. " z:"..math.round(start_pos.z,2).."}")
-    -- true の時は既に動いてる loop を終了させる
-    if auto == true then
-        auto = false
-        socket.sleep(settings.Period * 2)
-    end
     settings = config.load(defaults)
     auto = true
 end
 
-local stop2 = function()
-    io_chat.print('### AutoA  STOP')
+local stop = function()
+    io_chat.print('### AC STOP')
     auto = false
     ac_move.stop()
     works.stop()
     task.allClear()
-end
-
-local start = function()
-    if iamLeader() then
-        io_ipc.send("*", "AC", "start")
-    end
-    start2()
-end
-
-local stop = function()
-    if iamLeader() then
-	io_ipc.send("*", "AC", "stop")
-    end
-    stop2()
 end
 
 windower.register_event('ipc message', function(message)
