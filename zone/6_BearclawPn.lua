@@ -17,5 +17,5 @@ M.essentialPoints = {
 M.automatic_routes = {
     from_hp2 = { route="wind" },
 }
-return M
 
+return M
