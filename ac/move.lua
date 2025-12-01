@@ -149,8 +149,8 @@ function moveTo(route, routeTable, nextRoute)
     end
     local prevPos= nil
     for i, p in ipairs(route) do
-	if i <= 1 then
-	     do end
+	if i <= 1 and p.x ~= nil then
+	     do end  -- ひとつ目が座標の場合に skip
 	elseif i < start_idx then
             print("skip route idx:", i)
         else
