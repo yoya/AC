@@ -13,7 +13,7 @@ M.routes = {
 	{x=410.1,y=-406.2,z=22.9},
 	{x=334,y=-399.5}, {x=285.3,y=-401.4}, {x=268.4,y=-412.2},
 	{x=264.5,y=-423.3}, {a="dismount"},
-	{x=260.6,y=-436.5}, {a="f8touch"}
+	{x=260.6,y=-436.5}, {a="esc"}, {wait=1}, {a="touch"}
     },
     -- HP#1
     esca = { -- Undulating Confluence
