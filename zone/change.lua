@@ -40,8 +40,11 @@ function M.automatic_routes_handler(zone, automatic_routes)
     if ac_pos.isNear(pos, 0.5) then
 	for f, t in pairs(automatic_routes) do
 	    local fp = zone_object.essentialPoints[f]
-	    if fp == nil or fp.x == nil then
-		print("maybe esseialPoints illegal format")
+	    if fp == nil then
+		print("maybe essentialPoints not found: "..f)
+	    end
+	    if fp.x == nil then
+		print("maybe essentialPoints illegal format: "..f)
 		return
 	    end
 	    local route = t.route
