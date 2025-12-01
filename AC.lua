@@ -1072,11 +1072,18 @@ windower.register_event('addon command', function(...)
     elseif command == 'enterloop' then
         auto = true
         local i = 0
+	local mob = windower.ffxi.get_mob_by_target("t")
         while auto do
             print("enter #"..i)
             i = i + 1
             pushKeys({"enter"})
-            coroutine.sleep(3)
+            coroutine.sleep(2)
+	    io_net.targetByMobId(mob.id)
+	    local m = windower.ffxi.get_mob_by_target("t")
+	    if m.id ~= mob.id then
+		auto = false
+	    end
+	    coroutine.sleep(1)
         end
     elseif command == 'enterloop2' then
         auto = true
