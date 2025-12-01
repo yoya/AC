@@ -970,7 +970,7 @@ windower.register_event('addon command', function(...)
 	elseif arg1 == 'warp' then
 	    io_chat.print("デジョン15秒前")
 	    io_ipc.send("*", "all", "warp")
-	    coroutine.sleep(5)
+	    coroutine.sleep(3)
 	    task.allClear()
 	    io_chat.print("デジョン10秒前")
 	    local slot_right_ring = 14
