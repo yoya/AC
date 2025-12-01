@@ -288,17 +288,21 @@ function moveTo(route, routeTable, nextRoute)
                 coroutine.sleep(2.0)
             end
             if p.a == "enter" then
+		print("ac/move pushkey enter")
                 pushKeys({"enter"})
                 coroutine.sleep(1.0)
             end
             if p.a == "wait" then
+		print("ac/move wait 1.0")
                 coroutine.sleep(1.0)
             end
             if p.a == "up" then
+		print("ac/move pushkey up")
                 pushKeys({"up"})
                 coroutine.sleep(1.0)
             end
             if p.a == "down" then
+		print("ac/move: pushkey down")
                 pushKeys({"down"})
                 coroutine.sleep(1.0)
             end
