@@ -217,6 +217,14 @@ function moveTo(route, routeTable, nextRoute)
 		local x = p.x
 		local y = p.y
 		local d = p.d or 0
+		while true do  -- TODO: auto を見る
+		    local player = windower.ffxi.get_player()
+		    if player.status == 4 then
+			coroutine.sleep(1)  -- イベント中は一休み
+		    else
+			break
+		    end
+		end
                 print("moving to", i, x, y, d)
 		x = x + math.random(-d*100,d*100)/100
 		y = y + math.random(-d*100,d*100)/100
