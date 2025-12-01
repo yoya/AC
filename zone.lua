@@ -1,9 +1,26 @@
 ---
 --- Zone 毎の情報
 
+local utils = require 'utils'
 local ac_pos = require 'ac/pos'
 
 local M = {}
+
+M.city_zone_id_list = {
+    230, 231, 232, 233, -- サンドリア
+    234, 235, 236, 237, -- バストゥーク
+    238, 239, 240, 241, 242, -- ウィンダス
+    243, 244, 245, 246, -- ジュノ
+    247, 248, 249, -- ラバオ, マウラ, カザム
+    252, -- ノーグ
+    256, 257 -- アドゥリン
+}
+function M.is_city_zone(zone_id)
+    if utils.table.contains(M.city_zone_id_list, zone_id) then
+	return true
+    end
+    return false
+end
 
 M.zoneTable = {
     [2] = require('zone/2_CpntLanding'),    -- ギルド桟橋
@@ -56,6 +73,7 @@ M.zoneTable = {
     [127] = require('zone/127_BehemotDom'), -- ベヒーモスの縄張り
     [132] = require('zone/132_AbysLaThein'), -- アビセア-ラテーヌ
     [136] = require('zone/136_BeaGlacier_S'), -- ボスディン氷河〔Ｓ〕
+    [137] = require('zone/137_Xarcabard_S'), -- ザルカバード〔Ｓ〕
     [139] = require('zone/139_HorlaisPk'),  -- ホルレーの岩峰
     [142] = require('zone/142_Yughott'),    -- ユグホトの岩屋
     [143] = require('zone/143_Palborough'), -- パルブロ鉱山
@@ -68,6 +86,8 @@ M.zoneTable = {
     [152] = require('zone/152_AltarRoom'),  -- 祭壇の間
     [153] = require('zone/153_Boyahda'),    -- ボヤーダ樹
     [159] = require('zone/159_Uggalepih'),  -- ウガレピ寺院
+    [161] = require('zone/161_ZvahlBails'), -- ズヴァール城外郭
+    [162] = require('zone/162_ZvahlKeep'),  -- ズヴァール城内郭
     [164] = require('zone/164_Garlaige_S'), -- ガルレージュ要塞〔Ｓ〕
     [166] = require('zone/166_Ranguemont'), -- ラングモント峠
     [167] = require('zone/167_Bostaunieu'), -- ボストーニュ監獄
@@ -114,6 +134,7 @@ M.zoneTable = {
     [246] = require('zone/246_PortJeuno'),  -- ジュノ港
     [247] = require('zone/247_Rabao'),      -- ラバオ
     [249] = require('zone/249_Mhaura'),     -- マウラ
+    [250] = require('zone/250_Kazham'),     -- カザム
     [251] = require('zone/251_HallOfGods'), -- 神々の間
     [252] = require('zone/252_Norg'),       -- ノーグ
     [253] = require('zone/253_AbysUleg'),   -- アビセア-ウルガラン
