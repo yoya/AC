@@ -124,7 +124,7 @@ function M.tick(player)
 	    if mob.distance < 30 then
 		windower.ffxi.run(false)
 	    else
-		if mob.distance < 600 then
+		if mob.distance < 700 then
 		    io_net.targetByMobId(mob.id)
 --		    turnToPos(me.x, me.y, mob.x, mob.y)
 		    coroutine.sleep(0.5)
