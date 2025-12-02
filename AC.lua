@@ -1114,7 +1114,7 @@ windower.register_event('addon command', function(...)
 	else
 	    print("ac equip (save|restore)")
 	end
-    elseif command == 'finish' then
+    elseif command == 'finishblow' then
 	-- setFinish 
     elseif command == 'inject' then
 	if arg1 == 'currinfo1' then
