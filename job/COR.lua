@@ -3,6 +3,7 @@
 local M = {}
 
 local utils = require('utils')
+local control = require('control')
 local io_chat = require('io/chat')
 local ac_data = require('ac/data')
 local ac_pos = require('ac/pos')
@@ -132,8 +133,8 @@ function COR_phantom_roll_up(roll_name, roll_number)
     -- io_chat.print("COR_phantom_roll_up", roll_name, roll_number)
     local roll_info = phantom_roll_table[roll_name.."ロール"]
     if roll_info == nil then
-	-- io_chat.setNextColor(3)
-	-- io_chat.print("Unknown phantom roll:"..roll_name)
+	io_chat.setNextColor(3)
+	io_chat.print("Unknown phantom roll:"..roll_name)
 	return
     end
     if roll_number == roll_info.lucky then
@@ -144,21 +145,27 @@ function COR_phantom_roll_up(roll_name, roll_number)
     if roll_number >= 6 then
 	-- TODO: フォールド使える場合は return しない
 	if roll_number == roll_info.unlucky then
-	    -- io_chat.setNextColor(6)
-	    -- io_chat.print("アンラッキーロール("..roll_number..")！ > スネークアイ&ダブルアップ")
+	    if control.debug then
+		io_chat.setNextColor(6)
+		io_chat.print("アンラッキーロール("..roll_number..")！ > スネークアイ&ダブルアップ")
+	    end
 	    local c = "input /ja スネークアイ <me>; wait 2; input /ja ダブルアップ <me>"
 	    task.setTask(task.PRIORITY_MIDDLE,
 			 -- command, delay, duration, period, eachfight
 			 task.newTask(c, 1, 1, 5, false))
 	    return
 	end
-	-- io_chat.setNextColor(6)
-	-- io_chat.print(roll_name.." "..roll_number.." で打ち止め ("..roll_info.lucky.."/"..roll_info.unlucky..")")
+	if control.debug then
+	     io_chat.setNextColor(6)
+	     io_chat.print(roll_name.." "..roll_number.." で打ち止め ("..roll_info.lucky.."/"..roll_info.unlucky..")")
+	end
 	phantom_roll_double_up(false) -- たまに暴発するのを防ぎたい
 	return
     end
-    -- io_chat.setNextColor(6)
-    -- io_chat.print("出目:"..roll_number.." => ダブルアップ！")
+    if control.debug then
+	io_chat.setNextColor(6)
+	io_chat.print("出目:"..roll_number.." => ダブルアップ！")
+    end
     phantom_roll_double_up(true)
 end
 
@@ -185,8 +192,10 @@ function incoming_text_handler(text)
 	return
     end
     if string.contains(text,"ロールがBust") then
-	-- io_chat.setNextColor(3)
-	-- io_chat.print("Bust => フォールド！")
+	if control.debug then
+	     io_chat.setNextColor(3)
+	     io_chat.print("Bust => フォールド！")
+	end
 	local c = "input /ja フォールド <me>"
 	task.setTask(task.PRIORITY_MIDDLE,
 		     -- command, delay, duration, period, eachfight
