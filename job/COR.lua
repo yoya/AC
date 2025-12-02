@@ -16,8 +16,8 @@ local split_multi = utils.string.split_multi
 local phantom_roll_table = ac_data.phantom_roll_table
 
 M.mainJobProbTable = {
-    { 100, 60*10, 'input /ja クルケッドカード <me>', 3 }, -- 駄目元で
-    { 100, 20*60, 'input /ja ランダムディール <me>', 3 },
+    { 100, 60*10/2, 'input /ja クルケッドカード <me>', 3 }, -- 駄目元で
+    { 100, 20*60/2, 'input /ja ランダムディール <me>', 3 },
     -- { 200, 60, 'input /ja コルセアズロール <me>; wait 2; input /ja ダブルアップ <me>', 0 },
 --    { 50, 300, 'input /ja ブリッツァロール <me>', 3 },
 --    { 100, 300/2, 'input /ja サムライロール  <me>', 3 },
@@ -48,7 +48,7 @@ function phantom_roll(roll_name, on, delay)
 	period = 20
     end
     -- command, delay, duration, period, eachfight
-    local t = task.newTask(c, delay, 3, period, true)
+    local t = task.newTask(c, delay, 4, period, true)
     if on then
 	--io_chat.setNextColor(6)
 	--io_chat.print("phantom_roll", roll_name)
@@ -115,7 +115,7 @@ function phantom_roll_double_up(on)
     local c = "input /ja ダブルアップ <me>"
     local level = task.PRIORITY_MIDDLE
     -- command, delay, duration, period, eachfight
-    local t = task.newTask(c, 2, 2, 5, false)
+    local t = task.newTask(c, 1, 4, 5, false)
     if on == true then
 	-- io_chat.setNextColor(6)
 	-- io_chat.print("phantom_roll_double_up")
