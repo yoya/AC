@@ -1104,8 +1104,12 @@ windower.register_event('addon command', function(...)
         end
     elseif command == 'equip' then
 	if arg1 == 'save' then
+	    io_chat.setNextColor(6)
+	    io_chat.print("% equip save")
 	    ac_equip.equip_save(true)
 	elseif arg1 == 'restore' then
+	    io_chat.setNextColor(6)
+	    io_chat.print("% equip restore")
 	    ac_equip.equip_restore()
 	else
 	    print("ac equip (save|restore)")
