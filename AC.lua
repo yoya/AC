@@ -25,7 +25,6 @@ local defaults = {
 
 local settings = config.load(defaults)
 
-local auto = false
 -- local player_id
 local start_pos = {x = -1, y = -1, z = -1}
 local useSilt = false
@@ -544,7 +543,7 @@ local idleFunctionTradeItems = function(tname, items, wait, enterWaits)
             end
         end
 	io_chat.print("↑ トレード終了 ↑")
-	auto = false
+	control.auto = false
     end
     coroutine.sleep(1)
 end
@@ -641,7 +640,7 @@ local sellJunkItemsInInventory = function()
     io_chat.setNextColor(5)
     io_chat.print(total_count.."回売却 end")
 ---  stop() ---何故か動かない
-    auto = false
+    control.auto = false
 end
 
 local idleFunctionSellJunkItems = function()
@@ -649,7 +648,7 @@ local idleFunctionSellJunkItems = function()
     print("Aggregate Bag Junk Items to Inventory")
     aggregateJunkItemsToInventory()
     local done = false
-    while done == false and auto do
+    while done == false and control.auto do
         -- 売却処理
         sellJunkItemsInInventory()
         local move_count = aggregateJunkItemsToInventory()
@@ -705,23 +704,23 @@ local idleFunctionMobGarden = function()
            or mob.name == "Garden Furrow #3" then
         local id = 940 -- 反魂樹の根
         acitem.tradeByItemId(mob, id)
-        auto = false
+        control.auto = false
     elseif mob.name == "Mineral Vein" or mob.name == "Mineral Vein #2"
             or mob.name == "Mineral Vein #3"
             or mob.name == "Arboreal Grove" or mob.name == "Arboreal Grove #2"
             or mob.name == "Arboreal Grove #3" then
-        while auto do
+        while control.auto do
             pushKeys({"escape", "f8", "enter"})
             coroutine.sleep(2)
             pushKeys({"enter"})
             coroutine.sleep(3)
             if acitem.diffInventoryTotalNum() == 0 or
                 acitem.checkInventoryFreespace() == false then
-                auto = false
+                control.auto = false
             end
         end
     elseif mob.name == "Pond Dredger" then
-        auto = false
+        control.auto = false
         coroutine.sleep(2)
         pushKeys({"escape", "f8", "enter"})
         coroutine.sleep(3)
@@ -753,14 +752,14 @@ local idleFunctionWestAdoulin = function()
     elseif mob.name == "Eternal Flame" then
         if acitem.inventoryFreespaceNum() > 0 then
             command.send('sparks buyall Acheron Shield')
-            auto = false
+            control.auto = false
         end
-        auto = false
+        control.auto = false
     elseif mob.name == "Nunaarl Bthtrogg" then
         n = acitem.inventoryFreespaceNum()
 	io_chat.setNextColor(6)
         io_chat.print("かばんの空きは"..n.."*99 = "..(n*99))
-        auto = false
+        control.auto = false
     end
 end
 
@@ -807,7 +806,7 @@ local idleFunction = function()
     -- ワークス応援
     if mob.name == "Station Worker" then
         works.boost.stationWorkerFunction(zone, mob)
-	auto = false
+	control.auto = false
     end
     if mob.name == "Ergon Locus" then
 	works.survey.ergonLocusFunction()
@@ -838,10 +837,10 @@ function tick_serial()
     aczone.tick(player)
     contents.tick(player)
     task.tick()
-    if not auto then
+    if not control.auto then
         return
     end
-    -- ここからは auto のみ
+    -- ここからは control.auto のみ
     ac_equip.tick(player)
     acjob.tick(player)
     -- 待機、マウント(85)
@@ -872,12 +871,12 @@ local start = function()
     getMobPosition(start_pos, "me")
     io_chat.print("save start_pos: {x:" .. math.round(start_pos.x,2) .. " y:"..math.round(start_pos.y,2)  .. " z:"..math.round(start_pos.z,2).."}")
     settings = config.load(defaults)
-    auto = true
+    control.auto = true
 end
 
 local stop = function()
     io_chat.print('### AC STOP')
-    auto = false
+    control.auto = false
     ac_move.stop()
     works.stop()
     task.allClear()
@@ -1080,10 +1079,10 @@ windower.register_event('addon command', function(...)
 	    print("ac enemyspace (near|manual|magic|role)")
 	end
     elseif command == 'enterloop' then
-        auto = true
+        control.auto = true
         local i = 0
 	local mob = windower.ffxi.get_mob_by_target("t")
-        while auto do
+        while control.auto do
             print("enter #"..i)
             i = i + 1
             pushKeys({"enter"})
@@ -1091,13 +1090,13 @@ windower.register_event('addon command', function(...)
 	    io_net.targetByMobId(mob.id)
 	    local m = windower.ffxi.get_mob_by_target("t")
 	    if m.id ~= mob.id then
-		auto = false
+		control.auto = false
 	    end
 	    coroutine.sleep(1)
         end
     elseif command == 'enterloop2' then
-        auto = true
-        while auto do
+        control.auto = true
+        while control.auto do
             print("down & enter")
             pushKeys({"down", "enter"})
             coroutine.sleep(3)
@@ -1236,8 +1235,8 @@ windower.register_event('addon command', function(...)
 	    io_chat.print("スクロール学習終わり")
 	elseif arg1 == 'soulstonesack' then
 	    io_chat.print("石の袋開き開始")
-	    auto = true
-	    while auto and
+	    control.auto = true
+	    while control.auto and
 		acitem.inventoryHasItemT(item_data.soulStoneSacksT) do
 		for i,id in ipairs(item_data.soulStoneSacks) do
 		    if not acitem.checkBagsFreespace() then
@@ -1299,7 +1298,7 @@ windower.register_event('load', function()
     task.setTaskSimple("ac inject currinfo2", 4, 1)
     task.setTaskSimple("//record char", 6, 1)
     local incoming_text_handler = function(text)
-	if not auto then
+	if not control.auto then
 	    return
 	end
 	if string.contains(text, "コマンドが実行できない") and
@@ -1362,7 +1361,7 @@ windower.register_event('zone change', function(zone, prevZone)
     ac_stat.init()
     task.init()
     if iamLeader() then
-	auto = false
+	control.auto = false
     end
     useSilt = false
     useBeads = false
@@ -1391,7 +1390,7 @@ windower.register_event('incoming text', function(data, modified, original_mode,
 end)
 
 local loopConf = function()
-    return auto
+    return control.auto
 end
 
 --windower.register_event('load', function()
