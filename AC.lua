@@ -1336,9 +1336,10 @@ end)
 
 windower.register_event('logout', function()
     -- command, delay, duration
-    task.setTaskSimple("ac inject currinfo1", 2, 1)
-    task.setTaskSimple("ac inject currinfo2", 4, 1)
-    task.setTaskSimple("//record char", 6, 1)
+    --task.setTaskSimple("ac inject currinfo1", 2, 1)
+    --task.setTaskSimple("ac inject currinfo2", 4, 1)
+    --task.setTaskSimple("//record char", 6, 1)
+    task.setTaskSimple("//record char", 0, 1)
 end)
 
 windower.register_event('job change', function()
@@ -1350,6 +1351,9 @@ windower.register_event('job change', function()
     task.setTaskSimple("//record char", 6, 1)
 end)
 
+windower.register_event('status change', function(new, old)
+    task.setTaskSimple("//record char", 1, 1)
+end)
 
 --- ゾーンが変わったらリーダーだけ停止する
 windower.register_event('zone change', function(zone, prevZone)
