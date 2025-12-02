@@ -946,7 +946,17 @@ windower.register_event('addon command', function(...)
 	ac_defeated.done()
 	io_chat.setNextColor(6)
 	io_chat.printf("mode attack=%s puller=%s calm=%s", tostring(settings.Attack), tostring(puller), tostring(settings.Calm))
+	if arg1 == 'all' then
+	    if iamLeader() then
+		io_ipc.send("*", "AC", "start")
+	    end
+	end
     elseif command == 'stop' then
+	if arg1 == 'all' then
+	    if iamLeader() then
+		io_ipc.send("*", "AC", "stop")
+	    end
+	end
         stop()
     elseif command == 'all' then
 	if arg1 == 'dim' or arg1 == 'holla' or arg1 == 'mea' then
