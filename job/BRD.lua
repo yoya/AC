@@ -7,7 +7,7 @@ local role_Melee = require 'role/Melee'
 local aczone = require('zone')
 local io_chat = require('io/chat')
 
-local piani_prefix = "input /ja ピアニッシモ <me>; wait 1; "
+local piani_prefix = "input /ja ピアニッシモ <me>; wait 2; "
 
 M.mainJobProbTable = {
     -- { 100, 60, 'input /ma 魔法のフィナーレ <t>', 8, true },
