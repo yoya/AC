@@ -137,6 +137,23 @@ function M.removeTaskSimple(c)
     M.removeTask(level, t)
 end
 
+function M.setTaskEx(c, params)
+    local level = params.level or PRIORITY_SIMPLE
+    local delay = params.delay or 0
+    local duration = params.duration or 2
+    local period = params.period or 10
+    local eachfight = params.eachfight  or false
+    local t = M.newTask(c, delay, duration, period, eachfight)
+    M.setTask(level, t)
+end
+
+function M.removeTaskEx(c)
+    for level = PRIORITY_FIRST, PRIORITY_LAST do
+	local t = M.newTask(c, 0, 0, 0, false)
+	M.removeTask(level, t)
+    end
+end
+
 M.init = function()
     taskTable = {
 	[M.PRIORITY_TOP]    = {},
@@ -199,6 +216,7 @@ M.tick = function()
 	end
     end
     tickNextTime = now + task.duration
+    -- print("tickNextTime", tickNextTime, task.duration, c)
 end
 
 function M.print()
