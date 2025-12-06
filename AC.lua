@@ -317,10 +317,13 @@ local notLeaderFunction = function()
 	    mob = windower.ffxi.get_mob_by_target("t")
 	end
 	---        command.send('input /target <bt>')
-	if mob ~= nil and mob.hpp < 100 then
-            coroutine.sleep(math.random(0,2)/4)
-            command.send('input /attack <t>')
-	    task.resetByFight()
+	--if mob ~= nil and mob.hpp < 100 then
+	if mob ~= nil then
+	    if item_level >= 119 or mob.hpp < 100 then
+		coroutine.sleep(math.random(0,2)/4)
+		command.send('input /attack <t>')
+		task.resetByFight()
+	    end
         end
         ProbRecastTime = {}
     end
