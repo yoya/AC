@@ -453,10 +453,14 @@ local figtingFunction = function()
     end
     local ws_request = false
     local now = os.time()
-    -- 連携になるよう 3秒あける。MB を邪魔しないよう 連携から 8秒あける。
-    if  player.vitals.tp >= 1000 and (acinspect.ws_time + 3) < now and
-	(acinspect.sc_time + 10) < now then
-	-- print("(now - sc_time):"..(now - acinspect.sc_time), "(now - ws_time):"..(now - acinspect.ws_time), acinspect.sc_time)
+    -- 連携になるよう 4秒あける。MB を邪魔しないよう 連携から 10秒あける。
+    if player.vitals.tp >= 1000 and
+	(acinspect.ws_time + 4) < now and (acinspect.sc_time + 10) < now then
+		ws_request = true
+    end
+    if player.vitals.tp >= 2000 and
+	(acinspect.ws_time + 3) < now and (acinspect.sc_time + 9) < now then
+	-- TP:2000 超えは少しピーキーにする。
 	ws_request = true
     end
     if player.vitals.tp >= 2500 and (acinspect.sc_time + 8) < now then
