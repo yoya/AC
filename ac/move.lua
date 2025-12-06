@@ -244,7 +244,8 @@ function moveTo(route, routeTable, nextRoute)
 		if prevPos ~= nil then
 		    if distance(prevPos, currPos) > 128 then
 			print("too far next move point")
-			return
+			stop()
+			return false
 		    end
 		    local vec1 = {x=currPos.x-prevPos.x,y=currPos.y-prevPos.y}
 		    local vec2 = {x=dpos.x-currPos.x,y=dpos.y-currPos.y}
