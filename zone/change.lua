@@ -48,7 +48,11 @@ function M.automatic_routes_handler(zone, automatic_routes)
 		return
 	    end
 	    local route = t.route
-	    local exec_auto_route = ac_pos.isNear(fp, 2)
+	    local nearDist = 2
+	    if fp.d ~= nil then
+		nearDist = fp.d
+	    end
+	    local exec_auto_route = ac_pos.isNear(fp, nearDist)
 	    if t.leader_only == true and not iamLeader() then
 		io_chat.setNextColor(4) -- ピンク
 		io_chat.print("移動するのはリーダーだけ")
