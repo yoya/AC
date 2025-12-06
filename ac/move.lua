@@ -102,6 +102,53 @@ function containPos(route, pos)
     return false
 end
 
+function moveToAction(p)
+    if p.w ~= nil then
+	p.wait = p.w
+	p.w = nil
+    end
+    if p.wait ~= nil then
+	print("wait:"..p.wait)
+	coroutine.sleep(p.wait)
+    end
+    if p.a == "mount" then
+	command.send('input /mount ラプトル')
+	coroutine.sleep(2.0)
+    end
+    if p.a == "dismount" then
+	command.send('input /dismount')
+	coroutine.sleep(3.0)
+    end
+    if p.a == "insne" then
+	print("insne")
+	windower.ffxi.run(false)
+	coroutine.sleep(1)
+	command.send('input /ma スニーク <me>; wait 7.5; input /ma インビジ <me>')
+	coroutine.sleep(16)
+    end
+    if p.a == "sneak" then
+	print("sneak")
+	windower.ffxi.run(false)
+	coroutine.sleep(1)
+	command.send('input /ma スニーク <me>')
+	coroutine.sleep(7)
+    end
+    if p.a == "invisi" then
+	print("invisi")
+	windower.ffxi.run(false)
+	coroutine.sleep(1)
+	command.send('input /ma インビジ <me>')
+	coroutine.sleep(7)
+    end
+    if p.a == "invisi_cancel" then
+	print("invisi cancel")
+	windower.ffxi.run(false)
+	coroutine.sleep(1)
+	windower.ffxi.cancel_buff(69) -- インビジキャンセル
+    end
+    return true
+end
+
 function moveTo(route, routeTable, nextRoute)
     local pos = currentPos()
     local r1List = {}  -- 各routeの一個目をリスト化
