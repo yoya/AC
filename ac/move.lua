@@ -258,16 +258,20 @@ function moveTo(route, routeTable, nextRoute)
 		    end
 		end
 		prevPos = {x=currPos.x, y=currPos.y}
-                while (distance(currentPos(), dpos) > 0.5 and moveToRunning == true) do
+                while (distance(currentPos(), dpos) > 0.5 and M.auto) do
                     if distance(currentPos(), dpos) > 6468 and false then
                         print("not near position")
                         stop()
-                        return
+                        return false
                     end
                     turnTo(dpos)
                     pos = currentPos()
-                    windower.ffxi.run(dpos.x - pos.x, dpos.y - pos.y)
-                    coroutine.sleep(0.1)
+		    if pos.x ~= nil then
+			windower.ffxi.run(dpos.x - pos.x, dpos.y - pos.y)
+			coroutine.sleep(0.1)
+		    else
+			print("pos.x == nil")
+		    end
                 end
 		windower.ffxi.run(false)
 		if nextRoute ~= nil and containPos(nextRoute, p) then
