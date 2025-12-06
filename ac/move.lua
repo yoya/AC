@@ -80,11 +80,11 @@ M.lookForward = lookForward
 -- moveTo
 --
 
-local moveToRunning = false
+M.auto = false
 
 function stop()
----    print("moveToRunning = false")
-    moveToRunning = false
+---    print("M.auto = false")
+    M.auto = false
 end
 M.stop = stop
 
@@ -138,7 +138,7 @@ function moveTo(route, routeTable, nextRoute)
         print(idx, name, r)
         moveTo(r, routeTable)
     end
-    moveToRunning = true
+    M.auto = true
     print("moveFrom", math.round(pos.x, 2), math.round(pos.y, 2))
     local start_idx = nearest_idx(pos, route)
 --    print('start_idx', start_idx)
@@ -149,6 +149,9 @@ function moveTo(route, routeTable, nextRoute)
     end
     local prevPos= nil
     for i, p in ipairs(route) do
+	if not M.auto then
+	    break
+	end
 	if i <= 1 and p.x ~= nil then
 	     do end  -- ひとつ目が座標の場合に skip
 	elseif i < start_idx then
@@ -162,67 +165,28 @@ function moveTo(route, routeTable, nextRoute)
                 -- {} の時はオートラン
 		windower.ffxi.run(true)
             end
-	    if p.w ~= nil then
-		p.wait = p.w
-		p.w = nil
-	    end
-	    if p.wait ~= nil then
-		print("wait:"..p.wait)
-		coroutine.sleep(p.wait)
-	    end
 	    if p.stop ~= nil then
 		if p.stop == "raives" then
 		    windower.ffxi.run(false)
 		    if contents.raives.arise() then
-			return -- レイヴ発生中なら移動終了
+			stop()
+			return false -- レイヴ発生中なら移動終了
 		    end
 		end
 	    end
-            if p.a == "mount" then
-                command.send('input /mount ラプトル')
-                coroutine.sleep(2.0)
-            end
-            if p.a == "dismount" then
-                command.send('input /dismount')
-                coroutine.sleep(3.0)
-            end
-            if p.a == "insne" then
-                print("insne")
-                windower.ffxi.run(false)
-                coroutine.sleep(1)
-                command.send('input /ma スニーク <me>; wait 7.5; input /ma インビジ <me>')
-                coroutine.sleep(16)
-            end
-            if p.a == "sneak" then
-                print("sneak")
-                windower.ffxi.run(false)
-                coroutine.sleep(1)
-                command.send('input /ma スニーク <me>')
-                coroutine.sleep(7)
-            end
-            if p.a == "invisi" then
-                print("invisi")
-                windower.ffxi.run(false)
-                coroutine.sleep(1)
-                command.send('input /ma インビジ <me>')
-                coroutine.sleep(7)
-            end
-            if p.a == "invisi_cancel" then
-                print("invisi cancel")
-                windower.ffxi.run(false)
-                coroutine.sleep(1)
-                windower.ffxi.cancel_buff(69) -- インビジキャンセル
-            end
+	    if not moveToAction(p) then
+		return false
+	    end
             if p.x ~= nil then
 		local x = p.x
 		local y = p.y
 		local d = p.d or 0
-		while true do  -- TODO: auto を見る
+		while M.auto do  -- TODO: auto を見る
 		    local player = windower.ffxi.get_player()
 		    if player.status == 4 then
 			coroutine.sleep(1)  -- イベント中は一休み
 		    else
-			break
+			break  -- 移動の続きに戻る
 		    end
 		end
                 print("moving to", i, x, y, d)
