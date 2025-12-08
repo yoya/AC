@@ -886,7 +886,7 @@ local start = function()
     control.auto = true
     print("iamLeader()", iamLeader())
     if iamLeader() then
-	io_ipc.send("*", "start")
+	io_ipc.send_party("start")
     end
 end
 M.start = start
@@ -894,7 +894,7 @@ M.start = start
 local stop = function()
     io_chat.print('### AC STOP')
     if iamLeader() then
-	io_ipc.send("*", "stop")
+	io_ipc.send_party("stop")
     end
     control.auto = false
     ac_move.stop()
@@ -981,15 +981,15 @@ windower.register_event('addon command', function(...)
 	    end
 	    task.allClear()
 	    io_chat.print(item_name.."10秒前")
-	    io_ipc.send("*", "all", arg1)
+	    io_ipc.send_all("all", arg1)
 	    local slot_right_ring = 14
 	    acitem.useEquipItem(slot_right_ring, item_id, item_name, 10)
 	elseif arg1 == 'reload' then
-	    io_ipc.send("*", "all", "reload")
+	    io_ipc.send_all("all", "reload")
 	    task.setTaskSimple("lua r AC", 1, 1)
 	elseif arg1 == 'warp' then
 	    io_chat.print("デジョン15秒前")
-	    io_ipc.send("*", "all", "warp")
+	    io_ipc.send_all("all", "warp")
 	    coroutine.sleep(3)
 	    task.allClear()
 	    io_chat.print("デジョン10秒前")
@@ -1151,10 +1151,10 @@ windower.register_event('addon command', function(...)
         ac_move.autoMoveTo(zone, {"-"..arg1}, routeTable)
     elseif command == 'party' then
 	if arg1 == 'build' then
-	    io_ipc.send("*", "party", "build")
+	    io_ipc.send_party"party", "build")
 	elseif arg1 == 'warp' then
 	    io_chat.print("デジョン15秒前")
-	    io_ipc.send("*", "party", "warp")
+	    io_ipc.send_party("party", "warp")
 	    coroutine.sleep(5)
 	    task.allClear()
 	    io_chat.print("デジョン10秒前")

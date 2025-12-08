@@ -32,6 +32,26 @@ function M.send(target, method, arg)
     windower.send_ipc_message(command)
 end
 
+function M.send_all(method, arg)
+    M.send("*", method, arg)
+end
+
+function M.send_party(method, arg)
+    local party = windower.ffxi.get_party()
+    for _, x in pairs({"p", "a1", "a2"}) do -- アライアンス全員
+        for i = 0, 5 do -- 自分含めて全員
+            local member = party[x..i]
+	    -- 該当メンバーがいる。かつエリア内にいる
+            if member ~= nil and member.mob ~= nil then
+		local mob = member.mob
+		if  mob.id == id then
+		    M.send(mob.name, method, arg)
+                end
+            end
+        end
+    end
+    return false
+end
 
 function M.recieve(message)
     local sig = message:sub(1, SIGNATURE:len())
@@ -56,9 +76,13 @@ function M.recieve(message)
 	return  -- 自分向けじゃない
     end
     if method == 'start' then
-	M.AC.start()
+	if M.inParty() then
+	    M.AC.start()
+	end
     elseif method == 'stop' then
-	M.AC.stop()
+	if M.inParty() then
+	    M.AC.stop()
+	end
     elseif method == 'all' then
 	M.recieve_all(arg)
     elseif method == 'party' then
