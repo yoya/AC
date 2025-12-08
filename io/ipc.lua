@@ -14,7 +14,7 @@ local acitem = require 'item'
     sig, target, source, method, arg
 ]]
 
-local SIGNATURE = "AC."
+local SIGNATURE = "AC"
 
 -- { {keyword, callback}, ... }
 local listener_table = {}
