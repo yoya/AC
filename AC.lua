@@ -969,10 +969,14 @@ windower.register_event('addon command', function(...)
     elseif command == 'stop' then
         stop()
     elseif command == 'all' then
-	if arg1 == 'dim' or arg1 == 'holla' or arg1 == 'mea' then
-	    local item_name = "Ｄ．ホラリング"
-	    local item_id = 26176
+	if arg1 == 'warp' or
+	    arg1 == 'dim' or arg1 == 'holla' or arg1 == 'mea' then
+	    local item_name = "デジョンリング"
+	    local item_id = 28540
 	    if arg == "dim" then
+		item_name = "Ｄ．ホラリング"
+		item_id = 26176
+	    elseif arg == "holla" then
 		item_name = "Ｄ．デムリング"
 		item_id = 26177
 	    elseif arg == "mea" then
@@ -987,15 +991,6 @@ windower.register_event('addon command', function(...)
 	elseif arg1 == 'reload' then
 	    io_ipc.send_all("all", "reload")
 	    task.setTaskSimple("lua r AC", 1, 1)
-	elseif arg1 == 'warp' then
-	    io_chat.print("デジョン15秒前")
-	    io_ipc.send_all("all", "warp")
-	    coroutine.sleep(3)
-	    task.allClear()
-	    io_chat.print("デジョン10秒前")
-	    local slot_right_ring = 14
-	    local warpring_id = 28540
-	    acitem.useEquipItem(slot_right_ring, warpring_id, 'デジョンリング', 9)
 	else
 	    print("ac all warp")
 	end
@@ -1151,7 +1146,7 @@ windower.register_event('addon command', function(...)
         ac_move.autoMoveTo(zone, {"-"..arg1}, routeTable)
     elseif command == 'party' then
 	if arg1 == 'build' then
-	    io_ipc.send_party"party", "build")
+	    io_ipc.send_party("party", "build")
 	elseif arg1 == 'warp' then
 	    io_chat.print("デジョン15秒前")
 	    io_ipc.send_party("party", "warp")
