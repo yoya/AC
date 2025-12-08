@@ -2,6 +2,8 @@ _addon.author = 'Yoya'
 _addon.version = '1.3.0'
 _addon.commands = {'accountcluster', 'ac'}
 
+local M = {}
+
 require('functions')
 local res = require 'resources'
 local socket = require 'socket'
@@ -106,7 +108,10 @@ local iamLeader = ac_party.iamLeader
 
 local io_net = require 'io/net'
 local io_chat = require 'io/chat'
+
 local io_ipc = require 'io/ipc'
+io_ipc.AC = M  -- for calback
+
 local ac_stat = require 'ac/stat'
 local acinspect = require 'inspect'
 
@@ -879,15 +884,24 @@ local start = function()
     io_chat.print("save start_pos: {x:" .. math.round(start_pos.x,2) .. " y:"..math.round(start_pos.y,2)  .. " z:"..math.round(start_pos.z,2).."}")
     settings = config.load(defaults)
     control.auto = true
+    print("iamLeader()", iamLeader())
+    if iamLeader() then
+	io_ipc.send("*", "start")
+    end
 end
+M.start = start
 
 local stop = function()
     io_chat.print('### AC STOP')
+    if iamLeader() then
+	io_ipc.send("*", "stop")
+    end
     control.auto = false
     ac_move.stop()
     works.stop()
     task.allClear()
 end
+M.stop = stop
 
 windower.register_event('ipc message', function(message)
     --    print("IPC:"..message)
@@ -952,17 +966,7 @@ windower.register_event('addon command', function(...)
 	ac_defeated.done()
 	io_chat.setNextColor(6)
 	io_chat.printf("mode attack=%s puller=%s calm=%s", tostring(settings.Attack), tostring(puller), tostring(settings.Calm))
-	if arg1 == 'all' then
-	    if iamLeader() then
-		io_ipc.send("*", "AC", "start")
-	    end
-	end
     elseif command == 'stop' then
-	if arg1 == 'all' then
-	    if iamLeader() then
-		io_ipc.send("*", "AC", "stop")
-	    end
-	end
         stop()
     elseif command == 'all' then
 	if arg1 == 'dim' or arg1 == 'holla' or arg1 == 'mea' then

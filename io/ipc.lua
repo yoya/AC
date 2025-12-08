@@ -11,6 +11,7 @@ local acitem = require 'item'
 
 --[[
     AC.*.Upaupa.WS.1
+    sig, target, source, method, arg
 ]]
 
 local SIGNATURE = "AC."
@@ -22,7 +23,12 @@ local listener_table_last_idx = 0
 
 function M.send(target, method, arg)
     local player = windower.ffxi.get_player()
-    command = "%s.%s.%s.%s.%s":format(SIGNATURE, target, player.name, method, arg)
+    print(SIGNATURE, target, player.name, method, arg)
+    if arg == nil then
+	command = "%s.%s.%s.%s":format(SIGNATURE, target, player.name, method)
+    else
+	command = "%s.%s.%s.%s.%s":format(SIGNATURE, target, player.name, method, arg)
+    end
     windower.send_ipc_message(command)
 end
 
@@ -39,12 +45,21 @@ function M.recieve(message)
     local source = words[3]
     local method = words[4]
     local arg = words[5]
-    -- io_chat.printf("io/ipc.recieve: target:%s source:%s method:%s arg:%s", target, source, method, arg)
+    if arg == nil then
+	io_chat.printf("io/ipc.recieve: target:%s source:%s method:%s", target, source, method)
+    else
+	io_chat.printf("io/ipc.recieve: target:%s source:%s method:%s arg:%s", target, source, method, arg)
+    end
     local player = windower.ffxi.get_player()
     if target ~= '*' and (player == nil or player.name ~= target) then
+	print("not for me")
 	return  -- 自分向けじゃない
     end
-    if method == 'all' then
+    if method == 'start' then
+	M.AC.start()
+    elseif method == 'stop' then
+	M.AC.stop()
+    elseif method == 'all' then
 	M.recieve_all(arg)
     elseif method == 'party' then
 	M.recieve_party(source, arg)
