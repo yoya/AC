@@ -2,4 +2,8 @@
 
 local M = {}
 
+function M.tick(player)
+    
+end
+
 return M
