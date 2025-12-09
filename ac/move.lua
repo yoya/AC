@@ -13,6 +13,7 @@ local io_chat = require 'io/chat'
 local contents = require 'contents'
 local ac_pos = require 'ac/pos'
 local distance = ac_pos.distance
+local io_net = require 'io/net'
 
 local turnToFront = function(target)
     local push_numpad5 = 'setkey numpad5 down; wait 0.1; setkey numpad5 up'
@@ -137,6 +138,21 @@ function moveToAction(p)
 	coroutine.sleep(1)
 	command.send('input /ma スニーク <me>')
 	coroutine.sleep(7)
+    end
+    if p.target ~= nil then
+	print("target:"..p.target)
+	io_net.targetByMobName(p.target)
+	while M.auto do
+	    coroutine.sleep(1)
+	    local mob = windower.ffxi.get_mob_by_target("t")
+	    if mob == nil or mob.name ~= p.target then
+		print("tab")
+		pushKeys({"tab"})
+		coroutine.sleep(1)
+	    else
+		break
+	    end
+	end
     end
     if p.w ~= nil then
 	p.wait = p.w
