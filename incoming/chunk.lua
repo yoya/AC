@@ -232,8 +232,12 @@ end
 packet_handler[0x113] = function(packet)
     local player = windower.ffxi.get_player()
     local char = {
-	eminence_point = packet["Sparks of Eminence"],
-	unity_point = packet["Unity Accolades"],
+	eminence_point  = packet["Sparks of Eminence"],  -- 70
+	login_point     = packet["Login Points"],        -- A8
+	resistane_point = packet["Resistance Credits"],  -- AC
+	dominion_point  = packet["Dominion Notes"],      -- B0
+	unity_point     = packet["Unity Accolades"],     -- E0
+	deeds_point     = packet["Deeds"],               -- F6
     }
     ac_char.update(player.id, char)
 end
@@ -242,12 +246,12 @@ end
 packet_handler[0x118] = function(packet)
     local player = windower.ffxi.get_player()
     local char = {
-	hallmark = packet["Hallmarks"],
+	hallmark       = packet["Hallmarks"],
 	total_hallmark = packet["Total Hallmarks"],
-	gallantry = packet["Badges of Gallantry"],
-	domain_point = packet["Domain Points"],
-	mog_segments = packet["Mog Segments"],
-	gallimaufry = packet["Gallimaufry"],
+	gallantry      = packet["Badges of Gallantry"],
+	domain_point   = packet["Domain Points"],
+	mog_segments   = packet["Mog Segments"],
+	gallimaufry    = packet["Gallimaufry"],
     }
     ac_char.update(player.id, char)
 end
