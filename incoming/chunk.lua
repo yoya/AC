@@ -131,9 +131,14 @@ packet_handler[0x061] = function(packet)
 	current_exp_point = packet["Current EXP"],
 	next_exp_point = packet["Required EXP"],
 	master_breaker = packet["Master Breaker"],
+	synched_master_level = packet["Master Level"],
 	current_exemplar_point = packet["Current Exemplar Points"],
 	next_exemplar_point = packet["Required Exemplar Points"],
     }
+    if char.master_breaker == nil then
+	print("ERROR: char.master_breaker == nil at 0x061")
+    end
+
     ac_char.update(player.id, char)
 end
 
@@ -208,6 +213,9 @@ packet_handler[0x0DF] = function(packet)
 	-- master_level = packet["Master Level"],
 	master_breaker = packet["Master Breaker"],
     }
+    if char.master_breaker == nil then
+	print("ERROR: char.master_breaker == nil at 0x0DF")
+    end
     -- ac_char.update(id, char)
 end
 

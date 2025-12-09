@@ -38,7 +38,7 @@ function M.update_job_info(id, main_job, sub_job, char)
     local max_merit_point = char.max_merit_point
     local current_exp_point = char.current_exp_point
     local next_exp_point = char.next_exp_point
-    -- local master_level = char.master_level  -- レベルシンクで変動する
+    local synched_master_level = char.synched_master_level
     local master_breaker = char.master_breaker
     local current_exemplar_point = char.current_exemplar_point
     local next_exemplar_point = char.next_exemplar_point
@@ -67,6 +67,9 @@ function M.update_job_info(id, main_job, sub_job, char)
     end
     if next_exp_point ~= nil then
 	M.charTable[id][main_job].next_exp_point = next_exp_point
+    end
+    if synched_master_level ~= nil then
+	M.charTable[id][main_job].synched_master_level = synched_master_level
     end
     if master_breaker ~= nil and master_breaker == true then
 	if current_exemplar_point ~= nil then
@@ -204,6 +207,10 @@ end
 
 function M.real_master_level()
     return get_char_point_by_job("real_master_level")
+end
+
+function M.synched_master_level()
+    return get_char_point_by_job("synched_master_level")
 end
 
 function M.current_exemplar_point()
