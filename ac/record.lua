@@ -77,7 +77,7 @@ function M.record_char()
 	    local exemplar_percent = math.floor(100 * ac_char.current_exemplar_point()/ac_char.next_exemplar_point()) -- 切り捨て
 	    f:write("("..ac_char.current_exemplar_point().."/"..ac_char.next_exemplar_point().."="..exemplar_percent.."%)")
 	    if ac_char.real_master_level() ~= ac_char.synched_master_level() then
-		f:write(" =>Mlv:"..ac_char.synched_master_level())
+		f:write(" => Mlv:"..ac_char.synched_master_level())
 	    end
 	end
     end
