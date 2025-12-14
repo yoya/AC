@@ -143,13 +143,15 @@ function moveToAction(p)
 	print("target:"..p.target)
 	io_net.targetByMobName(p.target)
 	while M.auto do
-	    coroutine.sleep(1)
+	    coroutine.sleep(0.7)  -- 0.5 だとたまに失敗する
 	    local mob = windower.ffxi.get_mob_by_target("t")
 	    if mob == nil or mob.name ~= p.target then
 		print("tab")
 		pushKeys({"tab"})
-		coroutine.sleep(1)
+		coroutine.sleep(0.3)
 	    else
+		utils.target_lockon(true)
+		coroutine.sleep(0.5)
 		break
 	    end
 	end
