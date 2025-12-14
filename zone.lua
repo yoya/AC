@@ -71,6 +71,7 @@ M.zoneTable = {
     [125] = require('zone/125_WestAltepa'), -- 西アルテパ砂漠
     [126] = require('zone/126_Qufim'),      -- クフィム島
     [127] = require('zone/127_BehemotDom'), -- ベヒーモスの縄張り
+    [129] = require('zone/129_GhoyusRev'),  -- ゴユの空洞
     [132] = require('zone/132_AbysLaThein'), -- アビセア-ラテーヌ
     [136] = require('zone/136_BeaGlacier_S'), -- ボスディン氷河〔Ｓ〕
     [137] = require('zone/137_Xarcabard_S'), -- ザルカバード〔Ｓ〕
