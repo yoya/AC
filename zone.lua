@@ -74,6 +74,7 @@ M.zoneTable = {
     [132] = require('zone/132_AbysLaThein'), -- アビセア-ラテーヌ
     [136] = require('zone/136_BeaGlacier_S'), -- ボスディン氷河〔Ｓ〕
     [137] = require('zone/137_Xarcabard_S'), -- ザルカバード〔Ｓ〕
+    [138] = require('zone/138_ZvBaileys_S'), -- ズヴァール城外郭〔Ｓ〕
     [139] = require('zone/139_HorlaisPk'),  -- ホルレーの岩峰
     [142] = require('zone/142_Yughott'),    -- ユグホトの岩屋
     [143] = require('zone/143_Palborough'), -- パルブロ鉱山
