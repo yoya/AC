@@ -352,9 +352,15 @@ function autoMoveTo(zone_id, destTable, routeTable)
 	    io_chat.setNextColor(3) -- 赤
             print("not defined zone route", zone_id)
         else
-            for i, dest in pairs(routeTable) do
+            for dest, route in pairs(routeTable) do
 		io_chat.setNextColor(6) -- 緑
-                io_chat.print(i)
+		local pos = currentPos()
+		local idx = nearest_idx(pos, route)
+		if distance(pos, route[idx]) < 64 then
+		    io_chat.printf("O %s (%d) ", dest, idx)
+		else
+		    io_chat.printf("X %s (%d) ", dest, idx)
+		end
             end
         end
     else
