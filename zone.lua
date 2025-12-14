@@ -159,7 +159,9 @@ M.zoneTable = {
     [281] = require('zone/281_Leafallia'),  -- リファーリア
     [287] = require('zone/287_LegionB'),    -- アブダルスの模型-レギオンB
     [288] = require('zone/288_EschaZiTah'), -- エスカ-ジ・タ
+    [289] = require('zone/289_EschaRuAun'), -- エスカ-ル・オン
     [291] = require('zone/291_ReisenHenge'), -- 醴泉島-秘境
+    [295] = require('zone/295_DynamisBas'), -- デュナミス-バストゥーク
 }
 
 for z, m in pairs(M.zoneTable) do
