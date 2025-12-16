@@ -334,12 +334,12 @@ local notLeaderFunction = function()
 end
 
 --- 戦闘中。リーダー、メンバー共通。
-local figtingFunction = function()
----    print("figtingFunction")
---- io_chat.print("figtingFunction")
+local fightingFunction = function()
+---    print("fightingFunction")
+--- io_chat.print("fightingFunction")
     local mob = windower.ffxi.get_mob_by_target("t")
     if mob == nil then
---        print("figtingFunction mob is nil")
+--        print("fightingFunction mob is nil")
         -- 多分、戦闘モードなのにターゲットがいない。
         command.send('input /attack off')
         return
