@@ -487,7 +487,7 @@ local figtingFunction = function()
     end
 ---    if math.random(1, 100) <= 1 then
     --- 戦闘ターゲットがたまに外れる対策。とりあえずの方法。
-    if iamLeader() or puller then
+    if iamLeader() or control.puller then
         if math.random(1, 10) <= 1 then
             command.send('input /attack <t>')
         end
@@ -1177,7 +1177,7 @@ windower.register_event('addon command', function(...)
     elseif command == 'puller' then
 	local onoff = argument_means_on(arg1)
 	if onoff ~= nil then
-            puller = onoff
+            control.puller = onoff
 	    io_chat.setNextColor(6)
             io_chat.print("ac puller "..arg1)
         else
@@ -1380,9 +1380,8 @@ windower.register_event('zone change', function(zone, prevZone)
     task.setTaskSimple("ac inject currinfo2", 4, 1)
     task.setTaskSimple("//record char", 6, 1)
     control.enemy_filter = nil
-    puller = false
+    control.puller = false
 end)
-
 
 windower.register_event('incoming chunk', function(id, data, modified, injected, blocked)
     incoming_chunk.incoming_handler(id, data, modified, injected, blocked)
