@@ -41,9 +41,6 @@ local crystal_ids = item_data.crystal_ids -- クリスタル/塊
 local seal_ids = item_data.seal_ids -- 印章
 local cipher_ids = item_data.cipher_ids --  盟スクロール
 
-
-local enemyFilter = nil
-
 -- 他との戦闘を中断してでも先に倒すべき敵
 local moreAttractiveEnemyList = {
     -- カオス戦
@@ -153,7 +150,7 @@ local leaderFunction = function()
     local condition = {
 	range = settings.CampRange,
 	linkedOnly = true,
-	-- nameMatch = enemyFilter,
+	-- nameMatch = control.enemy_filter,
     }
     local mob = acmob.searchNearestMob(me_pos, condition)
     -- 優先する敵
@@ -161,7 +158,7 @@ local leaderFunction = function()
 	local condition = {
 	    range = settings.CampRange,
 	    preferMobs = utils.table.merge_lists(moreAttractiveEnemyList, preferedEnemyList),
-	    nameMatch = enemyFilter,
+	    nameMatch = control.enemy_filter,
 	}
 	local mob = acmob.searchNearestMob(start_pos, condition)
 	-- local mob = acmob.getNearestFightableMob(start_pos, settings.CampRange, )
@@ -175,7 +172,7 @@ local leaderFunction = function()
         --- 優先度の高い敵がいない場合は、誰でも良い
 	local condition = {
 	    range = settings.CampRange,
-	    nameMatch = enemyFilter,
+	    nameMatch = control.enemy_filter,
 	}
 	mob = acmob.searchNearestMob(start_pos, condition)
         -- mob = acmob.getNearestFightableMob(start_pos, settings.CampRange, nil)
@@ -302,7 +299,7 @@ local notLeaderFunction = function()
 	local condition = {
 	    range = settings.CampRange,
 	    linkedOnly = true,
-	    -- nameMatch = enemyFilter,
+	    -- nameMatch = control.enemy_filter,
 	}
 	local mob = acmob.searchNearestMob(me_pos, condition)
 	if mob ~= nil then
@@ -353,7 +350,7 @@ local figtingFunction = function()
     local condition = {
 	range = settings.CampRange,
 	preferMobs = moreAttractiveEnemyList,
-	nameMatch = enemyFilter,
+	nameMatch = control.enemy_filter,
     }
     local preferMob = acmob.searchNearestMob(start_pos, condition)
     -- local  preferMob =  acmob.getNearestFightableMob(start_pos, preferedEnemyList)
@@ -1040,7 +1037,7 @@ windower.register_event('addon command', function(...)
 	elseif arg1 == 'nearest' then
 	    local condition = {
 		range = settings.CampRange,
-		nameMatch = enemyFilter,
+		nameMatch = control.enemy_filter,
 	    }
 	    local mob = acmob.searchNearestMob(start_pos, condition)
 	    io_chat.print("nearest preferMob=====================")
@@ -1066,9 +1063,9 @@ windower.register_event('addon command', function(...)
 	io_chat.print(arg1)
     elseif command == 'enemy' then
 	if arg1 == 'filter' then
-	    enemyFilter = arg2
+	    control.enemy_filter = arg2
 	    io_chat.setNextColor(6)
-	    io_chat.print("ac enemy filter", enemyFilter)
+	    io_chat.print("ac enemy filter", control.enemy_filter)
 	else
 	    print("ac enemy filter <enemy substring>")
 	end
@@ -1378,7 +1375,7 @@ windower.register_event('zone change', function(zone, prevZone)
     task.setTaskSimple("ac inject currinfo1", 2, 1)
     task.setTaskSimple("ac inject currinfo2", 4, 1)
     task.setTaskSimple("//record char", 6, 1)
-    enemyFilter = nil
+    control.enemy_filter = nil
     puller = false
 end)
 

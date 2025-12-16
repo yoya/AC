@@ -3,6 +3,7 @@
 
 local M = {}
 
+local control = require 'control'
 local io_chat = require("io/chat")
 local utils = require('utils')
 local split = utils.split
