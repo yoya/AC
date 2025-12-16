@@ -987,9 +987,9 @@ windower.register_event('addon command', function(...)
 	    acitem.useEquipItem(slot_right_ring, item_id, item_name, 10)
 	elseif arg1 == 'reload' then
 	    io_ipc.send_all("all", "reload")
-	    task.setTaskSimple("lua r AC", 1, 1)
+	    task.setTaskSimple("lua u AC; wait 1; lua l AC", 0, 1)
 	else
-	    print("ac all warp")
+	    print("ac all reload | warp | holla | dim | mea")
 	end
     elseif command == 'attack' or command == 'att' or command == 'at' then
 	local onoff = argument_means_on(arg1)

@@ -116,10 +116,11 @@ function M.warp_with_ring(arg)
 end
     
 function M.recieve_all(arg)
+    print("io/ipc.recieve_all", arg)
     if arg == "dim" or arg == "holla" or arg == "mea" or arg == "warp" then
 	M.warp_with_ring(arg)
     elseif arg == "reload" then
-	task.setTaskSimple("lua r AC", 1, 1)
+	task.setTaskSimple("lua u AC; wait 1; lua l AC", 0, 1)
     else
 	print("io/ipc.recieve_all: unknown arg:"..arg)
     end
