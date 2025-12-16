@@ -6,6 +6,7 @@ local M = {
     do_my_best = false, -- 本気を出す (1H アビが使う)
     equip_lock = true,  -- 装備の固定。脱衣攻撃対策
     puller = false,  -- 敵にちょっかい出す。基本はリーダーのみ true
+    enemy_filter = nil  -- ちょっかい出す敵を名前で制限。
     -- enemy_space
     -- finish_blow
 }
