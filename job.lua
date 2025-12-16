@@ -96,4 +96,20 @@ function M.tick(player)
     end
 end
 
+-- 本気出す
+function M.dothebest(player)
+        local zone_id = windower.ffxi.get_info().zone
+    if aczone.is_city_zone(zone_id) then
+	return  -- 街中ではジョブ毎の処理はする事がない。ないよね？
+    end
+    local dothebest_sub = M.jobTable[player.sub_job].dothebest_sub
+    if dothebest_sub ~= nil then
+	dothebest_sub(player)
+    end
+    local dothebest_main = M.jobTable[player.main_job].dothebest_main
+    if dothebest_main ~= nil then
+	dothebest_main(player)
+    end
+end
+
 return M

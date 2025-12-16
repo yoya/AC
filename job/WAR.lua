@@ -102,4 +102,27 @@ function M.sub_tick(player)
     end
 end
 
+function M.dothebest_main(player)
+    local level = task.PRIORITY_HIGH
+    local jaList = { "アグレッサー", "バーサク", "ウォークライ",
+		     "ブラーゼンラッシュ", "マイティストライク"}
+    for i, ja_name in ipairs(jaList) do
+	local c = "input /ja "..ja_name.." <me>"
+	-- command, delay, duration, period, eachfight
+	local t = task.newTask(c, (i-1)*2, 2, 10, false)
+	task.setTask(level, t)
+    end
+end
+
+function M.dothebest_sub(player)
+    local level = task.PRIORITY_HIGH
+    local jaList = { "アグレッサー", "バーサク", "ウォークライ"}
+    for i, ja_name in ipairs(jaList) do
+	local c = "input /ja "..ja_name.." <me>"
+	-- command, delay, duration, period, eachfight
+	local t = task.newTask(c, (i-1)*2, 2, 10, false)
+	task.setTask(level, t)
+    end
+end
+
 return M

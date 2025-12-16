@@ -1054,6 +1054,8 @@ windower.register_event('addon command', function(...)
     elseif command == 'defeated' then
 	-- 戦闘終了時の処理
 	ac_defeated.done()
+    elseif command == 'dothebest' then
+	acjob.dothebest(player)
     elseif command == 'dropjunk' then
 	io_chat.print("アイテム廃棄開始")
 	dropJunkItemsInInventory()

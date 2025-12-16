@@ -31,4 +31,27 @@ function M.main_tick(player)
     end
 end
 
+function M.dothebest_main(player)
+    local level = task.PRIORITY_HIGH
+    local jaList = { "猫足立ち", "回避", "かまえる", "集中",
+		     "インナーストレングス", "百烈拳"}
+    for i, ja_name in ipairs(jaList) do
+	local c = "input /ja "..ja_name.." <me>"
+	-- command, delay, duration, period, eachfight
+	local t = task.newTask(c, (i-1)*2, 2, 10, false)
+	task.setTask(level, t)
+    end
+end
+
+function M.dothebest_sub(player)
+    local level = task.PRIORITY_HIGH
+    local jaList = { "回避", "かまえる", "集中"}
+    for i, ja_name in ipairs(jaList) do
+	local c = "input /ja "..ja_name.." <me>"
+	-- command, delay, duration, period, eachfight
+	local t = task.newTask(c, (i-1)*2, 2, 10, false)
+	task.setTask(level, t)
+    end
+end
+
 return M
