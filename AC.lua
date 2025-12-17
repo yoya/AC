@@ -1314,7 +1314,7 @@ windower.register_event('addon command', function(...)
 	    end
 	    io_chat.print("石の袋開き終わり")
 	else
-	    io_chat.print("ac use { silt | beads | scroll | soulstonesack}")
+	    io_chat.print("ac use { silt | beads | moolah | scroll | soulstonesack}")
 	end
     elseif command == 'ws' then
         changeWS(arg1)
