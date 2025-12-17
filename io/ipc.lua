@@ -47,6 +47,7 @@ function M.send_all(method, arg)
 end
 
 function M.send_party(method, arg)
+    print("io/ipc.send_party", method, arg)
     local party = windower.ffxi.get_party()
     for _, x in pairs({"p", "a1", "a2"}) do -- アライアンス全員
         for i = 0, 5 do -- 自分含めて全員
@@ -108,6 +109,10 @@ function M.recieve(message)
 	end
     elseif method == 'all' then
 	M.recieve_all(arg)
+    elseif method == 'focus' then
+	if M.AC.focusMyIndex == tonumber(arg) then
+	    windower.take_focus()
+	end
     elseif method == 'party' then
 	M.recieve_party(source, arg)
     else
@@ -116,7 +121,10 @@ function M.recieve(message)
 end
 
 function M.warp_with_ring(arg)
-    print("io/ipc.warp_with_ring", arg)
+    io_chat.print("指輪ワープ", arg)
+    if control.debug then
+	print("io/ipc.warp_with_ring", arg)
+    end
     task.allClear()
     local item_name = 'デジョンリング'
     local item_id = 28540
@@ -132,7 +140,6 @@ function M.warp_with_ring(arg)
 	item_name = "Ｄ．メアリング"
 	item_id = 26178
     end
-    task.allClear()
     io_chat.print(item_name.."10-12秒前")
     coroutine.sleep(math.random(0,8)/6)
     local slot_right_ring = 14
@@ -140,7 +147,9 @@ function M.warp_with_ring(arg)
 end
     
 function M.recieve_all(arg)
-    print("io/ipc.recieve_all", arg)
+    if control.debug then
+	print("io/ipc.recieve_all", arg)
+    end
     if arg == "dim" or arg == "holla" or arg == "mea" or arg == "warp" then
 	M.warp_with_ring(arg)
     elseif arg == "reload" then
