@@ -978,6 +978,7 @@ function argument_means_on(s)
 end
 
 function M.warp_with_equip(arg)
+    io_chat.print("指輪ワープ", arg)
     if arg == 'warp' or
 	arg == 'dim' or arg == 'holla' or arg == 'mea' then
 	local item_name = "デジョンリング"
