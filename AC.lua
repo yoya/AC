@@ -977,11 +977,39 @@ function argument_means_on(s)
     return nil
 end
 
+function M.warp_with_equip(arg)
+    if arg == 'warp' or
+	arg == 'dim' or arg == 'holla' or arg == 'mea' then
+	local item_name = "デジョンリング"
+	local item_id = 28540
+	if arg == "holla" then
+	    item_name = "Ｄ．ホラリング"
+	    item_id = 26176
+	elseif arg == "dim" then
+	    item_name = "Ｄ．デムリング"
+	    item_id = 26177
+	elseif arg == "mea" then
+	    item_name = "Ｄ．メアリング"
+	    item_id = 26178
+	end
+	task.allClear()
+	io_chat.print(item_name.."10秒前")
+	local slot_right_ring = 14
+	acitem.useEquipItem(slot_right_ring, item_id, item_name, 10)
+    else
+	print("Unknown arg:", arg)
+    end
+end
+
 windower.register_event('addon command', function(...)
     local command = select(1, ...)
     local arg1 = select(2, ...)
     local arg2 = select(3, ...)
+    local player = windower.ffxi.get_player()
     command = command and command:lower() or 'help'
+    if control.debug then
+	io_chat.print("addon command:", command, arg1, arg2)
+    end
     -- start/stop, (諸々ABC順), help の並び
     if command == 'start' then
         start()
@@ -1200,8 +1228,20 @@ windower.register_event('addon command', function(...)
 	    io_chat.print("record spells")
 	    ac_record.record_spells()
 	end
+    elseif command == 'reload' then
+	io_chat.setNextColor(2)
+	io_chat.print("reload myself")
+	task.setTaskSimple("lua u AC; wait 1; lua l AC", 0, 1)
     elseif command == 'show' then
-	if arg1 == 'char' then
+	if arg1 == 'auto' then
+	    io_chat.setNextColor(5)
+	    io_chat.print("ac show auto")
+	    io_chat.setNextColor(6)
+	    io_chat.print("control.auto", control.auto)
+	    io_chat.print("ac/move.auto", ac_move.auto)
+	    io_chat.print("ac/works survey.auto, boost.auto:",
+			  works.survey.auto, works.boost.auto)
+	elseif arg1 == 'char' then
 	    ac_char.print()
 	elseif arg1 == 'chatcolor' then
 	    for i, desc in ipairs({"白", "赤紫", "オレンジ", "ピンク","水色", "エメラルド","紫", "明赤紫", "白", "肌色"}) do
