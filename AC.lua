@@ -59,7 +59,7 @@ local moreAttractiveEnemyList = {
     -- プロマシア
     "Gargoyle",
     -- アルタナM
-    "Atomos",
+    "Atomos", "Aquila", "Haudrale",
 }
 
 -- 優先して釣る敵
