@@ -21,14 +21,23 @@ local SIGNATURE = "AC"
 local listener_table = {}
 local listener_table_last_idx = 0
 
+local player_name = nil
 
 function M.send(target, method, arg)
     local player = windower.ffxi.get_player()
-    print(SIGNATURE, target, player.name, method, arg)
+    if control.debug then
+	print("io/ipc.send", SIGNATURE, target, player.name, method, arg)
+    end
+    local name = "*"
+    -- ログイン切り替え時は前のプレイヤー名でメッセージを送る
+    if player ~= nil then
+	player_name = player.name
+    end
+    name = player_name
     if arg == nil then
-	command = "%s.%s.%s.%s":format(SIGNATURE, target, player.name, method)
+	command = "%s.%s.%s.%s":format(SIGNATURE, target, name, method)
     else
-	command = "%s.%s.%s.%s.%s":format(SIGNATURE, target, player.name, method, arg)
+	command = "%s.%s.%s.%s.%s":format(SIGNATURE, target, name, method, arg)
     end
     windower.send_ipc_message(command)
 end
@@ -45,9 +54,11 @@ function M.send_party(method, arg)
 	    -- 該当メンバーがいる。かつエリア内にいる
             if member ~= nil and member.mob ~= nil then
 		local mob = member.mob
-		if  mob.id == id then
+		if not mob.is_npc then
+		    io_chat.print("send_party:", mob.name)
 		    M.send(mob.name, method, arg)
-                end
+		    coroutine.sleep(0.3)
+		end
             end
         end
     end
@@ -55,8 +66,10 @@ function M.send_party(method, arg)
 end
 
 function M.recieve(message)
+    if control.debug then
+	print("io/ipc.recieve:", message)
+    end
     local sig = message:sub(1, SIGNATURE:len())
-    print("io/ipc.recieve:", message)
     if sig ~= SIGNATURE then
 	print("unknown signature:", sig)
 	return
@@ -66,23 +79,32 @@ function M.recieve(message)
     local source = words[3]
     local method = words[4]
     local arg = words[5]
-    if arg == nil then
-	io_chat.printf("io/ipc.recieve: target:%s source:%s method:%s", target, source, method)
-    else
-	io_chat.printf("io/ipc.recieve: target:%s source:%s method:%s arg:%s", target, source, method, arg)
+    if control.debug then
+	print(target, source, method, arg)
+	if arg == nil then
+	    io_chat.printf("io/ipc.recieve: target:%s source:%s method:%s arg:nil", target, source, method)
+	else
+	    io_chat.printf("io/ipc.recieve: target:%s source:%s method:%s arg:%s", target, source, method, arg)
+	end
     end
     local player = windower.ffxi.get_player()
     if target ~= '*' and (player == nil or player.name ~= target) then
-	print("not for me")
+	if control.debug then
+	    print("io/ipc.recieve: not for me")
+	end
 	return  -- 自分向けじゃない
     end
     if method == 'start' then
 	if M.inParty() then
 	    M.AC.start()
+	else
+	    print("not in Party")
 	end
     elseif method == 'stop' then
 	if M.inParty() then
 	    M.AC.stop()
+	else
+	    print("not in Party")
 	end
     elseif method == 'all' then
 	M.recieve_all(arg)

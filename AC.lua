@@ -859,51 +859,74 @@ function tick_serial()
     if player.status == 0 or player.status == 85 then
 	--- 待機中
 	idleFunction()
-	if iamLeader() == true or puller then
-	    leaderFunction()
-	elseif iamLeader() == false then
-	    notLeaderFunction()
+	if ac_move.auto then  -- automove 中
+	    getMobPosition(start_pos, "me")  -- start pos を更新
+	else -- automove 中は敵を探索して戦ったり、所定の位置に戻ったりしない
+	    if iamLeader() == true or control.puller then
+		leaderFunction()
+	    elseif iamLeader() == false then
+		notLeaderFunction()
+	    end
 	end
-    elseif player.status == 1 then
-	--- 戦闘中
-	figtingFunction()
-    elseif player.status == 4 then
-	-- イベント中
-    elseif player.status == 33 then
-	-- 休憩中
+    elseif player.status == 1 then  -- 戦闘中
+	fightingFunction()
+    elseif player.status == 3 then  -- 死亡
+    elseif player.status == 4 then  -- イベント中
+    elseif player.status == 33 then  -- 休憩中
     else
 	print("player.status: "..player.status)
     end
 end
 
 local start = function()
-    io_chat.print('### AC START')
+    io_chat.setNextColor(5)
+    io_chat.print('>>>>>>> AC START')
     io_chat.print("CampRange: " .. settings.CampRange)
     getMobPosition(start_pos, "me")
     io_chat.print("save start_pos: {x:" .. math.round(start_pos.x,2) .. " y:"..math.round(start_pos.y,2)  .. " z:"..math.round(start_pos.z,2).."}")
     settings = config.load(defaults)
     control.auto = true
-    print("iamLeader()", iamLeader())
-    if iamLeader() then
-	io_ipc.send_party("start")
-    end
+    ac_defeated.done()
+    io_chat.setNextColor(6)
+    io_chat.printf("mode attack=%s puller=%s calm=%s", tostring(settings.Attack), tostring(control.puller), tostring(settings.Calm))
 end
 M.start = start
 
 local stop = function()
-    io_chat.print('### AC STOP')
-    if iamLeader() then
-	io_ipc.send_party("stop")
-    end
+    io_chat.setNextColor(5)
+    io_chat.print('<<<<<<< AC STOP')
     control.auto = false
     ac_move.stop()
     works.stop()
     task.allClear()
+    coroutine.sleep(1)
+    windower.ffxi.run(false)
+    -- command.send('sparks fail')  -- exit_sparks
 end
 M.stop = stop
 
+local start_party = function()
+    start()
+    if iamLeader() then
+	io_chat.setNextColor(6)
+	io_chat.print('>>>>>>> AC START Party >>>>>>>')
+	io_ipc.send_party("start")
+    end
+end
+
+local stop_party = function()
+    stop()
+    if iamLeader() then
+	io_chat.setNextColor(6)
+	io_chat.print('<<<<<<< AC STOP Party <<<<<<<')
+	io_ipc.send_party("stop")
+    end
+end
+
 windower.register_event('ipc message', function(message)
-    --    print("IPC:"..message)
+    if control.debug then
+	print("AC: ipc message:", message)
+    end
     io_ipc.recieve(message)
 end)
 
@@ -962,9 +985,6 @@ windower.register_event('addon command', function(...)
     -- start/stop, (諸々ABC順), help の並び
     if command == 'start' then
         start()
-	ac_defeated.done()
-	io_chat.setNextColor(6)
-	io_chat.printf("mode attack=%s puller=%s calm=%s", tostring(settings.Attack), tostring(puller), tostring(settings.Calm))
     elseif command == 'stop' then
         stop()
     elseif command == 'all' then
@@ -1146,19 +1166,20 @@ windower.register_event('addon command', function(...)
 	local routeTable = aczone.getRouteTable(zone)
         ac_move.autoMoveTo(zone, {"-"..arg1}, routeTable)
     elseif command == 'party' then
-	if arg1 == 'build' then
-	    io_ipc.send_party("party", "build")
-	elseif arg1 == 'warp' then
-	    io_chat.print("デジョン15秒前")
-	    io_ipc.send_party("party", "warp")
-	    coroutine.sleep(5)
-	    task.allClear()
-	    io_chat.print("デジョン10秒前")
-	    local slot_right_ring = 14
-	    local warpring_id = 28540
-	    acitem.useEquipItem(slot_right_ring, warpring_id, 'デジョンリング', 9)
+	if arg1 == 'start' then
+	    start_party()
+	elseif arg1 == 'stop' then
+	    stop_party()
+	elseif arg1 == 'build' then
+	    io_chat.setNextColor(5)
+	    io_chat.print("パーティ作成開始")
+	    io_ipc.send_all("party", "build")
+	elseif arg1 == 'warp' or
+	    arg1 == 'dim' or arg1 == 'holla' or arg1 == 'mea' then
+	    io_ipc.send_party("party", arg1)
+	    M.warp_with_equip(arg1)
 	else
-	    print("ac party build | warp")
+	    print("ac party build | warp | holla | dim | mea")
 	end
     elseif command == 'point' then
         doPointCheer = not doPointCheer
