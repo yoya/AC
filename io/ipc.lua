@@ -116,13 +116,15 @@ function M.recieve(message)
 end
 
 function M.warp_with_ring(arg)
+    print("io/ipc.warp_with_ring", arg)
     task.allClear()
     local item_name = 'デジョンリング'
     local item_id = 28540
+    io_chat.setNextColor(5)
     io_chat.print(item_name.."発動 10-12秒前")
     if arg == "holla" then
-	local item_name = "Ｄ．ホラリング"
-	local item_id = 26176
+	item_name = "Ｄ．ホラリング"
+	item_id = 26176
     elseif arg == "dim" then
 	item_name = "Ｄ．デムリング"
 	item_id = 26177
