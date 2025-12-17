@@ -990,23 +990,8 @@ windower.register_event('addon command', function(...)
     elseif command == 'all' then
 	if arg1 == 'warp' or
 	    arg1 == 'dim' or arg1 == 'holla' or arg1 == 'mea' then
-	    local item_name = "デジョンリング"
-	    local item_id = 28540
-	    if arg == "dim" then
-		item_name = "Ｄ．ホラリング"
-		item_id = 26176
-	    elseif arg == "holla" then
-		item_name = "Ｄ．デムリング"
-		item_id = 26177
-	    elseif arg == "mea" then
-		item_name = "Ｄ．メアリング"
-		item_id = 26178
-	    end
-	    task.allClear()
-	    io_chat.print(item_name.."10秒前")
 	    io_ipc.send_all("all", arg1)
-	    local slot_right_ring = 14
-	    acitem.useEquipItem(slot_right_ring, item_id, item_name, 10)
+	    M.warp_with_equip(arg1)
 	elseif arg1 == 'reload' then
 	    io_ipc.send_all("all", "reload")
 	    task.setTaskSimple("lua u AC; wait 1; lua l AC", 0, 1)
@@ -1255,6 +1240,19 @@ windower.register_event('addon command', function(...)
 	elseif arg1 == 'beads' then
 	    useBeads = not useBeads
 	    io_chat.print({"item beads using start", useBeads})
+	elseif arg1 == 'moolah' then
+	    -- モグのおひねり
+	    local slot_ammo = 3
+	    local moolah_item_list = {
+		{id=18469, name="モグのおいわい"},
+		{id=19181, name="モグのおだちん"},
+		{id=19246, name="モグのへそくり"},
+		{id=19776, name="モグのおひねり"},
+		{id=21369, name="モグのたなぼた"},
+	    }
+	    io_chat.print("ac moolah # start")
+	    acitem.useEquipItemSequence(slot_ammo, moolah_item_list, 11)
+	    io_chat.print("ac moolah # end")
 	elseif arg1 == 'scroll' then
 	    io_chat.print("スクロール学習開始")
 	    for i,id in ipairs(item_data.magicScrolls) do
