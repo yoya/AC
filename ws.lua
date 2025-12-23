@@ -16,13 +16,12 @@ local preferWeaponSkill = {
     'evis', 'rudra', 'manda', 'exen',  'dance', 'shadow', -- 短剣
     'savage', 'chant', 'requ', -- 片手剣
     'reso','ground', -- 両手剣
-    'rui', 'ramp', 'deci', -- 片手斧
+    'rui', 'ramp', 'deci', 'raging', -- 片手斧
     'ukko', 'steel', 'uph', 'shield', --両手斧
     'dai',  -- 両手槍
     'demi', 'spin', 'frost', -- 両手剣
-    'jin', 'ten', -- 片手等
+    'kuu', 'jin', 'ten', 'shun', 'rin', -- 片手刀
     'kasha', 'shoha', 'hocho', 'gekko', 'kagero', 'yuki', -- 両手刀
-    'shun', -- 片手刀
     'moon', 'realm', 'hexa', 'shine', 'circle', -- 片手棍
     'myrkr', 'spirit', 'full', 'heavy', -- 両手棍
     'spiral', 'cross', 'ent', -- 両手鎌
@@ -66,6 +65,7 @@ M.weaponskillTable = {
     rui = 'ルイネーター',
     ramp = 'ランページ',
     deci = 'デシメーション',
+    raging = 'レイジングアクス',
     -- 両手斧
     shield = 'シールドブレイク',
     ukko = 'ウッコフューリー',
@@ -78,8 +78,11 @@ M.weaponskillTable = {
     cross = 'クロスリーパー',
     ent = 'エントロピー',
     -- 片手刀
+    rin = '臨',
+    kuu = '空',
     jin = '迅',
     ten = '天',
+    shun = '瞬',
     -- 両手刀
     kasha = '九之太刀・花車', -- 核熱
     kagero = '四之太刀・陽炎', -- 溶解
@@ -87,8 +90,6 @@ M.weaponskillTable = {
     gekko = '八之太刀・月光', -- 貫通、衝撃
     hocho = '十\一之太刀・鳳蝶', -- 防御力ダウン
     shoha = '十\二之太刀・照破', --　防御力カット。格上に強い
-    -- 片手刀
-    shun = '瞬',
     -- 片手棍
     shine = 'シャインストライク',
     realm = 'レルムレイザー',
