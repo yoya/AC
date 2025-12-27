@@ -11,16 +11,13 @@ local io_chat = require 'io/chat'
 local task = require 'task'
 
 M.mainJobProbTable = {
-    { 100, 120, 'input /ma ケアル <p1>', 4, true },
-    { 100, 120, 'input /ma ヘイスト <p2>', 6 },
-    { 100,5*60/2, 'input /ja コリメイトファーバー <me>', 6 },
+    { 10, 120, 'input /ma ケアル <p1>', 4, true },
+    { 10, 120, 'input /ma ヘイスト <p2>', 6 },
+    { 10,5*60/2, 'input /ja コリメイトファーバー <me>', 6 },
 }
 
 function isDefensive()
-    if aczone.isNear(291, "toad_pond", 120) then
-	return true
-    end
-    return false
+    return M.parent.needSafety()
 end
 
 function inde_setup(jobRank)

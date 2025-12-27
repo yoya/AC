@@ -39,6 +39,10 @@ M.subJobProbTable = {
     -- { 100, 300, 'input /ja ファイターズロール  <me>', 3 },
 }
 
+function isDefensive()
+    return M.parent.needSafety()
+end
+
 function phantom_roll(roll_name, on, delay)
     local c = "input /ja "..roll_name.." <me>"
     local level = task.PRIORITY_MIDDLE
@@ -62,14 +66,13 @@ function roll_tick(player)
     local zone = windower.ffxi.get_info().zone
     local me = windower.ffxi.get_mob_by_target("me")
     local mob = windower.ffxi.get_mob_by_target("t")
-    -- 醴泉島(291)のかえる池
-    if zone == 291 and aczone.isNear(291, "toad_pond", 100) then
+    if isDefensive() then
 	phantom_roll("ダンサーロール", true, 0)  -- リジェネ
 	phantom_roll("ガランツロール", true, 61)  -- 防御
-	-- phantom_roll("ニンジャロール", true, 61*3)  -- 回避
-	-- phantom_roll("メガスズロール", true, 61*4)  -- 魔防御
+	phantom_roll("ニンジャロール", true, 61*3)  -- 回避
+	phantom_roll("メガスズロール", true, 61*4)  -- 魔防御
 	phantom_roll("ルーニストロール", true, 61*6)  -- 魔回避
-	return
+	return  -- 抜ける
     end
     if mob ~= nil then
 	-- print(mob.hpp)

@@ -35,10 +35,7 @@ function song(song_name, onoff, period, delay)
 end
 
 function isDefensive()
-    if aczone.isNear(291, "toad_pond", 120) then
-	return true
-    end
-    return false
+    return M.parent.needSafety()
 end
 
 function song_tick(player)
