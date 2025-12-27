@@ -65,4 +65,27 @@ function M.main_tick(player)
     song_tick(player)
 end
 
+function M.dothebest_main(player)
+    local level = task.PRIORITY_HIGH
+    local jaList = { "クラリオンコール", "ナイチンゲール", "ソウルボイス"}
+    for i, ja_name in ipairs(jaList) do
+	local c = "input /ja "..ja_name.." <me>"
+	-- command, delay, duration, period, eachfight
+	task.setTask(level, task.newTask(c, (i-1)*2, 2, 10, false))
+    end
+    windower.ffxi.run(false)
+    level = task.PRIORITY_MIDDLE
+    local songList = { "栄光の凱旋マーチ", "猛者のメヌエットV",
+		       "怪力のエチュード", "妙技のエチュード",
+		       "剣豪のマドリガル", "猛者のメヌエットV",
+		       "栄光の凱旋マーチ" }
+    for i, song_name in ipairs(songList) do
+	local c = "input /song "..song_name.." <me>"
+	-- command, delay, duration, period, eachfight
+	local taskObj = task.newTask(c, 6+(i-1)*2, 5, 180/2, false)
+	task.setTask(level, taskObj)
+    end
+
+end
+
 return M

@@ -138,4 +138,19 @@ function M.main_tick(player)
     end
 end
 
+function M.dothebest_main(player)
+    local level = task.PRIORITY_HIGH
+    local jaList = { "ボルスター", "フルサークル" }
+    for i, ja_name in ipairs(jaList) do
+	local c = "input /ja "..ja_name.." <me>"
+	-- command, delay, duration, period, eachfight
+	local t = task.newTask(c, (i-1)*2, 2, 10, false)
+	task.setTask(level, t)
+    end
+    windower.ffxi.run(false)
+    geo_setup(1)
+    inde_setup(1)
+end
+
+
 return M
