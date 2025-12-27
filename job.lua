@@ -54,11 +54,16 @@ M.meleeJobs = {
 }
 
 local foodTable = {
-    BLM = 'ペアクレープ',
-    SCH = 'ペアクレープ',
-    GEO = 'ペアクレープ',
-    NIN = 'カルボナーラ',
-    BST = 'カルボナーラ',
+    WAR = {'カルボナーラ', 'ソーススシ'},
+    MNK = {'カルボナーラ', 'ソーススシ'},
+    PLD = {'カルボナーラ', 'ソーススシ'},  -- レベル上げ用
+    BST = {'カルボナーラ', 'ソーススシ'},
+    RNG = {'カルボナーラ', 'ソーススシ'},
+    NIN = {'カルボナーラ', 'ソーススシ'},
+    BLM = {'フルーツパフェ', 'ペアクレープ'},
+    RDM = {'カルボナーラ', 'ソーススシ'},
+    SCH = {'フルーツパフェ', 'ペアクレープ'},
+    GEO = {'フルーツパフェ', 'ペアクレープ'},
 }
 
 -- https://wiki.ffo.jp/html/33806.html
@@ -89,12 +94,18 @@ function M.tick(player)
     end
     if player.status == 1 then
 	local food = foodTable[player.main_job]
+	local foodList = {food}
+	if type(food) == "table" then
+	    foodList = food
+	end
 	if food ~= nil then
-	    local c = "input /item "..food.." <me>"
-	    local level = task.PRIORITY_LOW
-	    -- command, delay, duration, period, eachfight
-	    local t = task.newTask(c, 1, 3, 30*60/10, false)
-	    task.setTask(level, t)
+	    for i, f in ipairs(foodList) do
+		local c = "input /item "..f.." <me>"
+		local level = task.PRIORITY_LOW
+		-- command, delay, duration, period, eachfight
+		local t = task.newTask(c, i*3, 3, 30*60/10, false)
+		task.setTask(level, t)
+	    end
 	end
     end
 end
