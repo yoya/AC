@@ -7,6 +7,7 @@ local M = {
     equip_lock = true,  -- 装備の固定。脱衣攻撃対策
     puller = false,  -- 敵にちょっかい出す。基本はリーダーのみ true
     enemy_filter = nil  -- ちょっかい出す敵を名前で制限。
+    wstp = -1, -- 無条件で WS をうつ TP 量。-1 だと MB 狙いで調整される
     -- enemy_space
     -- finish_blow
 }

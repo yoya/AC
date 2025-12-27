@@ -460,7 +460,7 @@ local fightingFunction = function()
     -- 連携になるよう 4秒あける。MB を邪魔しないよう 連携から 10秒あける。
     if player.vitals.tp >= 1000 and
 	(acinspect.ws_time + 4) < now and (acinspect.sc_time + 10) < now then
-		ws_request = true
+	ws_request = true
     end
     if player.vitals.tp >= 2000 and
 	(acinspect.ws_time + 3) < now and (acinspect.sc_time + 9) < now then
@@ -473,6 +473,9 @@ local fightingFunction = function()
     end
     -- ドメインベーションはTP1000即撃ち
     if player.vitals.tp >= 1000 and utils.table.contains({"Azi Dahaka", "Naga Raja", "Quetzalcoatl", "Mireu"}, mob.name) then
+	ws_request = true
+    end
+    if control.wstp ~= nil and control.wstp ~= -1 and control.wstp <= player.vitals.tp then
 	ws_request = true
     end
     if ws_request == true then

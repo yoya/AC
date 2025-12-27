@@ -44,8 +44,32 @@ function M.print(...)
 end
 
 function M.printf(...)
-    local s = string.format(...)
-    M.print(s)
+    -- local s = string.format(...)
+    success, retval = pcall(string.format, ...)
+    if success then
+	M.print(retval)
+    else
+	M.print(debug.traceback())
+    end
+end
+
+-- 処理は続くレベルの警告
+function M.warn(...)
+    M.setNextColor(2)  -- 赤紫
+    M.print(...)
+end
+function M.warnf(...)
+    M.setNextColor(2)  -- 赤紫
+    M.printf(...)
+end
+-- 処理を止めるレベルのエラー
+function M.error(...)
+    M.setNextColor(4)
+    M.print(...)
+end
+function M.errorf(...)
+    M.setNextColor(3)  -- オレンジ
+    M.printf(...)
 end
 
 return M
