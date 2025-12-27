@@ -2,6 +2,9 @@
 
 local M = {}
 local task = require 'task'
+local utils = require 'utils'
+local aczone = require 'zone'
+local contents_wkr = require 'contents/wkr'
 
 M.jobTable = {
     -- スタンダードジョブ
@@ -109,6 +112,25 @@ function M.dothebest(player)
     local dothebest_main = M.jobTable[player.main_job].dothebest_main
     if dothebest_main ~= nil then
 	dothebest_main(player)
+    end
+end
+
+-- 戦闘を安全側に倒す状況
+function M.needSafety()
+    print("needSafety")
+    -- 醴泉島のかえる
+    if aczone.isNear(291, "toad_pond", 120) then
+	return true
+    end
+    -- WKR ボス相手
+    local WKR_Zones = contents_wkr.Zones
+    local WKR_MobNames = contents_wkr.BossNames
+    local zone = windower.ffxi.get_info().zone
+    local mob = windower.ffxi.get_mob_by_target("t")
+    if utils.table.contains(WKR_Zones, zone) then
+	if utils.table.contains(WKR_MobNames, mob.name) then
+	    return true
+	end
     end
 end
 
