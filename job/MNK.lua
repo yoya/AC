@@ -8,7 +8,7 @@ local task = require 'task'
 
 M.mainJobProbTable = {
     { 100, 120, 'input /ja 集中 <me>', 0 },
-    { 60, 180, 'input /ja チャクラ <me>', 0 },
+    { 100, 120, 'input /ja 回避 <me>', 0 },
     { 60, 600, 'input /ja マントラ <me>', 0 },
     { 60, 300, 'input /ja 猫足立ち <me>', 0 },
     { 60, 300, 'input /ja かまえる <me>', 0 },

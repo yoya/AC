@@ -47,9 +47,9 @@ M.subJobProbTable = {
     { 100, 120-10, 'input /ma ヘイスト <p1>', 4 },
     { 100, 120-10, 'input /ma ヘイスト <p2>', 4 },
 --]]
-    { 10, 120-30, 'input /ma ヘイスト <p1>', 5 },
-    { 10, 120-30, 'input /ma ヘイスト <p3>', 5 },
-    { 10, 600/3, 'input /ja コンバート <me>', 1 },
+    { 10, 120-30, 'input /ma ヘイスト <p1>', 7 },
+    { 10, 120-30, 'input /ma ヘイスト <p3>', 7 },
+    { 10, 600/3, 'input /ja コンバート <me>', 2 },
 }
 
 function M.invoke_magick_debuff(player, magic, onoff, duration, need_mp)
