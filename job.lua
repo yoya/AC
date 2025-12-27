@@ -84,6 +84,10 @@ local needExperiencePoints = {
 }
 
 function M.tick(player)
+    local zone_id = windower.ffxi.get_info().zone
+    if aczone.is_city_zone(zone_id) then
+	return  -- 街中ではジョブ毎の処理はする事がない。ないよね？
+    end
     local main_tick = M.jobTable[player.main_job].main_tick
     local sub_tick = M.jobTable[player.sub_job].sub_tick
     if main_tick ~= nil then
