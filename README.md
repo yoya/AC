@@ -7,7 +7,8 @@ Windower addon 。
 
 # findall / res
 
-script/findall.lua で item データを取得するのに、以下のようなシンボリックリンクが必要。
+script/findall.lua で item データを取得するのに、
+findAll と res フォルダとへのシンボリックリンクが必要。
 
 例 (WSL)
 ```
