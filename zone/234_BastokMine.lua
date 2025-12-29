@@ -23,12 +23,13 @@ M.routes = {
 	{x=-190,y=-22}, {}
     },
     diver = {
-	{x=38.2,y=-42.6,z=0}, {x=9.4,y=-115.2,z=0}
+	{x=38.2,y=-42.6,z=0}, {x=9.4,y=-115.2,z=0},
+	{target="Enigmatic Footprints #1"}
     },
 }
 
 M.essentialPoints = {
-    hp_1_A = {x=38.2,y=-42.6,z=0},
+    hp1_A = {x=38.2,y=-42.6,z=0},
 }
 
 M.automatic_routes = {
