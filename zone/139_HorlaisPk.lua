@@ -36,9 +36,9 @@ end
 M.essentialPoints = {
     entrance = {x=-536,y=-211.6,z=160.5},  -- ホルレーに入ったところ
     -- トローブ
-    trove_in = {x=-316.3, y=-102.6,z=113.1,w=15},
-    trove2_in = {x=-75.3,y=77.4,z=-7.1},
-    trove3_in = {x=163.6,y=257.2},
+    trove_in = {x=-316.3, y=-102.6,z=113.1,wait=10},
+    trove2_in = {x=-75.3,y=77.4,z=-7.1,wait=10},
+    trove3_in = {x=163.6,y=257.2,wait=10},
 }
 
 M.automatic_routes = {
