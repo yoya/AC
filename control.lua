@@ -1,3 +1,5 @@
+local io_chat = require "io/chat"
+
 local M = {
     auto = false,
     attack = false,  -- 敵と戦う
@@ -33,5 +35,18 @@ M.finish_blow = M.FINISH_BLOW_ANY
 
 -- 全共通のグローバルな制御フラグ/データ
 -- config/settings とは分けたい
+
+function M.setWSTP(wstp)
+    if type(wstp) == 'string' then
+	wstp = tonumber(wstp)
+    end
+    if (wstp == nil or wstp < 1000 or 3000 < wstp) and wstp ~= -1 then
+	io_chat.warnf("ac control wstp <-1 or 1000-3000>", wstp)
+	wstp = -1
+    end
+    control.wstp = wstp
+    io_chat.setNextColor(5)
+    io_chat.print("ac control wstp", wstp)
+end
 
 return M
