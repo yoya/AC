@@ -53,6 +53,24 @@ function M.printf(...)
     end
 end
 
+-- 重要なメッセージ
+function M.notice(...)
+    M.setNextColor(5)  -- 水色
+    M.print(...)
+end
+function M.noticef(...)
+    M.setNextColor(2)  -- 水色
+    M.printf(...)
+end
+-- 通常のメッセージ
+function M.info(...)
+    M.setNextColor(6)  -- エメラルド
+    M.print(...)
+end
+function M.infof(...)
+    M.setNextColor(6)  -- エメラルド
+    M.printf(...)
+end
 -- 処理は続くレベルの警告
 function M.warn(...)
     M.setNextColor(2)  -- 赤紫
