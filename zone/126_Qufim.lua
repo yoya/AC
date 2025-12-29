@@ -7,7 +7,7 @@ M.routes = {
     esca = { -- エスカ・ジタ
 	{x=-212,y=94,z=-21}, {x=-204,y=83.5},
 	{x=-204.3,y=78.5,z=-20},
-	{target="Undulating Confluence"}
+	{target="Undulating Confluence"}, {a="touch"}
     },
     pec = { -- 珍妙なモンスター
 	{x=-212,y=94,z=-21}, {x=-204,y=83.5},
