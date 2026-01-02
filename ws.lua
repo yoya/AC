@@ -21,7 +21,7 @@ local preferWeaponSkill = {
     'dai',  -- 両手槍
     'demi', 'spin', 'frost', -- 両手剣
     'kuu', 'jin', 'ten', 'shun', 'rin', -- 片手刀
-    'kasha', 'shoha', 'hocho', 'gekko', 'kagero', 'yuki', -- 両手刀
+    'gekko', 'kasha', 'shoha', 'hocho', 'kagero', 'yuki', 'enpi',-- 両手刀
     'moon', 'realm', 'hexa', 'shine', 'circle', -- 片手棍
     'myrkr', 'spirit', 'full', 'heavy', -- 両手棍
     'spiral', 'cross', 'ent', -- 両手鎌
