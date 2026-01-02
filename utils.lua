@@ -54,64 +54,6 @@ M.rankInJob = function()
     end
 end
 
---[[
-M.cureIfPartyHPisLow = function()
-    local player = windower.ffxi.get_player()
-    local mainJob = player.main_job
-    local subJob = player.sub_job
-    if mainJob ~= "WHM" and mainJob ~= "SCH" and
-       mainJob ~= "RDM" then
-        mainJob = nil
-    end
-    if subJob ~= "WHM" and subJob ~= "SCH" and
-        subJob ~= "RDM" then
-        subJob = nil
-    end
-    if mainJob == nil and subJob == nil then
-        return
-    end
---    print("cureIfPartyHPisLow:"..mainJob)
-    local player_mp = player.vitals.mp
-    if player_mp < 8 then
-        print("few player mp:"..player_mp)
-        return
-    end
-    local party = windower.ffxi.get_party()
-    for i=0,5 do
-        local t = "p"..i
-        local member = party[t]
-        if member ~= nil and  member.mob ~= nil then
-            local hpp = member.hpp
-            local hp = member.hp
-            local hp_need_cure = 75
-            if mainJob == "RDM" or mainJob == nil then
-                hp_need_cure = 65
-            end
-            if mainJob == "BLM" then
-                hp_need_cure = 50
-            end
-            if hp > 0 and hpp < hp_need_cure
-                and hp < 1800 then
---              print(t.." HP: "..hp.." ("..hpp.."%)")
-                local c = 'input /ma ケアル <'..t..'>'
-                if hp < 300 and mainJob == "WHM" then
-                    c = 'input /ja 女神の祝福 <me>'
-                elseif hp < 500 and player_mp >= 88 then
-                   c = 'input /ma ケアルIV <'..t..'>'
-                elseif hp < 1000  and player_mp >= 46 then
-                    c = 'input /ma ケアルIII <'..t..'>'
-                elseif hp < 1500  and player_mp >= 24 then
-                    c = 'input /ma ケアルII <'..t..'>'
-                end
-                windower.ffxi.run(false)
-                command.send(c)
-                coroutine.sleep(2)
-            end
-        end
-    end
-end
-]]
-
 M.target_lockon = function(b)
     local player = windower.ffxi.get_player()
     local locked = player.target_locked
