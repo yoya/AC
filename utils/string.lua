@@ -2,6 +2,11 @@
 
 M = {}
 
+-- https://gist.github.com/ram-nadella/dd067dfeb3c798299e8d
+function M.trim(text)
+    return (string.gsub(text, "^%s*(.-)%s*$", "%1"))
+end
+
 function M.split_multi(text, seps)
     local prev_start = 0
     local prev_end = 0
