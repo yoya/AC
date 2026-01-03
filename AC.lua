@@ -23,6 +23,7 @@ local defaults = {
     PullMethod = pull.MELEE,
     Attack = true,
     Calm = true,
+    Control = { Debug = "off", },
 }
 
 local settings = config.load(defaults)
