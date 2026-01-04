@@ -119,24 +119,30 @@ local sell_items = {
 
 local sell_itemsT = utils.table.convertArrayToTrueTable(sell_items)
 
+local selljunk_running = false
+
 function M.tick(player)
     if acitem.inventoryHasItemT(sell_itemsT) then
-	local me = windower.ffxi.get_mob_by_target("me")
 	local mob = windower.ffxi.get_mob_by_name("Defliaa")
+	local me = windower.ffxi.get_mob_by_target("me")
 	if mob ~= nil and me ~= nil and me.x > 25.5 then
 	    if mob.distance < 30 then
+		io_net.targetByMobId(mob.id)
 		windower.ffxi.run(false)
+		if not selljunk_running then
+		    control.auto = true
+		    M.parent.AC.idleFunctionSellJunkItems()
+		    selljunk_running = true
+		end
 	    else
+		selljunk_running = false
 		if mob.distance < 700 then
-		    io_net.targetByMobId(mob.id)
---		    turnToPos(me.x, me.y, mob.x, mob.y)
-		    coroutine.sleep(0.5)
-		    ac_move.turnToTarget("t")
-		    utils.target_lockon(true)
-		    windower.ffxi.run(true)
+		    ac_move.runToMob(mob)
 		end
 	    end
 	end
+    else
+	selljunk_running = false
     end
 end
 
