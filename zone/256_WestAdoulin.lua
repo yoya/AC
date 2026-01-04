@@ -7,13 +7,15 @@ local utils = require 'utils'
 local io_net = require 'io/net'
 local ac_move = require 'ac/move'
 local turnToPos = ac_move.turnToPos
+local control = require 'control'
 
 M.routes = {
     moogle = {  -- 開始地点が他にマッチしないように
 	{x=0, y=0, z=0}, {x=0, y=0, z=0},
     },
     pio = { {x=-105.5,y=-13.5}, {x=-101,y=-11},
-	{x=-96.2,y=15.5}, {x=-88.8,y=15}
+	{x=-96.2,y=15.5}, -- {x=-88.8,y=15}
+	{x=-89.3,y=16.2,z=3.3}, {target="Task Delegator"}, {a="touch"}
     },
     levil = { {x=-105.5,y=-13.5}, {x=-101,y=-11},
 	{x=-97,y=16}, {x=-88.4,y=13}, {a="f8touch"}
@@ -88,6 +90,7 @@ M.routes = {
 
 M.essentialPoints = {
     moogle = {x=0, y=0, z=0}, -- モグハウス内のモーグル
+    wp_pio = {x=-110.5,y=-13.5,z=4},
     wp_mum = {x=-21,y=-79.9,z=-0.2},
     wp_cou = {x=4.9,y=-4.8,z=0},
     wp_inv = {x=91.5,y=-49,z=-0.2},
@@ -98,6 +101,7 @@ M.essentialPoints = {
 
 M.automatic_routes = {
     moogle = { route="moogle" }, -- 動かないように
+    wp_pio = { route="pio"},
     wp_mum = { route="mum" },
     wp_cou = { route="cou" },
     wp_inv = { route="inv" },
