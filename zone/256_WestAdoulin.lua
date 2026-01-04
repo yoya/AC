@@ -82,9 +82,9 @@ M.routes = {
 	{x=15.2,y=-111.3,z=-0.1}, {a="f8touch"}
     },
     -- モグハウスから出たとこ
-    eminence = {  -- エニメンスのガルカ
+    eminence = {  -- エミネンスのガルカ
 	{x=7.7,y=-147.1,z=0.7}, {x=5,y=-141},
-	{x=12,y=-123,d=1},
+	{x=12,y=-123,d=1}, -- {target="Eternal Flame"}
     }
 }
 
@@ -95,8 +95,8 @@ M.essentialPoints = {
     wp_cou = {x=4.9,y=-4.8,z=0},
     wp_inv = {x=91.5,y=-49,z=-0.2},
     hp_2_M = {x=31,y=-163,z=0},
-    moghouse1 = {x=-1.9,y=-141.6,z=0.7},
-    moghouse2 = {x=7.7,y=-147.1,z=0.7},
+    -- x=(-1.9, 7.7), y=(-147.1, -141.6), z={-0.7,0.7}
+    moghouse = {x=3,y=-145,z=-0.7,d=5},
 }
 
 M.automatic_routes = {
@@ -106,8 +106,7 @@ M.automatic_routes = {
     wp_cou = { route="cou" },
     wp_inv = { route="inv" },
     hp_2_M = { route="unity" },
-    moghouse1 = { route="eminence" }, -- エミネンスのガルカ
-    moghouse2 = { route="eminence" }, -- エミネンスのガルカ
+    moghouse = { route="eminence" }, -- エミネンスのガルカ
 }
 
 local sell_items = {
