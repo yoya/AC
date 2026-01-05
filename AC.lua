@@ -152,11 +152,13 @@ local ac_stat = require 'ac/stat'
 local acinspect = require 'inspect'
 
 local acitem = require 'item'
+
 local ws = require 'ws'
 local aprob = require 'prob'
 local sendCommandProb = aprob.sendCommandProb
 local getSendCommandProbTable = aprob.getSendCommandProbTable
 local aczone = require 'zone'
+aczone.AC = M  -- for callback
 local zone_change = require 'zone/change'
 local outgoing_chunk = require 'outgoing/chunk'
 local incoming_chunk = require 'incoming/chunk'
