@@ -65,6 +65,7 @@ local item_data = require 'item/data'
 local crystal_ids = item_data.crystal_ids -- クリスタル/塊
 local seal_ids = item_data.seal_ids -- 印章
 local cipher_ids = item_data.cipher_ids --  盟スクロール
+local bayld_swap_ids = item_data.bayld_swap_ids --  ベヤルド交換品
 
 -- 他との戦闘を中断してでも先に倒すべき敵
 local moreAttractiveEnemyList = {
@@ -715,6 +716,7 @@ local idleFunctionSellJunkItems = function()
     -- ついでに売れないゴミも捨てる
     dropJunkItemsInInventory()
 end
+M.idleFunctionSellJunkItems = idleFunctionSellJunkItems
 
 function dropJunkItemsInInventory()
     print("dropJunkItemsInInventory")
@@ -812,10 +814,17 @@ local idleFunctionWestAdoulin = function()
         control.auto = false
     elseif mob.name == "Nunaarl Bthtrogg" then
         n = acitem.inventoryFreespaceNum()
-	io_chat.setNextColor(6)
-        io_chat.print("かばんの空きは"..n.."*99 = "..(n*99))
+        io_chat.info("かばんの空きは"..n.."*99 = "..(n*99))
         control.auto = false
     end
+end
+
+local idleFunctionEastAdoulin = function(mob) -- 東アドゥリン
+    if mob == nil then return end
+    if mob.name == "Malgrom" then
+	idleFunctionSellJunkItems()
+    end
+    idleFunctionTradeItems("Runje Desaali", bayld_swap_ids, 5, {})
 end
 
 local idleFunction = function()
@@ -854,9 +863,7 @@ local idleFunction = function()
     elseif zone == 256 then -- 西アドゥリン
         idleFunctionWestAdoulin()
     elseif zone == 257 then -- 東アドゥリン
-        if mob and mob.name == "Malgrom" then
-            idleFunctionSellJunkItems()
-        end
+	idleFunctionEastAdoulin(mob)
     end
     -- ワークス応援
     if mob.name == "Station Worker" then
