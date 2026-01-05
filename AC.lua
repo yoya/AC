@@ -10,6 +10,8 @@ local socket = require 'socket'
 local config = require 'config'
 local control = require 'control'
 local packets = require 'packets'
+
+local utils = require 'utils'
 local command = require 'command'
 local task = require 'task'
 local works = require 'works'
@@ -23,12 +25,34 @@ local defaults = {
     PullMethod = pull.MELEE,
     Attack = true,
     Calm = true,
+    AccountList = { },
     Control = { Debug = "off", },
 }
 
 local settings = config.load(defaults)
 
--- local player_id
+local io_chat = require 'io/chat'
+
+local _focusList = { }
+
+for i, charalist in pairs(settings.AccountList) do
+    local ii = tonumber(i)
+    if _focusList[ii] == nil then
+	_focusList[ii] = {}
+    end
+    for _, name in ipairs(string.split(charalist, ",")) do
+	table.insert(_focusList[ii], utils.string.trim(name))
+    end
+end
+
+local focusTable = {}
+for idx, name_list in pairs(_focusList) do
+    for _, name in ipairs(name_list) do
+	focusTable[name] = idx
+    end
+end
+M.focusMyIndex = 0
+
 local start_pos = {x = -1, y = -1, z = -1}
 local useSilt = false
 local useBeads = false
@@ -84,14 +108,29 @@ local preferedEnemyList = {
     "Cait Sith Ceithir",
 }
 
-command.send('bind ^d ac start')
-command.send('bind !d ac stop')
+
+-- https://docs.windower.net/commands/input/
+-- 邪魔なショートカットを無効化
+-- command.send('bind @d ac print Win+D are disabled') -- デスクトップ表示/非表示
+command.send('bind @l ac print Win+L are disabled') -- 画面ロック
+command.send('bind @m ac print Win+M are disabled') -- 全ウィンドウ最小化
+-- 操作
+command.send('bind ^d ac party start') -- alt-d
+command.send('bind !d ac party stop')  -- ctl-d
+command.send('bind @d ac stop')        -- win-d
 command.send('bind ^f ac show mob')
+for i,_ in pairs(_focusList) do
+    -- ex) command.send('bind @1 ac focus 1')
+    local bind_command = 'bind @'..tostring(i)..' ac focus '..tostring(i)
+    command.send(bind_command)
+end
+-- Alt-tab は乗っ取れなかった。残念。
+command.send('bind ^tab ac focus -1')
+command.send('bind ^DIK_TAB ac focus -1')
 
 local keyboard = require 'keyboard'
 local pushKeys = keyboard.pushKeys
 
-local utils = require 'utils'
 local ac_pos = require 'ac/pos'
 local ac_move = require 'ac/move'
 local ac_record = require 'ac/record'
@@ -105,7 +144,6 @@ local ac_party = require 'ac/party'
 local iamLeader = ac_party.iamLeader
 
 local io_net = require 'io/net'
-local io_chat = require 'io/chat'
 
 local io_ipc = require 'io/ipc'
 io_ipc.AC = M  -- for calback
@@ -1159,7 +1197,14 @@ windower.register_event('addon command', function(...)
 	    print("ac equip (save|restore)")
 	end
     elseif command == 'finishblow' then
-	-- setFinish 
+    elseif command == 'focus' then
+	if control.debug then
+	    print("ac focus", arg1)
+	end
+	if M.focusMyIndex ~= arg1 then
+	    -- index が自分以外なら他にフォーカスを譲る
+	    io_ipc.send_all("focus", arg1)
+	end
     elseif command == 'inject' then
 	if arg1 == 'currinfo1' then
 	    local p = packets.new('outgoing', 0x10F, {}) -- Curr Info
@@ -1397,11 +1442,18 @@ windower.register_event('load', function()
 	end
     end
     incoming_text.addListener("", incoming_text_handler)
+    -- 全ての準備が整ってから tick 起動
+    local player = windower.ffxi.get_player()
+    if player ~= nil then
+	M.focusMyIndex = focusTable[player.name]
+    end
 end)
 
 windower.register_event('login', function()
     -- ws.init()  -- このタイミングだと前のキャラのジョブが反映される
     ac_stat.init()
+    local player = windower.ffxi.get_player()
+    focusMyIndex = focusTable[player.name]
 end)
 
 windower.register_event('logout', function()
