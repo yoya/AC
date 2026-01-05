@@ -5,17 +5,14 @@
         <CampRange>18.0</CampRange>
         <AccountList>
             <1>
-                Apuapu, Apuchan, Hullo, Apucha, Aputan
+                Apuapu
             </1>
             <2>
-                Upaupa, Upasan, Upachan, Upacha, Upatan
+                Upaupa, Upatan, Upasan
             </2>
             <3>
-                Paupau, Paupa, Paupan, Paucha, Pautan
+                Paupau, Pautan
             </3>
-            <4>
-                Opaopa, Opasan, Opachan, Opacha, Opatan
-           </4>
         </AccountList>
         <Control>
             <Debug> off </Debug>
