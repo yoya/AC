@@ -70,7 +70,7 @@ function searchPreferEnemy()
 end
 
 function searchEnemy(range, excludeEmemy)
-    print("searchEnemy", range, excludeEmemy)
+    -- print("searchEnemy", range, excludeEmemy)
     -- 何故かアンバスでは常に空っぽが返る
     -- local mobArr = windower.ffxi.get_mob_array()
     local mobArr = searchPreferEnemy()
@@ -104,7 +104,7 @@ function M.tick(player)
 	    end
 	]]
 	if postponeEnemies[mob.name] == true then
-	    print("postponeEnemies")
+	    -- print("postponeEnemies")
 	    local nextMob = searchEnemy(30, mob.name)
 	    if nextMob ~= nil then
 		io_chat.setNextColor(8) -- 明るい赤紫
