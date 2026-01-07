@@ -18,6 +18,8 @@ local postponeEnemies = {
     ["Dastardly Banneret"] = true, -- アルカナ類 イヴィルウェポン
     ["Bozzetto Necronura"] = true, -- ボロッゴ族(かえる)
     ["Possessed Heartwing"] = true, -- リフキン
+    ["Master Manipulator"] = true, -- ソウルフレア
+    ["Goes"] = true, -- プリン
 }
 
 local preferEnemyTable = {
@@ -48,6 +50,9 @@ local preferEnemyTable = {
     -- "Keen Leafkin",
     -- "Eldritch Leafkin",
     -- "Rejuvenating Leafkin",
+    -- ソウルフレア
+    "Bozzetto Imp",
+    --
 }
 
 function searchPreferEnemy()
@@ -55,6 +60,7 @@ function searchPreferEnemy()
     for i, name in ipairs(preferEnemyTable) do
 	local mob = windower.ffxi.get_mob_by_name(name)
 	if mob ~= nil then
+	    io_chat.print("searchPreferEnemy", mob.name, mob.status)
 	    if  mob.status == 0 or mob.status == 1 then
 		table.insert(arr, mob)
 	    end
@@ -64,6 +70,7 @@ function searchPreferEnemy()
 end
 
 function searchEnemy(range, excludeEmemy)
+    print("searchEnemy", range, excludeEmemy)
     -- 何故かアンバスでは常に空っぽが返る
     -- local mobArr = windower.ffxi.get_mob_array()
     local mobArr = searchPreferEnemy()
@@ -97,12 +104,13 @@ function M.tick(player)
 	    end
 	]]
 	if postponeEnemies[mob.name] == true then
+	    print("postponeEnemies")
 	    local nextMob = searchEnemy(30, mob.name)
 	    if nextMob ~= nil then
 		io_chat.setNextColor(8) -- 明るい赤紫
 		io_chat.print("より優先度の高い敵を発見")
 		command.send('input /attackoff <me>')
-		io_net.targetByMobIndex(nextMob.index)
+		io_net.targetByMob(nextMob)
 		command.send('wait 1; input /attack <t>')
 	    end
 	end
