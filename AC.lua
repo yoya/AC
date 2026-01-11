@@ -221,7 +221,7 @@ local leaderFunction = function()
     end
     if mob ~= nil and settings.Attack then
         windower.ffxi.run(false)
-        io_net.targetByMobId(mob.id)
+	io_net.targetByMob(mob)
         command.send('wait 0.5; input /attack <t>')
     else 
         local dx = start_pos.x - me_pos.x
@@ -347,7 +347,7 @@ local notLeaderFunction = function()
 	}
 	local mob = acmob.searchNearestMob(me_pos, condition)
 	if mob ~= nil then
-	    io_net.targetByMobIndex(mob.index)
+	    io_net.targetByMob(mob)
 	else
 	    --- p1 がターゲットしてる敵に合わせる
 	    if p1 == nil or p1.status ~= 1 or p1.target_index == 0 then
@@ -402,7 +402,7 @@ local fightingFunction = function()
     if not utils.table.contains(moreAttractiveEnemyList, mob.name) and preferMob ~= nil and mob.name ~= preferMob.name then
 --        print("preferMob:", mob.name)
         if iamLeader() then
-            io_net.targetByMobId(preferMob.id)
+            io_net.targetByMob(preferMob)
             coroutine.sleep(1)
             command.send('input /attack <t>')
         else
@@ -587,13 +587,13 @@ local idleFunctionTradeItems = function(tname, items, wait, enterWaits)
                 acitem.tradeByItemId(mob, id)
 		print("trade item:"..id)
                 coroutine.sleep(1)
-                io_net.targetByMobId(mob.id)
+                io_net.targetByMob(mob)
                 coroutine.sleep(wait-1)
                 for i, w in ipairs(enterWaits) do
                     pushKeys({"enter"})
 		    print("push enter > sleep:"..w)
                     coroutine.sleep(1)
-                    io_net.targetByMobId(mob.id)
+                    io_net.targetByMob(mob)
                     coroutine.sleep(w-1)
                 end
             end
@@ -752,11 +752,11 @@ local idleFunctionMobGarden = function()
             if acitem.inventoryHasItem(id) then
                 acitem.tradeByItemId(mob, id)
                 coroutine.sleep(3)
-                io_net.targetByMobId(mob.id)
+                io_net.targetByMob(mob)
             end
         end
         coroutine.sleep(7)
-        io_net.targetByMobId(mob.id)
+        io_net.targetByMob(mob)
     elseif mob.name == "Garden Furrow" or mob.name == "Garden Furrow #2"
            or mob.name == "Garden Furrow #3" then
         local id = 940 -- 反魂樹の根
@@ -1179,7 +1179,7 @@ windower.register_event('addon command', function(...)
             i = i + 1
             pushKeys({"enter"})
             coroutine.sleep(2)
-	    io_net.targetByMobId(mob.id)
+	    io_net.targetByMob(mob)
 	    local m = windower.ffxi.get_mob_by_target("t")
 	    if m.id ~= mob.id then
 		control.auto = false
