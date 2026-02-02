@@ -223,8 +223,7 @@ local leaderFunction = function()
 	    range = settings.CampRange,
 	    nameMatch = control.enemy_filter,
 	}
-	mob = acmob.searchNearestMob(start_pos, condition)
-        -- mob = acmob.getNearestFightableMob(start_pos, settings.CampRange, nil)
+	mob = acmob.searchNearestMob(M.start_pos, condition)
     end
     if mob ~= nil and settings.Attack then
         windower.ffxi.run(false)
@@ -1132,7 +1131,7 @@ windower.register_event('addon command', function(...)
 		range = settings.CampRange,
 		nameMatch = control.enemy_filter,
 	    }
-	    local mob = acmob.searchNearestMob(start_pos, condition)
+	    local mob = acmob.searchNearestMob(M.start_pos, condition)
 	    io_chat.print("nearest preferMob=====================")
 	    io_chat.print(preferMob)
 	    io_chat.print("nearest mob =====================")
