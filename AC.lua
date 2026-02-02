@@ -378,26 +378,42 @@ local notLeaderFunction = function()
 	--if mob ~= nil and mob.hpp < 100 then
 	if mob ~= nil then
 	    if item_level >= 119 or mob.hpp < 100 then
-		coroutine.sleep(math.random(0,2)/4)
-		command.send('input /attack <t>')
-		task.resetByFight()
+		-- 5 が近接攻撃できるギリギリの距離
+		if ac_pos.distance(p1, mob) <= 5 then  -- 敵が近づくまで待つ
+		    coroutine.sleep(math.random(0,2)/4)
+		    command.send('input /attack <t>')
+		    task.resetByFight()
+		end
 	    end
         end
         ProbRecastTime = {}
     end
 end
 
+local so_long_to_get_fight_count = 0
 --- 戦闘中。リーダー、メンバー共通。
 local fightingFunction = function()
 ---    print("fightingFunction")
 --- io_chat.print("fightingFunction")
     local mob = windower.ffxi.get_mob_by_target("t")
-    if mob == nil then
---        print("fightingFunction mob is nil")
-        -- 多分、戦闘モードなのにターゲットがいない。
-        command.send('input /attack off')
-        return
+    -- 戦闘モードだけどタゲが外れる(稀に発生)
+    -- もしくは殴れる距離なのに敵が赤字に変わらない
+    if mob == nil or (mob.distance < (mob.model_scale * 1.5) and mob.status == 0) then
+	if control.debug then
+	    io_chat.printf("so_long_to_get_fight_count:%d/7",
+			   so_long_to_get_fight_count)
+	end
+	if so_long_to_get_fight_count < 7 then
+	    so_long_to_get_fight_count = so_long_to_get_fight_count  + 1
+	else
+	    command.send('input /attack off')  -- 一旦諦める
+	    io_chat.noticef("so_long_to_get_fight_count:%d/7",
+			    so_long_to_get_fight_count)
+	    so_long_to_get_fight_count = 0
+	end
+	return
     end
+    so_long_to_get_fight_count = 0
     local player = windower.ffxi.get_player()
     local mainJob = player.main_job
     local subJob = player.sub_job
