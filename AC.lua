@@ -53,7 +53,8 @@ for idx, name_list in pairs(_focusList) do
 end
 M.focusMyIndex = 0
 
-local start_pos = {x = -1, y = -1, z = -1}
+M.start_pos = {x = -99999, y = -99999, z = -99999}
+
 local useSilt = false
 local useBeads = false
 local doPointCheer = false
