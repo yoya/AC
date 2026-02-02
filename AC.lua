@@ -314,6 +314,10 @@ local notLeaderFunction = function()
     end
     isFar = false
     windower.ffxi.run(false)
+    -- 100以下は 戦闘しない
+    if item_level < 100 then
+	return
+    end
     -- 119未満は無理しない, 109 は頑張る。潜在外し
     if item_level < 109 then
         local mob = windower.ffxi.get_mob_by_target("bt")
