@@ -25,23 +25,25 @@ M.routes = {
 	{x=352,y=435}, {x=339,y=424}, {x=325,y=419},
 	{x=313,y=426}, {x=303,y=431}, {x=288,y=423}, {x=262,y=411},
 	{x=256,y=388}, {x=245,y=380}, {x=222,y=376}, {x=212,y=371,z=20},
-	{x=202,y=362,z=20}, {target="Banespore"}
+	{x=202,y=362,z=20}, {enemy_filter="Banespore"}, {target="Banespore"},
     },
     raive2 = {
 	{x=202,y=362,z=20},
 	{x=213,y=348}, {x=219,y=323,d=1}, {x=218,y=302}, {x=204,y=288},
-	{x=186,y=293}, {x=162,y=297,z=19.8}, {target="Knotted Root"}
+	{x=186,y=293}, {x=162,y=297,z=19.8},
+	{enemy_filter="Knotted Root"}, {target="Knotted Root"}
     },
     raive3 = {
 	{x=162,y=297,z=19.8},
 	{x=165,y=299}, {x=144,y=300}, {x=116,y=301}, {x=101,y=290},
 	{x=95,y=270}, {x=83,y=260}, {x=51,y=250},
-	{x=22,y=241,z=21}, {target="Banespore"}
+	{x=22,y=241,z=21}, {enemy_filter="Banespore"}, {target="Banespore"}
     },
     raive4 = {
 	{x=22,y=241,z=21},
 	{x=-11,y=227}, {x=-20,y=196}, {x=-30,y=184}, {x=-43.5,y=180.4},
-	{x=-59,y=162,z=19.9}, {target="Knotted Root"}
+	{x=-59,y=162,z=19.9},
+	{enemy_filter="Knotted Root"}, {target="Knotted Root"}
     },
     -- シィの門から
     wave = { -- waveling flux 変妖君（ドクマク)
