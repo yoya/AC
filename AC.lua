@@ -526,20 +526,20 @@ local fightingFunction = function()
     end
     local ws_request = false
     local now = os.time()
-    -- 連携になるよう 4秒あける。MB を邪魔しないよう 連携から 10秒あける。
+    -- 連携になるよう 3秒あける。MB を邪魔しないよう 連携から 10秒あける。
     if player.vitals.tp >= 1000 and
-	(acinspect.ws_time + 4) < now and (acinspect.sc_time + 10) < now then
+	(acinspect.ws_time + 2) < now and (acinspect.sc_time + 10) < now then
 	ws_request = true
     end
     if player.vitals.tp >= 2000 and
-	(acinspect.ws_time + 3) < now and (acinspect.sc_time + 9) < now then
+	(acinspect.ws_time + 1) < now and (acinspect.sc_time + 10) < now then
 	-- TP:2000 超えは少しピーキーにする。
 	ws_request = true
     end
-    if player.vitals.tp >= 2500 and (acinspect.sc_time + 8) < now then
+--    if player.vitals.tp >= 2500 and (acinspect.sc_time + 10) < now then
 	-- print("(now - sc_time):"..(now - acinspect.sc_time), acinspect.sc_time)
-	ws_request = true
-    end
+--	ws_request = true
+--    end
     -- ドメインベーションはTP1000即撃ち
     if player.vitals.tp >= 1000 and utils.table.contains(domain_enemy_list, mob.name) then
 	ws_request = true
