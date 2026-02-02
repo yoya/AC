@@ -68,6 +68,12 @@ local seal_ids = item_data.seal_ids -- 印章
 local cipher_ids = item_data.cipher_ids --  盟スクロール
 local bayld_swap_ids = item_data.bayld_swap_ids --  ベヤルド交換品
 
+-- ドメインベーションの敵一覧
+local domain_enemy_list = { "Azi Dahaka","Azi Dahaka's Dragon",
+			    "Naga Raja", "Naga Raja's Lamia",
+			    "Quetzalcoatl", "Quetzalcoatl's Sibilus",
+			    "Mireu" }
+
 -- 他との戦闘を中断してでも先に倒すべき敵
 local moreAttractiveEnemyList = {
     -- カオス戦
@@ -515,7 +521,7 @@ local fightingFunction = function()
 	ws_request = true
     end
     -- ドメインベーションはTP1000即撃ち
-    if player.vitals.tp >= 1000 and utils.table.contains({"Azi Dahaka", "Naga Raja", "Quetzalcoatl", "Mireu"}, mob.name) then
+    if player.vitals.tp >= 1000 and utils.table.contains(domain_enemy_list, mob.name) then
 	ws_request = true
     end
     if control.wstp ~= nil and control.wstp ~= -1 and control.wstp <= player.vitals.tp then
