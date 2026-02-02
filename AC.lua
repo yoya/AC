@@ -573,13 +573,6 @@ local fightingFunction = function()
 		{ 20, 10, 'setkey s down; wait 0.1; setkey s up', 0 }, -- back
 			}, settings.Period, ProbRecastTime)
     end
-    if acitem.checkBagsFreespace() then
-        for i, id in pairs(crystal_ids) do
-            if acitem.inventoryHasItem(id) then
-                acitem.moveToBags(id)
-            end
-        end
-    end
     if doPointCheer then  --- アンバス：マンドラ
         sendCommandProb({
             { 200, 1, 'input /point <t>', 1 },
