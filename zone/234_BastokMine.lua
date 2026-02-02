@@ -33,8 +33,8 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    -- hp_1_A = { route="gumbah" },
-    hp1_A = { route="diver", leader_only=true },
+    -- hp1_A = { route="gumbah" },
+    -- hp1_A = { route="diver", leader_only=true },
 }
 
 return M
