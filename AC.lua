@@ -332,18 +332,20 @@ local notLeaderFunction = function()
 	local target = windower.ffxi.get_mob_by_index(p1.target_index)
 	if target ~= nil then
 	    local target_name = target.name
-	    -- print("p1 target_name", target_name)
 	    if string.find(target_name, "Home Point") or
 		string.find(target_name, "Survival Guide") or
 		string.find(target_name, "Waypoint") or
+		string.find(target_name, "Nunaarl Bthtrogg") or
 		string.find(target_name, "Undulating Confluence") or
 		string.find(target_name, "Ethereal") or
 		string.find(target_name, "Affi") or
 		string.find(target_name, "Dremi") or
-		string.find(target_name, "Shiftrix") then
+		string.find(target_name, "Shiftrix") or
+		string.find(target_name, "Dimmian") or
+		string.find(target_name, "Swirling Vortex") or  -- アポリオン
+		string.find(target_name, "???") then
 		-- print("p1 target Found", p1.target_index, target.index)
 		io_net.targetByMobIndex(p1.target_index)
-		-- io_net.targetByMobId(target.id)
 		windower.ffxi.run(true)
 	    end
 	end
