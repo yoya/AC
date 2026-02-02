@@ -141,6 +141,7 @@ local pushKeys = keyboard.pushKeys
 
 local ac_pos = require 'ac/pos'
 local ac_move = require 'ac/move'
+ac_move.AC = M
 local ac_record = require 'ac/record'
 local ac_char = require 'ac/char'
 
