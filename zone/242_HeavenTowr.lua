@@ -3,14 +3,15 @@
 local M = { id = 242 }
 
 M.routes = {
-    kupipi = {
-	{x=0,y=-22.4,z=0}, {x=-10,y=-4}, {x=-10,y=7},
+    kupi = {
+	{x=0,y=-22.4,z=0,desc="Kupipi(天の塔書記官)"},
+	{x=-10,y=-4}, {x=-10,y=7},
 	{x=-1,y=20.5}, {a="opendoor"}, {x=0,y=25},
 	{x=1.5,y=30.1,z=0}, {a="f8touch"}
     },
-    chumimi = {
-	{x=0,y=-22.4,z=0}, {x=10,y=-9,z=0.6}, {x=13,y=14,z=0.5},
-	{x=22,y=21,z=0},
+    chumi = {
+	{x=0,y=-22.4,z=0,desc="Chumimi(黒魔道士AFクエ)"},
+	{x=10,y=-9,z=0.6}, {x=13,y=14,z=0.5}, {x=22,y=21,z=0},
 	--- 階段を降りる
 	{x=31,y=6,z=2.5}, {x=26,y=-17,z=7.5}, {x=8,y=-30,z=12},
 	{x=-12,y=-30,z=16.3}, {x=-28,y=-13,z=21}, {x=-30,y=7,z=25.3},
@@ -24,7 +25,8 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    -- from_win = { route="kupipi" },
+    -- from_win = { route="kupi" },
+    -- from_win = { route="chumi" },
 }
 
 return M
