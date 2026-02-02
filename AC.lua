@@ -210,8 +210,7 @@ local leaderFunction = function()
 	    preferMobs = utils.table.merge_lists(moreAttractiveEnemyList, preferedEnemyList),
 	    nameMatch = control.enemy_filter,
 	}
-	local mob = acmob.searchNearestMob(start_pos, condition)
-	-- local mob = acmob.getNearestFightableMob(start_pos, settings.CampRange, )
+	local mob = acmob.searchNearestMob(M.start_pos, condition)
 	---    print("nearest prefered mob", mob)
     end
     if mob == nil then
@@ -404,8 +403,7 @@ local fightingFunction = function()
 	preferMobs = moreAttractiveEnemyList,
 	nameMatch = control.enemy_filter,
     }
-    local preferMob = acmob.searchNearestMob(start_pos, condition)
-    -- local  preferMob =  acmob.getNearestFightableMob(start_pos, preferedEnemyList)
+    local preferMob = acmob.searchNearestMob(M.start_pos, condition)
     ---    print("prefereMob", preferMob)
     if not utils.table.contains(moreAttractiveEnemyList, mob.name) and preferMob ~= nil and mob.name ~= preferMob.name then
 --        print("preferMob:", mob.name)
