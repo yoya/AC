@@ -7,6 +7,7 @@ local command = require 'command'
 local ac_party = require 'ac/party'
 local iamLeader = ac_party.iamLeader
 local task = require 'task'
+local control = require 'control'
 
 local M = {}
 
@@ -33,6 +34,15 @@ function M.automatic_routes_handler(zone, automatic_routes)
 	return
     end
     local player = windower.ffxi.get_player()
+    if player == nil or player.status == 3  then
+	print("player and player.status", player and player.status)
+	coroutine.sleep(3)
+	player = windower.ffxi.get_player()
+	if player == nil or player.status == 3  then
+	    io_chat.print("プレイヤー情報をみて移動を諦めた", player and player.status)
+	    return
+	end
+    end
     local level = player.main_job_level
     coroutine.sleep(3)
     local pos = ac_pos.currentPos()
@@ -48,24 +58,34 @@ function M.automatic_routes_handler(zone, automatic_routes)
 		return
 	    end
 	    local route = t.route
-	    local nearDist = 2
-	    if fp.d ~= nil then
-		nearDist = fp.d
+	    local nearDist = nil
+	    local nearDistX = nil
+	    local nearDistY = nil
+	    if fp.d == nil and fp.dx == nil and fp.dy == nil then
+		nearDist = 2
 	    end
-	    local exec_auto_route = ac_pos.isNear(fp, nearDist)
+	    if fp.d ~= nil then nearDist = fp.d end
+	    if fp.dx ~= nil then nearDistX = fp.dx end
+	    if fp.dy ~= nil then nearDistY = fp.dy end
+	    local exec_auto_route = ac_pos.isNear(fp, nearDist,
+						  nearDistX, nearDistY)
 	    if t.leader_only == true and not iamLeader() then
-		io_chat.setNextColor(4) -- ピンク
-		io_chat.print("移動するのはリーダーだけ")
+		io_chat.infof("移動するのはリーダーだけ: %s => %s", f, route)
 		exec_auto_route = false
 	    end
 	    if t.need_level ~= nil and level < t.need_level then
 		io_chat.setNextColor(4) -- ピンク
-		io_chat.print("移動するのに level 20 必要")
+		io_chat.infof("移動するのに level 20 必要: %s => %s", f, route)
 		exec_auto_route = false
 	    end
+	    if control.debug then
+		io_chat.print(f, "fp:", fp, "nearDist:", nearDist, "nexrDistX,Y:", nearDistX, nearDistY)
+	    end
 	    if exec_auto_route then
-		io_chat.print(f.."から"..route.."に移動")
-		ac_move.moveTo(zone_object.routes[route], zone_object.routes)
+		io_chat.printf("移動 %s => %s", f, route)
+		-- ac_move.moveTo(zone_object.routes[route], zone_object.routes)
+		aczone.AC.start_pos = { x=-99999, y = -99999, z = -99999 }
+		autoMoveTo(zone, {route}, zone_object.routes)
 		break
 	    end
 	end
@@ -116,6 +136,7 @@ function M.zone_change_handler(zone, prevZone)
     print("zone/change zone_change_handler", zone, prevZone)
     ac_stat.init()
     task.allClear()
+    aczone.AC.start_pos = { x=-99999, y = -99999, z = -99999 }
     -- zone out の処理
     if prevZone == nil then
 	print("ERROR: prevZone == nil")  -- 普通はありえない
