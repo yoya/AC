@@ -37,5 +37,4 @@ M.automatic_routes = {
     book = { route="gate1" }
 }
 
-
 return M
