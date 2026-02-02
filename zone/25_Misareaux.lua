@@ -18,7 +18,8 @@ M.routes = {
     -- HP#1
     esca = { -- エスカ・ルオン
 	{x=-66,y=562,z=-17.3}, {x=-64,y=571,z=-18.8,d=1},
-	{x=-54,y=571,z=-21.8}, {target="Undulating Confluence"}
+	{x=-54,y=571,z=-21.8}, {target="Undulating Confluence"},
+	{a="touch"}
     },
 }
 
