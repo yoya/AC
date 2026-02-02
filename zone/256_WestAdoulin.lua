@@ -110,11 +110,14 @@ M.automatic_routes = {
 }
 
 local sell_items = {
+    4101, -- 水のクリスタル
     5945, -- プライズパウダー
     12305, -- アイスシールド
     12385, -- アケロンシールド
     12387, -- ケーニヒシールド
-    4101, -- 水のクリスタル
+    --
+    1155, -- 砂鉄
+    17296, -- 石つぶて
 }
 
 local sell_itemsT = utils.table.convertArrayToTrueTable(sell_items)
