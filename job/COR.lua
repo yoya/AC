@@ -82,14 +82,14 @@ function roll_tick(player)
 	local cor_roll = false
 	local blitzer_roll = false
 	-- コルセアロール使えるように 33% でストップ
-	if 33 <= mob.hpp and mob.hpp <= 100 then
+	if 40 <= mob.hpp and mob.hpp <= 100 then
 	    war_roll = true
 	    sam_roll = true
 	    drk_roll = true
 	end
 	-- 敵の HP が3%〜15% で、可能ならコルセアズロール
 	-- Apex で3%未満だと戦闘終了と同時に動く可能性がそこそこある
-	if 3 <= mob.hpp and mob.hpp <= 20 then
+	if 3 <= mob.hpp and mob.hpp <= 30 then
 	    cor_roll = true
 	    blitzer_roll = true
 	end
