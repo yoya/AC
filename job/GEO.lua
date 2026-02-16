@@ -38,7 +38,7 @@ function inde_setup(jobRank)
     --   GEO_inde = "インデアキュメン" -- 魔攻 up
     -- TODO: 格上の敵対応
     --   GEO_inde = "インデプレサイス" -- 命中up
-    local level = task.PRIORITY_MIDDLE
+    local level = task.PRIORITY_LOW
     local c = 'input /ma '..GEO_inde..' <me>'
     -- command, delay, duration, period, eachfight
     local t = task.newTask(c, 2, 7, 180/2, false)
@@ -118,14 +118,22 @@ end
 
 function M.main_tick(player)
     local jobRank = 1  -- あとで party 情報を元に設定
-    if player.status == 1 then -- 戦闘中
+    local pet = windower.ffxi.get_mob_by_target("pet")
+    local mob = windower.ffxi.get_mob_by_target("t")
+    if player.status == 0 then -- 待機中
+	if pet ~= nil and mob ~= nil then
+	    -- 遠く離れたラバンは解除する
+	    local mobpetdist = ac_pos.distance(pet, mob)
+	    if mobpetdist >= 32 then
+		geo_release("フルサークル")
+	    end
+	end
+    elseif player.status == 1 then -- 戦闘中
 	inde_setup(jobRank)
-	local pet = windower.ffxi.get_mob_by_target("pet")
 	if pet == nil then  -- 羅盤が無い場合
 	    geo_setup(jobRank)
 	else -- 羅盤がある場合
-	    local mob = windower.ffxi.get_mob_by_target("t")
-	    if mob ~= nil then
+	    if pet ~= nil and mob ~= nil then
 		-- 状況に応じて羅盤解除
 		geo_release_with_contexte(player, pet, mob)
 	    end
@@ -141,16 +149,19 @@ end
 function M.dothebest_main(player)
     local level = task.PRIORITY_HIGH
     local jaList = { "ボルスター", "フルサークル" }
+    local ti = 1
     for i, ja_name in ipairs(jaList) do
 	local c = "input /ja "..ja_name.." <me>"
 	-- command, delay, duration, period, eachfight
-	local t = task.newTask(c, (i-1)*2, 2, 10, false)
-	task.setTask(level, t)
+	local ta = task.newTask(c, ti, 2, 10, false)
+	task.setTask(level, ta)
+	ti = ti + 2
     end
     windower.ffxi.run(false)
-    geo_setup(1)
+    geo_setup(1) -- 後で見直す
+    geo_setup(2) -- 1 の recast 対策で 2 を実行
+    inde_setup(2)
     inde_setup(1)
 end
-
 
 return M
