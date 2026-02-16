@@ -13,6 +13,7 @@ local jobs = res.jobs
 function M.init(id, char)
     M.charTable = {}
     --[[ user_id => eminence_point
+	         => login_point
                  => unity_point
 	         => main_job
                  => job => exp_point ...
@@ -21,7 +22,7 @@ end
 
 function M.update_points(id, char)
     local point_keys = {
-	"eminence_point", "unity_point",
+	"eminence_point", "login_point", "unity_point",
 	"hallmark", "total_hallmark",  "gallantry",
 	"domain_point", "mog_segments", "gallimaufry"
     }
@@ -91,6 +92,7 @@ function M.update(id, char)
     if M.charTable[id] == nil then
 	M.charTable[id] = {
 	    eminence_point = -1,
+	    login_point = -1,
 	    unity_point = -1,
 	    hallmark = -1,
 	    total_hallmark = -1,
@@ -146,6 +148,10 @@ end
 
 function M.eminence_point()
     return get_char_point("eminence_point")
+end
+
+function M.login_point()
+    return get_char_point("login_point")
 end
 
 function M.unity_point()
