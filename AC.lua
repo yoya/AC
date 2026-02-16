@@ -228,10 +228,13 @@ local leaderFunction = function()
     if mob ~= nil and settings.Attack then
         windower.ffxi.run(false)
 	io_net.targetByMob(mob)
-        command.send('wait 0.5; input /attack <t>')
-    else 
-        local dx = start_pos.x - me_pos.x
-        local dy = start_pos.y - me_pos.y
+	coroutine.sleep(0.2)
+	command.send('input /target <t>')
+	coroutine.sleep(0.2)
+        command.send('input /attack on')
+    else
+        local dx = M.start_pos.x - me_pos.x
+        local dy = M.start_pos.y - me_pos.y
         local dist = math.sqrt(dx*dx + dy*dy)
         if dist > 4 then
             isFar = true
@@ -922,16 +925,26 @@ function tick_serial()
     if not control.auto then
         return
     end
+    --
     -- ここからは control.auto のみ
+   --
     ac_equip.tick(player)
     acjob.tick(player)
+    -- クリスタルはカバンに仕舞う
+    if acitem.checkBagsFreespace() then
+        for i, id in pairs(crystal_ids) do
+            if acitem.inventoryHasItem(id) then
+                acitem.moveToBags(id)
+            end
+        end
+    end
     -- 待機、マウント(85)
     -- https://github.com/Windower/Resources/blob/master/resources_data/statuses.lua
     if player.status == 0 or player.status == 85 then
 	--- 待機中
 	idleFunction()
 	if ac_move.auto then  -- automove 中
-	    getMobPosition(start_pos, "me")  -- start pos を更新
+	    getMobPosition(M.start_pos, "me")  -- start pos を更新
 	else -- automove 中は敵を探索して戦ったり、所定の位置に戻ったりしない
 	    if iamLeader() == true or control.puller then
 		leaderFunction()
@@ -950,16 +963,15 @@ function tick_serial()
 end
 
 local start = function()
-    io_chat.setNextColor(5)
-    io_chat.print('>>>>>>> AC START')
-    io_chat.print("CampRange: " .. settings.CampRange)
-    getMobPosition(start_pos, "me")
-    io_chat.print("save start_pos: {x:" .. math.round(start_pos.x,2) .. " y:"..math.round(start_pos.y,2)  .. " z:"..math.round(start_pos.z,2).."}")
     settings = config.load(defaults)
+    getMobPosition(M.start_pos, "me")
     control.auto = true
+    io_chat.noticef('<<<<<<< AC START >>>>>>> {x=%d y=%d z=%d}',
+		    math.round(M.start_pos.x,2), math.round(M.start_pos.y,2),
+		    math.round(M.start_pos.z,2))
     ac_defeated.done()
-    io_chat.setNextColor(6)
-    io_chat.printf("mode attack=%s puller=%s calm=%s", tostring(settings.Attack), tostring(control.puller), tostring(settings.Calm))
+    io_chat.infof("attack=%s camp_range=%d, enemy_filter=%s ", tostring(settings.Attack), settings.CampRange, tostring(control.enemy_filter))
+    io_chat.infof("puller=%s wstp=%d provoke=%d, calm=%s", tostring(control.puller), control.wstp, control.provoke, tostring(settings.Calm))
 end
 M.start = start
 
@@ -1252,10 +1264,12 @@ windower.register_event('addon command', function(...)
     elseif command == 'move' then
         local zone = windower.ffxi.get_info().zone
 	local routeTable = aczone.getRouteTable(zone)
+	M.start_pos = {x = -99999, y = -99999, z = -99999}
         ac_move.autoMoveTo(zone, {arg1, arg2}, routeTable)
     elseif command == 'moverev' then
         local zone = windower.ffxi.get_info().zone
 	local routeTable = aczone.getRouteTable(zone)
+	M.start_pos = {x = -99999, y = -99999, z = -99999}
         ac_move.autoMoveTo(zone, {"-"..arg1}, routeTable)
     elseif command == 'party' then
 	if arg1 == 'start' then
