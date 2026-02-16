@@ -9,7 +9,13 @@ local incoming_text = require 'incoming/text'
 
 local split_multi = utils.string.split_multi
 
-M.routes = { }
+M.routes = {
+    mogsale = {
+	{x=2.5,y=-5.1,z=0.2}, {x=1,y=-2,z=-0.2},
+	{target="Green Thumb Moogle"}, {auto=true},
+	{target_lockon=false}  -- タゲロックは外す
+    }
+}
 
 function garden_furrow(player, mob)
     io_net.targetByMobId(mob.id)
@@ -79,7 +85,12 @@ function M.zone_out()
 end
 
 M.essentialPoints = {
+    from_moghouse = {x=2.5,y=-5.1,z=0.2},
     furrow = {x=5.1,y=2.0,z=0.1}, -- 畑
+}
+
+M.automatic_routes = {
+    from_moghouse = { route="mogsale"},
 }
 
 return M
