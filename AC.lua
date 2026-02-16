@@ -693,8 +693,7 @@ end
 
 local sellJunkItemsInInventory = function()
     local total_count = countJunkItemsInInventory()
-    io_chat.setNextColor(5)
-    io_chat.print(total_count.."回売却 start")
+    io_chat.info(total_count.."回売却 start")
     local remain_count = total_count
     for index = 1, 80 do
         local item = windower.ffxi.get_items(0, index)
@@ -703,21 +702,21 @@ local sellJunkItemsInInventory = function()
             windower.packets.inject_outgoing(0x084,string.char(0x084,0x06,0,0,item.count,0,0,0,
                                         item.id%256,math.floor(item.id/256)%256,index,0))
             windower.packets.inject_outgoing(0x085,string.char(0x085,0x04,0,0,1,0,0,0))
-	    -- io_chat.print({"item:", windower.to_shift_jis(res.items[item.id].ja), item.id, item.status})
+	    if control.debug then
+		io_chat.print({"item:", res.items[item.id].ja, item.id, item.status})
+	    end
             remain_count = remain_count - 1
             if remain_count <= 0 then
                 break
             end
             if remain_count % 5 == 0 then
-		io_chat.setNextColor(6)
-                io_chat.print("# "..remain_count.."/"..total_count)
+                io_chat.info("# "..remain_count.."/"..total_count)
             end
             coroutine.sleep(math.random(6,8)/4)
         end
     end
     print("junk sold out", total_count)
-    io_chat.setNextColor(5)
-    io_chat.print(total_count.."回売却 end")
+    io_chat.info(total_count.."回売却 end")
 ---  stop() ---何故か動かない
     control.auto = false
 end
