@@ -4,6 +4,7 @@ local M = {}
 
 local command = require 'command'
 local io_chat = require 'io/chat'
+local role_Healer = require 'role/Healer'
 
 M.mainJobProbTable = {
     { 200, 45, 'input /ma フラッシュ <t>', 1 },
@@ -32,6 +33,9 @@ function M.main_tick(player)
 	    io_chat.setNextColor(3)
 	    io_chat.printf("HP: %d < 300 => インビンシブル", hp)
 	    command.send("input /ja インビンシブル <me>")
+	end
+	if role_Healer.main_tick ~= nil then
+	    role_Healer.main_tick(player)
 	end
     end
 end
