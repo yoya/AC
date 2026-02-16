@@ -614,7 +614,7 @@ local idleFunctionTradeItems = function(tname, items, wait, enterWaits)
                 coroutine.sleep(wait-1)
                 for i, w in ipairs(enterWaits) do
                     pushKeys({"enter"})
-		    print("push enter > sleep:"..w)
+		    print("push enter > coroutine.sleep:"..w)
                     coroutine.sleep(1)
                     io_net.targetByMob(mob)
                     coroutine.sleep(w-1)
@@ -976,8 +976,7 @@ end
 M.start = start
 
 local stop = function()
-    io_chat.setNextColor(5)
-    io_chat.print('<<<<<<< AC STOP')
+    io_chat.notice('>>>>>>> AC STOP <<<<<<<')
     control.auto = false
     ac_move.stop()
     works.stop()
@@ -989,21 +988,19 @@ end
 M.stop = stop
 
 local start_party = function()
-    start()
     if iamLeader() then
-	io_chat.setNextColor(6)
-	io_chat.print('>>>>>>> AC START Party >>>>>>>')
+	io_chat.notice('<<<<<<< AC START Party >>>>>>>')
 	io_ipc.send_party("start")
     end
+    start()
 end
 
 local stop_party = function()
-    stop()
     if iamLeader() then
-	io_chat.setNextColor(6)
-	io_chat.print('<<<<<<< AC STOP Party <<<<<<<')
+	io_chat.notice('>>>>>>> AC STOP Party <<<<<<<')
 	io_ipc.send_party("stop")
     end
+    stop()
 end
 
 windower.register_event('ipc message', function(message)
@@ -1061,7 +1058,7 @@ function argument_means_on(s)
 end
 
 function M.warp_with_equip(arg)
-    io_chat.print("指輪ワープ", arg)
+    io_chat.print("### 指輪ワープ", arg)
     if arg == 'warp' or
 	arg == 'dim' or arg == 'holla' or arg == 'mea' then
 	local item_name = "デジョンリング"
@@ -1077,7 +1074,7 @@ function M.warp_with_equip(arg)
 	    item_id = 26178
 	end
 	task.allClear()
-	io_chat.print(item_name.."10秒前")
+	io_chat.info(item_name.."10秒前")
 	local slot_right_ring = 14
 	acitem.useEquipItem(slot_right_ring, item_id, item_name, 10)
     else
@@ -1114,33 +1111,50 @@ windower.register_event('addon command', function(...)
 	local onoff = argument_means_on(arg1)
 	if onoff ~= nil then
 	    settings.Attack = onoff
-	    io_chat.setNextColor(6)
-	    io_chat.print("attack mode "..arg1)
+	    io_chat.info("attack mode "..arg1)
 	else
-	    io_chat.setNextColor(3)
-	    io_chat.print("Usage: ac attack (on|off)")
+	    io_chat.error("Usage: ac attack (on|off)")
+	end
+    elseif command == 'build' or command == 'b' then
+	if arg1 == 'party' or arg1 == 'p'  then
+	    io_chat.notice("パーティ作成開始")
+	    io_ipc.send_all("build", "party")
+	else
+	    io_chat.error("Usage: ac build party")
 	end
     elseif command == 'calm' then
 	local onoff = argument_means_on(arg1)
 	if onoff ~= nil then
 	    settings.Calm = onoff
-	    io_chat.setNextColor(6)
-	    io_chat.print("ac calm "..arg1)
+	    io_chat.info("ac calm "..arg1)
 	else
-	    io_chat.setNextColor(3)
-	    io_chat.print("Usage: ac calm (on|off)")
+	    io_chat.error("Usage: ac calm (on|off)")
 	end
     elseif command == 'camprange' then
         settings.CampRange = tonumber(arg1, 10)
         io_chat.print("CampRange:", arg1)
+    elseif command == 'content' or command == 'cont' then
+	-- 
     elseif command == 'control' or command == 'cnt' then
-	if arg1 == 'debug' and arg2 ~= nil then
-	    local onoff = argument_means_on(arg2)
-	    control.debug = onoff
-	    io_chat.setNextColor(6)
-	    io_chat.print("ac control debug "..tostring(onoff))
+	if arg1 == 'debug' then
+	    if  arg2 ~= nil then
+		local onoff = argument_means_on(arg2)
+		control.debug = onoff
+		io_chat.info("ac control debug "..tostring(onoff))
+	    else
+		io_chat.error("ac congtrol debug {on|off}")
+	    end
+	elseif arg1 == 'provoke' then
+	    if arg2 ~= nil and tonumber(arg2) ~= nil then
+		control.provoke = tonumber(arg2)
+	    else
+		io_chat.error("ac control provoke <hp threshold>")
+	    end
+	    io_chat.info("ac control provoke", control.provoke)
+	elseif arg1 == 'wstp' then
+	    control.setWSTP(arg2)
 	else
-	    print("ac control debug on|off")
+	    io_chat.error("ac control debug|provoke")
 	end
     elseif command == 'debug' then
 	if arg1 == 'checkbags' then
@@ -1173,22 +1187,21 @@ windower.register_event('addon command', function(...)
     elseif command == 'defeated' then
 	-- 戦闘終了時の処理
 	ac_defeated.done()
-    elseif command == 'dothebest' then
+    elseif command == 'dothebest' or command == 'do' then
+	io_chat.notice("本気出す(do the best)")
 	acjob.dothebest(player)
     elseif command == 'dropjunk' then
-	io_chat.print("アイテム廃棄開始")
+	io_chat.info("アイテム廃棄開始")
 	dropJunkItemsInInventory()
-	io_chat.print("アイテム廃棄終わり")
+	io_chat.info("アイテム廃棄終わり")
     elseif command == 'echo' then
-	io_chat.setNextColor(6)
-	io_chat.print(arg1)
+	io_chat.info(arg1)
     elseif command == 'enemy' then
 	if arg1 == 'filter' then
 	    control.enemy_filter = arg2
-	    io_chat.setNextColor(6)
-	    io_chat.print("ac enemy filter", control.enemy_filter)
+	    io_chat.info("ac enemy filter", control.enemy_filter)
 	else
-	    print("ac enemy filter <enemy substring>")
+	    io_chat.error("ac enemy filter <enemy substring>")
 	end
     elseif command == 'enemyspace' or command == 'es' then
 	if arg1 == 'near' then
@@ -1227,17 +1240,21 @@ windower.register_event('addon command', function(...)
         end
     elseif command == 'equip' then
 	if arg1 == 'save' then
-	    io_chat.setNextColor(6)
-	    io_chat.print("% equip save")
-	    ac_equip.equip_save(true)
+	    io_chat.info("% equip save")
+	    ac_equip.equip_save(arg2)
 	elseif arg1 == 'restore' then
-	    io_chat.setNextColor(6)
-	    io_chat.print("% equip restore")
-	    ac_equip.equip_restore()
+	    io_chat.info("% equip restore")
+	    ac_equip.equip_restore(arg2)
+	elseif arg1 == 'show' then
+	    ac_equip.equip_show(arg2)
 	else
-	    print("ac equip (save|restore)")
+	    io_chat.error("ac equip (save|restore) [<bank_name>]")
 	end
     elseif command == 'finishblow' then
+	if control.debug then
+	    print("ac finishblow", arg1)
+	end
+	-- setFinish
     elseif command == 'focus' then
 	if control.debug then
 	    print("ac focus", arg1)
@@ -1305,35 +1322,28 @@ windower.register_event('addon command', function(...)
 	local onoff = argument_means_on(arg1)
 	if onoff ~= nil then
             control.puller = onoff
-	    io_chat.setNextColor(6)
-            io_chat.print("ac puller "..arg1)
+            io_chat.info("ac puller "..arg1)
         else
-	    io_chat.setNextColor(3)
-            io_chat.print("Usage: ac puller (on|off)")
+            io_chat.error("Usage: ac puller (on|off)")
         end
     elseif command == 'record' or command == 'rec' then
 	if arg1 == 'char' then
-	    io_chat.setNextColor(6)
-	    io_chat.print("record char")
+	    io_chat.info("ac record char")
 	    ac_record.record_char()
 	elseif arg1 == 'spells' then
-	    io_chat.setNextColor(6)
-	    io_chat.print("record spells")
+	    io_chat.info("ac record spells")
 	    ac_record.record_spells()
 	end
     elseif command == 'reload' then
-	io_chat.setNextColor(2)
-	io_chat.print("reload myself")
+	io_chat.notice("ac reload (myself)")
 	task.setTaskSimple("lua u AC; wait 1; lua l AC", 0, 1)
     elseif command == 'show' then
 	if arg1 == 'auto' then
-	    io_chat.setNextColor(5)
-	    io_chat.print("ac show auto")
-	    io_chat.setNextColor(6)
-	    io_chat.print("control.auto", control.auto)
-	    io_chat.print("ac/move.auto", ac_move.auto)
-	    io_chat.print("ac/works survey.auto, boost.auto:",
-			  works.survey.auto, works.boost.auto)
+	    io_chat.notice("ac show auto")
+	    io_chat.info("control.auto", control.auto)
+	    io_chat.info("ac/move.auto", ac_move.auto)
+	    io_chat.info("ac/works survey.auto, boost.auto:",
+			 works.survey.auto, works.boost.auto)
 	elseif arg1 == 'char' then
 	    ac_char.print()
 	elseif arg1 == 'chatcolor' then
@@ -1443,7 +1453,7 @@ windower.register_event('addon command', function(...)
         io_chat.print('To start AC without commands use the key:  Ctrl+D')
         io_chat.print('To stop AC attacks in the same manner:  Atl+D')
     else
-        io_chat.print("See ac help!!!")
+        io_chat.error("See ac help!!!")
     end
 end)
 
@@ -1464,8 +1474,9 @@ windower.register_event('load', function()
 	    control.enemy_space == control.ENEMY_SPACE_NEAR then
 	    if string.contains(text, "近づかないとコマンドが") or
 		string.contains(text, "遠くにいるため、コマンドが")then
-		--io_chat.setNextColor(6)
-		--io_chat.print("前に詰める")
+		if control.debug then
+		    io_chat.info("前に詰める")
+		end
 		keyboard.longpushKey("w", 3.0)  -- 前に詰める
 	    elseif string.contains(text, "姿が見えないためコマンドが") then
 		--io_chat.setNextColor(6)
@@ -1475,11 +1486,13 @@ windower.register_event('load', function()
 		pushKeys({"numpad*"})  -- ターゲットを戻す
 	    end
 	elseif string.contains(text, "の詠唱は中断された") then
-	    -- io_chat.setNextColor(3)
-	    -- io_chat.print("詠唱の中断を検知")
+	    if control.debug then
+		 io_chat.warn("詠唱の中断を検知")
+	    end
 	elseif string.contains(text, "魔法を唱えることができない") then
-	    -- io_chat.setNextColor(3)
-	    -- io_chat.print("魔法唱える失敗を検知")
+	    if control.debug then
+		io_chat.warn("魔法 詠唱の失敗を検知")
+	    end
 	elseif string.contains(text, "の命のカウントダウン") then
 	    command.send('input /item 聖水 <me>')
 	end
