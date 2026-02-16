@@ -49,16 +49,41 @@ function distance(pos1, pos2)
 end
 M.distance = distance
 
-function isNear(pos, dist)
+function distanceX(pos1, pos2)
+    if pos1 == nil or pos2 == nil then
+        return 99999
+    end
+    return math.abs(pos1.x - pos2.x)
+end
+
+function distanceY(pos1, pos2)
+    if pos1 == nil or pos2 == nil then
+        return 99999
+    end
+    return math.abs(pos1.y - pos2.y)
+end
+
+function isNear(pos, dist, distX, distY)
     local me_pos = currentPos()
-    d = distance(me_pos, pos)
-    if dist == nil then
+    if me_pos == nil then
+	return false
+    end
+    local d = distance(me_pos, pos)
+    local dx = distanceX(me_pos, pos)
+    local dy = distanceY(me_pos, pos)
+    if dist == nil and distX == nil and distY == nil then
 	dist = 1.0
     end
-    if d < dist then
-        return true
+    if dist ~= nil and dist < d then
+        return false
     end
-    return false
+    if distX ~= nil and distX < dx then
+        return false
+    end
+    if distY ~= nil and distY < dy then
+        return false
+    end
+    return true
 end
 M.isNear = isNear
 
