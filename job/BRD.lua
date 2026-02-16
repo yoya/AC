@@ -12,7 +12,8 @@ local piani_prefix = "input /ja ピアニッシモ <me>; wait 2; "
 M.mainJobProbTable = {
     -- { 100, 60, 'input /ma 魔法のフィナーレ <t>', 8, true },
     -- { 200, 120, 'input /ma 修羅のエレジー <t>', 8, true },
-    { 1000, 120, piani_prefix..'input /ma 魔物のレクイエムVII <t>', 8, true },
+    --    { 1000, 120, piani_prefix..'input /ma 魔物のレクイエムVII <t>', 8, true },
+    { 1000, 120, 'input /ma 魔物のレクイエムVII <t>', 8, true },
     -- { 200, 120, 'input /ma 光のスレノディII <t>', 8, true },
 }
 
@@ -47,15 +48,24 @@ function song_tick(player)
 	-- song("活力のエチュード", onoff, 15*60 / 3, 12*2)
 	song("戦士達のピーアンVI", onoff, 15*60 / 3, 12*3)
 	song("栄光の凱旋マーチ", onoff, 15*60 / 3, 12)
-	return
+    elseif false then  -- 魔法強化
+	-- song("無敵の進撃マーチ", onoff, 15*60 / 3, 12)
+	song("栄光の凱旋マーチ", onoff, 15*60 / 3, 12*2)
+	song("魔道士のバラードII", onoff, 15*60 / 2, 12*3)
+	song("魔道士のバラードIII", onoff, 15*60 / 2, 12*3)
+	song("英知のエチュード", onoff, 15*60 / 3, 12*4)
+	song("知恵のエチュード", onoff, 15*60 / 2, 12*4)
+    else
+	-- TODO auto かつ街中以外で以下を実行。status 1 で弱体系実行
+	-- song("無敵の進撃マーチ",   onoff, 15*60 / 2, 12*1)
+	song("栄光の凱旋マーチ",   onoff, 15*60 / 3, 12*1)
+	song("猛者のメヌエットV",  onoff, 15*60 / 3, 12*2)
+	song("猛者のメヌエットIV", onoff, 15*60 / 2, 12*3)
+	song("猛者のメヌエットIII", onoff, 15*60 , 12*4)
+	-- song("剣豪のマドリガル",   onoff, 15*60 / 4, 12*5)
+	song("怪力のエチュード",   onoff, 15*60 / 3, 12*5)
+	song("妙技のエチュード",   onoff, 15*60 / 2, 12*6)
     end
-    -- TODO auto かつ街中以外で以下を実行。status 1 で弱体系実行
-    song("無敵の進撃マーチ", onoff, 15*60 / 3, 12)
-    song("栄光の凱旋マーチ", onoff, 15*60 / 3, 12*2)
-    song("猛者のメヌエットV", onoff, 15*60 / 2, 12*3)
-    song("剣豪のマドリガル", onoff, 15*60 / 4, 12*4)
-    song("怪力のエチュード", onoff, 15*60 / 3, 12*4)
-    song("妙技のエチュード", onoff, 15*60 / 2, 12*4)
 end
 
 function M.main_tick(player)
