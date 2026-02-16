@@ -2,6 +2,7 @@
 
 local M = {}
 
+local control = require 'control'
 local role_Melee = require 'role/Melee'
 local task = require 'task'
 local ac_party = require 'ac/party'
@@ -25,6 +26,9 @@ M.subJobProbTable = {
 }
 
 function provoke(player) -- 挑発
+    if player.vitals.hp < control.provoke then
+	return  -- HP が少ないと挑発しない
+    end
     local level = task.PRIORITY_HIGH
     local c = "input /ja 挑発 <t>"
     -- command, delay, duration, period, eachfight
@@ -83,7 +87,7 @@ function M.sub_tick(player)
     if 119 <= player.item_level then
 	local main_job = player.main_job
 	-- if main_job == "PLD" or main_job == "MNK" or main_job == "SAM" then
-	if main_job == "PLD" or main_job == "SAM" then
+	if main_job == "PLD" or main_job == "RUN" or main_job == "WAR" or main_job == "SAM" then
 	    -- 頑丈なジョブは挑発もアタッカーアビも使う
 	    attacker(player)
 	    provoke(player)
@@ -94,9 +98,9 @@ function M.sub_tick(player)
 	    provoke(player)  -- 盾ジョブがいない時は、挑発を使う
 	end
 	local hp = player.vitals.hp
-	if hp < 1000 then -- 危ない時は防御
+	if hp < 1200 then -- 危ない時は防御
 	    io_chat.setNextColor(3)
-	    io_chat.printf("HP: %d < 1000 => ディフェンダー", hp)
+	    io_chat.printf("HP:%d < 1200 => ディフェンダー", hp)
 	    defender(player) -- ディフェンダー
 	end
     end
