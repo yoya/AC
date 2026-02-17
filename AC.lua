@@ -1554,11 +1554,10 @@ windower.register_event('load', function()
 		end
 		keyboard.longpushKey("w", 3.0)  -- 前に詰める
 	    elseif string.contains(text, "姿が見えないためコマンドが") then
-		--io_chat.setNextColor(6)
-		--io_chat.print("左後ろに回る")
-		pushKeys({"numpad*"})  -- ターゲットを一瞬外して
-		pushKeys({"a", "s"})  -- 左後ろ
-		pushKeys({"numpad*"})  -- ターゲットを戻す
+		if control.debug then
+		    io_chat.info("左>後>前に移動")
+		end
+		pushKeys({"a", "s", "w"})  -- 左>後>前に移動
 	    end
 	elseif string.contains(text, "の詠唱は中断された") then
 	    if control.debug then
