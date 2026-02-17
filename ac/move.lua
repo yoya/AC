@@ -6,14 +6,18 @@ local M = {}
 local utils = require 'utils'
 local array_reverse = utils.table.array_reverse
 
+local control = require 'control'
+local io_chat = require 'io/chat'
+local command = require 'command'
 local keyboard = require 'keyboard'
 local pushKeys = keyboard.pushKeys
-local command = require 'command'
-local io_chat = require 'io/chat'
+
 local contents = require 'contents'
 local ac_pos = require 'ac/pos'
 local distance = ac_pos.distance
 local io_net = require 'io/net'
+local acmob = require 'mob'
+local getMobPosition = acmob.getMobPosition
 
 local turnToFront = function(target)
     local push_numpad5 = 'setkey numpad5 down; wait 0.1; setkey numpad5 up'
