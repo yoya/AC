@@ -1658,9 +1658,9 @@ windower.register_event('level up', function(level)
     ac_record.record_spells()
 end)
 
---windower.register_event('load', function()
----    local c = check:loop(1)
---end)
+windower.register_event('pipe message', function(message)
+    io_chat.notice(message)
+end)
 
 --Copyright 2025, yoya@awm.jp
 --All rights reserved.
