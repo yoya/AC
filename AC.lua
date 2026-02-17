@@ -1593,9 +1593,6 @@ end)
 
 windower.register_event('logout', function()
     -- command, delay, duration
-    --task.setTaskSimple("ac inject currinfo1", 2, 1)
-    --task.setTaskSimple("ac inject currinfo2", 4, 1)
-    --task.setTaskSimple("//record char", 6, 1)
     task.setTaskSimple("//record char", 0, 1)
 end)
 
@@ -1604,12 +1601,15 @@ windower.register_event('job change', function()
     ac_stat.init()
     -- command, delay, duration
     task.setTaskSimple("ac inject currinfo1", 2, 1)
-    task.setTaskSimple("ac inject currinfo2", 4, 1)
+    task.setTaskSimple("ac inject currinfo2", 3, 1)
     task.setTaskSimple("//record char", 6, 1)
 end)
 
 windower.register_event('status change', function(new, old)
-    task.setTaskSimple("//record char", 1, 1)
+    -- command, delay, duration
+    task.setTaskSimple("ac inject currinfo1", 2, 1)
+    task.setTaskSimple("ac inject currinfo2", 3, 1)
+    task.setTaskSimple("//record char", 6, 1)
 end)
 
 --- ゾーンが変わったらリーダーだけ停止する
@@ -1648,9 +1648,15 @@ windower.register_event('incoming text', function(data, modified, original_mode,
     incoming_text.incoming_handler(data, modified, original_mode, modified_mode, blocked)
 end)
 
-local loopConf = function()
-    return control.auto
-end
+windower.register_event('gain experience', function(amount, chain_number, limit)
+    ac_record.record_char()
+    ac_record.record_spells()
+end)
+
+windower.register_event('level up', function(level)
+    ac_record.record_char()
+    ac_record.record_spells()
+end)
 
 --windower.register_event('load', function()
 ---    local c = check:loop(1)
