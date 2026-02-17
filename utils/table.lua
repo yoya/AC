@@ -19,6 +19,15 @@ function M.get_keys(t)
     return keys
 end
 
+-- key と value を逆にする
+function M.swap_key_value_table(t)
+    local keys={}
+    for key, value in pairs(t) do
+	keys[value] = key
+    end
+    return keys
+end
+
 function M.array_reverse(arr)
     rev = {}
     for i=#arr, 1, -1 do
@@ -91,7 +100,6 @@ function M.isNaturalArray(table)
     return true
 end
 
-
 -- 末端のテーブルなら true
 function M.isTableLeaf(table)
     for k, v in pairs(table) do
@@ -163,13 +171,36 @@ function M.tableToString(data)
     return (string.gsub(str, "^%s*(.-)%s*$", "%1"))  -- trim
 end
 
-
 function M.convertArrayToTrueTable(arr)
     local t = {}
     for i, v in ipairs(arr) do
 	t[v] = true
     end
     return t
+end
+
+function M.assignValues(to, from)
+    assert(type(to) == 'table')
+    assert(type(from) == 'table')
+    for k, v in pairs(from) do
+	if type(v) ~= 'table' then
+	    to[k] = v
+	else
+	    M.assignValues(to[k], v)
+	end
+
+    end
+end
+    
+function M.deepclone(obj)
+    if type(obj) ~= 'table' then
+	return obj
+    end
+    local tbl = {}
+    for k, v in pairs(obj) do
+	tbl[k] = M.deepclone(v)
+    end
+    return tbl
 end
 
 return M
