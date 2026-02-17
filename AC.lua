@@ -712,28 +712,31 @@ local sellJunkItemsInInventory = function()
             if remain_count % 5 == 0 then
                 io_chat.info("# "..remain_count.."/"..total_count)
             end
-            coroutine.sleep(math.random(6,8)/4)
+            -- coroutine.sleep(math.random(6,8)/4)  -- 店売りUIガード動く
+	    coroutine.sleep(math.random(7,8)/4)
         end
     end
     print("junk sold out", total_count)
     io_chat.info(total_count.."回売却 end")
 ---  stop() ---何故か動かない
-    control.auto = false
+    return total_count
 end
 
 local idleFunctionSellJunkItems = function()
     -- 可搬ストレージのジャンクアイテムをかばんに集める
     print("Aggregate Bag Junk Items to Inventory")
     aggregateJunkItemsToInventory()
-    local done = false
-    while done == false and control.auto do
+    while control.auto do
         -- 売却処理
-        sellJunkItemsInInventory()
+        local sell_count = sellJunkItemsInInventory()
         local move_count = aggregateJunkItemsToInventory()
-        if move_count == 0 then
-            -- 移動するアイテムがなければ終了
-            done = true
+        if sell_count == 0 and move_count == 0 then
+            -- 移動するアイテムも売れたアイテムもなければ終了
+	    control.auto = false
+	    coroutine.sleep(1)
+	    break
         end
+	coroutine.sleep(2)  -- sleep しないと落ちる事がある
     end
     -- ついでに売れないゴミも捨てる
     dropJunkItemsInInventory()
