@@ -1580,6 +1580,7 @@ windower.register_event('load', function()
 	M.focusMyIndex = focusTable[player.name]
 	io_chat.notice("[load] focus", M.focusMyIndex, player.name)
     end
+    tick:loop(1.0)
 end)
 
 windower.register_event('login', function()
