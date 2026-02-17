@@ -13,7 +13,7 @@ local pushKeys = keyboard.pushKeys
 -- これらの敵と戦っていて、それ以外の敵が現れた時は、
 -- それ以外の方にターゲットを移す
 
-local postponeEnemies = {
+local postponeEnemies = { -- ボス。後回し
     ["Bozzetto Enceladus"] = true, -- 巨人族
     ["Dastardly Banneret"] = true, -- アルカナ類 イヴィルウェポン
     ["Bozzetto Necronura"] = true, -- ボロッゴ族(かえる)
@@ -22,7 +22,7 @@ local postponeEnemies = {
     ["Goes"] = true, -- プリン
 }
 
-local preferEnemyTable = {
+local preferEnemyTable = { -- 先に倒すべき敵
     -- 巨人族
     "Bozzetto Marshal",      -- 戦士   (マイティストライク)
     "Bozzetto Swiftshooter", -- 狩人   (イーグルアイ)
