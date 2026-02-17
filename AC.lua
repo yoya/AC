@@ -1534,7 +1534,6 @@ windower.register_event('addon command', function(...)
 end)
 
 windower.register_event('load', function()
-    tick:loop(1.0)
     ws.init()
     local zone = windower.ffxi.get_info().zone
     zone_change.zone_in_handler(zone, nil)
