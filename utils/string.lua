@@ -46,4 +46,10 @@ function M.gil_string(gil, sep, digit)
     return gil_str2
 end
 
+-- 標準 string.format は nil を受け取るとエラー終了するので、その対策
+function M.format(f, ...)
+    -- ... を走査して nil なら "(nil" に上書きする処理
+    format(f, ...)
+end
+
 return M
