@@ -34,6 +34,15 @@ local turnToPos = function(x1, y1, x2, y2)
 end
 M.turnToPos = turnToPos
 
+M.runToMob = function(mob)
+    local me = windower.ffxi.get_mob_by_target("me")
+    local dx = mob.x - me.x
+    local dy = mob.y - me.y
+    local dir = math.atan2(dx, dy) - 3.14/2
+    windower.ffxi.turn(dir)
+    windower.ffxi.run(dx, dy)
+end
+
 M.turnToTarget = function(target)
 ---    print("turnToTarget:"..target)
     local mob = windower.ffxi.get_mob_by_target(target)
