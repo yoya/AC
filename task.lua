@@ -59,6 +59,10 @@ M.allClear = function()
     end
 end
 
+M.allReset = function()  -- 再使用タイマーのリセット
+    taskPeriodTable = {}
+end
+
 M.resetByFight = function()
     -- taskPeriodTable から eachfight が true のエントリを削除する
     for level = PRIORITY_FIRST, PRIORITY_LAST do
@@ -121,6 +125,15 @@ function M.removeTask(level, task)
     return i
 end
 
+function M.resetTask(level, task)
+    local i = taskIndex(level, task)
+    if i > 0 then
+	table.remove(taskTable[level], i)
+	taskPeriodTable[task.command] = nil  -- 再使用タイマーをリセット
+    end
+    return i
+end
+
 local PRIORITY_SIMPLE = M.PRIORITY_MIDDLE
 -- ある程度決め打ちの設定でタスク生成
 function M.setTaskSimple(c, delay, duration)
@@ -170,7 +183,7 @@ function M.getTask()
 	for i, task in ipairs(taskTable[level]) do
 	    local c = task.command
 	    local t = taskPeriodTable[c]
-	    if t <= now then
+	    if t == nil or t <= now then
 		taskPeriodTable[c] = now + task.period
 		table.remove(taskTable[level], i)
 		return level, task
