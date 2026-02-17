@@ -1088,10 +1088,11 @@ windower.register_event('addon command', function(...)
     local command = select(1, ...)
     local arg1 = select(2, ...)
     local arg2 = select(3, ...)
+    local arg3 = select(4, ...)
     local player = windower.ffxi.get_player()
     command = command and command:lower() or 'help'
     if control.debug then
-	io_chat.print("addon command:", command, arg1, arg2)
+	print("addon command:", command, arg1, arg2)
     end
     -- start/stop, (諸々ABC順), help の並び
     if command == 'start' then
