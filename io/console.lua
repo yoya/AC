@@ -16,8 +16,12 @@ function M.print(...)
 end
 
 function M.printf(...)
-    local s = string.format(...)
-    M.print(s)
+    success, retval = pcall(string.format, ...)
+    if success then
+	M.print(retval)
+    else
+	M.print(debug.traceback())
+    end
 end
 
 return M
