@@ -4,12 +4,12 @@ local packets = require('packets')
 local res = require('resources')
 local command = require('command')
 local io_chat = require('io/chat')
+local task = require('task')
+local control = require('control')
 
 local M = {}
 
 -- アイテムの量
-
-M.warpring_id = 28540  -- でジョンリング
 
 local inventoryTotalNum = function()
     local items = windower.ffxi.get_items()
@@ -66,9 +66,14 @@ local SafesList = { locker = 4, storage = 2, safe = 1 }
 --- 持ち歩きバッグのkeyリスト
 local BagsList = { case = 7, sack = 6, satchel = 5 }
 
+local WardrobeList = { wardrobe = 8, wardrobe2 = 10,
+		       wardrobe3 = 11, wardrobe4 = 12,
+		       wardrobe5 = 13, wardrobe6 = 14,
+		       wardrobe7 = 15, wardrobe8 = 16 }
+
 local safesToInventory = function(id)
 ---    print("safesToInventry")
-    local result = false
+    local count = 0
     for bname, bagid in pairs(SafesList) do
         local items = windower.ffxi.get_items()
         local inventory = items.inventory
@@ -77,14 +82,14 @@ local safesToInventory = function(id)
             for i, item in ipairs(bag) do
                 if item.id == id then
                     windower.ffxi.get_item(bagid, item.slot, item.count)
-                    result = true
+		    count = count + 1
                 end
             end
         else
-            return true
+            return count
         end
     end
-    return result
+    return count
 end
 M.safesToInventory = safesToInventory
 
@@ -104,6 +109,8 @@ function M.safesToInventoryT(idsT)
 		    end
                 end
             end
+	else
+	    return count
 	end
     end
     return count
@@ -124,7 +131,7 @@ M.checkBagsFreespace = checkBagsFreespace
 
 local bagsToInventory = function(id)
 ---    print("bagsToInventory")
-    local result = false
+    local count = 0
     for bname, bagid in pairs(BagsList) do
         local items = windower.ffxi.get_items()
         local inventory = items.inventory
@@ -133,15 +140,14 @@ local bagsToInventory = function(id)
             for i, item in ipairs(bag) do
                 if item.id == id then
                     windower.ffxi.get_item(bagid, item.slot, item.count)
-                    result = true
+		    count = count + 1
                 end
             end
         else
-	    print("maybe Inventry full", inventory.count, inventory.max)
-            return true
+            return count
         end
     end
-    return result
+    return count
 end
 M.bagsToInventory = bagsToInventory
 
@@ -161,6 +167,8 @@ function M.bagsToInventoryT(idsT)
 		    end
                 end
             end
+	else
+	    return count
         end
     end
     return count
@@ -258,6 +266,38 @@ M.bagsHasItemsT = function(idsT)
     return false
 end
 
+M.wardrobeHasItem = function(id)
+    local items = windower.ffxi.get_items()
+    for bname, bagid in pairs(WardrobeList) do
+	-- print("item.wardrobeHasItem", bname, bagid)
+        local bag = items[bname]
+        for i, item in ipairs(bag) do
+            if item.id == id then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+M.wardrobeHasItemsT = function(idsT)
+    local items = windower.ffxi.get_items()
+    for bname, bagid in pairs(WardrobeList) do
+        local bag = items[bname]
+        for i, item in ipairs(bag) do
+            if isdT[item.id] == true then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+
+
+
+
+
 M.tradeByItemId = function(mob, id)
 ---    print("tradeByItemId", target, id)
     if mob == nil then
@@ -298,34 +338,55 @@ M.tradeByItemId = function(mob, id)
 end
 
 -- アイテムの使用。スクロールの学習など
-M.useItemIncludeBags = function(item_id)
+M.useItemIncludeBags = function(item_id, duration)
+    if duration == nil then
+	duration = 5
+    end
     local ret = false
     if checkBagsFreespace(item_id) then
         bagsToInventory(item_id)
     end
     if inventoryHasItem(item_id) then
         local name = res.items[item_id].name
-	command.send('input /item '..name..' <me>')
+	local c = 'input /item '..name..' <me>'
+	task.setTaskSimple(c, 0, duration)
         ret = true
-        coroutine.sleep(math.random(5,6))
+        coroutine.sleep(duration)
     end
     return ret
 end
 
 -- useEquipItem(14, 28540, 'デジョンリング', 9)
 -- 右指にデジョンリングをつけて使用
+
+local EQUIP_ITEM_BANK_KEY = 'use_equip_item'
+
 function M.useEquipItem(slot, item_id, item_name, delay)
     local ac_equip = require('ac/equip')
     local task = require('task')
-    ac_equip.equip_save(true)
+    ac_equip.equip_save(EQUIP_ITEM_BANK_KEY)
     coroutine.sleep(1)
     ac_equip.equip_item(slot, item_id)
+    windower.ffxi.run(false) -- 足を止める
     local c = "input /item "..item_name.." <me>"
-    coroutine.sleep(10)
+    coroutine.sleep(delay + 1)  -- delay ぴったりだと50%程度失敗する
+    task.allClear() -- 他タスクが邪魔しないよう全消去
     -- command, delay, duration
     task.setTaskSimple(c, 0, 5)  -- delay が信用できないので一旦 sleep で。
     coroutine.sleep(2)
-    ac_equip.equip_restore()
+    ac_equip.equip_restore(EQUIP_ITEM_BANK_KEY)
+    coroutine.sleep(2)
+    ac_equip.equip_restore(EQUIP_ITEM_BANK_KEY)
+end
+
+function M.useEquipItemSequence(slot, item_list, delay)
+    for _, item in ipairs(item_list) do
+	local id = item.id
+	if M.inventoryHasItem(id) or M.wardrobeHasItem(id)  then
+	    io_chat.print("useEquipItemSequence", id, item.name)
+	    M.useEquipItem(slot, id, item.name, delay)
+	end
+    end
 end
 
 return M
