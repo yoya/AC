@@ -18,6 +18,14 @@ function table_union(t1, t2)
     return t
 end
 
+function table_count(t)
+    local c = 0
+    for k, v in pairs(t) do
+	c = c + 1
+    end
+    return c
+end
+
 function table_diff(t1, t2)
     local t = {}
     for k, v in pairs(t1) do
@@ -38,8 +46,9 @@ function get_ordered_key_array(t)
 end
 
 function usage()
+    print("spell.lua: List of missing spells")
     print("Usage: ./spell.lua <spell type> <chara name>")
-    print("    ./spell.lua trust  # lack of trust(face)")
+    print("    ./spell.lua trust Upaupa # lack of trust(face)")
 end
 
 if #arg ~= 2 then
@@ -77,7 +86,6 @@ end
 
 for i, file in ipairs(files) do
     if string.find(file, chara_name) then
-	print("==== "..file)
 	local f = io.input(savedDir..file);
 	local text = f:read("*all")
 	local data = json.decode(text)
@@ -86,6 +94,10 @@ for i, file in ipairs(files) do
 	--    print(k, v)
 	--end
 	local spell_keys = get_ordered_key_array(spell_table)
+	local spell_count = table_count(spell_table)
+	local all_count = table_count(all_spell_table)
+	local learned_count = table_count(data[spell_type])
+	print("==== "..file.." count:"..spell_count.." ("..all_count.."-"..learned_count..")")
 	for i, k in pairs(spell_keys) do
 	    local v = spell_table[k]
 	    print(k, v)
