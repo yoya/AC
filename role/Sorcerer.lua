@@ -8,8 +8,18 @@ local acinspect = require 'inspect'
 local task = require 'task'
 
 local MB_magic = "ファイア"
+local nonMB_magic = "ファイア"
 --local MB_magic = "ブリザド"
 --local MB_magic = "サンダー"
+
+M.weakMagikTable = {
+    -- イフリート
+    -- シヴァ
+    ['Garuda'] = 'ice', -- ブリザド
+    ['Titan'] = 'wind', -- エアロ
+    ['Ramuh'] = 'stone', -- ストーン
+    ['Leviathan'] = 'thunder', -- サンダー
+}
 
 function within_time(x, a, b)
     if a <= x and x < b then
@@ -18,19 +28,19 @@ function within_time(x, a, b)
     return false
 end
 
--- local fc = 0.8
+-- local fastcast = 0.8
 -- local haste = 0.8
-local fc = 3.0
+local fastcast = 3.0
 local haste = 1.0
 
 local magickParams = {
     -- rank, duration, period
-    [1] = {rank='', dur=0.5*fc, per=2*haste},
-    [2] = {rank='II', dur=1.5*fc, per=6*haste},
-    [3] = {rank='III', dur=3*fc, per=15*haste},
-    [4] = {rank='IV', dur=5*fc, per=30*haste},
-    [5] = {rank='V', dur=7.5*fc, per=45*haste},
-    [6] = {rank='VI', dur=10.5*fc, per=60*haste}
+    [1] = {rank='', dur=0.5*fastcast, per=2*haste},
+    [2] = {rank='II', dur=1.5*fastcast, per=6*haste},
+    [3] = {rank='III', dur=3*fastcast, per=15*haste},
+    [4] = {rank='IV', dur=5*fastcast, per=30*haste},
+    [5] = {rank='V', dur=7.5*fastcast, per=45*haste},
+    [6] = {rank='VI', dur=10.5*fastcast, per=60*haste}
 }
 
 function invoke_magic(magicRank, onoff, level)
@@ -116,6 +126,8 @@ function M.main_tick(player)
 	magickRank = 4
     elseif main_job == "GEO" or main_job == "DRK" then
 	magickRank = 3
+    else
+	return -- MB しない
     end
     M.magicBurst(player, magickRank)
 end
