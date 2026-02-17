@@ -1283,6 +1283,10 @@ windower.register_event('addon command', function(...)
 	else
 	    print("ac inject currinfo1 | currinfo2")
 	end
+    elseif command == 'logout' then
+	io_chat.notice("#### Logout!!!")
+	task.setTaskSimple("input /logout", 1, 1)
+
     elseif command == 'magic' or command == 'magick' then
 	role_Sorcerer.setMagic(arg1)
     elseif command == 'move' then
@@ -1300,10 +1304,9 @@ windower.register_event('addon command', function(...)
 	    start_party()
 	elseif arg1 == 'stop' then
 	    stop_party()
-	elseif arg1 == 'build' then
-	    io_chat.setNextColor(5)
-	    io_chat.print("パーティ作成開始")
-	    io_ipc.send_all("party", "build")
+	--elseif arg1 == 'build' then
+	--    io_chat.notice("パーティ作成開始")
+	--    io_ipc.send_all("party", "build")
 	elseif arg1 == 'warp' or
 	    arg1 == 'dim' or arg1 == 'holla' or arg1 == 'mea' then
 	    io_ipc.send_party("party", arg1)
@@ -1373,6 +1376,9 @@ windower.register_event('addon command', function(...)
 	else
 	    io_chat.print("ac show { char | chatcolor | inventory | listener | mob | party | stat | task }")
 	end
+    elseif command == 'shutdown' then
+	io_chat.notice("#### Shutdown!!!")
+	task.setTaskSimple("input /shutdown", 1, 1)
     elseif command == 'test' then
         print("test command")
         ac_mob.PartyTargetMob()
@@ -1381,7 +1387,67 @@ windower.register_event('addon command', function(...)
 	if period ~= nil and 0.1 < period and period < 10 then
 	    settings.Period = period
 	else
-	    print("ac tick <period> illegal:"..arg1)
+	    print("ac tick <period> illegal:", arg1)
+	end
+    elseif command == 'timer' then
+	local start = os.time()
+	local period = tonumber(arg1, 10)
+	if period == nil then
+	    io_chat.error("ac timer <period>", arg1)
+	else
+	    io_chat.info("<<< timer start >>>", period)
+	    local prev = period + 1
+	    while (os.time() - start) <=  period do
+		local elapse = os.time() - start -- 経過時間
+		local remain = period - elapse
+		local th = 0
+		if remain < 5 then -- 毎秒
+		    th = remain
+		elseif remain < 30 then -- 5秒毎
+		    th = remain - remain % 5
+		elseif remain < 60 then -- 10秒毎
+		    th = remain - remain % 10
+		else -- 30秒分ごと
+		    th = remain - remain % 30
+		end
+		-- print("th remain", th, remain)
+		if th == remain then
+		    io_chat.printf("=== Timer 残り %d/%d ===", remain, period)
+		end
+		coroutine.sleep(1)
+	    end
+	    io_chat.info(">>> Time End <<<", period)
+	end
+    elseif command == 'toward' or command == 'to' then
+	local name_abbreviation_map = { -- 省略形
+	    geo = "Geomantic Reservoir",
+	    coffer = "Treasure Coffer",
+	    -- chest = "Treasure Chest",
+	}
+	local mob_name = name_abbreviation_map[arg1]
+	if mob_name == nil then
+	    mob_name = arg1
+	end
+	local mob = windower.ffxi.get_mob_by_name(mob_name)
+	control.auto = true
+	M.start_pos = {x = -99999, y = -99999, z = -99999}
+	local counter = 0
+	while control.auto and mob == nil do
+	    if counter == 0 then
+		io_chat.errorf("not found mob name:%s", mob_name)
+		counter = counter + 1
+	    else
+		counter = counter + 1
+		if counter > 10 then counter = 0 end
+	    end
+	    coroutine.sleep(1)
+	    mob = windower.ffxi.get_mob_by_name(mob_name)
+	end
+	if mob ~= nil then
+	    io_chat.noticef("found mob name:%s", mob_name)
+	    ac_move.runToMob(mob)
+	else
+	    io_chat.errorf("give up found mob name:%s", mob_name)
 	end
     elseif command == 'use' then
 	if arg1 == 'silt' then
