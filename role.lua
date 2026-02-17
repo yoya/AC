@@ -7,6 +7,7 @@ local utils = require("utils")
 local tankJobs = { "PLD", "RUN", "WAR", "SAM", "DNC" }
 local skillChainJobs = { "WAR", "MNK", "DRK", "SAM", "DRG", "THF", "RNG", "NIN", "DNC" }
 local magicBurstJobs = { "BLM", "SCH", "GEO" }
+local rangeJobs = { "RNG" }
 local healerJobs = { "WHM", "RDM", "SCH", "PLD" }
     
 function M.iamTankJob()
@@ -25,6 +26,9 @@ function M.iamHealerJob()
     local player = windower.ffxi.get_player()
     return utils.table.contains(healerJobs, player.main_job) or
 	utils.table.contains(healerJobs, player.sub_job)
+end
+
+function M.tick(player)
 end
 
 return M
