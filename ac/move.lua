@@ -130,10 +130,18 @@ function containPos(route, pos)
     return false
 end
 
-function moveToAction(p)
-    if p.a == "dismount" then
+function moveToAction(p, reverse)
+    if (not reverse and p.a == "dismount") or (reverse and p.a=="mount") then
 	command.send('input /dismount')
 	coroutine.sleep(3.0)
+    end
+    if p.enemy_filter ~= nil then
+	io_chat.setNextColor(6)
+	io_chat.printf("enemy_filter: %s", p.enemy_filter)
+	control.enemy_filter = p.enemy_filter
+    end
+    if p.a == "faith" then
+	--  TODO:フェイス呼び出し処理
     end
     if p.a == "insne" then
 	print("insne")
@@ -155,7 +163,7 @@ function moveToAction(p)
 	coroutine.sleep(1)
 	windower.ffxi.cancel_buff(69) -- インビジキャンセル
     end
-    if p.a == "mount" then
+    if (not reverse and p.a == "mount") or (reverse and p.a=="dismount") then
 	command.send('input /mount ラプトル')
 	coroutine.sleep(2.0)
     end
@@ -166,22 +174,35 @@ function moveToAction(p)
 	command.send('input /ma スニーク <me>')
 	coroutine.sleep(7)
     end
+    if p.auto ~= nil then
+	control.auto = p.auto
+	if p.auto then
+	    getMobPosition(M.AC.start_pos, "me")  -- start pos を更新
+	end
+    end
+    if p.puller ~= nil then
+	control.puller = p.puller
+	print("puller:", p.puller)
+    end
     if p.target ~= nil then
 	print("target:"..p.target)
-	io_net.targetByMobName(p.target)
 	while M.auto do
-	    coroutine.sleep(0.7)  -- 0.5 だとたまに失敗する
+	    io_net.targetByMobName(p.target)
+	    coroutine.sleep(0.3)
 	    local mob = windower.ffxi.get_mob_by_target("t")
 	    if mob == nil or mob.name ~= p.target then
-		print("tab")
+		-- print("tab")
 		pushKeys({"tab"})
-		coroutine.sleep(0.3)
+		coroutine.sleep(0.2)
 	    else
 		utils.target_lockon(true)
 		coroutine.sleep(0.5)
 		break
 	    end
 	end
+    end
+    if p.target_lockon ~= nil then
+	utils.target_lockon(p.target_lockon)
     end
     if p.w ~= nil then
 	p.wait = p.w
