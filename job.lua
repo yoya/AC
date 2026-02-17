@@ -53,17 +53,22 @@ M.meleeJobs = {
     "PUP", "RUN"
 }
 
+local foods_melee = {'カルボナーラ', 'アラビアータ', '特上スシ', 'ソーススシ'}
+local foods_magic = {'フルーツパフェ', 'ペアクレープ'}
+
 local foodTable = {
-    WAR = {'カルボナーラ', 'ソーススシ'},
-    MNK = {'カルボナーラ', 'ソーススシ'},
-    PLD = {'カルボナーラ', 'ソーススシ'},  -- レベル上げ用
-    BST = {'カルボナーラ', 'ソーススシ'},
-    RNG = {'カルボナーラ', 'ソーススシ'},
-    NIN = {'カルボナーラ', 'ソーススシ'},
-    BLM = {'フルーツパフェ', 'ペアクレープ'},
-    RDM = {'カルボナーラ', 'ソーススシ'},
-    SCH = {'フルーツパフェ', 'ペアクレープ'},
-    GEO = {'フルーツパフェ', 'ペアクレープ'},
+    WAR = foods_melee,
+    MNK = foods_melee,
+    BLM = foods_magic,
+    RDM = foods_melee,
+    PLD = foods_melee,  -- レベル上げ用
+    BST = foods_melee,  -- レベル上げ用
+    RNG = foods_melee,  -- レベル上げ用
+    NIN = foods_melee,
+    COR = foods_melee,  -- レベル上げ用
+    SCH = foods_magic,
+    RUN = foods_melee,  -- レベル上げ用
+    GEO = foods_magic,
 }
 
 -- https://wiki.ffo.jp/html/33806.html
@@ -132,7 +137,7 @@ end
 
 -- 戦闘を安全側に倒す状況
 function M.needSafety()
-    print("needSafety")
+    -- print("needSafety")
     -- 醴泉島のかえる
     if aczone.isNear(291, "toad_pond", 120) then
 	return true
@@ -142,11 +147,15 @@ function M.needSafety()
     local WKR_MobNames = contents_wkr.BossNames
     local zone = windower.ffxi.get_info().zone
     local mob = windower.ffxi.get_mob_by_target("t")
+    if mob == nil then
+	return false -- XXX
+    end
     if utils.table.contains(WKR_Zones, zone) then
 	if utils.table.contains(WKR_MobNames, mob.name) then
 	    return true
 	end
     end
+    return false
 end
 
 return M
