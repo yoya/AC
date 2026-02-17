@@ -2,6 +2,7 @@
 -- 最後に WS をうった時間とか。
 
 local utils = require 'utils'
+local control = require 'control'
 local io_chat = require 'io/chat'
 local task = require 'task'
 local ac_party = require 'ac/party'
@@ -57,14 +58,17 @@ function M.sc(message, attr)
     local datetime = os.date("%X", now)
     local sc = M.skillchain_table[attr]
     if sc == nil then
-	io_chat.setNextColor(3)
-	io_chat.printf("[%s] mesg(%d) 連携(%d) sc == nil",
-		       datetime, message, attr)
-	return
+	io_chat.noticef("[%s] mesg(%d) 連携(%d) sc == nil",
+			datetime, message, attr)
+    else
+	if control.debug then
+	    io_chat.infof("[%s] mesg(%d) 連携(%d:%s) => %s",
+			  datetime, message, attr, sc.ja, sc.magic)
+	else
+	    io_chat.infof("[%s] 連携(%d:%s) => %s",
+			  datetime, attr, sc.ja, sc.magic)
+	end
     end
-    io_chat.setNextColor(6)
-    io_chat.printf("[%s] mesg(%d) 連携(%d:%s) => %s",
-		   datetime, message, attr, sc.ja, sc.magic)
 end
 
 function M.mb(duration)
@@ -85,7 +89,6 @@ end
 
 function M.party_update(alliance_table)
     if is_alliance_joined(alliance_table) and iamLeader() then
-	io_chat.setNextColor(5)
 	io_chat.print("パーティorアライアンスのメンバー追加")
 	local remain_list = { 90, 60, 30, 10, 3 }
 	for i, remain in ipairs(remain_list) do
