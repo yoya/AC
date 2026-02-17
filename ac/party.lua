@@ -71,7 +71,9 @@ function M.hasJobMemberInParty(jobName)
 	local member = party["p"..i]
 	local info = M.member_table[id]
 	-- 該当メンバーがいる。かつエリア内にいる
-	if info ~= nil and info.main_job == jobName then -- 間違ってそう。要調査
+	if info ~= nil and info.index > 0 and
+	    info.main_job == jobName then -- 間違ってそう。要調査
+	    print("ac/party.hasJobMemberInParty", info.main_job, jobName)
 	    return true
 	end
     end
@@ -115,7 +117,7 @@ end
 function M.count_member(cond)
     local count = 0
     for id, info in pairs(M.member_table) do
-	if info.main_job == cond.main_job then
+	if info.index > 0 and info.main_job == cond.main_job then
 	    count = count + 1
 	end
     end
@@ -126,9 +128,11 @@ function M.showPartyMembers()
     io_chat.setNextColor(5)
     io_chat.print("=== showPartyMembers")
     for id, info in pairs(M.member_table) do
-	io_chat.setNextColor(6)
-	io_chat.print(id, info.name, info.main_job, info.sub_job)
-	io_chat.print(info)
+	if info.index > 0 then
+	    io_chat.setNextColor(6)
+	    io_chat.print(id, info.name, info.main_job, info.sub_job)
+	    io_chat.print(info)
+	end
     end
 end
 
