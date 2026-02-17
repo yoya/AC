@@ -59,7 +59,7 @@ function M.notice(...)
     M.print(...)
 end
 function M.noticef(...)
-    M.setNextColor(2)  -- 水色
+    M.setNextColor(5)  -- 水色
     M.printf(...)
 end
 -- 通常のメッセージ
