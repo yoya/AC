@@ -862,7 +862,7 @@ local idleFunction = function()
     end
     if  useBeads then
         windower.ffxi.run(false)
-        useBeads = acitem.useItemIncludeBags(6392)
+        useBeads = acitem.useItemIncludeBags(6392, 4)
         return 
     end
     if useSilt or useBeads then
