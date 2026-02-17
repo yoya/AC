@@ -1568,7 +1568,9 @@ windower.register_event('load', function()
 		io_chat.warn("魔法 詠唱の失敗を検知")
 	    end
 	elseif string.contains(text, "の命のカウントダウン") then
-	    command.send('input /item 聖水 <me>')
+	    command.send('input /item 聖水 <me> ; wait 1 ; input /item 聖水 <me>')
+	elseif string.contains(text, "ターゲット選択中は使用できません。") then
+	    pushKeys({"escape"})  -- ターゲットを外す
 	end
     end
     incoming_text.addListener("", incoming_text_handler)
