@@ -69,6 +69,20 @@ function nearest_idx(pos, posTable)
     return near_idx
 end
 
+function relay_idx(pos, dest, routeTable)
+    local delay_dest = nil
+    local near_idx = nil
+    local near_dis = 99999
+    for d, route in pairs(routeTable) do
+	if d ~= dest then
+	    for i, p in ipairs(route) do
+		local idx = nearest_idx(p, route)
+	    end
+	end
+    end
+    return relay_dest
+end
+
 -- 指定した方向に向く
 local turnTo = function(pos)
     local me = currentPos()
