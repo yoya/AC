@@ -1105,8 +1105,12 @@ windower.register_event('addon command', function(...)
 	    io_ipc.send_all("all", arg1)
 	    M.warp_with_equip(arg1)
 	elseif arg1 == 'reload' then
+	    io_chat.notice("ac all reload")
 	    io_ipc.send_all("all", "reload")
 	    task.setTaskSimple("lua u AC; wait 1; lua l AC", 0, 1)
+	elseif arg1 == 'wstp' then
+	    io_ipc.send_all("all", arg1, arg2)
+	    control.setWSTP(arg2)
 	else
 	    print("ac all reload | warp | holla | dim | mea")
 	end
@@ -1396,34 +1400,37 @@ windower.register_event('addon command', function(...)
 		{id=19776, name="モグのおひねり"},
 		{id=21369, name="モグのたなぼた"},
 	    }
-	    io_chat.print("ac moolah # start")
+	    io_chat.notice("ac moolah # start")
 	    acitem.useEquipItemSequence(slot_ammo, moolah_item_list, 11)
-	    io_chat.print("ac moolah # end")
+	    io_chat.notice("ac moolah # end")
 	elseif arg1 == 'scroll' then
 	    io_chat.print("スクロール学習開始")
+	    coroutine.sleep(0.5)
 	    for i,id in ipairs(item_data.magicScrolls) do
 		acitem.useItemIncludeBags(id)
 	    end
 	    io_chat.print("スクロール学習終わり")
 	elseif arg1 == 'soulstonesack' then
-	    io_chat.print("石の袋開き開始")
+	    io_chat.notice("石の袋開き開始")
 	    control.auto = true
 	    while control.auto and
 		acitem.inventoryHasItemT(item_data.soulStoneSacksT) do
 		for i,id in ipairs(item_data.soulStoneSacks) do
 		    if not acitem.checkBagsFreespace() then
-			io_chat.print("アイテム満杯")
+			io_chat.info("アイテム満杯")
 			break
 		    end
 		    acitem.useItemIncludeBags(id)
 		end
 	    end
-	    io_chat.print("石の袋開き終わり")
+	    io_chat.notice("石の袋開き終わり")
 	else
-	    io_chat.print("ac use { silt | beads | moolah | scroll | soulstonesack}")
+	    io_chat.error("ac use { silt | beads | moolah | scroll | soulstonesack}")
 	end
     elseif command == 'ws' then
         changeWS(arg1)
+    elseif command == 'wstp' then
+	control.setWSTP(arg1)
     elseif command == 'help' then
         io_chat.print('AC (AccountCluster)  v' .. _addon.version .. 'commands:')
         io_chat.print('//ac [options]')
