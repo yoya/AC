@@ -18,9 +18,9 @@ function usage()
     print("Usage: ./show.lua <l|p|a|d> <num>")
     print("    ./show.lua l 4 # latest 4 entries")
     print("    ./show.lua p   # point(eminence&unity)")
-    print("    ./show.lua e   # point(eminence)")
-    print("    ./show.lua p 4 # point(ambus)")
-    print("    ./show.lua d 4 # point(dp|mogseg|gallimau)")
+    print("    ./show.lua e   # point(experiment)")
+    print("    ./show.lua a 8 # point(ambus)")
+    print("    ./show.lua d 8 # point(dp|mogseg|gallimau)")
 end
 
 function parseArgs()
@@ -95,11 +95,22 @@ for i, file in ipairs(files) do
 	end
     end
     if line4 ~= nil then
-	local table4 = split_multi(line4, {"DomainP:", "  MogSeg:", "  Gallimau:"})
+	local table4 = split_multi(line4, {"DomainP:", "  MogSeg:", "  Gallimau:","Login:"})
 	if table4 ~= nil then
 	    domain_point = tonumber(table4[2])
 	    mog_segments = tonumber(table4[3])
 	    gallimaufry = tonumber(table4[4])
+	    login_point = tonumber(table4[5])
+	end
+	if table4 ~= nil then
+	else
+	    local table4 = split_multi(line4, {"DomainP:", "  MogSeg:", "  Gallimau:"})
+	    if table4 ~= nil then
+		domain_point = tonumber(table4[2])
+		mog_segments = tonumber(table4[3])
+		gallimaufry = tonumber(table4[4])
+		login_point = -1
+	    end
 	end
     end
 local time, err = lfs.attributes(savedDir..file, 'modification')
@@ -114,6 +125,7 @@ local time, err = lfs.attributes(savedDir..file, 'modification')
 	hallmark = hallmark,
 	total_hallmark = total_hallmark,
 	gallantry = gallantry,
+	login_point = login_point,
 	domain_point = domain_point,
 	mog_segments = mog_segments,
 	gallimaufry = gallimaufry,
@@ -124,8 +136,10 @@ local time, err = lfs.attributes(savedDir..file, 'modification')
 end
 
 function compPoint(a, b)
---    print(a.eminence_point.." < "..b.eminence_point)
-    if (a.eminence_point + a.unity_point) < (b.eminence_point+ b.unity_point) then
+    -- print(a.eminence_point.." < "..b.eminence_point)
+    local a_point_min = math.min(a.eminence_point, a.unity_point)
+    local b_point_min = math.min(b.eminence_point, b.unity_point)
+    if a_point_min < b_point_min then
 	return true
     else
 	return false
@@ -187,7 +201,7 @@ for i, char in pairs(charTable) do
     elseif method == 'a' then
 	print(string.format("%7s HM:%5s Total:%5s Gal:%5s", char.name, char.hallmark, char.total_hallmark, char.gallantry))
     elseif method == 'd' then
-	print(string.format("%7s DP:%5s MogS:%5s GF:%5s", char.name, char.domain_point, char.mog_segments, char.gallimaufry))
+	print(string.format("%7s DP:%5s MogS:%5s GF:%5s Login:%4s", char.name, char.domain_point, char.mog_segments, char.gallimaufry, char.login_point))
     else
 	print("Error: Wrong method:"..method)
     end
