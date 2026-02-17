@@ -59,9 +59,9 @@ function M.send_party(method, arg)
             if member ~= nil and member.mob ~= nil then
 		local mob = member.mob
 		if not mob.is_npc then
-		    io_chat.print("send_party:", mob.name)
+		    -- io_chat.print("send_party:", mob.name)
 		    M.send(mob.name, method, arg)
-		    coroutine.sleep(0.3)
+		    coroutine.sleep(0.2)
 		end
             end
         end
@@ -118,12 +118,27 @@ function M.recieve(message)
 	end
     elseif method == 'all' then
 	M.recieve_all(arg1, arg2, arg3)
+    elseif method == 'build' then
+	if arg1 == 'party' then
+	    if not M.inParty() then
+		M.send(source, "submit", "party")
+	    end
+	else
+	    print("ac all build party")
+	end
     elseif method == 'focus' then
 	if M.AC.focusMyIndex == tonumber(arg1) then
 	    windower.take_focus()
 	end
     elseif method == 'party' then
 	M.recieve_party(source, arg1, arg2, arg3)
+    elseif method == 'submit' then
+	if arg1 == 'party' then
+	    local c = "input /pcmd add "..source
+	    -- print("io/ipc.recieve_party", c)
+	    --  command, delay, period
+	    task.setTaskSimple(c, 1, 2)
+	end
     else
 	print("io/ipc.recieve: unknown method:"..method)
     end
@@ -137,8 +152,7 @@ function M.warp_with_ring(arg)
     task.allClear()
     local item_name = 'デジョンリング'
     local item_id = 28540
-    io_chat.setNextColor(5)
-    io_chat.print(item_name.."発動 10-12秒前")
+    -- io_chat.info(item_name.."発動 10-12秒前")
     if arg == "holla" then
 	item_name = "Ｄ．ホラリング"
 	item_id = 26176
@@ -149,7 +163,7 @@ function M.warp_with_ring(arg)
 	item_name = "Ｄ．メアリング"
 	item_id = 26178
     end
-    io_chat.print(item_name.."10-12秒前")
+    io_chat.info(item_name.."10-12秒前")
     coroutine.sleep(math.random(1,10)/5)
     local slot_right_ring = 14
     acitem.useEquipItem(slot_right_ring, item_id, item_name, 10)
