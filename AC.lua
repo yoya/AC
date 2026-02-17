@@ -1578,6 +1578,7 @@ windower.register_event('load', function()
     local player = windower.ffxi.get_player()
     if player ~= nil then
 	M.focusMyIndex = focusTable[player.name]
+	io_chat.notice("[load] focus", M.focusMyIndex, player.name)
     end
 end)
 
@@ -1585,7 +1586,8 @@ windower.register_event('login', function()
     -- ws.init()  -- このタイミングだと前のキャラのジョブが反映される
     ac_stat.init()
     local player = windower.ffxi.get_player()
-    focusMyIndex = focusTable[player.name]
+    M.focusMyIndex = focusTable[player.name]
+    io_chat.notice("[login] focus", M.focusMyIndex, player.name)
 end)
 
 windower.register_event('logout', function()
