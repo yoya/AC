@@ -1,18 +1,26 @@
+local utils = require 'utils'
 local io_chat = require "io/chat"
 
-local M = {
+local M = { }
+
+M.INIT_VALUES = {
     auto = false,
     attack = false,  -- 敵と戦う
     calm = false,    -- 戦闘中動かない
     debug = false,   -- デバッグメッセージ
-    do_my_best = false, -- 本気を出す (1H アビが使う)
+    do_my_best = false, -- 本気を出す (1H アビを使う)
     equip_lock = true,  -- 装備の固定。脱衣攻撃対策
     puller = false,  -- 敵にちょっかい出す。基本はリーダーのみ true
-    enemy_filter = nil  -- ちょっかい出す敵を名前で制限。
-    wstp = -1, -- 無条件で WS をうつ TP 量。-1 だと MB 狙いで調整される
-    -- enemy_space
-    -- finish_blow
+    enemy_filter = nil,  -- ちょっかい出す敵を名前で制限。
+    provoke = 2000, -- HPがこれ以下だと挑発しない
+    wstp = 2000,  -- 無条件で WS をうつ TP 量。-1 は MB 狙いでタイミングを取る
 }
+
+function M.init()
+    utils.table.assignValues(M, M.INIT_VALUES)
+end
+
+M.init()
 
 -- enemy_space
 M.ENEMY_SPACE_NEAR   = 1  -- 敵に近づく
@@ -41,12 +49,11 @@ function M.setWSTP(wstp)
 	wstp = tonumber(wstp)
     end
     if (wstp == nil or wstp < 1000 or 3000 < wstp) and wstp ~= -1 then
-	io_chat.warnf("ac control wstp <-1 or 1000-3000>", wstp)
+	io_chat.warn("ac control wstp <-1 or 1000-3000>", wstp)
 	wstp = -1
     end
-    control.wstp = wstp
-    io_chat.setNextColor(5)
-    io_chat.print("ac control wstp", wstp)
+    M.wstp = wstp
+    io_chat.info("ac control wstp", M.wstp)
 end
 
 return M
