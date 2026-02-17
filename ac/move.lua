@@ -215,7 +215,7 @@ function moveToAction(p, reverse)
     return true
 end
 
-function moveTo(route, routeTable, nextRoute)
+function moveTo(route, routeTable, nextRoute, reverse)
     local pos = currentPos()
     local r1List = {}  -- 各routeの一個目をリスト化
     local r1ListName = {}
@@ -251,7 +251,6 @@ function moveTo(route, routeTable, nextRoute)
         print(idx, name, r)
         moveTo(r, routeTable)
     end
-    M.auto = true
     print("moveFrom", math.round(pos.x, 2), math.round(pos.y, 2))
     local start_idx = nearest_idx(pos, route)
 --    print('start_idx', start_idx)
@@ -287,7 +286,7 @@ function moveTo(route, routeTable, nextRoute)
 		    end
 		end
 	    end
-	    if not moveToAction(p) then
+	    if not moveToAction(p, reverse) then
 		return false
 	    end
             if p.x ~= nil then
@@ -302,14 +301,25 @@ function moveTo(route, routeTable, nextRoute)
 			break  -- 移動の続きに戻る
 		    end
 		end
-                print("moving to", i, x, y, d)
+		if control.debug then
+		    io_chat.print("moving to", i, x, y, d)
+		end
 		x = x + math.random(-d*100,d*100)/100
 		y = y + math.random(-d*100,d*100)/100
 		local dpos = {x=x,y=y,z=p.z}
 		local currPos = currentPos()
+		M.AC.start_pos = currPos  -- 開始位置を更新
 		if prevPos ~= nil then
-		    if distance(prevPos, currPos) > 128 then
-			print("too far next move point")
+		    local d = distance(prevPos, currPos)
+		    if d > 128 then
+			io_chat.warn("too far next move point")
+			io_chat.printf("prevPos(%d,%d) currPos(%d,%d) distance(%d) > 128",
+				       prevPos.x, prevPos.y,
+				       currPos.x, currPos.y, d)
+			local zone_id = windower.ffxi.get_info().zone
+			io_chat.printf("add midpoint (x=%d,y=%d) zone(%d) file",
+				       (prevPos.x + currPos.x)/2,
+				       (prevPos.y + currPos.y)/2, zone_id)
 			stop()
 			return false
 		    end
@@ -319,24 +329,25 @@ function moveTo(route, routeTable, nextRoute)
 		    if similality < 0.5 then
 			windower.ffxi.run(false)
 			local t = (0.5 - similality) / 3
-			-- print("similality:"..similality.." => sleep "..t)
+			-- print("similality:"..similality.." => coroutine.sleep "..t)
 			coroutine.sleep(t)
 		    end
 		end
 		prevPos = {x=currPos.x, y=currPos.y}
                 while (distance(currentPos(), dpos) > 0.5 and M.auto) do
                     if distance(currentPos(), dpos) > 6468 and false then
-                        print("not near position")
+                        io_chat.warn("not near position")
                         stop()
                         return false
                     end
                     turnTo(dpos)
                     pos = currentPos()
-		    if pos.x ~= nil then
+		    if pos ~= nil and pos.x ~= nil then
 			windower.ffxi.run(dpos.x - pos.x, dpos.y - pos.y)
 			coroutine.sleep(0.1)
 		    else
-			print("pos.x == nil")
+			print("pos == nil or pos.x == nil pos:", pos)
+			coroutine.sleep(1.0)
 		    end
                 end
 		windower.ffxi.run(false)
@@ -348,6 +359,10 @@ function moveTo(route, routeTable, nextRoute)
                 command.send('input /target '..p.t)
                 coroutine.sleep(0.5)
             end
+	    if p.a == "f8" then
+                pushKeys({"f8"})
+                coroutine.sleep(1.0)
+	    end
             if p.a == "f8touch" or p.a == "opendoor" then
                 pushKeys({"escape", "f8", "enter"})
                 coroutine.sleep(1.0)
@@ -355,11 +370,11 @@ function moveTo(route, routeTable, nextRoute)
             end
             if p.a == "esc" then
                 pushKeys({"escape"})
-                coroutine.sleep(1.0)
+                coroutine.sleep(0.5)
             end
             if p.a == "tab" then
                 pushKeys({"tab"})
-                coroutine.sleep(1.0)
+                coroutine.sleep(0.5)
             end
             if p.a == "touch" then
                 pushKeys({"enter"})
@@ -392,24 +407,35 @@ function moveTo(route, routeTable, nextRoute)
     end
     return true
 end
-M.moveTo = moveTo
 
 function autoMoveTo(zone_id, destTable, routeTable)
+    M.auto = true
     if destTable[1] == nil then
         if routeTable == nil then
 	    io_chat.setNextColor(3) -- 赤
             print("not defined zone route", zone_id)
         else
+	    io_chat.setNextColor(5) -- 水色
+	    io_chat.printf("### routa table: (num:%d)", utils.table.count_keys(routeTable))
+	    local NGlist = {}
             for dest, route in pairs(routeTable) do
-		io_chat.setNextColor(6) -- 緑
 		local pos = currentPos()
 		local idx = nearest_idx(pos, route)
-		if distance(pos, route[idx]) < 64 then
-		    io_chat.printf("O %s (%d) ", dest, idx)
+		local desc = ""
+		if route[1] ~= nil and route[1].desc then
+		    desc = route[1].desc
+		end
+		local d = distance(pos, route[idx])
+		if d < 64 then
+		    io_chat.setNextColor(6) -- 緑
+		    io_chat.printf("O %s(%d=>%d) %s", dest, d, idx, desc)
 		else
-		    io_chat.printf("X %s (%d) ", dest, idx)
+		    local NGstr = string.format("%s(%d)", dest, d)
+		    table.insert(NGlist, NGstr)
 		end
             end
+	    io_chat.setNextColor(3) -- 赤
+	    io_chat.print("X "..table.concat(NGlist, '  '))
         end
     else
 	for i, dest in ipairs(destTable) do
@@ -425,6 +451,7 @@ function autoMoveTo(zone_id, destTable, routeTable)
 	    _autoMoveTo(zone_id, dest, routeTable, reverse, nextDest)
 	end
     end
+    stop()
 end
 M.autoMoveTo = autoMoveTo
 
@@ -439,7 +466,8 @@ function _autoMoveTo(zone_id, dest, routeTable, reverse, nextDest)
     if reverse == true then
 	route = array_reverse(route)
     end
-    moveTo(route, routeTable, nextRoute)
+    moveTo(route, routeTable, nextRoute, reverse)
+    stop()
 end
 
 
