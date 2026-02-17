@@ -13,7 +13,7 @@ M.weaponskill = 'flat'
 
 local preferWeaponSkill = {
     'dragon', 'victory', 'asyura', 'shishin', 'tokon', 'rangeki', 'combo', -- 格闘
-    'evis', 'rudra', 'manda', 'exen',  'dance', 'shadow', -- 短剣
+    'rudra', 'evis', 'manda', 'exen',  'dance', 'shadow', -- 短剣
     'savage', 'chant', 'requ', -- 'circle', -- 片手剣
     'reso','ground', -- 両手剣
     'rui', 'ramp', 'deci', 'raging', -- 片手斧
