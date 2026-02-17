@@ -1561,8 +1561,10 @@ windower.register_event('zone change', function(zone, prevZone)
     task.setTaskSimple("ac inject currinfo1", 2, 1)
     task.setTaskSimple("ac inject currinfo2", 4, 1)
     task.setTaskSimple("//record char", 6, 1)
-    control.enemy_filter = nil
-    control.puller = false
+    control.enemy_filter = control.INIT_VALUES.enemy_filter
+    control.puller = control.INIT_VALUES.puller
+    control.wstp = control.INIT_VALUES.wstp
+    M.start_pos = {x = -99999, y = -99999, z = -99999}
 end)
 
 windower.register_event('incoming chunk', function(id, data, modified, injected, blocked)
