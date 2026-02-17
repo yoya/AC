@@ -222,6 +222,10 @@ end
 -- Update Current Sparks via 110
 packet_handler[0x110] = function(packet)
     local player = windower.ffxi.get_player()
+    if player == nil then
+	print("packet_handler[0x110]: player == nil")
+	return
+    end
     local char = {
 	eminence_point = packet["Sparks Total"]
     }
