@@ -18,7 +18,7 @@ end
 -- コマンド実行：無し。を前提にする。
 
 function setup(mob)
-    pushKeys({"w", "w", "w", "enter"})  -- 前に詰めて改行
+    pushKeys({"w", "w", "w", "s", "enter"})  -- 前に詰めて改行
     coroutine.sleep(1)
     item_table = {  -- インカンタートルク
 	[26012] = 1, -- メリックトルク
@@ -32,11 +32,7 @@ function setup(mob)
     coroutine.sleep(1) -- ???
     io_chat.info("錬成を開始する")
     pushKeys({"enter"})  -- 錬成を開始する。改行キー
-    coroutine.sleep(2)
-    io_net.targetByMob(mob)
-    coroutine.sleep(1)
-    utils.target_lockon(true)
-    coroutine.sleep(1)
+    coroutine.sleep(4)
 end
 
 function start(mob)
@@ -44,7 +40,7 @@ function start(mob)
     coroutine.sleep(1)
     utils.target_lockon(true)
     coroutine.sleep(1)
-    pushKeys({"w", "w", "w", "enter"})  -- 前に詰めて改行
+    pushKeys({"w", "w", "w", "s", "enter"})  -- 前に詰めて改行
     io_chat.info("錬成メニューを開く")
     pushKeys({"enter"})  -- 錬成メニューを開く (時間かかる)
     coroutine.sleep(3)
@@ -52,6 +48,7 @@ end
 
 function add(mob, downCount)
     -- クリスタル燃料投入
+    pushKeys({"left"})  -- 初期位置
     pushKeys({"enter"})  -- 燃料を投入する
     coroutine.sleep(1)
     pushKeys({"left", "left", "left"}) -- 一番上に
@@ -64,20 +61,21 @@ end
 
 function operate(mob) -- 操作する
     io_chat.info("操作する＞圧力ハンドル")
+    pushKeys({"left"})  -- 初期位置
     pushKeys({"down", "enter"})  -- 操作する
-    coroutine.sleep(2)
     pushKeys({"left", "left"}) -- 初期位置
     pushKeys({"down", "enter"}) -- 圧力ハンドル調整
-    coroutine.sleep(1)
+    coroutine.sleep(2)
     io_chat.info("操作する＞安全レバー")
     pushKeys({"enter"})  -- 操作する
-    coroutine.sleep(2)
-    pushKeys({"down", "enter"}) -- 安全レバー
     coroutine.sleep(1)
+    pushKeys({"down", "enter"}) -- 安全レバー
+    coroutine.sleep(2)
     io_chat.info("操作する＞結界メンテナンス")
     pushKeys({"enter"})  -- 操作する
-    coroutine.sleep(2)
+    coroutine.sleep(1)
     pushKeys({"down", "enter"}) -- 結界メンテナンス
+    coroutine.sleep(2)
 end
 
 function SynergyFurnaceFunction(zone, mob)
@@ -142,7 +140,7 @@ M.synergy_finish = false
 function M.incoming_text_handler(text)
     if string.contains(text, "ダメージ。") then
 	M.explosion = true
-    elseif if string.contains(text, "錬成プロセスを完了！") then
+    elseif string.contains(text, "錬成プロセスを完了！") then
 	M.synergy_finish = true
     end
 end
