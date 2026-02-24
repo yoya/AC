@@ -80,7 +80,6 @@ function M.npcActionHandler(zone, mob)
     for _, c in pairs(M.contentsTable) do
 	if c.npcActionHandlers ~= nil then
 	    for name, handler in pairs(c.npcActionHandlers) do
-		print("mob.name, name", mob.name, name)
 		if mob.name == name then
 		    handler(zone, mob)
 		end
