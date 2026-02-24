@@ -25,7 +25,7 @@ M.routes = {
 	{x=-63,y=267}, {x=-91,y=261}, {x=-100,y=244},
 	{x=-97,y=213}, {a="dismount"},
 	{x=-100,y=183,z=1.7}, {target="Gnarled Rampart"},
-	{enemy_filter="Gnarled Rampart"}
+	{enemy_filter="Gnarled Rampart"}, {auto=true}
 	-- {x=-63.6,y=333.2}, {x=-92.5,y=343.7},
     },
     raive2 = { -- レイアレイブ
@@ -35,6 +35,9 @@ M.routes = {
 	{x=-93.3,y=372.8}, {x=-83.8,y=378.3}, {x=-26,y=387.2},
 	{x=-19.1,y=415.9},
 	{x=-6,y=422}, {x=21,y=418}, {x=21,y=405}, {x=20,y=395},
+	{x=26,y=417}, {x=42,y=422}, {x=68,y=421}, {x=90,y=419},
+	{x=109,y=432}, {x=115,y=444}, {x=111,y=460},
+	{x=98,y=468,z=0.7}, {target="Arboreal Bastion"}, {auto=true}
     },
 }
 
