@@ -898,6 +898,7 @@ local idleFunction = function()
     if mob.name == "Ergon Locus" then
 	works.survey.ergonLocusFunction()
     end
+    contents.npcActionHandler(zone, mob)
 end
 
 local tickRunning = false
