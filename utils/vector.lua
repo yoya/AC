@@ -1,6 +1,6 @@
 -- ベクトル操作
 
-M = {}
+local M = {}
 
 function norm(vec)
     local x = vec.x

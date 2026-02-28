@@ -1,6 +1,6 @@
 -- 角度計算
 
-M = {}
+local M = {}
 
 -- 0 は正として扱う(角度として都合がよい)
 function numsign(a)

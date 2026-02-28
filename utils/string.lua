@@ -1,6 +1,6 @@
 -- 文字列
 
-M = {}
+local M = {}
 
 -- https://gist.github.com/ram-nadella/dd067dfeb3c798299e8d
 function M.trim(text)

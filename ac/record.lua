@@ -1,5 +1,7 @@
 -- ファイル保存するデータ
 
+local M = {}
+
 local res = require 'resources'
 
 local io_chat = require("io/chat")
