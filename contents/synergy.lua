@@ -3,15 +3,74 @@
 local M = {}
 
 local control = require 'control'
-local acitem = require 'item'
 local utils = require 'utils'
-local keyboard = require 'keyboard'
-local pushKeys = keyboard.pushKeys
+local acitem = require 'item'
 local io_chat = require 'io/chat'
 local io_net = require 'io/net'
 local incoming_text = require('incoming/text')
 
+local keyboard = require 'keyboard'
+local pushKeys = keyboard.pushKeys
+local longpushKey = keyboard.longpushKey
+
 local last_time = nil
+
+M.item_table = {  -- インカンタートルク
+    [26012] = 1, -- メリックトルク
+    [26013] = 1, -- "ヘニックトルク
+    [26014] = 1, -- デシーバートルク
+}
+
+function M.init()
+end
+M.init()
+
+function M.tick(player)
+end
+
+-- コマンド実行：無し。を前提にする。
+
+function target_and_lockon(mob)
+    io_net.targetByMobEx(mob)
+    coroutine.sleep(1)
+    utils.target_lockon(true)
+    coroutine.sleep(1)
+end
+
+local key_sequence = {
+    {  -- start
+	{echo="start"},
+	{keys={"w","w","w","s",}},
+    },
+    {
+    },
+    {
+    },
+    {
+    },
+}
+
+function SynergyFurnaceFunction(zone, mob)
+end
+
+function SynergyEngineerFunction(zone, mob)
+end
+
+function M.incoming_text_handler(text)
+end
+
+
+function M.zone_in()
+    M.init()
+end
+
+function M.zone_out()
+    M.init()
+end
+
+--
+-- 古いコード、参考のため一時的に残す
+--
 
 function M.init()
     M.mob_Furnace = nil
@@ -52,7 +111,11 @@ end
 function setup(mob)
     target_and_lockon(mob)
     forward()
-    pushKeys({"enter"})  -- 前に詰めて改行
+    if not acitem.inventoryHasItem(M.item_table[1]) then
+	pushKeys({"enter"})  -- アイテムを取り出す
+	coroutine.sleep(1)
+    end
+    pushKeys({"enter"})  -- 改行で開始
     coroutine.sleep(1)
     --[[
     item_table = {  -- インカンタートルク
@@ -70,6 +133,19 @@ function setup(mob)
     pushKeys({"enter"})  -- 錬成を開始する。改行キー
     coroutine.sleep(4)
 end
+
+local key_sequence = {
+    {  -- start
+	{echo="start"},
+	{keys={"w","w","w","s",}},
+    },
+    {
+    },
+    {
+    },
+    {
+    },
+}
 
 function start(mob)
     target_and_lockon(mob)
@@ -97,20 +173,27 @@ function operate(mob) -- 操作する
     io_chat.info("操作する＞圧力ハンドル")
     pushKeys({"left"})  -- 初期位置
     pushKeys({"down", "enter"})  -- 操作する
+    coroutine.sleep(1)
     pushKeys({"left", "left"}) -- 初期位置
     pushKeys({"down", "enter"}) -- 圧力ハンドル調整
-    coroutine.sleep(2)
+    coroutine.sleep(3)
     if M.explosion == true then	return end
     io_chat.info("操作する＞安全レバー")
     pushKeys({"enter"})  -- 操作する
     coroutine.sleep(1)
+    io_chat.info("安全レバー")
     pushKeys({"down", "enter"}) -- 安全レバー
-    coroutine.sleep(2)
+    coroutine.sleep(3)
     if M.explosion == true then	return end
     io_chat.info("操作する＞結界メンテナンス")
     pushKeys({"enter"})  -- 操作する
     coroutine.sleep(1)
     pushKeys({"down", "enter"}) -- 結界メンテナンス
+    coroutine.sleep(2)
+    if M.explosion == true then	return end
+    pushKeys({"enter"})  -- 操作する
+    coroutine.sleep(1)
+    pushKeys({"enter"}) -- もう一度、結界メンテナンス
     coroutine.sleep(2)
 end
 
@@ -124,13 +207,50 @@ function finish(mob)
     utils.target_lockon(true)
     coroutine.sleep(1)
     -- pushKeys({"w", "w", "w", "enter"})  -- 前に詰めて改行
-    coroutine.sleep(1)
+    coroutine.sleep(2)
     io_chat.info("取り出す")
     pushKeys({"enter"})  -- 取り出す
     coroutine.sleep(2)
 end
 
-function SynergyFurnaceFunction(zone, mob)
+function common(mob, downCount)
+    add(mob, downCount)
+    if M.synergy_finish then return end
+    if M.explosion == true then
+	coroutine.sleep(10)
+	start(mob)
+	M.explosion = false
+    end
+    operate(mob)
+    if M.synergy_finish then return false end
+    if M.explosion == true then
+	coroutine.sleep(10)
+	start(mob)
+	M.explosion = false
+    end
+    return true
+end
+
+function wind(mob)
+    io_chat.info("風クリ投入")
+    return common(mob, 2)
+end
+function thunder(mob)
+    io_chat.info("雷クリ投入")
+    return common(mob, 4)
+end
+function dark(mob)
+    io_chat.info("闇クリ投入")
+    return common(mob, 7)
+end
+
+function SynergyFurnaceFunction_old(zone, mob)
+    if not control.auto then
+	return
+    end
+    if mob == nil then
+	return
+    end
     last_time = nil
     if M.mob_Furnace ~= nil then
 	if mob.index ~= M.mob_Furnace.index then
@@ -142,54 +262,11 @@ function SynergyFurnaceFunction(zone, mob)
     M.synergy_finish = false
     setup(mob)
     start(mob)
-    io_chat.info("風クリ投入")
-    add(mob, 2) -- 風クリ投入
-    if M.explosion == true then
-	coroutine.sleep(10)
-	start(mob)
-	M.explosion = false
-    end
-    operate(mob)
-    if M.synergy_finish then return end
-    if M.explosion == true then
-	coroutine.sleep(10)
-	start(mob)
-	M.explosion = false
-    end
-    -- 雷クリ投入
-    io_chat.info("雷クリ投入")
-    add(mob, 4)
-    if M.synergy_finish then return end
-    if M.explosion == true then
-	coroutine.sleep(10)
-	start(mob)
-	M.explosion = false
-    end
-    operate(mob)
-    if M.synergy_finish then return end
-    if M.explosion == true then
-	coroutine.sleep(10)
-	start(mob)
-	M.explosion = false
-    end
-    -- 闇クリ投入
-    io_chat.info("闇クリ投入")
-    add(mob, 7)
-    if M.synergy_finish then return end
-    if M.explosion == true then
-	coroutine.sleep(10)
-	start(mob)
-	M.explosion = false
-    end
-    operate(mob)
-    add(mob, 7)
-    if M.synergy_finish then return end
-    if M.explosion == true then
-	coroutine.sleep(10)
-	start(mob)
-	M.explosion = false
-    end
-    coroutine.sleep(2)
+    --if not dark(mob) then return end    -- 闇クリ投入
+    if not wind(mob) then return end    -- 風クリ投入
+    if not thunder(mob) then return end -- 雷クリ投入
+    --if not dark(mob) then return end    -- 闇クリ投入
+    --coroutine.sleep(2)
     -- 終了
     finish(mob)
     utils.target_lockon(false)
@@ -205,8 +282,10 @@ function SynergyFurnaceFunction(zone, mob)
     last_time = os.time()
 end
 
-function SynergyEngineerFunction(zone, mob)
-    last_time = nil
+function SynergyEngineerFunction_old(zone, mob)
+    if not control.auto then
+	return
+    end
     if M.mob_Engineer ~= nil then
 	if mob.index ~= M.mob_Engineer.index then
 	    utils.target_lockon(false)
@@ -240,12 +319,7 @@ function SynergyEngineerFunction(zone, mob)
     last_time = os.time()
 end
 
-M.npcActionHandlers = {
-    ["Synergy Furnace"] = SynergyFurnaceFunction,
-    ["Synergy Engineer"] = SynergyEngineerFunction,
-}
-
-function M.incoming_text_handler(text)
+function M.incoming_text_handler_old(text)
     if string.contains(text, "ダメージ。") then
 	M.explosion = true
     elseif string.contains(text, "錬成プロセスを完了！") then
@@ -273,26 +347,26 @@ function M.incoming_text_handler(text)
 	pushKeys({"enter"})  --  アイテム取り出し
 	coroutine.sleep(1)
     elseif string.contains(text, "素材を投入して錬成窯を稼働してください。") then
-	item_table = {  -- インカンタートルク
-	    [26012] = 1, -- メリックトルク
-	    [26013] = 1, -- "ヘニックトルク
-	    [26014] = 1, -- デシーバートルク
-	}
-	acitem.tradeByItemTable(M.mob_Furnace, item_table)
-	coroutine.sleep(1)
+	io_chat.info("錬成トレード")
+	acitem.tradeByItemTable(M.mob_Furnace, M.item_table)
+	coroutine.sleep(3)  --  2でもフライングする事がある？
 	io_chat.info("完成品を提示")
 	pushKeys({"enter"})  -- 完成品を提示。改行キー
     end
 end
 
-M.listener_id = incoming_text.addListener("", M.incoming_text_handler)
+--- 切り替え
 
-function M.zone_in()
-    M.init()
-end
+M.npcActionHandlers = {
+--    ["Synergy Furnace"] = SynergyFurnaceFunction,
+--    ["Synergy Engineer"] = SynergyEngineerFunction,
+    ["Synergy Furnace"] = SynergyFurnaceFunction_old,
+    ["Synergy Engineer"] = SynergyEngineerFunction_old,
+}
 
-function M.zone_out()
-    M.init()
-end
+-- M.listener_id = incoming_text.addListener("", M.incoming_text_handler)
+M.listener_id = incoming_text.addListener("", M.incoming_text_handler_old)
+
 
 return M
+
