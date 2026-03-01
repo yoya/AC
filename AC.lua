@@ -1444,6 +1444,8 @@ windower.register_event('addon command', function(...)
 	local name_abbreviation_map = { -- 省略形
 	    geo = "Geomantic Reservoir",
 	    coffer = "Treasure Coffer",
+	    airele = "Air Elemental",
+	    darkele = "Dark Elemental",
 	    -- chest = "Treasure Chest",
 	}
 	local mob_name = name_abbreviation_map[arg1]
