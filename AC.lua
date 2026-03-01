@@ -787,10 +787,8 @@ local idleFunctionMobGarden = function()
         local id = 940 -- 反魂樹の根
         acitem.tradeByItemId(mob, id)
         control.auto = false
-    elseif mob.name == "Mineral Vein" or mob.name == "Mineral Vein #2"
-            or mob.name == "Mineral Vein #3"
-            or mob.name == "Arboreal Grove" or mob.name == "Arboreal Grove #2"
-            or mob.name == "Arboreal Grove #3" then
+    elseif string.find(mob.name, "Mineral Vein") or
+	string.find(mob.name, "Arboreal Grove") then
         while control.auto do
             pushKeys({"escape", "f8", "enter"})
             coroutine.sleep(2)
