@@ -88,4 +88,12 @@ function M.npcActionHandler(zone, mob)
     end
 end
 
+function M.zone_out()
+    for _, c in pairs(M.contentsTable) do
+	if c.zone_out ~= nil then
+	    c.zone_out()
+	end
+    end
+end
+
 return M

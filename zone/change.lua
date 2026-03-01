@@ -8,6 +8,7 @@ local ac_party = require 'ac/party'
 local iamLeader = ac_party.iamLeader
 local task = require 'task'
 local control = require 'control'
+local contents = require 'contents'
 
 local M = {}
 
@@ -149,6 +150,7 @@ function M.zone_change_handler(zone, prevZone)
 		zone_out()
 	    end
 	end
+	contents.zone_out()
     end
     -- zone in の処理
     local zone_object = aczone.zoneTable[zone]
