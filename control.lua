@@ -56,4 +56,13 @@ function M.setWSTP(wstp)
     io_chat.info("ac control wstp", M.wstp)
 end
 
+function M.show()
+    io_chat.infof( "auto:%s attack:%s calm:%s debug:%s do_my_best:%s",
+		   tostring(M.auto), tostring(M.attack), tostring(M.calm),
+		   tostring(M.debug), tostring(M.do_my_best) )
+    io_chat.infof("equip_lock:%s puller:%s enemy_filter:%s provoke:%s wstp:%s",
+		  tostring(M.equip_lock), tostring(M.puller),
+		  tostring(M.enemy_filter), M.provoke, M.wstp )
+end
+
 return M

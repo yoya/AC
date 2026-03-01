@@ -1381,6 +1381,8 @@ windower.register_event('addon command', function(...)
 		io_chat.setNextColor(i)
 		io_chat.printf("Color:%d => %s", i, desc)
 	    end
+	elseif arg1 == 'control' then
+	    control.show()
 	elseif arg1 == 'inventory' then
 	    acitem.showInventory()
 	elseif arg1 == 'listener' then
@@ -1394,7 +1396,7 @@ windower.register_event('addon command', function(...)
 	elseif arg1 == 'task' then
 	    task.print()
 	else
-	    io_chat.print("ac show { char | chatcolor | inventory | listener | mob | party | stat | task }")
+	    io_chat.print("ac show { char | chatcolor | control | inventory | listener | mob | party | stat | task }")
 	end
     elseif subcommand == 'shutdown' then
 	io_chat.notice("#### Shutdown!!!")
