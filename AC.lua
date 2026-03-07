@@ -1335,7 +1335,7 @@ windower.register_event('addon command', function(...)
 	    print("ac partrol <chara number>")
 	else
 	    for i = 1, n do
-		print("Patrol ", i)
+		print("Patrol #", i, "/", n)
 		pushKeys({"enter"})
 		coroutine.sleep(1)
 		pushKeys({"enter"})
