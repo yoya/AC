@@ -189,6 +189,8 @@ local isFar = false
 local fightingMobName = nil
 
 --- リーダー待機用
+local prevDx = 0
+local prevDy = 0
 local leaderFunction = function()
 ---    print("I am a reader")
     local me_pos = {}
@@ -247,7 +249,19 @@ local leaderFunction = function()
                 isFar = false
             end
         end
-        return
+	-- near の範囲を通り過ぎると永久に往復するのでその対処
+	local vec1 = { x=dx, y=dy }
+	local vec2 = { x=prevDx, y=prevDy }
+	local similarity = utils.vector.CosineSimilarity(vec1, vec2)
+	prevDx = dx
+	prevDy = dy
+	if similarity < -0.8 then
+	    -- 逆向きに動いたら近くになったと判断して停止かつ
+	    -- print("DEBUG: similarity=", similarity)
+	    isFar = false
+	    coroutine.sleep(0.2)
+	    windower.ffxi.run(false)
+	end
     end
     if settings.Attack then
         command.send('input /attack on')
