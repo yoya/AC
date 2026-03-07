@@ -1592,6 +1592,7 @@ windower.register_event('load', function()
 		    io_chat.info("前に詰める")
 		end
 		keyboard.longpushKey("w", 3.0)  -- 前に詰める
+		pushKeys({"a"})  -- 少し左にずらす
 	    elseif string.contains(text, "姿が見えないためコマンドが") then
 		if control.debug then
 		    io_chat.info("左>後>前に移動")
