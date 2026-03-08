@@ -1461,6 +1461,7 @@ windower.register_event('addon command', function(...)
 	    coffer = "Treasure Coffer",
 	    airele = "Air Elemental",
 	    darkele = "Dark Elemental",
+	    faf = "Fafnir",
 	    -- chest = "Treasure Chest",
 	}
 	local mob_name = name_abbreviation_map[arg1]
