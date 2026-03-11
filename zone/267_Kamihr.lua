@@ -36,6 +36,25 @@ M.routes = {
 	{a="dismount"}, {x=321.5,y=47.6}
     },
     -- WP#2から
+    raive1 = { -- レイブ
+	{x=8.2,y=-283,z=43}, {x=-2.4,y=-284},{a="mount"},
+	{x=-3,y=-285.6}, {x=-18.3,y=-256.8},
+	{x=-21.7,y=-231.6}, {x=-29.4,y=-224.6}, {x=-27,y=-208},
+	{x=-31,y=-180}, {a="dismount"}, {x=-39,y=-159,z=40.3},
+	{enemy_filter="Wintry Cave"}, {target="Wintry Cave"},
+	{auto=true}, {attack=false},
+    },
+    raive2 = {
+	{x=-39,y=-159,z=40.3}, {x=-31,y=-180} ,{a="mount"},
+	{x=-22,y=-185}, {x=-4,y=-193}, {x=11,y=-212},
+	{x=16,y=-227}, {x=28,y=-229}, {x=48,y=-239},
+	{x=77,y=-242}, {x=88,y=-246},
+	-- コロナイズ領域
+	{x=92,y=-255}, {x=95,y=-266}, {a="dismount"},
+	{x=110,y=-270,z=40.1},
+	{enemy_filter="Icy Palisade"},{target="Icy Palisade"},
+	{auto=true}, {attack=false},
+    },
     craw = { -- Crawling Cave
 	{x=8.2,y=-283,z=43}, {x=-2.4,y=-284},{a="mount"},
 	{x=-3,y=-285.6}, {x=-18.3,y=-256.8},
