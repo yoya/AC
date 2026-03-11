@@ -85,7 +85,7 @@ function M.automatic_routes_handler(zone, automatic_routes)
 	    if exec_auto_route then
 		io_chat.printf("移動 %s => %s", f, route)
 		-- ac_move.moveTo(zone_object.routes[route], zone_object.routes)
-		aczone.AC.start_pos = { x=-99999, y = -99999, z = -99999 }
+		aczone.AC.start_pos = nil
 		autoMoveTo(zone, {route}, zone_object.routes)
 		break
 	    end
@@ -137,7 +137,7 @@ function M.zone_change_handler(zone, prevZone)
     print("zone/change zone_change_handler", zone, prevZone)
     ac_stat.init()
     task.allClear()
-    aczone.AC.start_pos = { x=-99999, y = -99999, z = -99999 }
+    aczone.AC.start_pos = nil
     -- zone out の処理
     if prevZone == nil then
 	print("ERROR: prevZone == nil")  -- 普通はありえない

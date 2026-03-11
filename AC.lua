@@ -54,7 +54,7 @@ for idx, name_list in pairs(_focusList) do
 end
 M.focusMyIndex = 0
 
-M.start_pos = {x = -99999, y = -99999, z = -99999}
+M.start_pos = nil
 
 local useSilt = false
 local useBeads = false
@@ -235,7 +235,7 @@ local leaderFunction = function()
 	command.send('input /target <t>')
 	coroutine.sleep(0.2)
         command.send('input /attack on')
-    else
+    elseif M.start_pos ~= nil then
         local dx = M.start_pos.x - me_pos.x
         local dy = M.start_pos.y - me_pos.y
         local dist = math.sqrt(dx*dx + dy*dy)
@@ -960,6 +960,7 @@ function tick_serial()
 	--- 待機中
 	idleFunction()
 	if ac_move.auto then  -- automove 中
+	    M.start_pos = {x=0, y=0, z=0}
 	    getMobPosition(M.start_pos, "me")  -- start pos を更新
 	else -- automove 中は敵を探索して戦ったり、所定の位置に戻ったりしない
 	    if iamLeader() == true or control.puller then
@@ -1306,12 +1307,12 @@ windower.register_event('addon command', function(...)
     elseif subcommand == 'move' then
         local zone = windower.ffxi.get_info().zone
 	local routeTable = aczone.getRouteTable(zone)
-	M.start_pos = {x = -99999, y = -99999, z = -99999}
+	M.start_pos = nil
         ac_move.autoMoveTo(zone, {arg1, arg2}, routeTable)
     elseif subcommand == 'moverev' then
         local zone = windower.ffxi.get_info().zone
 	local routeTable = aczone.getRouteTable(zone)
-	M.start_pos = {x = -99999, y = -99999, z = -99999}
+	M.start_pos = nil
         ac_move.autoMoveTo(zone, {"-"..arg1}, routeTable)
     elseif subcommand == 'party' then
 	if arg1 == 'start' then
@@ -1470,7 +1471,7 @@ windower.register_event('addon command', function(...)
 	end
 	local mob = windower.ffxi.get_mob_by_name(mob_name)
 	control.auto = true
-	M.start_pos = {x = -99999, y = -99999, z = -99999}
+	M.start_pos = nil
 	local counter = 0
 	while control.auto and mob == nil do
 	    if counter == 0 then
@@ -1674,7 +1675,7 @@ windower.register_event('zone change', function(zone, prevZone)
     control.enemy_filter = control.INIT_VALUES.enemy_filter
     control.puller = control.INIT_VALUES.puller
     control.wstp = control.INIT_VALUES.wstp
-    M.start_pos = {x = -99999, y = -99999, z = -99999}
+    M.start_pos = nil
 end)
 
 windower.register_event('incoming chunk', function(id, data, modified, injected, blocked)
