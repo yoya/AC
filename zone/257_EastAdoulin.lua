@@ -62,8 +62,14 @@ M.routes = {
     -- 太陽の広場 (Coronal Esplanade)
     bayld = { -- ベヤルド交換
 	{x=27.1,y=-60.8,z=-40.2}, {x=62,y=-74}, {x=66,y=-76}, {x=66,y=-109},
-	{x=63,y=-113,z=-40.3,d=1}, {target="Runje Desaali"}
-    }
+	{x=63,y=-113,z=-40.3,d=1}, {target="Runje Desaali"}, {auto=true}
+    },
+    -- 城門前
+    zaff = {
+	{x=96,y=-74.5,z=-40.2,desc="Zaffeld(魔女クエ)"},
+	{x=70,y=-54,d=1}, {x=71,y=-16,d=1},
+	{target="Zaffeld"}
+    },
 }
 
 M.essentialPoints = {
