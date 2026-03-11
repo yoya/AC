@@ -13,7 +13,9 @@ M.INIT_VALUES = {
     puller = false,  -- 敵にちょっかい出す。基本はリーダーのみ true
     enemy_filter = nil,  -- ちょっかい出す敵を名前で制限。
     provoke = 2000, -- HPがこれ以下だと挑発しない
-    wstp = 2000,  -- 無条件で WS をうつ TP 量。-1 は MB 狙いでタイミングを取る
+    wstp = 1000,  -- 無条件で WS をうつ TP 量。-1 は MB 狙いでタイミングを取る
+    magic = true, -- 魔法を使っても良いか
+    enemy_range = 19.0 -- 索敵範囲
 }
 
 function M.init()
@@ -57,8 +59,9 @@ function M.setWSTP(wstp)
 end
 
 function M.show()
-    io_chat.infof( "auto:%s attack:%s calm:%s debug:%s do_my_best:%s",
-		   tostring(M.auto), tostring(M.attack), tostring(M.calm),
+    io_chat.infof( "auto:%s attack:%s enemy_range:%s calm:%s debug:%s do_my_best:%s",
+		   tostring(M.auto), tostring(M.attack),
+		   tostring(M.enemy_range), tostring(M.calm),
 		   tostring(M.debug), tostring(M.do_my_best) )
     io_chat.infof("equip_lock:%s puller:%s enemy_filter:%s provoke:%s wstp:%s",
 		  tostring(M.equip_lock), tostring(M.puller),

@@ -201,7 +201,7 @@ local leaderFunction = function()
     end
     -- リンクしてる敵
     local condition = {
-	range = settings.CampRange,
+	range = control.enemy_range,
 	linkedOnly = true,
 	-- nameMatch = control.enemy_filter,
     }
@@ -209,7 +209,7 @@ local leaderFunction = function()
     -- 優先する敵
     if mob == nil then
 	local condition = {
-	    range = settings.CampRange,
+	    range = control.enemy_range,
 	    preferMobs = utils.table.merge_lists(moreAttractiveEnemyList, preferedEnemyList),
 	    nameMatch = control.enemy_filter,
 	}
@@ -223,7 +223,7 @@ local leaderFunction = function()
     if mob == nil then
         --- 優先度の高い敵がいない場合は、誰でも良い
 	local condition = {
-	    range = settings.CampRange,
+	    range = control.enemy_range,
 	    nameMatch = control.enemy_filter,
 	}
 	mob = acmob.searchNearestMob(M.start_pos, condition)
@@ -371,7 +371,7 @@ local notLeaderFunction = function()
     if settings.Attack then
         windower.ffxi.run(false)
 	local condition = {
-	    range = settings.CampRange,
+	    range = control.enemy_range,
 	    linkedOnly = true,
 	    -- nameMatch = control.enemy_filter,
 	}
@@ -438,7 +438,7 @@ local fightingFunction = function()
 ---    print("XXX", preferedEnemyList)
     -- 中断してでも優先する敵
     local condition = {
-	range = settings.CampRange,
+	range = control.enemy_range,
 	preferMobs = moreAttractiveEnemyList,
 	nameMatch = control.enemy_filter,
     }
@@ -981,13 +981,15 @@ end
 
 local start = function()
     settings = config.load(defaults)
+    control.enemy_range = settings.CampRange
+    M.start_pos = {x=0,y=0,z=0}
     getMobPosition(M.start_pos, "me")
     control.auto = true
     io_chat.noticef('<<<<<<< AC START >>>>>>> {x=%d y=%d z=%d}',
 		    math.round(M.start_pos.x,2), math.round(M.start_pos.y,2),
 		    math.round(M.start_pos.z,2))
     ac_defeated.done()
-    io_chat.infof("attack=%s camp_range=%d, enemy_filter=%s ", tostring(settings.Attack), settings.CampRange, tostring(control.enemy_filter))
+    io_chat.infof("attack=%s enemy_range=%d, enemy_filter=%s ", tostring(settings.Attack), control.enemy_range, tostring(control.enemy_filter))
     io_chat.infof("puller=%s wstp=%d provoke=%d, calm=%s", tostring(control.puller), control.wstp, control.provoke, tostring(settings.Calm))
 end
 M.start = start
@@ -1152,9 +1154,6 @@ windower.register_event('addon command', function(...)
 	else
 	    io_chat.error("Usage: ac calm (on|off)")
 	end
-    elseif subcommand == 'camprange' then
-        settings.CampRange = tonumber(arg1, 10)
-        io_chat.print("CampRange:", arg1)
     elseif subcommand == 'content' or subcommand == 'cont' then
 	-- 
     elseif subcommand == 'control' or subcommand == 'cnt' then
@@ -1191,7 +1190,7 @@ windower.register_event('addon command', function(...)
 	    end
 	elseif arg1 == 'nearest' then
 	    local condition = {
-		range = settings.CampRange,
+		range = control.enemy_range,
 		nameMatch = control.enemy_filter,
 	    }
 	    local mob = acmob.searchNearestMob(M.start_pos, condition)
@@ -1222,8 +1221,12 @@ windower.register_event('addon command', function(...)
 	if arg1 == 'filter' then
 	    control.enemy_filter = arg2
 	    io_chat.info("ac enemy filter", control.enemy_filter)
+	elseif arg1 == 'range' then
+	    control.enemy_range = tonumber(arg2, 10)
+	    io_chat.print("ac enemy range:", control.enemy_range)
 	else
 	    io_chat.error("ac enemy filter <enemy substring>")
+	    io_chat.error("ac enemy range <enemy search range>")
 	end
     elseif subcommand == 'enemyspace' or subcommand == 'es' then
 	if arg1 == 'near' then

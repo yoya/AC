@@ -180,6 +180,11 @@ function moveToAction(p, reverse)
 	    getMobPosition(M.AC.start_pos, "me")  -- start pos を更新
 	end
     end
+    if p.enemy_range ~= nil then
+	io_chat.info("enemy_range:"..p.enemy_range)
+	control.enemy_range = p.enemy_range
+    end
+
     if p.puller ~= nil then
 	control.puller = p.puller
 	print("puller:", p.puller)
