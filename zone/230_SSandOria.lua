@@ -30,7 +30,8 @@ M.routes = {
     },
     -- HP#3(M)
     trust = {
-	{x=140,y=124,z=-2}, {x=125.2,y=94.3,z=0}, {a="f8"}
+	{x=140,y=124,z=-2}, {x=125.2,y=94.3,z=0}, -- {a="f8"}
+	{target="Gondebaud"}, {auto=true}
     },
 }
 
