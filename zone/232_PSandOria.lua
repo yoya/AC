@@ -20,8 +20,8 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    -- hp2_M = { route="greeter", contents="loginpoint" },
-    hp2_M = { route="mogshop" },
+    hp2_M = { route="greeter", contents="loginpoint" },
+    -- hp2_M = { route="mogshop" },
 }
 
 return M
