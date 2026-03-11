@@ -3,6 +3,15 @@
 local M = { id = 266 }
 
 M.routes = {
+    -- WP# Fステ
+    dho = {
+	{x=358,y=165,z=-60,"ドーの門へ"}, {x=365,y=161}, {a="mount"},
+	{x=381,y=165}, {x=400,y=169}, {x=412,y=170}, {x=418,y=176},
+	{x=419,y=220}, {x=404,y=232}, {x=405,y=247},
+	{x=415,y=255}, {x=416,y=262},
+	{x=413,y=270}, {x=419,y=277}, {x=419,y=286}, {a="dismount"},
+	{x=430,y=300},	{x=440,y=299.6,z=-60}, {}
+    },
     -- WP#4
     woh = { -- ウォーの門へ
 	{x=-326,y=201.1,z=-40}, {x=-329,y=184}, {a="mount"},
@@ -17,16 +26,31 @@ M.routes = {
 	{x=-500,y=319,z=-40}, {}
 	--- {x=-500,y=320}, {}
     },
+    raive1 = {
+	{x=-326,y=201.1,z=-40}, {x=-312,y=192}, -- {a="mount"},
+	{x=-303,y=176}, {x=-300,y=155}, {x=-299,y=136},
+	-- レイブ
+	{x=-299,y=132}, {x=-300,y=105,z=-21.5},
+	{enemy_filter="Monolithic Boulder"}, {target="Monolithic Boulder"},
+    },
+    raive2 = {
+	{x=-300,y=101,z=-21.7}, {x=-295,y=89}, {a="mount"},
+	{x=-283,y=88}, {x=-266,y=92}, {x=-247,y=107}, {x=-229,y=115},
+	{x=-223,y=115},
+	-- レイブ
+	{x=-221,y=115}, {x=-207,y=114,z=-19.8}, {a="dismount"},
+	{enemy_filter="Avian Roost"}, {target="Avian Roost"},
+    },
 }
 
 M.essentialPoints = {
-    wp_warp = {x=-326,y=201.1,z=-40}
+    wpF = {x=358,y=165,z=-60},
+    wp4 = {x=-326,y=201.1,z=-40},
 }
 
 M.automatic_routes = {
-    wp_warp = { route="woh", need_level=20 },
+    wpF = { route="dho" },
+    -- wp_warp = { route="woh", need_level=20 },
 }
-
-
 
 return M
