@@ -1335,8 +1335,9 @@ windower.register_event('addon command', function(...)
     elseif subcommand == 'patrol' then
 	-- ログイン
 	local n = tonumber(arg1, 10)
-	if n == nil then
-	    print("ac partrol <chara number>")
+	if n == nil or
+	    not utils.table.contains({"mailbox", "garden"}, arg2) then
+	    print("ac partrol <chara number> {mailbox|garden} ")
 	else
 	    for i = 1, n do
 		print("Patrol #", i, "/", n)
@@ -1344,9 +1345,22 @@ windower.register_event('addon command', function(...)
 		coroutine.sleep(1)
 		pushKeys({"enter"})
 		coroutine.sleep(20)
-		command.send('input /mailbox')  -- 宅配ポストを開ける
-		coroutine.sleep(5)
-		pushKeys({"escape"})
+		if arg2 == "mailbox" then
+		    command.send('input /mailbox')  -- 宅配ポストを開ける
+		    coroutine.sleep(5)
+		    pushKeys({"escape"})
+		elseif arg2 == "garden" then  -- 栽培
+		    command.send('input /garden')  -- 宅配ポストを開ける
+		    coroutine.sleep(3)
+		    pushKeys({"enter"})
+		    coroutine.sleep(1)
+		    pushKeys({"enter", "enter"})
+		    coroutine.sleep(1)
+		    pushKeys({"escape", "escape"})
+		else
+		    print("internal error: ac partrol <chara number> {mailbox|garden} ")
+		    break
+		end
 		coroutine.sleep(1)
 		command.send('input /logout')
 		coroutine.sleep(5)
