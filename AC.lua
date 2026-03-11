@@ -1400,6 +1400,12 @@ windower.register_event('addon command', function(...)
     elseif subcommand == 'reload' then
 	io_chat.notice("ac reload (myself)")
 	task.setTaskSimple("lua u AC; wait 1; lua l AC", 0, 1)
+    elseif subcommand == 'roundtrip' then
+	control.auto = true
+	while control.auto do
+	    keyboard.longpushKey("s", 3.0)  -- 後ろに下がる
+	    coroutine.sleep(60)
+	end
     elseif subcommand == 'show' then
 	if arg1 == 'auto' then
 	    io_chat.notice("ac show auto")
