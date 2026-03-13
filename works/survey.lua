@@ -3,10 +3,13 @@
 local M = {}
 
 local keyboard = require 'keyboard'
+-- local io_chat = require 'io/chat'
+local incoming_text = require 'incoming/text'
+local control = require 'control'
 
 M.auto = false
     
-function ergonLocusFunction()
+function M.ergonLocusFunction()
     keyboard.pushKeys({"numpad5"})
     M.auto = true
     while(M.auto)
@@ -17,8 +20,21 @@ function ergonLocusFunction()
 	coroutine.sleep(3)
     end
     M.auto = false
+    keyboard.pushKeys({"escape"})
 end
 
-M.ergonLocusFunction = ergonLocusFunction
+function M.incoming_text_handler(text)
+    if not M.auto then return end -- auto 時だけ処理
+    if string.contains(text, "ワークスコールを達成した") or
+	string.contains(text, "すでに調査を終えています") then
+	M.auto = false
+	keyboard.pushKeys({"escape"})
+    elseif string.contains(text, "ターゲットが範囲外です") then
+	M.auto = false
+	keyboard.pushKeys({"escape"})
+    end
+end
+
+M.listener_id = incoming_text.addListener("", M.incoming_text_handler)
 
 return M
