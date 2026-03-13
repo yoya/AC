@@ -5,7 +5,7 @@ local M = { id = 291 }
 M.routes = {
     -- 入り口
     shift = { -- Shiftrix
-	{x=-500,y=-487.7,z=-19.1}, {wait=4},
+	{x=-500,y=-487.7,z=-19.1}, {wait=3},
 	{target="Shiftrix"}, {a="touch"}
     },
     -- ドメイン
