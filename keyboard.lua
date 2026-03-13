@@ -15,7 +15,6 @@ function M.pushKeys(keys)
     coroutine.sleep(wait)
 end
 
-
 function M.longpushKey(key, wait)
     assert(type(key) == "string")
     assert(type(wait) == "number")
@@ -25,4 +24,3 @@ function M.longpushKey(key, wait)
 end
 
 return M
-
