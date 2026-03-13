@@ -51,7 +51,7 @@ M.essentialPoints = {
 
 M.automatic_routes = {
     book_warp = { route="arra" },
-    hp = { route="odin" },
+    -- hp = { route="odin" },
     unity_warp = { route="pec" },
 }
 
