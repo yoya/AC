@@ -1106,6 +1106,7 @@ windower.register_event('addon command', function(...)
     local arg1 = select(2, ...)
     local arg2 = select(3, ...)
     local arg3 = select(4, ...)
+    local arg4 = select(5, ...)
     local player = windower.ffxi.get_player()
     subcommand = subcommand and subcommand:lower() or 'help'
     if control.debug then
@@ -1219,7 +1220,16 @@ windower.register_event('addon command', function(...)
 	io_chat.info(arg1)
     elseif subcommand == 'enemy' then
 	if arg1 == 'filter' then
-	    control.enemy_filter = arg2
+	    control.enemy_filter = nil
+	    if arg2 ~= nil then
+		control.enemy_filter = { arg2 }
+	    end
+	    if arg3 ~= nil then
+		control.enemy_filter = {arg2, arg3}
+	    end
+	    if arg4 ~= nil then
+		control.enemy_filter = {arg2, arg3, arg4}
+	    end
 	    io_chat.info("ac enemy filter", control.enemy_filter)
 	elseif arg1 == 'range' then
 	    control.enemy_range = tonumber(arg2, 10)
