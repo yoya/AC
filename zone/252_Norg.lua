@@ -5,9 +5,8 @@ local M = { id = 252 }
 M.routes = {
     gilga = { {x=-25.9,y=-46.2}, {x=6.9,y=-2.4},
 	{x=40,y=-0.2}, {x=52.4,y=-2.4}, {x=73.4,y=-9.9},
-	{x=99.4,y=-9.4}, {a="f8touch"}
-	-- {x=73.3,y=-9.8}, {x=99,y=-12.5},
-	-- {a="f8touch"}
+	{x=99.4,y=-9.4}, {a="esc"}, {target="Oaken Door"},
+	{a="touch"}
     },
     oseem = { {x=-25.9,y=-46.2}, {x=-5.8,y=-20.1}, {x=1,y=-4},
 	{x=13.2,y=22.4}
@@ -22,8 +21,8 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    hp_1 = { route="foot_of_stairs" },
+    -- hp_1 = { route="foot_of_stairs" },
+    hp_1 = { route="gilga" },
 }
-
 
 return M
