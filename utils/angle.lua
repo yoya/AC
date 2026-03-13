@@ -29,6 +29,7 @@ end
 
 -- 中間の角度
 function M.midangle(a, b)
+    if a == nil or b == nil then print(debug.traceback()) end
     a = M.normalangle(a)
     b = M.normalangle(b)
     -- a と b の角度が180 度以内の場合
