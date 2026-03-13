@@ -93,8 +93,19 @@ function M.conditionMatch(pos, condition, mob)
 	return false
     end
     if condition.nameMatch ~= nil then
-	local a, b = string.find(mob.name, condition.nameMatch)
-	if a == nil then
+	local nameMatchList = condition.nameMatch
+	if type(nameMatchList) ~= "table" then
+	    nameMatchList = { nameMatchList }
+	end
+	local nameMatch = false
+	for _, name in ipairs(nameMatchList) do
+	    local a, b = string.find(mob.name, name)
+	    if a ~= nil then
+		nameMatch = true
+		break
+	    end
+	end
+	if not nameMatch then
 	    return  false
 	end
     end
