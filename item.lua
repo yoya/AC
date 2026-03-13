@@ -60,23 +60,12 @@ local inventoryFreespaceNum = function()
 end
 M.inventoryFreespaceNum = inventoryFreespaceNum
 
--- 金庫系のkeyリスト
-local SafesList = { locker = 4, storage = 2, safe = 1 }
--- ちなみに 3 は Temporary
---- 持ち歩きバッグのkeyリスト
-local BagsList = { case = 7, sack = 6, satchel = 5 }
-
-local WardrobeList = { wardrobe = 8, wardrobe2 = 10,
-		       wardrobe3 = 11, wardrobe4 = 12,
-		       wardrobe5 = 13, wardrobe6 = 14,
-		       wardrobe7 = 15, wardrobe8 = 16 }
-
 local safesToInventory = function(id)
 ---    print("safesToInventry")
     local count = 0
     for bname, bagid in pairs(SafesList) do
-        local items = windower.ffxi.get_items()
-        local inventory = items.inventory
+	local items = windower.ffxi.get_items()
+	local inventory = items.inventory
         if inventory.count < inventory.max then
             local bag = items[bname]
             for i, item in ipairs(bag) do
@@ -292,11 +281,6 @@ M.wardrobeHasItemsT = function(idsT)
     end
     return false
 end
-
-
-
-
-
 
 M.tradeByItemId = function(mob, id)
 ---    print("tradeByItemId", target, id)
