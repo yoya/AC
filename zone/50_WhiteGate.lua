@@ -94,8 +94,8 @@ M.routes = {
     choco = {
 	{x=-107,y=108,z=-6,desc="チョコボサーキット"},
 	{x=-103,y=102,z=-6}, {x=-83,y=102,z=0},
-	{x=-81.2,y=105.6,z=0}, {a="opendoor"},
-	{a="wait"},{a="up"}, {a="wait"}, {a="enter"}
+	{x=-81.2,y=105.6,z=0}, {target="Gate: Chocobo Circuit"},
+	{a="touch"}, {a="wait"}, {a="up"}, {a="wait"}, {a="enter"}
     },
 }
 
