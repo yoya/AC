@@ -37,6 +37,12 @@ local stationWorkerBoostTable = {
         [12] = {NW,N, 0}, [15] = {N,NE, 1},
         [18] = {NE,E, 2}, [21] = {E,SE, 3},
     },
+    [267] = { -- カミール山麓
+        [0]  = {W,NW, 4}, [3]  = {NW,N, 5},
+        [6]  = {N,NE, 6}, [9]  = {NE,E, 7},
+        [12] = {E,SE, 0}, [15] = {SE,S, 1},
+        [18] = {S,SW, 2}, [21] = {SW,W, 3},
+    },
 }
 
 local getStationWorkerBoostInfo = function(zone)
