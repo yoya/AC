@@ -54,6 +54,10 @@ local ignoreMobs = {
 }
 
 function M.distance(a, b)
+    if a == nil or b == nil then
+	print(debug.traceback())
+	return 99999
+    end
     local dx = b.x - a.x
     local dy = b.y - a.y
     local dz = b.z - a.z
