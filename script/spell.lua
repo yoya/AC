@@ -85,7 +85,7 @@ for i, file in ipairs(files) do
 end
 
 for i, file in ipairs(files) do
-    if string.find(file, chara_name) then
+    if file == (chara_name .. '-spells.json') then
 	local f = io.input(savedDir..file);
 	local text = f:read("*all")
 	local data = json.decode(text)
