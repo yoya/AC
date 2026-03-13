@@ -232,4 +232,20 @@ function M.isNear(zone, name, distance)
     return false
 end
 
+function M.event_handler(event_type)
+    -- print("zone.event_handler:", event_type)
+    local zone = windower.ffxi.get_info().zone
+    local z = M.zoneTable[zone]
+    if z ~= nil then
+	local handlers = z.event_handlers
+	if handlers ~= nil then
+	    for i, handler in ipairs(handlers) do
+		if handler.event_type == event_type then
+		    handler.handler()
+		end
+	    end
+	end
+    end
+end
+
 return M
