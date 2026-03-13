@@ -11,9 +11,8 @@ M.routes = {
     },
     center = {
 	{x=0, y=-472, z=-34.1}, {x=1,y=-435}, {x=0,y=-362},
-	{x=0,y=-291,d=1}, {enemy_filter="Kirin"}, {auto=true},
-	-- {x=0,y=-260,z=-43.6,d=1}, {enemy_filter="Kirin"}, {auto=true},
-	-- {x=0,y=-272,z=-42.4,d=1}, {enemy_filter="Kirin"}, {auto=true},
+	-- x=0,y={-362,-238}
+	{x=0,y=-299,z=-42,d=1}, {enemy_filter={"Kirin","Coffer"}}, {auto=true},
 	{enemy_range=100}
     },
 }
