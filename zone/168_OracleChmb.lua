@@ -18,7 +18,7 @@ M.routes = {
     bc = {
 	{x=0,y=-306.5,z=97.1}, {x=0,y=-272,z=97.5},
 	{target="Cermet Door"}, {a="opendoor"},
-	{x=0,y=-263,z=97.5},
+	{x=0,y=-261,z=97.7},
     },
 }
 
