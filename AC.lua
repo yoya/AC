@@ -1414,10 +1414,11 @@ windower.register_event('addon command', function(...)
 	io_chat.notice("ac reload (myself)")
 	task.setTaskSimple("lua u AC; wait 1; lua l AC", 0, 1)
     elseif subcommand == 'roundtrip' then
+	local n = tonumber(arg1, 10)
 	control.auto = true
 	while control.auto do
 	    keyboard.longpushKey("s", 3.0)  -- 後ろに下がる
-	    coroutine.sleep(60)
+	    coroutine.sleep(n)
 	end
     elseif subcommand == 'show' then
 	if arg1 == 'auto' then
@@ -1596,6 +1597,8 @@ windower.register_event('addon command', function(...)
 	io_chat.print('    pos                - Show current position')
         io_chat.print('    puller on|off      - Change puller mode')
 	io_chat.print('    record char|spells - Reord Status to LogFile')
+	io_chat.print('    reload             - Reload AC process')
+	io_chat.print('    roundtrip <period> - RoundTrip zone')
         io_chat.print('    show mob|...       - Show something')
 	io_chat.print('    tick <period>      - Change tick period')
         io_chat.print('    use silt|...       - Use Item')
