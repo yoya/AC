@@ -120,6 +120,11 @@ function M.searchNearestMob(pos, condition)
     local mob = nil
     local dist = 99999    
     local linked = false
+    if pos == nil then
+	pos = {x=0,y=0,z=0}
+	M.getMobPosition(pos, "me")
+	-- print(pos.x ,pos.y, pos.z)
+    end
     for i, m in pairs(mobArr) do
 	if M.conditionMatch(pos, condition, m) and isMobAttackable(m) then
 	    local d = M.distance(m, pos)
@@ -198,6 +203,10 @@ M.PartyTargetMob = function()
 end
 
 function M.getMobPosition(pos, target)
+    if pos == nil then
+	print(debug.traceback())
+	return false
+    end
     local mob = windower.ffxi.get_mob_by_target(target)
     if mob == nil then
 ---        print("not found mob by target:" ..target)
