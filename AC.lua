@@ -1079,7 +1079,7 @@ function argument_means_on(s)
     return nil
 end
 
-function M.warp_with_equip(arg)
+function M.warp_with_equip(arg, delay)
     io_chat.print("### 指輪ワープ", arg)
     if arg == 'warp' or
 	arg == 'dim' or arg == 'holla' or arg == 'mea' then
@@ -1096,9 +1096,9 @@ function M.warp_with_equip(arg)
 	    item_id = 26178
 	end
 	task.allClear()
-	io_chat.info(item_name.."10秒前")
+	io_chat.info(item_name..delay.."秒前")
 	local slot_right_ring = 14
-	acitem.useEquipItem(slot_right_ring, item_id, item_name, 10)
+	acitem.useEquipItem(slot_right_ring, item_id, item_name, delay)
     else
 	print("Unknown arg:", arg)
     end
@@ -1121,14 +1121,20 @@ windower.register_event('addon command', function(...)
     elseif subcommand == 'stop' then
         stop()
     elseif subcommand == 'all' then
-	if arg1 == 'warp' or
-	    arg1 == 'dim' or arg1 == 'holla' or arg1 == 'mea' then
+	if arg1 == 'logout' then
 	    io_ipc.send_all("all", arg1)
-	    M.warp_with_equip(arg1)
+	    task.setTaskSimple("input /logout", 0, 1)
 	elseif arg1 == 'reload' then
 	    io_chat.notice("ac all reload")
 	    io_ipc.send_all("all", "reload")
 	    task.setTaskSimple("lua u AC; wait 1; lua l AC", 0, 1)
+	elseif arg1 == 'shutdown' then
+	    io_ipc.send_all("all", arg1)
+	    task.setTaskSimple("input /shutdown", 0, 1)
+	elseif arg1 == 'warp' or
+	    arg1 == 'dim' or arg1 == 'holla' or arg1 == 'mea' then
+	    io_ipc.send_all("all", arg1)
+	    M.warp_with_equip(arg1, 15)
 	elseif arg1 == 'wstp' then
 	    io_ipc.send_all("all", arg1, arg2)
 	    control.setWSTP(arg2)
