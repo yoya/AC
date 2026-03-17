@@ -173,10 +173,14 @@ function M.recieve_all(arg1, arg2, arg3)
     if control.debug then
 	print("io/ipc.recieve_all", arg1, arg2, arg3)
     end
-    if arg1 == "dim" or arg1 == "holla" or arg1 == "mea" or arg1 == "warp" then
-	M.warp_with_ring(arg1)
+    if arg1 == "logout"  then
+	task.setTaskSimple("input /logout", 0, 1)
     elseif arg1 == "reload" then
 	task.setTaskSimple("lua u AC; wait 1; lua l AC", 0, 1)
+    elseif arg1 == "shutdown" then
+	task.setTaskSimple("input /shutdown", 0, 1)
+    elseif arg1 == "dim" or arg1 == "holla" or arg1 == "mea" or arg1 == "warp" then
+	M.warp_with_ring(arg1)
     elseif arg1 == 'wstp' then
 	control.setWSTP(arg2)
     else
