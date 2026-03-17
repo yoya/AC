@@ -1,11 +1,18 @@
 --- packets で送受信する関数はここ
 
+local M = {}
+
 local packets = require 'packets'
 local control = require 'control'
-local M = {}
+local keyboard = require 'keyboard'
+local utils = require 'utils'
 
 -- https://github.com/DiscipleOfEris/Assist/blob/master/assist.lua
 M.targetByMob = function(mob)
+    if mob == nil then
+	print(debug.traceback())
+	return
+    end
 ---    print("tagetByMobId", mobId)
     local player = windower.ffxi.get_player()
     packets.inject(packets.new('incoming', 0x58, {
@@ -17,6 +24,28 @@ M.targetByMob = function(mob)
 	['Target Index'] = mob.index,
     }))
     return true
+end
+
+M.targetByMobEx = function(mob)
+    M.targetByMob(mob)
+    while control.auto do
+	coroutine.sleep(0.3)
+	local m = windower.ffxi.get_mob_by_target("t")
+	if m ~= nil then
+	    -- print("m.index ~= mob.index", m.index, mob.index)
+	end
+	if m == nil or m.index ~= mob.index then
+	    -- print("tab")
+	    utils.target_lockon(false)
+	    coroutine.sleep(0.2)
+	    keyboard.pushKeys({"tab"})
+	    M.targetByMob(mob)
+	    coroutine.sleep(0.2)
+	else
+	    -- print("mob match")
+	    break
+	end
+    end
 end
 
 M.targetByMobName = function(name)
