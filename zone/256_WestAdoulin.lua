@@ -134,7 +134,7 @@ function M.tick(player)
 		windower.ffxi.run(false)
 		if not selljunk_running then
 		    control.auto = true
-		    M.parent.AC.idleFunctionSellJunkItems()
+		    M.parent.AC.idleFunctionSellJunkItems(mob)
 		    selljunk_running = true
 		end
 	    else

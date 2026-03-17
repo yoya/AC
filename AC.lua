@@ -643,11 +643,14 @@ local idleFunctionTradeItems = function(tname, items, wait, enterWaits)
 end
 
 -- ジャンクアイテムをかばんに集める
-local aggregateJunkItemsToInventory = function()
+local aggregateJunkItemsToInventory = function(mob)
     local count = 0
-    count = count + acitem.safesToInventoryT(JunkItemsT)
+    if mob.name == "Green Thumb Moogle" then
+	count = count + acitem.safesToInventoryT(JunkItemsT)
+	print("aggregateJunkItemsToInventoryT(sefas): "..count)
+    end
     count = count + acitem.bagsToInventoryT(JunkItemsT)
-    -- print("aggregateJunkItemsToInventoryT: "..count)
+    print("aggregateJunkItemsToInventoryT(bags): "..count)
     return count
 end
 
@@ -737,14 +740,14 @@ local sellJunkItemsInInventory = function()
     return total_count
 end
 
-local idleFunctionSellJunkItems = function()
+local idleFunctionSellJunkItems = function(mob)
     -- 可搬ストレージのジャンクアイテムをかばんに集める
     print("Aggregate Bag Junk Items to Inventory")
-    aggregateJunkItemsToInventory()
+    aggregateJunkItemsToInventory(mob)
     while control.auto do
         -- 売却処理
         local sell_count = sellJunkItemsInInventory()
-        local move_count = aggregateJunkItemsToInventory()
+        local move_count = aggregateJunkItemsToInventory(mob)
         if sell_count == 0 and move_count == 0 then
             -- 移動するアイテムも売れたアイテムもなければ終了
 	    control.auto = false
@@ -843,7 +846,7 @@ local idleFunctionWestAdoulin = function()
         return
     end
     if mob.name == "Defliaa" then
-        idleFunctionSellJunkItems()
+        idleFunctionSellJunkItems(mob)
     elseif mob.name == "Eternal Flame" then
         if acitem.inventoryFreespaceNum() > 0 then
             command.send('sparks buyall Acheron Shield')
@@ -860,7 +863,7 @@ end
 local idleFunctionEastAdoulin = function(mob) -- 東アドゥリン
     if mob == nil then return end
     if mob.name == "Malgrom" then
-	idleFunctionSellJunkItems()
+	idleFunctionSellJunkItems(mob)
     end
     idleFunctionTradeItems("Runje Desaali", bayld_swap_ids, 5, {})
 end
@@ -890,7 +893,7 @@ local idleFunction = function()
         --- 以下はモグガーデンのみ処理
         idleFunctionMobGarden()
         if mob and mob.name == "Green Thumb Moogle" then
-            idleFunctionSellJunkItems()
+            idleFunctionSellJunkItems(mob)
         end
     elseif zone == 246 then --- ジュノ港
         idleFunctionJeunoPort()
