@@ -13,6 +13,10 @@ function M.done()
     ac_record.record_char()
     task.allClear() -- 戦闘後の動きが不自然なので、一旦タスク削除
     local player = windower.ffxi.get_player()
+    if player == nil then  -- フェイルセーフ
+	io_chat.error("defeated: player == nil")
+	return
+    end
     local jobpt = player.job_points[string.lower(player.main_job)]
     if jobpt.jp > 0 then
 	local cp_jp_list = {5,25,55,95,145,205,275,355,445,545,655,775,905,1045,1195,1355,2100}
