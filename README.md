@@ -5,6 +5,25 @@ Windower addon 。
 
 - https://pwiki.awm.jp/~yoya/?Windower/Addons/AC
 
+# settings
+
+- Windower/autoload/autoload.txt (Windower 初期画面でも設定可能)
+
+```
+load Sandbox;
+lua load autojoin;
+lua load findAll;
+```
+
+- Windower/scripts/init.txt
+```
+lua load AC
+lua load sparks
+```
+
+- sparks
+  - https://github.com/sethmccauley/Addons/tree/master/sparks
+
 # findall / res
 
 script/findall.lua で item データを取得するのに、
