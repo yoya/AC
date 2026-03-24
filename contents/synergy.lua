@@ -73,7 +73,6 @@ local Furnace_wind = {
     {keys={"left", "left", "left"}}, -- 選択位置リセット
     {keylong={"enter", 1}}, -- 燃料追加
     {keys={"left", "left", "left"}}, -- 選択位置リセット
-    {keys={"down", "down", "enter"}}, -- 風クリ選択
     {wait=1},
 }
 
@@ -174,8 +173,8 @@ function SynergyFurnaceFunction(zone, mob)
     io_chat.notice("<<<< 錬成 Start >>>>")
     M.FurnaceExplosion = false
     M.FurnaceDone = false
-    -- アイテムを持っていない場合は、窯に置きっぱなしのはず
-    if not acitem.inventoryHasItem(M.item_table[1]) then
+    -- メリックトルク(26012)を持っていない場合は、窯に置きっぱなしのはず
+    if not acitem.inventoryHasItem(26012) then
 	pushKeys({"enter"})  -- アイテムを窯から取り出す
 	coroutine.sleep(1)
     end
@@ -279,7 +278,8 @@ end
 function setup(mob)
     target_and_lockon(mob)
     forward()
-    if not acitem.inventoryHasItem(M.item_table[1]) then
+    -- メリックトルク(26012)
+    if not acitem.inventoryHasItem(26012) then
 	pushKeys({"enter"})  -- アイテムを取り出す
 	coroutine.sleep(1)
     end
