@@ -23,6 +23,7 @@ M.raives = require 'contents/raives'
 M.wkr = require 'contents/wkr'
 M.vagary = require 'contents/vagary'
 M.synergy = require 'contents/synergy'
+M.trove = require 'contents/trove'
 M.contentsTable = {
     -- モードが必要なだけで特別な処理のないcontentsは、ここに追加しない
     [M.Ambus] = M.ambus,
@@ -31,6 +32,7 @@ M.contentsTable = {
     [M.WKR] = M.wkr,
     [M.Vagary] = M.vagary,
     [M.Synergy] = M.synergy,
+    [M.Trove] = M.trove,
 }
 
 M.type = M.Idle
@@ -50,7 +52,8 @@ function M.setContents(name)
 	[M.WKR] = {'wkr'},
 	[M.LoginPoint] = {'loginpoint', 'login', 'logpo'},
 	[M.Vagary] = {'vagary'},
-	[M.Synergy] = {'synergy'}
+	[M.Synergy] = {'synergy'},
+	[M.Trove] = {'trove'},
     }
     for c, names in pairs(nameTable) do
 	for _, n in ipairs(names) do
