@@ -137,7 +137,7 @@ function moveToAction(p, reverse)
     end
     if p.enemy_filter ~= nil then
 	io_chat.setNextColor(6)
-	io_chat.printf("enemy_filter: %s", p.enemy_filter)
+	io_chat.print("enemy_filter:", p.enemy_filter)
 	control.enemy_filter = p.enemy_filter
     end
     if p.a == "faith" then
