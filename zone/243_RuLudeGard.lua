@@ -28,4 +28,13 @@ M.routes = {
 	{x=-11.33,y=-49.8}, {x=-31.2,y=-49.9} },
 }
 
+M.essentialPoints = {
+    hp1 = {x=-6,y=-1,z=3},
+}
+
+M.automatic_routes = {
+    hp1 = { route="trust" },
+}
+
+
 return M
