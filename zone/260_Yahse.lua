@@ -1,6 +1,6 @@
 -- ヤッセの狩り場
 
-local M = { id = 272 }
+local M = { id = 260 }
 
 M.routes = {
     urag = {
