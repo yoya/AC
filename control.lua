@@ -59,13 +59,19 @@ function M.setWSTP(wstp)
 end
 
 function M.show()
-    io_chat.infof( "auto:%s attack:%s enemy_range:%s calm:%s debug:%s do_my_best:%s",
-		   tostring(M.auto), tostring(M.attack),
-		   tostring(M.enemy_range), tostring(M.calm),
-		   tostring(M.debug), tostring(M.do_my_best) )
-    io_chat.infof("equip_lock:%s puller:%s enemy_filter:%s provoke:%s wstp:%s",
-		  tostring(M.equip_lock), tostring(M.puller),
-		  tostring(M.enemy_filter), M.provoke, M.wstp )
-end
+    local filter = "nil"
+    if M.enemy_filter ~= nil then
+	filter = table.concat(M.enemy_filter ,", ")
+    end
+    io_chat.infof("auto:%s attack:%s enemy_range:%s enemy_filter:%s",
+		  tostring(M.auto), tostring(M.attack),
+		  M.enemy_range, filter)
+    io_chat.infof("puller:%s calm:%s provoke:%d wstp:%s",
+		  tostring(M.puller), tostring(M.calm),
+		  M.provoke, M.wstp)
+    io_chat.infof("debug:%s equip_lock:%s do_my_best:%s",
+		  tostring(M.debug), tostring(M.equip_lock),
+		  tostring(M.do_my_best))
+    end
 
 return M
