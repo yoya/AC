@@ -360,6 +360,7 @@ local notLeaderFunction = function()
 		string.find(target_name, "Dremi") or
 		string.find(target_name, "Shiftrix") or
 		string.find(target_name, "Dimmian") or
+		string.find(target_name, "Diaphanous Transposer") or  -- ソーティ
 		string.find(target_name, "Swirling Vortex") or  -- アポリオン
 		string.find(target_name, "???") then
 		-- print("p1 target Found", p1.target_index, target.index)
