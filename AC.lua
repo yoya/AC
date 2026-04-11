@@ -1627,6 +1627,11 @@ windower.register_event('addon command', function(...)
 end)
 
 windower.register_event('load', function()
+    local player = windower.ffxi.get_player()
+    if player ~= nil then
+	M.focusMyIndex = focusTable[player.name]
+	io_chat.notice("[load] focus #", M.focusMyIndex, player.name, "=======")
+    end
     ws.init()
     local zone = windower.ffxi.get_info().zone
     zone_change.zone_in_handler(zone, nil)
@@ -1669,11 +1674,6 @@ windower.register_event('load', function()
     end
     incoming_text.addListener("", incoming_text_handler)
     -- 全ての準備が整ってから tick 起動
-    local player = windower.ffxi.get_player()
-    if player ~= nil then
-	M.focusMyIndex = focusTable[player.name]
-	io_chat.notice("[load] focus", M.focusMyIndex, player.name)
-    end
     tick:loop(1.0)
 end)
 
