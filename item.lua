@@ -373,4 +373,39 @@ function M.useEquipItemSequence(slot, item_list, delay)
     end
 end
 
+function M.showOwnItems(item_list)
+    io_chat.info("=== Important Items I have ===")
+    local items = windower.ffxi.get_items()
+    for i, item_id in ipairs(item_list) do
+	local name = res.items[item_id].name
+	local line = string.format("[%d] %s:", item_id, name)
+	for _, bag in ipairs(bag_name_ja_list) do
+	    local bag_name = bag.name
+	    local bag_name_ja = bag.ja
+	    local bag = items[bag_name]
+	    for _, b in ipairs(bag) do
+		if b.id == item_id and b.count > 0 then
+		    line = string.format("%s %s(%d)", line, bag_name_ja, b.count)
+		end
+	    end
+        end
+	io_chat.print(line)
+    end
+end
+
+function M.showOwnKeyItems(key_item_list)
+    io_chat.info("=== Important Key Items I have ===")
+    local key_items = windower.ffxi.get_key_items()
+    for i, key_item_id in ipairs(key_item_list) do
+	local name = res.key_items[key_item_id].name
+	local line = string.format("[%d] %s:", key_item_id, name)
+	for _, id in ipairs(key_items) do
+	    if key_item_id == id then
+		line = string.format("%s 有", line)
+	    end
+	end
+	io_chat.print(line)
+    end
+end
+
 return M
