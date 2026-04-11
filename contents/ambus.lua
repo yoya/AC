@@ -20,6 +20,7 @@ local postponeEnemies = { -- ボス。後回し
     ["Possessed Heartwing"] = true, -- リフキン
     ["Master Manipulator"] = true, -- ソウルフレア
     ["Goes"] = true, -- プリン
+    ["Splendid Sakura"] = true, -- プラントイド
 }
 
 local preferEnemyTable = { -- 先に倒すべき敵
@@ -52,7 +53,9 @@ local preferEnemyTable = { -- 先に倒すべき敵
     -- "Rejuvenating Leafkin",
     -- ソウルフレア
     "Bozzetto Imp",
-    --
+    -- プラントイド
+    "Hibernating Hickory",
+    "Languishing Larch",
 }
 
 function searchPreferEnemy()
@@ -60,7 +63,7 @@ function searchPreferEnemy()
     for i, name in ipairs(preferEnemyTable) do
 	local mob = windower.ffxi.get_mob_by_name(name)
 	if mob ~= nil then
-	    io_chat.print("searchPreferEnemy", mob.name, mob.status)
+	    -- io_chat.print("searchPreferEnemy", mob.name, mob.status)
 	    if  mob.status == 0 or mob.status == 1 then
 		table.insert(arr, mob)
 	    end
