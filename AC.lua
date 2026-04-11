@@ -1112,6 +1112,7 @@ windower.register_event('addon command', function(...)
     local arg3 = select(4, ...)
     local arg4 = select(5, ...)
     local player = windower.ffxi.get_player()
+    local zone = windower.ffxi.get_info().zone
     subcommand = subcommand and subcommand:lower() or 'help'
     if control.debug then
 	print("addon command:", subcommand, arg1, arg2)
@@ -1328,12 +1329,10 @@ windower.register_event('addon command', function(...)
     elseif subcommand == 'magic' or subcommand == 'magick' then
 	role_Sorcerer.setMagic(arg1)
     elseif subcommand == 'move' then
-        local zone = windower.ffxi.get_info().zone
 	local routeTable = aczone.getRouteTable(zone)
 	M.start_pos = nil
         ac_move.autoMoveTo(zone, {arg1, arg2}, routeTable)
     elseif subcommand == 'moverev' then
-        local zone = windower.ffxi.get_info().zone
 	local routeTable = aczone.getRouteTable(zone)
 	M.start_pos = nil
         ac_move.autoMoveTo(zone, {"-"..arg1}, routeTable)
@@ -1352,11 +1351,15 @@ windower.register_event('addon command', function(...)
 	else
 	    print("ac party build | warp | holla | dim | mea")
 	end
-    elseif subcommand == 'patrol' then
+    elseif subcommand == 'patrol' or subcommand == 'pat' then
+	if zone ~= nil and zone ~= 0 then
+	    io_chat.errorf("多分、ログイン画面じゃないです zone:%d", zone)
+	    return
+	end
 	-- ログイン
 	local n = tonumber(arg1, 10)
 	if n == nil or
-	    not utils.table.contains({"mailbox", "garden"}, arg2) then
+	    not utils.table.contains({"mailbox", "garden", "m", "g"}, arg2) then
 	    print("ac partrol <chara number> {all | mailbox | garden} ")
 	else
 	    for i = 1, n do
@@ -1365,11 +1368,11 @@ windower.register_event('addon command', function(...)
 		coroutine.sleep(1)
 		pushKeys({"enter"})
 		coroutine.sleep(18)
-		if arg2 == "mailbox" then
+		if arg2 == "mailbox" or arg2 == "m" then
 		    command.send('input /mailbox')  -- 宅配ポストを開ける
 		    coroutine.sleep(3)
 		    pushKeys({"escape"})
-		elseif arg2 == "garden" then  -- 栽培
+		elseif arg2 == "garden" or arg2 == "g" then  -- 栽培
 		    command.send('input /garden')  -- 宅配ポストを開ける
 		    coroutine.sleep(5)
 		    pushKeys({"enter"})
@@ -1395,7 +1398,6 @@ windower.register_event('addon command', function(...)
         doPointCheer = not doPointCheer
         io_chat.print({"do point&cheer for ambus", doPointCheer})
     elseif subcommand == 'pos' then  -- よく使うので ac 直下のまま
-        local zone = windower.ffxi.get_info().zone
         io_chat.print("zone id:"..zone)
         local me_pos = {}
         getMobPosition(me_pos, "me")
