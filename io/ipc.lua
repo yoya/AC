@@ -50,7 +50,7 @@ function M.send_all(method, arg1, arg2, arg3)
 end
 
 function M.send_party(method, arg)
-    print("io/ipc.send_party", method, arg)
+    -- print("io/ipc.send_party", method, arg)
     local party = windower.ffxi.get_party()
     for _, x in pairs({"p", "a1", "a2"}) do -- アライアンス全員
         for i = 0, 5 do -- 自分含めて全員
