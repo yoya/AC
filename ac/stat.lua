@@ -7,7 +7,8 @@ local M = {
     WSCount = 0,
 }
 
-local io_chat = require('io/chat')
+local io_chat = require 'io/chat'
+local aczone = require 'zone'
 
 function M.init()
     M.DefeatedEnemyTable = {}
@@ -67,6 +68,7 @@ function M.print()
     if M.WSCount > 0 then
 	io_chat.print("### WS Count =  "..M.WSCount)
     end
+    aczone.event_handler("statprint")
 end
 
 return M
