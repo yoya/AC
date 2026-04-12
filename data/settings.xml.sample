@@ -2,7 +2,6 @@
 <settings>
     <global>
         <Period>1.0</Period>
-        <CampRange>18.0</CampRange>
         <AccountList>
             <1>
                 Apuapu

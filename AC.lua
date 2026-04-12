@@ -20,9 +20,6 @@ local pull = require 'pull'
 local puller = false
 local defaults = {
     Period = 1.0,
----    CampRange = 15.0,
-    -- CampRange = 18.0,
-    CampRange = 19.0,
     PullMethod = pull.MELEE,
     Attack = true,
     Calm = true,
@@ -985,7 +982,6 @@ end
 
 local start = function()
     settings = config.load(defaults)
-    control.enemy_range = settings.CampRange
     M.start_pos = {x=0,y=0,z=0}
     getMobPosition(M.start_pos, "me")
     control.auto = true
@@ -1725,6 +1721,7 @@ windower.register_event('zone change', function(zone, prevZone)
     task.setTaskSimple("ac inject currinfo2", 4, 1)
     task.setTaskSimple("//record char", 6, 1)
     control.enemy_filter = control.INIT_VALUES.enemy_filter
+    control.enemy_range = control.INIT_VALUES.enemy_range
     control.puller = control.INIT_VALUES.puller
     control.wstp = control.INIT_VALUES.wstp
     M.start_pos = nil
