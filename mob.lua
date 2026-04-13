@@ -30,6 +30,7 @@ local nonAttackableMobs = {
     "Resolute Leafkin", -- ミッション「門」
     "Exenmille", -- 過去サンドクエスト「影」
     "Naja Salaheem", -- 巨人の懐へ
+    "Mnejing", -- 憂鬱なるガッサド
 }
 
 --- 多分、戦える敵 (レイド戦は上記の敵のみ対応)
