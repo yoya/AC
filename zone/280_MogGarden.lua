@@ -85,6 +85,7 @@ function M.zone_out()
 end
 
 M.essentialPoints = {
+    -- x=-2.5,y=-5.1,z={0.2,0.5}
     from_moghouse = {x=2.5,y=-5.1,z=0.2},
     furrow = {x=5.1,y=2.0,z=0.1}, -- 畑
 }
