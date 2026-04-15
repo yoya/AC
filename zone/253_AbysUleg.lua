@@ -44,8 +44,8 @@ M.automatic_routes = {
     entrance = { route="conf" },
 }
 
-function M.stat_handler()
-    print("zone/253 stat_handler")
+function M.statprint_handler()
+    print("zone/253 statprint_handler")
     local items = {
 	-- 鋼鉄の鎧板
 	3251, -- 不凍液
@@ -53,14 +53,21 @@ function M.stat_handler()
 	3245, -- ベベルギア
 	3293, -- 鋼鉄の鎧板
 	-- アペデマクの角
-	
+	3252, -- 凍えるうで
+	3246, -- 雪神の魂
+	3253, -- 上質なマーリド毛皮
+	3247, -- シーシュポスの破片
 	3289, -- アペデマクの角
     }
+    local key_items = {
+	1525, -- 破れたキマイラの翼
+    }
     acitem.showOwnItems(items)
+    acitem.showOwnKeyItems(key_items)
 end
 
 M.event_handlers = {
-    { event_type="stat", handler=M.stat_handler }
+    { event_type="statprint", handler=M.statprint_handler }
 }
 
 return M
