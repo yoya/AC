@@ -21,8 +21,8 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    -- hp_1 = { route="foot_of_stairs" },
-    hp_1 = { route="gilga" },
+    hp_1 = { route="foot_of_stairs" },
+    -- hp_1 = { route="gilga" },
 }
 
 return M
