@@ -9,37 +9,32 @@ local utils = require 'utils'
 local io_console = require 'io/console'
 
 local bag_name_ja_list = {
-    -- { name='inventory', ja='マイバッグ'},
-    { name='inventory', ja='バッグ'},
-    --{ name='safe', ja='モグ金庫'},
---     { name='safe2', ja='モグ金庫2'},
-    { name='safe', ja='金庫'},
-    { name='safe2', ja='金庫2'},
-    { name='storage', ja= '収納家具'},
-    --{ name='locker', ja='モグロッカー'},
-    --{ name='satchel', ja='モグサッチェル'},
-    --{ name='sack', ja='モグサック'},
-    --{ name='case', ja='モグケース'},
-    { name='locker', ja='ロッカー'},
-    { name='satchel', ja='サッチェル'},
-    { name='sack', ja='サック'},
-    { name='case', ja='ケース'},
+    { name='inventory', ja='バッグ'},     -- マイバッグ
+    { name='safe',      ja='金庫'},       -- モグ金庫
+    { name='safe2',     ja='金庫2'},      -- モグ金庫2
+    { name='storage',   ja= '収納家具'},
+    { name='locker',    ja='ロッカー'},   -- モグロッカー
+    { name='satchel',   ja='サッチェル'}, -- モグサッチェル
+    { name='sack',      ja='サック'},     -- モグサック
+    { name='case',      ja='ケース'},     -- モグケース
 }
 
---table.insert(bag_name_ja_list, {name='wardrobe', ja='モグワードローブ'})
+-- モグワードローブ
 table.insert(bag_name_ja_list, {name='wardrobe', ja='ローブ'})
 for i = 2, 8 do
     table.insert(bag_name_ja_list, { name='wardrobe'..i,
 				     ja='ローブ'..i})
-				     -- ja='モグワードローブ'..i})
 end
+
 table.insert(bag_name_ja_list, { name='recycle', ja='リサイクル' })
+
+--モグの預り帳
 for i = 1, 33 do
     local ii = string.format('%02d', i)
     table.insert(bag_name_ja_list, { name='slip '..ii,
 				     ja='預り帳['..ii..']' })
-				     -- ja='モグの預り帳【'..ii..'】' })
 end
+
 -- table.insert(bag_name_ja_list, { name='key items', ja='だいじなもの' })
 -- table.insert(bag_name_ja_list, { name='temporary', ja='テンポラリー' })
 
