@@ -6,8 +6,31 @@ local command = require('command')
 local io_chat = require('io/chat')
 local task = require('task')
 local control = require('control')
+local utils = require 'utils'
 
 local M = {}
+
+-- 金庫系のkeyリスト
+local SafesList = { locker = 4, storage = 2, safe = 1 }
+-- ちなみに 3 は Temporary
+--- 持ち歩きバッグのkeyリスト
+local BagsList = { case = 7, sack = 6, satchel = 5 }
+
+local WardrobeList = { wardrobe = 8, wardrobe2 = 10,
+		       wardrobe3 = 11, wardrobe4 = 12,
+		       wardrobe5 = 13, wardrobe6 = 14,
+		       wardrobe7 = 15, wardrobe8 = 16 }
+
+local bag_name_ja_list = {
+    { name='inventory', ja='バッグ'},
+    { name='safe', ja='金庫'},
+    { name='safe2', ja='金庫2'},
+    { name='storage', ja= '収納家具'},
+    { name='locker', ja='ロッカー'},
+    { name='satchel', ja='サッチェル'},
+    { name='sack', ja='サック'},
+    { name='case', ja='ケース'},
+}
 
 -- アイテムの量
 
@@ -91,10 +114,17 @@ function M.safesToInventoryT(idsT)
         if inventory.count < inventory.max then
             local bag = items[bname]
             for i, item in ipairs(bag) do
-                if idsT[item.id] == true then
+                if idsT[item.id] == true and item.count > 0 then
 		    if M.checkInventoryFreespace() then
 			windower.ffxi.get_item(bagid, item.slot, item.count)
 			count = count + 1
+			if control.debug then
+			    local item_name = "unknown item"
+			    if res.items[item_id] ~= nil then
+				item_name = res.items[item_id].name
+			    end
+			    io_chat.printf("safesToInventory:%s %s(%d)", bname, item_name, item.id)
+			end
 		    end
                 end
             end
@@ -130,6 +160,13 @@ local bagsToInventory = function(id)
                 if item.id == id then
                     windower.ffxi.get_item(bagid, item.slot, item.count)
 		    count = count + 1
+		    if control.debug then
+			local item_name = "unknown item"
+			if res.items[item_id] ~= nil then
+			    item_name = res.items[item_id].name
+			end
+			io_chat.printf("bagsToInventory:%s %s(%d)", bname, item_name, item.id)
+		    end
                 end
             end
         else
@@ -149,7 +186,7 @@ function M.bagsToInventoryT(idsT)
         if inventory.count < inventory.max then
             local bag = items[bname]
             for i, item in ipairs(bag) do
-                if idsT[item.id] == true then
+                if idsT[item.id] == true and item.count > 0 then
 		    if M.checkInventoryFreespace() then
 			windower.ffxi.get_item(bagid, item.slot, item.count)
 			count = count + 1
@@ -300,8 +337,54 @@ M.tradeByItemId = function(mob, id)
     end
     num = #ind
     if num == 0 then
-	io_chat.setNextColor(3)
-	io_chat.printf("you have not item id:%d", id)
+	io_chat.warnf("you have not item id:%d", id)
+	return
+    end
+    for i = num+1, 8 do
+        ind[#ind+1] = 0
+        cnt[#cnt+1] = 0
+    end
+--    for i, index in ipairs(ind) do
+--        local item = inventory[index]
+--    end
+    if #ind > 0 then
+        local menu_item = 'C4I11C10HI':pack(0x36,0x20,0x00,0x00,mob.id,
+               cnt[1],cnt[2],cnt[3],cnt[4],cnt[5],cnt[6],cnt[7],cnt[8],0,0x00,
+               ind[1],ind[2],ind[3],ind[4],ind[5],ind[6],ind[7],ind[8],0,0x00,
+               mob.index,num)
+        windower.packets.inject_outgoing(0x36, menu_item)
+    end
+    return true
+end
+
+-- item_table = { { item_id = count }, ... }
+M.tradeByItemTable = function(mob, item_table)
+---    print("tradeByItemId", target, id)
+    if mob == nil then
+        print("tradeByItemId: target:"..#target.." not found")
+        return false
+    end
+    item_table = utils.table.deepclone(item_table)  -- 非破壊的にする
+    local items = windower.ffxi.get_items()
+    local inventory = items.inventory
+    local ind = {}
+    local cnt = {}
+    for i, item in ipairs(inventory) do
+	local c = item_table[item.id]  -- item count
+        if c ~= nil and c > 0 and item.count > 0 then
+	    if item.count < c then
+		c = item.count
+	    end
+	    if #ind < 8 then
+		ind[#ind+1] = i
+		cnt[#cnt+1] = c
+		item_table[item.id] = item_table[item.id] - c
+	    end
+        end
+    end
+    num = #ind
+    if num == 0 then
+	io_chat.warn("you have not item", item_table)
 	return
     end
     for i = num+1, 8 do
@@ -348,19 +431,19 @@ local EQUIP_ITEM_BANK_KEY = 'use_equip_item'
 function M.useEquipItem(slot, item_id, item_name, delay)
     local ac_equip = require('ac/equip')
     local task = require('task')
-    ac_equip.equip_save(EQUIP_ITEM_BANK_KEY)
-    coroutine.sleep(1)
-    ac_equip.equip_item(slot, item_id)
-    windower.ffxi.run(false) -- 足を止める
-    local c = "input /item "..item_name.." <me>"
-    coroutine.sleep(delay + 1)  -- delay ぴったりだと50%程度失敗する
     task.allClear() -- 他タスクが邪魔しないよう全消去
+    ac_equip.equip_save(EQUIP_ITEM_BANK_KEY) -- 今の装備を記録
+    coroutine.sleep(1)
+    ac_equip.equip_item(slot, item_id)  -- 装備する
+    windower.ffxi.run(false) -- 足を止める
+    coroutine.sleep(delay + 1)  -- delay ぴったりだと50%程度失敗する
+    local c = "input /item "..item_name.." <me>"
     -- command, delay, duration
     task.setTaskSimple(c, 0, 5)  -- delay が信用できないので一旦 sleep で。
     coroutine.sleep(2)
-    ac_equip.equip_restore(EQUIP_ITEM_BANK_KEY)
-    coroutine.sleep(2)
-    ac_equip.equip_restore(EQUIP_ITEM_BANK_KEY)
+    ac_equip.equip_restore(EQUIP_ITEM_BANK_KEY)  -- 前の装備に戻す
+    -- coroutine.sleep(2)
+    -- ac_equip.equip_restore(EQUIP_ITEM_BANK_KEY)
 end
 
 function M.useEquipItemSequence(slot, item_list, delay)
