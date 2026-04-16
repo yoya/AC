@@ -8,7 +8,10 @@ local task = require('task')
 local control = require('control')
 local utils = require 'utils'
 
-local M = {}
+local M = {
+    data = require 'item/data',
+    vagary = require 'item/vagary',
+}
 
 -- 金庫系のkeyリスト
 local SafesList = { locker = 4, storage = 2, safe = 1 }
