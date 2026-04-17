@@ -141,7 +141,12 @@ function moveToAction(p, reverse)
 	control.enemy_filter = p.enemy_filter
     end
     if p.a == "faith" then
-	--  TODO:フェイス呼び出し処理
+	windower.ffxi.run(false)
+	coroutine.sleep(1)
+	for _, f in ipairs(p.faithList) do
+	    command.send('input /ma '..f..' <me>')
+	    coroutine.sleep(7.0)
+	end
     end
     if p.a == "insne" then
 	print("insne")
