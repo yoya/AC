@@ -53,6 +53,10 @@ M.meleeJobs = {
     "PUP", "RUN"
 }
 
+M.sorcererJobs = {
+    "BLM", "RDM", "SCH", "GEO", "DRK"
+}
+
 local foods_melee = {'カルボナーラ', 'アラビアータ', '特上スシ', 'ソーススシ'}
 local foods_magic = {'フルーツパフェ', 'ペアクレープ'}
 
