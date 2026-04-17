@@ -173,7 +173,7 @@ function COR_phantom_roll_up(roll_name, roll_number)
 end
 
 -- ロールの文字列を見つけたら動く。
-function incoming_text_handler(text)
+function M.incoming_text_handler(text)
     local player = windower.ffxi.get_player()
     if player == nil or string.contains(text, player.name) == false then
 	return
@@ -208,6 +208,6 @@ function incoming_text_handler(text)
 end
 
 
-local listener_id = incoming_text.addListener("ロール", incoming_text_handler)
+M.listener_id = incoming_text.addListener("ロール", M.incoming_text_handler)
 
 return M
