@@ -11,7 +11,9 @@ M.routes = {
 	{x=0,y=-238,z=-43.8}, -- {x=-4,y=-212,z=-43.6,d=3},
 	--{x=-2,y=-214,z=-43.6,d=3},
 	{x=-4,y=-214,z=-43.6,d=3},
-	{enemy_filter="Naga"}, {puller=true}
+	{a="faith", faithList={"クピピ", "コルモル", "サクラ",
+                               "モーグリ", "ブリジッド"}},
+	{enemy_filter="Naga"}, {enemy_range=25}, {puller=true}
     }
 }
 

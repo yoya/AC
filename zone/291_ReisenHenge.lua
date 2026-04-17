@@ -13,7 +13,9 @@ M.routes = {
 	{x=640,y=-921,z=-372},--{x=618,y=-949,z=-371,d=2},
 	--{x=620,y=-948,z=-371,d=2}, -- 右前すぎる気がする
 	{x=621,y=-947,z=-371,d=2},
-	{puller=true}
+	{a="faith", faithList={"クピピ", "コルモル", "サクラ",
+			       "モーグリ", "ブリジッド"}},
+	{puller=true},
     },
     -- Ethereal Ingress
     omen = { -- Earthly Convrescence (オーメン入り口
