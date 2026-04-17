@@ -118,7 +118,7 @@ function phantom_roll_double_up(on)
     local c = "input /ja ダブルアップ <me>"
     local level = task.PRIORITY_MIDDLE
     -- command, delay, duration, period, eachfight
-    local t = task.newTask(c, 1, 4, 5, false)
+    local t = task.newTask(c, 2, 4, 5, false)  -- dalay:1 だとたまに失敗する
     if on == true then
 	-- io_chat.setNextColor(6)
 	-- io_chat.print("phantom_roll_double_up")
