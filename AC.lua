@@ -1363,10 +1363,10 @@ windower.register_event('addon command', function(...)
 		pushKeys({"enter"})
 		coroutine.sleep(1)
 		pushKeys({"enter"})
-		coroutine.sleep(18)
+		coroutine.sleep(19)
 		if arg2 == "mailbox" or arg2 == "m" then
 		    command.send('input /mailbox')  -- 宅配ポストを開ける
-		    coroutine.sleep(3)
+		    coroutine.sleep(4)
 		    pushKeys({"escape"})
 		elseif arg2 == "garden" or arg2 == "g" then  -- 栽培
 		    command.send('input /garden')  -- 宅配ポストを開ける
