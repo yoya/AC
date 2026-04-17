@@ -52,12 +52,24 @@ M.routes = {
 	{a="f8touch"}
     },
     -- ヤッセの船着場
-    ionis = {
-	{x=-57.8,y=85.2,z=-0.1}, {x=-54.3,y=85,z=-0.1,d=1},
+    ['ionis-wp'] = {
+	-- Waypoint
+	{x=-57.8,y=85.2,z=-0.1},{x=-54.3,y=85,d=1},
 	{target="Quiri-Aliri"},
 	{a="enter"}, {wait=1}, {a="enter"},
 	{a="up"}, {a="enter"},
-	{wait=2}, {x=-57.6,y=85.1,d=1}, -- {a="f8touch"},
+	{wait=2}, {x=-57.6,y=85.1,d=1},
+	{target="Waypoint"}, {a="touch"}
+    },
+    ['ionis-hp'] = {
+	-- HP#1
+	{x=-52.9,y=58.9,z=-0.1}, {x=-54,y=78,d=1},
+	{x=-53.5,y=82,d=1},
+	-- HP#1
+	{target="Quiri-Aliri"},
+	{a="enter"}, {wait=1}, {a="enter"},
+	{a="up"}, {a="enter"},
+	{wait=2}, {x=-57.6,y=85.1,d=1},
 	{target="Waypoint"}, {a="touch"}
     },
     -- 太陽の広場 (Coronal Esplanade)
@@ -78,6 +90,7 @@ M.essentialPoints = {
     -- x=(-59.4,-51.5),y=-128.5
     from_moghouse = {x=-56,y=-128.5,z=-0.1, dx=5,dy=1},
     -- HP#2(M) x=(-51.3,-50.5), y=(-95.7-93.9)
+    homepoint_1 = {x=-52.9,y=58.9,z=-0.1, d=1.5},
     homepoint_2_M = {x=-50.5,y=-95.5,z=-0.1, d=1.5},
     yahse_dock = {x=-57.8,y=85.2,z=-0.1},
     sun_square = {x=27.1,y=-60.8,z=-40.2}, -- 太陽の広場 (Coronal Esplanade)
@@ -87,7 +100,8 @@ M.automatic_routes = {
     pck = { route="pck" },
     from_moghouse = { route="hp2m" },
     homepoint_2_M = { route="moghouse" },
-    yahse_dock = { route="ionis" },
+    yahse_dock = { route="ionis-wp" },
+    homepoint_1 = { route="ionis-hp" },
     sun_square = { route="bayld" }, -- ベヤルド交換
 }
 
