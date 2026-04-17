@@ -66,8 +66,11 @@ end
 
 function M.sub_tick(player)
     local acjob = M.parent
-    if role_Sorcerer.sub_tick ~= nil then
-	role_Sorcerer.sub_tick(player)
+    if utils.table.contains(acjob.sorcererJobs, player.main_job) and
+	player.vitals.mp >= 1000 then  -- MP に余裕があれば
+	if role_Sorcerer.sub_tick ~= nil then
+	    role_Sorcerer.sub_tick(player)
+	end
     end
     if utils.table.contains(acjob.tankJobs, player.main_job) or
 	utils.table.contains(acjob.meleeJobs, player.main_job) then
