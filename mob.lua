@@ -33,6 +33,18 @@ local nonAttackableMobs = {
     "Mnejing", -- 憂鬱なるガッサド
 }
 
+function isMobTouchable(mob)  -- 宝箱とか
+    if mob.valid_target and mob.is_npc and
+	(mob.status == 0 or mob.status == 1) and
+	not utils.table.contains(nonAttackableMobs, mob.name) then
+	-- 敵が平常、または味方にヘイトを向けている
+	if mob.status == 0 or mob.claim_id == 0 or
+	    isMobLinked(mob) or
+	    utils.table.contains(alwaysAttackableMobs, mob.name) then
+	    return true
+	end
+    end
+end
 --- 多分、戦える敵 (レイド戦は上記の敵のみ対応)
 function isMobAttackable(mob)
     if mob.valid_target and mob.is_npc and mob.spawn_type == 16 and
