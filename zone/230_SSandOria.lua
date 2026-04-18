@@ -8,6 +8,9 @@ M.routes = {
 	{x=-84.5,y=-65.5,z=1}, {x=-101.1,y=-18.5,z=2,d=1},
 	{target="Atmacite Refiner"}, {a="touch"}
     },
+    mission = {
+	{x=-84.5,y=-65.5,z=1}, {x=-98,y=-50}, {x=-105,y=-41,z=1},
+    },
     -- HP#2(A)
     sgate = {  -- 南門
 	{x=45,y=-34,z=2}, {x=45,y=-29}, {x=53,y=-25},
@@ -42,7 +45,8 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    hp1_E = { route="vw" },
+    hp1_E = { route="vw", contents="peculiar" },
+    hp1_E = { route="mission", contents="mission" },
     hp2_A = { route="sgate" },
     hp3_M = { route="trust" },
 }
