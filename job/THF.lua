@@ -22,8 +22,10 @@ M.mainJobProbTable = {
 
 M.subJobProbTable = {
     { 10, 300, 'input /ja ぬすむ <t>', 0 },
-    { 50, 60, 'setkey d down; wait 0.75; setkey d up; input /ja 不意打ち <me>;', 0 },
-    { 50, 60, 'setkey s down; wait 0.2; setkey s up; input /ja だまし討ち <me>;', 0 },
+    -- { 50, 60, 'setkey d down; wait 0.75; setkey d up; input /ja 不意打ち <me>;', 0 },
+    -- { 50, 60, 'setkey s down; wait 0.2; setkey s up; input /ja だまし討ち <me>;', 0 },
+    { 50, 60, 'input /ja 不意打ち <me>; wait 1; input /ws '..sneak_attack_ws..' <t>', 0 },
+    { 50, 60, 'input /ja 不意打ち <me>; wait 1; input /ws '..sneak_attack_ws..' <t>', 0 },
     { 10, 300, 'input /ja かすめとる <t>', 0 },
 }
 
