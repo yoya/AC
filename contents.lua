@@ -1,5 +1,7 @@
 local M = {}
 
+local io_chat = require 'io/chat'
+
 -- Idle, Leveling, Ambus, Works, Mission, ...
 M.Idle = 0
 M.Leveling = 1    -- レベル上げ
@@ -37,25 +39,26 @@ M.contentsTable = {
 
 M.type = M.Idle
 
+M.nameTable = {
+    [M.Idle] = {'idle', nil, ''},
+    [M.Leveling] = {'leveling', 'level'},
+    [M.Ambus] = {"ambus"},
+    [M.Works] = {'works'},
+    [M.Trove] = {'trove'},
+    [M.Mission] = {'mission'},
+    [M.AbysYellow] = {'abysyellow', 'yellow'},
+    [M.MogGarden] = {'moggarden', 'garden'},
+    [M.Trial] = {'trial'},
+    [M.Raives] = {'raives'},
+    [M.WKR] = {'wkr'},
+    [M.LoginPoint] = {'loginpoint', 'login', 'logpo'},
+    [M.Vagary] = {'vagary'},
+    [M.Synergy] = {'synergy'},
+    [M.Trove] = {'trove'},
+}
+
 function M.setContents(name)
-    local nameTable = {
-	[M.Idle] = {nil, '', 'idle'},
-	[M.Leveling] = {'leveling', 'level'},
-	[M.Ambus] = {"ambus"},
-	[M.Works] = {'works'},
-	[M.Trove] = {'trove'},
-	[M.Mission] = {'mission'},
-	[M.AbysYellow] = {'abysyellow', 'yellow'},
-	[M.MogGarden] = {'moggarden', 'garden'},
-	[M.Trial] = {'trial'},
-	[M.Raives] = {'raives'},
-	[M.WKR] = {'wkr'},
-	[M.LoginPoint] = {'loginpoint', 'login', 'logpo'},
-	[M.Vagary] = {'vagary'},
-	[M.Synergy] = {'synergy'},
-	[M.Trove] = {'trove'},
-    }
-    for c, names in pairs(nameTable) do
+    for c, names in pairs(M.nameTable) do
 	for _, n in ipairs(names) do
 	    if name == n then
 		M.type = c
@@ -97,6 +100,30 @@ function M.zone_out()
 	    c.zone_out()
 	end
     end
+end
+
+function M.matchContentsName(name)
+    -- print("contents.matchContentsName(name)", name)
+    local names = M.nameTable[M.type]
+    print(names);
+    if names == nil then return false end
+    for _, n in ipairs(names) do
+	print(name, "==", n);
+	if name == n then
+	    return true
+	end
+    end
+    return false
+end
+
+function M.showContents()
+    local name = M.nameTable[M.type]
+    if name == nil then
+	name = "<nil>"
+    else
+	name = name[1]
+    end
+    io_chat.infof("Contents: %s", name)
 end
 
 return M
