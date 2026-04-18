@@ -77,7 +77,7 @@ function geo_setup(jobRank)
     -- TODO: 格上の敵対応
     --   GEO_geo = "ジオトーパー" -- 敵の回避率down
     local level = task.PRIORITY_MIDDLE
-    local c = 'input /ja グローリーブレイズ <me>; wait 2; input /ma '..GEO_geo..' <bt>; wait 2; input /ja サークルエンリッチ <me>'
+    local c = 'input /ja グローリーブレイズ <me>; wait 2; input /ma '..GEO_geo..' <t>; wait 2; input /ja サークルエンリッチ <me>'
     -- command, delay, duration, period, eachfight
     local t = task.newTask(c, 2, 10, 5, false)
     -- 戦闘開始で硬直してる可能性があるので、3秒待つ
