@@ -5,9 +5,9 @@ local M = {}
 local utils = require("utils")
 
 local tankJobs = { "PLD", "RUN", "WAR", "SAM", "DNC" }
-local skillChainJobs = { "WAR", "MNK", "DRK", "SAM", "DRG", "THF", "RNG", "NIN", "DNC" }
+local skillChainJobs = { "WAR", "MNK", "DRK", "SAM", "DRG", "THF", "RNG", "NIN", "DNC", "COR" }
 local magicBurstJobs = { "BLM", "SCH", "GEO" }
-local rangeJobs = { "RNG" }
+local rangeJobs = { "RNG", "COR" }
 local healerJobs = { "WHM", "RDM", "SCH", "PLD" }
     
 function M.iamTankJob()
