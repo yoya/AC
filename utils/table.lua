@@ -59,6 +59,7 @@ function M.merge_tables(t1, t2)
 end
 
 function M.contains(arr, val)
+    if arr == nil then print(debug.traceback()) end
     for i=1,#arr do
 	if arr[i] == val then
 	    return true
