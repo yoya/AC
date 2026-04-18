@@ -86,9 +86,18 @@ function M.main_tick(player)
     end
     local level = task.PRIORITY_HIGH
     -- level, command, duration, period, onoff
-    invoke_ninjutsu(level, '/nin 空蝉の術:壱 <me>', 4 + 4, 30, shika_onoff)
-    invoke_ninjutsu(level, '/nin 空蝉の術:弍 <me>', 1.5 + 4, 45, shika_onoff)
-    invoke_ninjutsu(level, '/nin 空蝉の術:参 <me>', 0.5 + 4, 60, shika_onoff)
+    local utsusemi_onoff = shika_onoff
+    if utsusemi_onoff then
+	if S(player.buffs):contains(66) or  -- 分身
+	    S(player.buffs):contains(444) or  -- 分身(2)
+	    S(player.buffs):contains(445) or  -- 分身(3)
+	    S(player.buffs):contains(446) then  -- 分身(+4)
+	    utsusemi_onoff = false -- 分身がある時
+	end
+    end
+    invoke_ninjutsu(level, '/nin 空蝉の術:壱 <me>', 4 + 4, 30, utsusemi_onoff)
+    invoke_ninjutsu(level, '/nin 空蝉の術:弍 <me>', 1.5 + 4, 45, utsusemi_onoff)
+    invoke_ninjutsu(level, '/nin 空蝉の術:参 <me>', 0.5 + 4, 60, utsusemi_onoff)
 end
 
 function M.sub_tick(player)
