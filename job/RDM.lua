@@ -1,5 +1,6 @@
 -- 赤魔導士
 
+local utils = require 'utils'
 local task = require 'task'
 local role_Healer = require 'role/Healer'
 local role_Melee = require 'role/Melee'
@@ -19,8 +20,8 @@ M.mainJobProbTable = {
     { 100, 180*3, 'input /ma ストライII <me>', 4 },
     { 100, 300*3, 'input /ma ゲインデック <me>', 4 },
     { 100, 150*3, 'input /ma リフレシュIII <me>', 4 },
-    { 100, 150, 'input /ma リフレシュIII <p2>', 4 },
-    { 100, 150, 'input /ma リフレシュIII <p3>', 4 },
+    --{ 100, 150, 'input /ma リフレシュIII <p2>', 4 },
+    --{ 100, 150, 'input /ma リフレシュIII <p3>', 4 },
     { 100, 180, 'input /ma エンサンダーII <me>', 4 },
     -- { 100, 180, 'input /ma エンストーンII <me>', 4 },
     { 100, 180*3, 'input /ma ヘイストII <me>', 3 },
@@ -52,6 +53,10 @@ M.subJobProbTable = {
     { 10, 600/3, 'input /ja コンバート <me>', 2 },
 }
 
+function M.invoke_magick_buff(player, magic, onoff, duration, need_mp)
+    -- 間隔90固定なのどうにしかする
+    M.invoke_magick_debuff(player, magic, onoff, duration, need_mp)
+end
 function M.invoke_magick_debuff(player, magic, onoff, duration, need_mp)
     if player.vitals.mp < need_mp then
 	return
@@ -89,6 +94,20 @@ function M.main_tick(player)
 	-- M.invoke_magick_debuff(player, 'フラズルII', false, 5, 64)
 	M.invoke_magick_debuff(player, 'ディストラIII', false, 5, 84)
 	M.invoke_magick_debuff(player, 'フラズルIII', false, 5, 90)
+    end
+    for id, info in pairs(ac_party.member_table) do
+	if utils.table.contains({"BLM", "WHM", "PLD", "RUN", "GEO"}, info.main_job) then
+	    local level = task.PRIORITY_LOW
+	    if type(info.target) == 'string' then
+		local c = 'input /ma リフレシュIII <'..info.target..'>'
+		-- command, delay, duration, period, eachfight
+		local t = task.newTask(c, 1, 5, 120, false)
+		task.setTask(level, t)
+	    else
+		-- io_chat.error("job/RDM: info.target", info.target)
+	    end
+
+	end
     end
 end
 
