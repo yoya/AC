@@ -265,7 +265,7 @@ function moveTo(route, routeTable, nextRoute, reverse)
     local start_idx = nearest_idx(pos, route)
 --    print('start_idx', start_idx)
     if distance(pos, route[start_idx]) > 64 then
-        print("not starting position")
+        io_chat.error("not starting position")
         stop()
         return false
     end
