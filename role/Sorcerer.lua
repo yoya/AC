@@ -2,23 +2,63 @@
 
 local M = {}
 
+local utils = require 'utils'
 local io_chat = require'io/chat'
 local command = require 'command'
 local acinspect = require 'inspect'
 local task = require 'task'
 
+M.magic = "ファイア"
 local MB_magic = "ファイア"
 local nonMB_magic = "ファイア"
 --local MB_magic = "ブリザド"
 --local MB_magic = "サンダー"
 
-M.weakMagikTable = {
+local magicTable = {
+    fire = "ファイア",
+    ice = "ブリザド",
+    wind = "エアロ",
+    -- light
+    -- dark
+    stone = "ストーン",
+    thunder = "サンダー",
+    water = "ウォータ",
+}
+
+M.weakMagicTable = {
     -- イフリート
     -- シヴァ
-    ['Garuda'] = 'ice', -- ブリザド
-    ['Titan'] = 'wind', -- エアロ
-    ['Ramuh'] = 'stone', -- ストーン
-    ['Leviathan'] = 'thunder', -- サンダー
+    ['Ifrit'] = {'ウォータ'},
+    ['Shiva'] = {'ファイア'},
+    ['Garuda'] = {'ブリザド'},
+    ['Titan'] = {'エアロ'},
+    ['Ramuh'] = {'ストーン'},
+    ['Leviathan'] = {'サンダー'},
+    --
+    ['Azi Dahaka'] = {'ウォータ', 'ストーン'},
+    ['Naga Raja'] = {'サンダー'},
+    ['Quetzalcoatl'] = {'ブリザド'},
+    ['Mireu'] = {'ウォータ'},
+    --
+    ['Apex Jagil'] = {'サンダー', 'ブリザド'},
+    ['Apex Toad'] = {'サンダー', 'ブリザド'},
+}
+
+M.resistMagicTable = {
+    ['Ifrit'] = {'ファイア'},
+    ['Shiva'] = {'ブリザド'},
+    ['Garuda'] = {'エアロ'},
+    ['Titan'] = {'ストーン'},
+    ['Ramuh'] = {'サンダー'},
+    ['Leviathan'] = {'サンダー'},
+    -- ドメインベージョン
+    ['Azi Dahaka'] = {'ファイア', 'サンダー'},
+    ['Naga Raja'] = {'ブリザド', 'ウォータ'},
+    ['Quetzalcoatl'] = {'エアロ', 'ストーン'},
+    ['Mireu'] = {'ファイア'},
+    --
+    ['Apex Jagil'] = {'ウォーター'},
+    ['Apex Toad'] = {'ウォーター'},
 }
 
 function within_time(x, a, b)
@@ -51,6 +91,13 @@ function invoke_magic(magicRank, onoff, level)
 	level = task.PRIORITY_HIGH
     end
     local magic = MB_magic
+    -- なるべく通りのよい属性を選択する
+    local mob = windower.ffxi.get_mob_by_target("t")
+    if mob ~= nil and M.weakMagicTable[mob.name] ~= nil then
+	if not utils.table.contains(M.weakMagicTable[mob.name], magic) then
+	    magic = M.weakMagicTable[mob.name][1]
+	end
+    end
     if magicRank > 1 then
 	magic = magic .. param.rank
     end
@@ -77,6 +124,14 @@ function M.magicBurst(player, magickRank)
 	    return
 	end
 	MB_magic = sc.magic
+	local magic = MB_magic
+	-- 効かない属性は MB 打たない。回復されるかもしれないし。
+	local mob = windower.ffxi.get_mob_by_target("t")
+	if mob ~= nil and M.resistMagicTable[mob.name] ~= nil then
+	    if utils.table.contains(M.resistMagicTable[mob.name], magic) then
+		return -- MB を打たない
+	    end
+	end
 	-- 一旦、FC 少なめでタイミング調整。
 	if within_time(now, sc_time, sc_time + 1)
 	    and magickRank >= 5 and mp >= 306 then
@@ -141,19 +196,8 @@ function M.sub_tick(player)
     M.magicBurst(player, magickRank)
 end
 
-local magicTable = {
-    fire = "ファイア",
-    ice = "ブリザド",
-    wind = "エアロ",
-    -- light
-    -- dark
-    stone = "ストーン",
-    thunder = "サンダー",
-    water = "ウォータ",
-}
-
 function M.setMagic(magic)
-    print("setMagic("..magic..")")
+    -- print("setMagic("..tostring(magic)..")")
     if magic ~= nil then
 	if magicTable[magic] ~= nil then
 	    MB_magic = magicTable[magic]
