@@ -25,7 +25,7 @@ M.routes = {
     gha = {
 	{x=-20.1,y=-19.9,z=0,desc="ガッサド(オートマトン工房)"},
 	{x=-20,y=7,z=0}, {x=-20,y=26,z=-6}, {x=-18,y=28},
-	{x=-15,y=50}, {x=-12,y=52}, {x=18,y=56},
+	{x=-15,y=50}, {x=-12,y=52}, {x=18,y=56}, {a="esc"},
 	{target="Door: Automaton Workshop"}, {a="opendoor"},
 	{x=21,y=56}, {x=26,y=46}, {x=32,y=46}, {x=33,y=49,d=1},
 	{x=34,y=53,z=-7.8}, {target="Ghatsad"}, {a="touch"},
@@ -105,7 +105,8 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    hp_1 = { route="naja" },
+    -- hp_1 = { route="naja" },
+    -- hp_1 = { route="gha" },
     hp_4_a = { route="choco" }
 }
 
