@@ -48,6 +48,7 @@ M.zoneTable = {
     [54] = require('zone/54_ArrpgoReef'),   -- アラパゴ暗礁域
     [57] = require('zone/57_Talacca'),      -- タラッカ入江
     [61] = require('zone/61_Zhayolm'),      -- ゼオルム火山
+    [62] = require('zone/62_Halvung'),      -- ハルブーン
     [64] = require('zone/64_Navukgo'),      -- ナバゴ処刑場
     [67] = require('zone/67_JadeSepul'),    -- 翡翠廟
     [68] = require('zone/68_Aydeewa'),      -- エジワ蘿洞
