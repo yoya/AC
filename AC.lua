@@ -1162,8 +1162,11 @@ windower.register_event('addon command', function(...)
 	else
 	    io_chat.error("Usage: ac calm (on|off)")
 	end
-    elseif subcommand == 'content' or subcommand == 'cont' then
-	-- 
+    elseif subcommand == 'contents' or subcommand == 'cont' then
+	if arg1 ~= nil then
+	    contents.setContents(arg1)
+	end
+	contents.showContents()
     elseif subcommand == 'control' or subcommand == 'cnt' then
 	if arg1 == 'debug' then
 	    if  arg2 ~= nil then
