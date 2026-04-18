@@ -29,6 +29,67 @@ function posStr(pos)
     return str
 end
 
+function M.search_and_invoke_automatic_routes(zone, automatic_routes,
+					      contents_match)
+    -- print("zone/change.search_and_invoke_automatic_routes")
+    local zone_object = aczone.zoneTable[zone]
+    if contents_match then  -- コンテンツが一致するものに絞る
+	-- print("contents_match", contents_match)
+	local new_routes = {}
+	for f, route in pairs(automatic_routes) do
+	    -- io_chat.notice("route.contents", route.contents)
+	    if route ~= nil and route.contents ~= nil then
+		if contents.matchContentsName(route.contents) then
+		    new_routes[f] = route
+		end
+	    end
+	end
+	automatic_routes = new_routes
+    end
+    for f, t in pairs(automatic_routes) do
+	local fp = zone_object.essentialPoints[f]
+	if fp == nil then
+	    print("maybe essentialPoints not found: "..f)
+	end
+	if fp.x == nil then
+	    print("maybe essentialPoints illegal format: "..f)
+	    return false;
+	end
+	local route = t.route
+	local nearDist = nil
+	local nearDistX = nil
+	local nearDistY = nil
+	if fp.d == nil and fp.dx == nil and fp.dy == nil then
+	    nearDist = 2
+	end
+	if fp.d ~= nil then nearDist = fp.d end
+	if fp.dx ~= nil then nearDistX = fp.dx end
+	if fp.dy ~= nil then nearDistY = fp.dy end
+	local exec_auto_route = ac_pos.isNear(fp, nearDist,
+					      nearDistX, nearDistY)
+	if t.leader_only == true and not iamLeader() then
+	    io_chat.infof("移動するのはリーダーだけ: %s => %s", f, route)
+	    exec_auto_route = false
+	end
+	if t.need_level ~= nil and level < t.need_level then
+	    io_chat.setNextColor(4) -- ピンク
+	    io_chat.infof("移動するのに level 20 必要: %s => %s", f, route)
+	    exec_auto_route = false
+	end
+	if control.debug then
+	    io_chat.print(f, "fp:", fp, "nearDist:", nearDist, "nexrDistX,Y:", nearDistX, nearDistY)
+	end
+	if exec_auto_route then
+	    io_chat.printf("移動 %s => %s", f, route)
+	    -- ac_move.moveTo(zone_object.routes[route], zone_object.routes)
+	    aczone.AC.start_pos = nil
+	    autoMoveTo(zone, {route}, zone_object.routes)
+	    return true
+	end
+    end
+    return false
+end
+
 function M.automatic_routes_handler(zone, automatic_routes)
     local zone_object = aczone.zoneTable[zone]
     if zone_object == nil then
@@ -49,46 +110,12 @@ function M.automatic_routes_handler(zone, automatic_routes)
     local pos = ac_pos.currentPos()
     coroutine.sleep(5)
     if ac_pos.isNear(pos, 0.5) then
-	for f, t in pairs(automatic_routes) do
-	    local fp = zone_object.essentialPoints[f]
-	    if fp == nil then
-		print("maybe essentialPoints not found: "..f)
-	    end
-	    if fp.x == nil then
-		print("maybe essentialPoints illegal format: "..f)
-		return
-	    end
-	    local route = t.route
-	    local nearDist = nil
-	    local nearDistX = nil
-	    local nearDistY = nil
-	    if fp.d == nil and fp.dx == nil and fp.dy == nil then
-		nearDist = 2
-	    end
-	    if fp.d ~= nil then nearDist = fp.d end
-	    if fp.dx ~= nil then nearDistX = fp.dx end
-	    if fp.dy ~= nil then nearDistY = fp.dy end
-	    local exec_auto_route = ac_pos.isNear(fp, nearDist,
-						  nearDistX, nearDistY)
-	    if t.leader_only == true and not iamLeader() then
-		io_chat.infof("移動するのはリーダーだけ: %s => %s", f, route)
-		exec_auto_route = false
-	    end
-	    if t.need_level ~= nil and level < t.need_level then
-		io_chat.setNextColor(4) -- ピンク
-		io_chat.infof("移動するのに level 20 必要: %s => %s", f, route)
-		exec_auto_route = false
-	    end
-	    if control.debug then
-		io_chat.print(f, "fp:", fp, "nearDist:", nearDist, "nexrDistX,Y:", nearDistX, nearDistY)
-	    end
-	    if exec_auto_route then
-		io_chat.printf("移動 %s => %s", f, route)
-		-- ac_move.moveTo(zone_object.routes[route], zone_object.routes)
-		aczone.AC.start_pos = nil
-		autoMoveTo(zone, {route}, zone_object.routes)
-		break
-	    end
+	local ret = M.search_and_invoke_automatic_routes(zone,
+							 automatic_routes,
+							 true)
+	if not ret then
+	    M.search_and_invoke_automatic_routes(zone, automatic_routes,
+						 false)
 	end
     end
 end
