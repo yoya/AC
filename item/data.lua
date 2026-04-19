@@ -1,6 +1,7 @@
 local M = {}
 
 local utils = require 'utils'
+local acevent = require 'event'
 
 -- 参考) https://raw.githubusercontent.com/Windower/Resources/master/resources_data/items.lua
 
@@ -588,8 +589,8 @@ M.JunkItems = {
 --  4047, -- 丈夫な絹糸 -- ルーニスト装束
     4058, -- ビスマス鉱 -- 1D相場15万
     --  4077, -- 月虹鋼 -- 1個6万
-    4098, -- 風のクリスタル (4000到達したら売る)
-    4101, -- 水のクリスタル (4000到達したら売る)
+--  4098, -- 風のクリスタル (4000到達したら売る)
+--  4101, -- 水のクリスタル (4000到達したら売る)
     4112, -- ポーション
     4113, -- ポーション+1
     4114, -- ポーション+2
@@ -922,6 +923,30 @@ M.JunkItems = {
     28384, -- フアニカラー -- Colkhab
     28458, -- ジャキジュサッシュ -- Hurkan
 }
+
+-- クリスタルを売るか否か、透明モグに預けている量で判断する
+M.crystal_char_table = {
+    -- [item_id] = char_property_name
+    [4096] = "fire_crystals",    -- 炎のクリスタル
+    [4097] = "ice_crystals",     -- 氷のクリスタル
+    [4098] = "wind_crystals",    -- 風のクリスタル
+    [4099] = "earth_crystals",   -- 土のクリスタル
+    [4100] = "thunder_crystals", -- 雷のクリスタル
+    [4101] = "water_crystals",   -- 水のクリスタル
+    [4102] = "light_crystals",   -- 光のクリスタル
+    [4103] = "dark_crystals",    -- 闇のクリスタル
+}
+function M.char_update_handler(char)
+    -- local io_chat = require 'io/chat'
+    -- io_chat.info("item/data.char_handler", char)
+    for i, c in pairs(M.crystal_char_table) do
+	local p = char[c]
+	if p ~= nil and p > 4000 then  -- 4000 個以上預けていれば店売りする
+	    table.insert(M.JunkItems, i)
+	end
+    end
+end
+acevent.addListener("char update", M.char_update_handler)
 
 -- 1314-1318, -- 神木の免罪符 -- 修羅装束 Lv73～ モ侍忍
 -- 1319-1323, -- 地霊の免罪符 -- アダマンチェーンメイル Lv73～ 戦暗獣

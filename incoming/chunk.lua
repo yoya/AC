@@ -6,6 +6,7 @@ local io_chat = require('io/chat')
 
 local task = require('task')
 local acinspect = require('inspect')
+local acevent = require('event')
 
 local ac_char = require('ac/char')
 local ac_defeated = require('ac/defeated')
@@ -254,6 +255,7 @@ packet_handler[0x113] = function(packet)
 	deeds_point     = packet["Deeds"],               -- F6
     }
     ac_char.update(player.id, char)
+    acevent.fire("char update", char)
 end
 
 -- Currency Info (Currencies2)
@@ -268,6 +270,7 @@ packet_handler[0x118] = function(packet)
 	gallimaufry    = packet["Gallimaufry"],
     }
     ac_char.update(player.id, char)
+    acevent.fire("char update", char)
 end
 
 function M.incoming_handler(id, data, modified, injected, blocked)
