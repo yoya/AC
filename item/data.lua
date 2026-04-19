@@ -935,6 +935,15 @@ M.crystal_char_table = {
     [4101] = "water_crystals",   -- 水のクリスタル
     [4102] = "light_crystals",   -- 光のクリスタル
     [4103] = "dark_crystals",    -- 闇のクリスタル
+    --
+--  [4104] = "fire_crystals",    -- 炎の塊
+--  [4105] = "ice_crystals",     -- 氷の塊
+--  [4106] = "wind_crystals",    -- 風の塊
+--  [4107] = "earth_crystals"  , -- 土の塊
+--  [4108] = "thunder_crystals", -- 雷の塊
+--  [4109] = "water_crystals",   -- 水の塊
+--  [4110] = "dark_crystals",    -- 光の塊
+--  [4111] = "fire_crystals",    -- 闇の塊
 }
 function M.char_update_handler(char)
     -- local io_chat = require 'io/chat'
