@@ -22,9 +22,13 @@ end
 
 function M.update_points(id, char)
     local point_keys = {
-	"eminence_point", "login_point", "unity_point",
+	"eminence_point", "login_point",
+	"dominion_point", "unity_point",
 	"hallmark", "total_hallmark",  "gallantry",
-	"domain_point", "mog_segments", "gallimaufry"
+	"domain_point", "mog_segments", "gallimaufry",
+	"fire_crystals", "ice_crystals", "wind_crystals", "earth_crystals",
+	"thunder_crystals", "water_crystals", "light_crystals", "dark_crystals",
+	"deeds_point",
     }
     for i, key in ipairs(point_keys) do
 	if char[key] ~= nil then
@@ -137,7 +141,8 @@ end
 
 -- char point
 
-function get_char_point(key)
+function M.get_char_point(key)
+    print("M.get_char_point", key)
     local player = windower.ffxi.get_player()
     if M.charTable[player.id] == nil then
 	return -1
@@ -147,44 +152,44 @@ end
 
 
 function M.eminence_point()
-    return get_char_point("eminence_point")
+    return M.get_char_point("eminence_point")
 end
 
 function M.login_point()
-    return get_char_point("login_point")
+    return M.get_char_point("login_point")
 end
 
 function M.unity_point()
-    return get_char_point("unity_point")
+    return M.get_char_point("unity_point")
 end
 
 function M.hallmark()
-    return get_char_point("hallmark")
+    return M.get_char_point("hallmark")
 end
 
 function M.total_hallmark()
-    return get_char_point("total_hallmark")
+    return M.get_char_point("total_hallmark")
 end
 
 function M.gallantry()
-    return get_char_point("gallantry")
+    return M.get_char_point("gallantry")
 end
 
 function M.domain_point()
-    return get_char_point("domain_point")
+    return M.get_char_point("domain_point")
 end
 
 function M.mog_segments()
-    return get_char_point("mog_segments")
+    return M.get_char_point("mog_segments")
 end
 
 function M.gallimaufry()
-    return get_char_point("gallimaufry")
+    return M.get_char_point("gallimaufry")
 end
 
 -- char job info
 
-function get_char_point_by_job(key)
+function M.get_char_point_by_job(key)
     local player = windower.ffxi.get_player()
     if M.charTable[player.id] == nil then
 	return -1
@@ -196,35 +201,35 @@ function get_char_point_by_job(key)
 end
 
 function M.current_merit_point()
-    return get_char_point_by_job("current_merit_point")
+    return M.get_char_point_by_job("current_merit_point")
 end
 
 function M.max_merit_point()
-    return get_char_point_by_job("max_merit_point")
+    return M.get_char_point_by_job("max_merit_point")
 end
 
 function M.current_exp_point()
-    return get_char_point_by_job("current_exp_point")
+    return M.get_char_point_by_job("current_exp_point")
 end
 
 function M.next_exp_point()
-    return get_char_point_by_job("next_exp_point")
+    return M.get_char_point_by_job("next_exp_point")
 end
 
 function M.real_master_level()
-    return get_char_point_by_job("real_master_level")
+    return M.get_char_point_by_job("real_master_level")
 end
 
 function M.synched_master_level()
-    return get_char_point_by_job("synched_master_level")
+    return M.get_char_point_by_job("synched_master_level")
 end
 
 function M.current_exemplar_point()
-    return get_char_point_by_job("current_exemplar_point")
+    return M.get_char_point_by_job("current_exemplar_point")
 end
 
 function M.next_exemplar_point()
-    return get_char_point_by_job("next_exemplar_point")
+    return M.get_char_point_by_job("next_exemplar_point")
 end
 
 function M.print()
