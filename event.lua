@@ -5,10 +5,10 @@ local M = {}
 M.listener_table = {}
 M.listener_table_last_idx = 0
 
-function M.fire_handler(event_type, ...)
+function M.fire(event_type, ...)
     for i, listener in pairs(M.listener_table) do
 	if listener ~= nil and listener.event_type == event_type then
-	    listener.callback(text)
+	    listener.callback(...)
 	end
     end
 end
