@@ -241,6 +241,16 @@ packet_handler[0x113] = function(packet)
 	resistane_point = packet["Resistance Credits"],  -- AC
 	dominion_point  = packet["Dominion Notes"],      -- B0
 	unity_point     = packet["Unity Accolades"],     -- E0
+	--
+	fire_crystals    = packet["Fire Crystals"],      -- E8
+	ice_crystals     = packet["Ice Crystals"],       -- EA
+	wind_crystals    = packet["Wind Crystals"],      -- EC
+	earth_crystals   = packet["Earth Crystals"],     -- EE
+	thunder_crystals = packet["Lightning Crystals"], -- E0
+	water_crystals   = packet["Water Crystals"],     -- F2
+	light_crystals   = packet["Light Crystals"],     -- F4
+	dark_crystals    = packet["Dark Crystals"],      -- F6
+	--
 	deeds_point     = packet["Deeds"],               -- F6
     }
     ac_char.update(player.id, char)
