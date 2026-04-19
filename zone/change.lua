@@ -96,12 +96,12 @@ function M.automatic_routes_handler(zone, automatic_routes)
 	return
     end
     local player = windower.ffxi.get_player()
-    if player == nil or player.status == 3  then
+    if player == nil or player.status == 3 then
 	print("player and player.status", player and player.status)
 	coroutine.sleep(3)
 	player = windower.ffxi.get_player()
-	if player == nil or player.status == 3  then
-	    io_chat.print("プレイヤー情報をみて移動を諦めた", player and player.status)
+	if player == nil or player.status == 3 then
+	    io_chat.print("移動しない status: ", player and player.status)
 	    return
 	end
     end
