@@ -589,8 +589,8 @@ M.JunkItems = {
 --  4047, -- 丈夫な絹糸 -- ルーニスト装束
     4058, -- ビスマス鉱 -- 1D相場15万
     --  4077, -- 月虹鋼 -- 1個6万
---  4098, -- 風のクリスタル (4000到達したら売る)
---  4101, -- 水のクリスタル (4000到達したら売る)
+--  4098, -- 風のクリスタル (モグ預けが溢れそうなら売る)
+--  4101, -- 水のクリスタル  (モグ預けが溢れそうなら売る)
     4112, -- ポーション
     4113, -- ポーション+1
     4114, -- ポーション+2
@@ -941,7 +941,7 @@ function M.char_update_handler(char)
     -- io_chat.info("item/data.char_handler", char)
     for i, c in pairs(M.crystal_char_table) do
 	local p = char[c]
-	if p ~= nil and p > 4000 then  -- 4000 個以上預けていれば店売りする
+	if p ~= nil and p > 4500 then  -- モグ預けが溢れそうなら店売り
 	    table.insert(M.JunkItems, i)
 	end
     end
