@@ -142,8 +142,12 @@ end
 -- char point
 
 function M.get_char_point(key)
-    print("M.get_char_point", key)
+    -- print("M.get_char_point", key)
     local player = windower.ffxi.get_player()
+    if player == nil then
+	print("ac/char.get_char_point: player == nil")
+	return -1
+    end
     if M.charTable[player.id] == nil then
 	return -1
     end
