@@ -30,6 +30,7 @@ local defaults = {
 local settings = config.load(defaults)
 
 local io_chat = require 'io/chat'
+local acevent = require 'event'
 
 local _focusList = { }
 
@@ -1452,6 +1453,7 @@ windower.register_event('addon command', function(...)
 	    acitem.showInventory()
 	elseif arg1 == 'listener' then
 	    incoming_text.showListener()
+	    acevent.showListener()
 	elseif arg1 == 'mob' then
 	    showMob()
 	elseif arg1 == 'party' then
