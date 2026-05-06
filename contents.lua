@@ -17,7 +17,8 @@ M.WKR = 10        -- ワイルドキーパーレイブス
 M.LoginPoint = 11
 M.Vagary = 12     -- ベガリーインスペクター
 M.Synergy = 13    -- 窯錬成 (スキル上げ)
-M.allContents = { M.Idle, M.Leveling, M.Ambus, M.Works, M.Trove,  M.Mission, M.AbysYellow, M.MogGarden, M.Trial, M.Raives, M.WKR, M.LoginPoint, M.Vagary, M.Synergy }
+M.Redeem = 14    -- 換金(エミネンス/ユニティポイント)
+M.allContents = { M.Idle, M.Leveling, M.Ambus, M.Works, M.Trove,  M.Mission, M.AbysYellow, M.MogGarden, M.Trial, M.Raives, M.WKR, M.LoginPoint, M.Vagary, M.Synergy, M.Redeem }
 
 M.ambus = require 'contents/ambus'
 M.trial = require 'contents/trial'
@@ -26,6 +27,7 @@ M.wkr = require 'contents/wkr'
 M.vagary = require 'contents/vagary'
 M.synergy = require 'contents/synergy'
 M.trove = require 'contents/trove'
+M.redeem = require 'contents/redeem'
 M.contentsTable = {
     -- モードが必要なだけで特別な処理のないcontentsは、ここに追加しない
     [M.Ambus] = M.ambus,
@@ -35,6 +37,7 @@ M.contentsTable = {
     [M.Vagary] = M.vagary,
     [M.Synergy] = M.synergy,
     [M.Trove] = M.trove,
+    [M.Redeem] = M.redeem,
 }
 
 M.type = M.Idle
