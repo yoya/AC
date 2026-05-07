@@ -32,39 +32,38 @@ M.contentsTable = {
     -- モードが必要なだけで特別な処理のないcontentsは、ここに追加しない
     [M.Ambus]   = M.ambus,
     [M.Trial]   = M.trial,
+    [M.Trove]   = M.trove,
     [M.Raives]  = M.raives,
     [M.WKR]     = M.wkr,
     [M.Vagary]  = M.vagary,
     [M.Synergy] = M.synergy,
-    [M.Trove]   = M.trove,
     [M.Redeem]  = M.redeem,
 }
 
 M.type = M.Idle
 
 M.nameTable = {
-    [M.Idle]       = {'idle', nil, ''},
-    [M.Leveling]   = {'leveling', 'level'},
-    [M.Ambus]      = {"ambus"},
-    [M.Works]      = {'works'},
-    [M.Trove]      = {'trove'},
-    [M.Mission]    = {'mission'},
-    [M.AbysYellow] = {'abysyellow', 'yellow'},
-    [M.MogGarden]  = {'moggarden', 'garden'},
-    [M.Trial]      = {'trial'},
-    [M.Raives]     = {'raives'},
-    [M.WKR]        = {'wkr'},
-    [M.LoginPoint] = {'loginpoint', 'login', 'logpo'},
-    [M.Vagary]     = {'vagary'},
-    [M.Synergy]    = {'synergy'},
-    [M.Trove]      = {'trove'},
-    [M.Redeem]     = {'redeem'}
+    [M.Idle]       = {'Idle', nil, ''},
+    [M.Leveling]   = {'Leveling', 'level'},
+    [M.Ambus]      = {"Ambus"},
+    [M.Works]      = {'Works'},
+    [M.Trove]      = {'Trove'},
+    [M.Mission]    = {'Mission'},
+    [M.AbysYellow] = {'AbysYellow', 'yellow'},
+    [M.MogGarden]  = {'MogGarden', 'garden'},
+    [M.Trial]      = {'Trial'},
+    [M.Raives]     = {'Raives'},
+    [M.WKR]        = {'WKR'},
+    [M.LoginPoint] = {'LoginPoint', 'login', 'logpo'},
+    [M.Vagary]     = {'Vagary'},
+    [M.Synergy]    = {'Synergy'},
+    [M.Redeem]     = {'Redeem'}
 }
 
 function M.setContents(name)
     for c, names in pairs(M.nameTable) do
 	for _, n in ipairs(names) do
-	    if name == n then
+	    if name:lower() == n:lower() then
 		M.type = c
 		return true
 	    end
@@ -106,16 +105,23 @@ function M.zone_out()
     end
 end
 
+function M.getContentsByName(name)
+    print("contents.getContentsByName(name)", name)
+    local names = M.nameTable[M.type]
+    if names == nil then return false end
+    for i, n in ipairs(names) do
+	if name:lower() == n:lower() then
+	    return i, M.contentsTable[n]
+	end
+    end
+    return 0, nil
+end
+
 function M.matchContentsName(name)
     -- print("contents.matchContentsName(name)", name)
-    local names = M.nameTable[M.type]
-    print(names);
-    if names == nil then return false end
-    for _, n in ipairs(names) do
-	print(name, "==", n);
-	if name == n then
-	    return true
-	end
+    local i, c = M.getContentsByName(name)
+    if i == M.type then
+	return true
     end
     return false
 end
@@ -128,6 +134,14 @@ function M.showContents()
 	name = name[1]
     end
     io_chat.infof("Contents: %s", name)
+end
+
+function M.listContents()
+    local str = ''
+    for c, names in pairs(M.nameTable) do
+	str = str .. names[1] .. " "
+    end
+    io_chat.infof("listContents: %s", str)
 end
 
 return M
