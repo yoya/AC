@@ -80,7 +80,9 @@ function M.equip_save(arg)
 	end
     end
     if control.debug then
-	M.equip_show(arg)
+	if arg ~= nil then
+	    M.equip_show(arg)
+	end
     end
 end
 
@@ -94,7 +96,9 @@ function M.equip_restore(arg)
 	return -- トライアル武器はそのまま維持
     end
     if control.debug then
-	M.equip_show(arg)
+	if arg ~= nil then
+	    M.equip_show(arg)
+	end
     end
     local _equip_set = equip_set
     if arg ~= nil then
