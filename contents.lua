@@ -3,61 +3,62 @@ local M = {}
 local io_chat = require 'io/chat'
 
 -- Idle, Leveling, Ambus, Works, Mission, ...
-M.Idle = 0
-M.Leveling = 1    -- レベル上げ
-M.Ambus = 2       -- アンバス
-M.Works = 3       -- ワークス
-M.Trove = 4       -- AMANトローブ
-M.Mission = 5
-M.AbysYellow = 6  -- アビセアの黄色発光
-M.MogGarden = 7
-M.Trial = 8       -- 試練(各属性プロトクリスタル)
-M.Raives = 9      -- コロナイズ/レイアレイブス
-M.WKR = 10        -- ワイルドキーパーレイブス
-M.LoginPoint = 11
-M.Vagary = 12     -- ベガリーインスペクター
-M.Synergy = 13    -- 窯錬成 (スキル上げ)
-M.Redeem = 14    -- 換金(エミネンス/ユニティポイント)
+M.Idle       =  1
+M.Leveling   =  2  -- レベル上げ
+M.Ambus      =  3  -- アンバス
+M.Works      =  4  -- ワークス
+M.Trove      =  5  -- AMANトローブ
+M.Mission    =  6
+M.AbysYellow =  7  -- アビセアの黄色発光
+M.MogGarden  =  8
+M.Trial      =  9  -- 試練(各属性プロトクリスタル)
+M.Raives     = 10  -- コロナイズ/レイアレイブス
+M.WKR        = 11  -- ワイルドキーパーレイブス
+M.LoginPoint = 12
+M.Vagary     = 13  -- ベガリーインスペクター
+M.Synergy    = 14  -- 窯錬成 (スキル上げ)
+M.Redeem     = 15  -- 換金(エミネンス/ユニティポイント)
 M.allContents = { M.Idle, M.Leveling, M.Ambus, M.Works, M.Trove,  M.Mission, M.AbysYellow, M.MogGarden, M.Trial, M.Raives, M.WKR, M.LoginPoint, M.Vagary, M.Synergy, M.Redeem }
 
-M.ambus = require 'contents/ambus'
-M.trial = require 'contents/trial'
-M.raives = require 'contents/raives'
-M.wkr = require 'contents/wkr'
-M.vagary = require 'contents/vagary'
+M.ambus   = require 'contents/ambus'
+M.trial   = require 'contents/trial'
+M.raives  = require 'contents/raives'
+M.wkr     = require 'contents/wkr'
+M.vagary  = require 'contents/vagary'
 M.synergy = require 'contents/synergy'
-M.trove = require 'contents/trove'
-M.redeem = require 'contents/redeem'
+M.trove   = require 'contents/trove'
+M.redeem  = require 'contents/redeem'
 M.contentsTable = {
     -- モードが必要なだけで特別な処理のないcontentsは、ここに追加しない
-    [M.Ambus] = M.ambus,
-    [M.Trial] = M.trial,
-    [M.Raives] = M.raives,
-    [M.WKR] = M.wkr,
-    [M.Vagary] = M.vagary,
+    [M.Ambus]   = M.ambus,
+    [M.Trial]   = M.trial,
+    [M.Raives]  = M.raives,
+    [M.WKR]     = M.wkr,
+    [M.Vagary]  = M.vagary,
     [M.Synergy] = M.synergy,
-    [M.Trove] = M.trove,
-    [M.Redeem] = M.redeem,
+    [M.Trove]   = M.trove,
+    [M.Redeem]  = M.redeem,
 }
 
 M.type = M.Idle
 
 M.nameTable = {
-    [M.Idle] = {'idle', nil, ''},
-    [M.Leveling] = {'leveling', 'level'},
-    [M.Ambus] = {"ambus"},
-    [M.Works] = {'works'},
-    [M.Trove] = {'trove'},
-    [M.Mission] = {'mission'},
+    [M.Idle]       = {'idle', nil, ''},
+    [M.Leveling]   = {'leveling', 'level'},
+    [M.Ambus]      = {"ambus"},
+    [M.Works]      = {'works'},
+    [M.Trove]      = {'trove'},
+    [M.Mission]    = {'mission'},
     [M.AbysYellow] = {'abysyellow', 'yellow'},
-    [M.MogGarden] = {'moggarden', 'garden'},
-    [M.Trial] = {'trial'},
-    [M.Raives] = {'raives'},
-    [M.WKR] = {'wkr'},
+    [M.MogGarden]  = {'moggarden', 'garden'},
+    [M.Trial]      = {'trial'},
+    [M.Raives]     = {'raives'},
+    [M.WKR]        = {'wkr'},
     [M.LoginPoint] = {'loginpoint', 'login', 'logpo'},
-    [M.Vagary] = {'vagary'},
-    [M.Synergy] = {'synergy'},
-    [M.Trove] = {'trove'},
+    [M.Vagary]     = {'vagary'},
+    [M.Synergy]    = {'synergy'},
+    [M.Trove]      = {'trove'},
+    [M.Redeem]     = {'redeem'}
 }
 
 function M.setContents(name)
