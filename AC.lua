@@ -1165,7 +1165,9 @@ windower.register_event('addon command', function(...)
 	end
     elseif subcommand == 'contents' or subcommand == 'cont' then
 	if arg1 ~= nil then
-	    contents.setContents(arg1)
+	    if not contents.setContents(arg1) then
+		contents.listContents()
+	    end
 	end
 	contents.showContents()
     elseif subcommand == 'control' or subcommand == 'cnt' then
