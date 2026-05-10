@@ -18,7 +18,7 @@ local preferWeaponSkill = {
     'reso','ground', -- 両手剣
     'rui', 'ramp', 'deci', 'raging', -- 片手斧
     'ukko', 'steel', 'uph', 'shield', --両手斧
-    'dai',  -- 両手槍
+    'dai', 'penta',  -- 両手槍
     'demi', 'spin', 'frost', -- 両手剣
     'kuu', 'jin', 'ten', 'shun', 'rin', -- 片手刀
     'gekko', 'kasha', 'shoha', 'hocho', 'kagero', 'yuki', 'enpi',-- 両手刀
@@ -72,6 +72,7 @@ M.weaponskillTable = {
     steel = 'スチールサイクロン',
     uph = 'アップヒーバル',
     -- 両手槍
+    penta = 'ペンタスラスト',
     dai = '大車輪',
     -- 両手鎌
     spiral = 'スパイラルヘル',
