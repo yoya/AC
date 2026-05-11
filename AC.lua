@@ -1587,6 +1587,9 @@ windower.register_event('addon command', function(...)
 	else
 	    io_chat.error("ac use { silt | beads | moolah | scroll | soulstonesack}")
 	end
+    elseif subcommand == 'warp' or
+	subcommand == 'dim' or subcommand == 'holla' or subcommand == 'mea' then
+	M.warp_with_equip(subcommand, 10)
     elseif subcommand == 'ws' then
         changeWS(arg1)
     elseif subcommand == 'wstp' then
