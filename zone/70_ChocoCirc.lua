@@ -2,6 +2,28 @@
 
 local M = { id = 70 }
 
+local command = require 'command'
+local incoming_text = require 'incoming/text'
+
+function M.incoming_text_handler(text)
+    -- レースが終わったらデジョンする
+    -- エミネンス目標対応で、レースの連続観戦はしない前提
+    if string.contains(text, "次回の開催までごきげんよう！") then
+	command.send("ac warp")
+    end
+end
+
+M.text_handler_idx = nil
+function M.zone_in()
+    M.text_handler_idx = incoming_text.addListener("", M.incoming_text_handler)
+end
+
+function M.zone_out()
+    if M.text_handler_idx ~= nil then
+	incoming_text.removeListener(M.text_handler_idx)
+    end
+end
+
 M.routes = {
     ent = {
 	{x=-320,y=-475,z=-0.3}, {x=-326,y=-464},
