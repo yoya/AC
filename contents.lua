@@ -18,7 +18,9 @@ M.LoginPoint = 12
 M.Vagary     = 13  -- ベガリーインスペクター
 M.Synergy    = 14  -- 窯錬成 (スキル上げ)
 M.Redeem     = 15  -- 換金(エミネンス/ユニティポイント)
-M.allContents = { M.Idle, M.Leveling, M.Ambus, M.Works, M.Trove,  M.Mission, M.AbysYellow, M.MogGarden, M.Trial, M.Raives, M.WKR, M.LoginPoint, M.Vagary, M.Synergy, M.Redeem }
+M.GobMys     = 16  -- ゴブの不思議箱 (Gobbie Mystery Box)
+
+M.allContents = { M.Idle, M.Leveling, M.Ambus, M.Works, M.Trove,  M.Mission, M.AbysYellow, M.MogGarden, M.Trial, M.Raives, M.WKR, M.LoginPoint, M.Vagary, M.Synergy, M.Redeem, M.GobMys }
 
 M.ambus   = require 'contents/ambus'
 M.trial   = require 'contents/trial'
@@ -39,8 +41,12 @@ M.contentsTable = {
     [M.Synergy] = M.synergy,
     [M.Redeem]  = M.redeem,
 }
+for c, m in pairs(M.contentsTable) do
+    m.parent = M
+end
 
 M.type = M.Idle
+
 
 M.nameTable = {
     [M.Idle]       = {'Idle', nil, ''},
@@ -57,7 +63,8 @@ M.nameTable = {
     [M.LoginPoint] = {'LoginPoint', 'login', 'logpo'},
     [M.Vagary]     = {'Vagary'},
     [M.Synergy]    = {'Synergy'},
-    [M.Redeem]     = {'Redeem'}
+    [M.Redeem]     = {'Redeem'},
+    [M.GobMys]     = {'GobMys', 'Gob'},
 }
 
 function M.setContents(name)
