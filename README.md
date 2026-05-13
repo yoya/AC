@@ -7,6 +7,8 @@ Windower addon 。
 
 # settings
 
+## Windower
+
 - Windower/autoload/autoload.txt (Windower 初期画面でも設定可能)
 
 ```
@@ -23,6 +25,16 @@ lua load sparks
 
 - sparks
   - https://github.com/sethmccauley/Addons/tree/master/sparks
+
+## WSL2 Lua
+
+WSL2 から Lua でアクセスする script を使う為の準備
+
+```
+$ sudo apt-get install lua-lfs
+$ sudo apt-get install lua-cjson
+$ sudo apt-get install lua-socket  # 予定
+```
 
 # findall / res
 
