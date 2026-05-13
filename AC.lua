@@ -1361,8 +1361,8 @@ windower.register_event('addon command', function(...)
 	-- ログイン
 	local n = tonumber(arg1, 10)
 	if n == nil or
-	    not utils.table.contains({"mailbox", "garden", "m", "g"}, arg2) then
-	    print("ac partrol <chara number> {all | mailbox | garden} ")
+	    not utils.table.contains({"mailbox", "garden", "m", "g", "gob"}, arg2) then
+	    print("ac partrol <chara number> {all | mailbox | garden | gob} ")
 	else
 	    for i = 1, n do
 		print("Patrol #", i, "/", n)
@@ -1386,8 +1386,23 @@ windower.register_event('addon command', function(...)
 		    pushKeys({"escape"})
 		    coroutine.sleep(1)
 		    pushKeys({"escape"})
+		elseif arg2 == "gob" then  -- ゴブの不思議箱
+		    windower.ffxi.turn(3.14/2)  -- ドアの方を向く
+		    turnToFront()
+		    io_net.targetByMobName("Door:Back to Town")
+		    coroutine.sleep(1)
+		    pushKeys({"enter", "enter"})
+		    coroutine.sleep(1)
+		    -- 出るエリアを選択するに合わせる
+		    pushKeys({"down", "down", "down", "enter"})
+		    -- coroutine.sleep(1)
+		    pushKeys({"down", "enter"})  -- 東アドゥリンを選択
+		    coroutine.sleep(8)
+		    command.send("ac move gob")
+		    coroutine.sleep(40)
+		    print("after sleep 50")
 		else
-		    print("internal error: ac partrol <chara number> {mailbox|garden} ")
+		    print("internal error: ac partrol <chara number> {mailbox|garden|gob} ")
 		    break
 		end
 		coroutine.sleep(2)
