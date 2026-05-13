@@ -1736,6 +1736,7 @@ windower.register_event('zone change', function(zone, prevZone)
     if iamLeader() then
 	control.auto = false
     end
+    ac_move.auto = false
     useSilt = false
     useBeads = false
     doPointCheer = false
