@@ -18,6 +18,7 @@ local distance = ac_pos.distance
 local io_net = require 'io/net'
 local acmob = require 'mob'
 local getMobPosition = acmob.getMobPosition
+local acitem = require 'item'
 
 local turnToFront = function(target)
     local push_numpad5 = 'setkey numpad5 down; wait 0.1; setkey numpad5 up'
@@ -193,6 +194,12 @@ function moveToAction(p, reverse)
     if p.puller ~= nil then
 	control.puller = p.puller
 	print("puller:", p.puller)
+    end
+    if p.show ~= nil then
+	if p.show == "bag_empty_epace" then
+	    n = acitem.inventoryFreespaceNum()
+	    io_chat.info("かばんの空きは"..n.."*99 = "..(n*99))
+	end
     end
     if p.target ~= nil then
 	print("target:"..p.target)
