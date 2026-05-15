@@ -190,7 +190,9 @@ function moveToAction(p, reverse)
 	io_chat.info("enemy_range:"..p.enemy_range)
 	control.enemy_range = p.enemy_range
     end
-
+    if p.keys ~= nil then
+	pushKeys(p.keys)
+    end
     if p.puller ~= nil then
 	control.puller = p.puller
 	print("puller:", p.puller)
