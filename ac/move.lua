@@ -275,7 +275,7 @@ function moveTo(route, routeTable, nextRoute, reverse)
 --    print('start_idx', start_idx)
     if distance(pos, route[start_idx]) > 64 then
         io_chat.error("not starting position")
-        stop()
+        -- M.stop()
         return false
     end
     local prevPos= nil
@@ -300,7 +300,7 @@ function moveTo(route, routeTable, nextRoute, reverse)
 		if p.stop == "raives" then
 		    windower.ffxi.run(false)
 		    if contents.raives.arise() then
-			stop()
+			-- M.stop()
 			return false -- レイヴ発生中なら移動終了
 		    end
 		end
@@ -339,7 +339,7 @@ function moveTo(route, routeTable, nextRoute, reverse)
 			io_chat.printf("add midpoint (x=%d,y=%d) zone(%d) file",
 				       (prevPos.x + currPos.x)/2,
 				       (prevPos.y + currPos.y)/2, zone_id)
-			stop()
+			-- M.stop()
 			return false
 		    end
 		    local vec1 = {x=currPos.x-prevPos.x,y=currPos.y-prevPos.y}
@@ -356,7 +356,7 @@ function moveTo(route, routeTable, nextRoute, reverse)
                 while (distance(currentPos(), dpos) > 0.5 and M.auto) do
                     if distance(currentPos(), dpos) > 6468 and false then
                         io_chat.warn("not near position")
-                        stop()
+                        -- M.stop()
                         return false
                     end
                     turnTo(dpos)
@@ -428,7 +428,6 @@ function moveTo(route, routeTable, nextRoute, reverse)
 end
 
 function autoMoveTo(zone_id, destTable, routeTable)
-    M.auto = true
     if destTable[1] == nil then
         if routeTable == nil then
 	    io_chat.setNextColor(3) -- 赤
@@ -470,7 +469,7 @@ function autoMoveTo(zone_id, destTable, routeTable)
 	    _autoMoveTo(zone_id, dest, routeTable, reverse, nextDest)
 	end
     end
-    stop()
+    -- M.stop()
 end
 M.autoMoveTo = autoMoveTo
 
@@ -485,8 +484,13 @@ function _autoMoveTo(zone_id, dest, routeTable, reverse, nextDest)
     if reverse == true then
 	route = array_reverse(route)
     end
+    if M.auto == true then
+	print("_autoMoveTo: singleton guard", destTable)
+	return
+    end
+    M.auto = true
     moveTo(route, routeTable, nextRoute, reverse)
-    stop()
+    M.stop() -- M.auto = false
 end
 
 
