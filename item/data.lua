@@ -956,14 +956,13 @@ M.crystal_char_table = {
 --  [4111] = "fire_crystals",    -- 闇の塊
 }
 function M.char_update_handler(char)
-    -- local io_chat = require 'io/chat'
-    -- io_chat.info("item/data.char_handler", char)
     for i, c in pairs(M.crystal_char_table) do
 	local p = char[c]
-	if p ~= nil and p > 4500 then  -- モグ預けが溢れそうなら店売り
+	if p ~= nil and p > 4800 then  -- モグ預けが溢れそうなら店売り
 	    table.insert(M.JunkItems, i)
 	end
     end
+    M.JunkItemsT = utils.table.convertArrayToTrueTable(M.JunkItems)
 end
 acevent.addListener("char update", M.char_update_handler)
 
