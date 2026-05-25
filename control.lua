@@ -5,6 +5,7 @@ local M = { }
 
 M.INIT_VALUES = {
     auto = false,
+    automove = true, -- zone change での automove
     attack = false,  -- 敵と戦う
     calm = false,    -- 戦闘中動かない
     debug = false,   -- デバッグメッセージ

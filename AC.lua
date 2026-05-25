@@ -1173,11 +1173,15 @@ windower.register_event('addon command', function(...)
 	end
 	contents.showContents()
     elseif subcommand == 'control' or subcommand == 'cnt' then
-	if arg1 == 'debug' then
+	if arg1 == 'automove' then
+	    local onoff = argument_means_on(arg2)
+	    control.automove = onoff
+	    io_chat.info("ac control automove "..tostring(control.automove))
+	elseif arg1 == 'debug' then
 	    if  arg2 ~= nil then
 		local onoff = argument_means_on(arg2)
 		control.debug = onoff
-		io_chat.info("ac control debug "..tostring(onoff))
+		io_chat.info("ac control debug "..tostring(control.debug))
 	    else
 		io_chat.error("ac congtrol debug {on|off}")
 	    end
@@ -1191,7 +1195,7 @@ windower.register_event('addon command', function(...)
 	elseif arg1 == 'wstp' then
 	    control.setWSTP(arg2)
 	else
-	    io_chat.error("ac control debug|provoke")
+	    io_chat.error("ac control automove | debug | provoke | wstp")
 	end
     elseif subcommand == 'debug' then
 	if arg1 == 'checkbags' then
