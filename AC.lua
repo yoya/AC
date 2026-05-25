@@ -353,6 +353,8 @@ local notLeaderFunction = function()
 		string.find(target_name, "Waypoint") or
 		string.find(target_name, "Nunaarl Bthtrogg") or
 		string.find(target_name, "Undulating Confluence") or
+		string.find(target_name, "Echo Disseminator") or  -- WoE
+		string.find(target_name, "Veridical Conflux") or  -- WoE
 		string.find(target_name, "Ethereal") or
 		string.find(target_name, "Affi") or
 		string.find(target_name, "Dremi") or
