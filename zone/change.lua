@@ -31,21 +31,25 @@ end
 
 function M.search_and_invoke_automatic_routes(zone, automatic_routes,
 					      contents_match)
-    -- print("zone/change.search_and_invoke_automatic_routes")
-    local zone_object = aczone.zoneTable[zone]
-    if contents_match then  -- コンテンツが一致するものに絞る
-	-- print("contents_match", contents_match)
-	local new_routes = {}
-	for f, route in pairs(automatic_routes) do
-	    -- io_chat.notice("route.contents", route.contents)
-	    if route ~= nil and route.contents ~= nil then
-		if contents.matchContentsName(route.contents) then
+    print("zone/change.search_and_invoke_automatic_routes")
+    -- コンテンツに応じて有効な宛先を切り替える
+    local new_routes = {}
+    for f, route in pairs(automatic_routes) do
+	if route ~= nil then
+	    if contents_match then
+		if route.contents ~= nil and
+		    contents.matchContentsName(route.contents) then
+		    new_routes[f] = route
+		end
+	    else
+		if route.contents == nil then
 		    new_routes[f] = route
 		end
 	    end
 	end
-	automatic_routes = new_routes
     end
+    automatic_routes = new_routes
+    local zone_object = aczone.zoneTable[zone]
     for f, t in pairs(automatic_routes) do
 	local fp = zone_object.essentialPoints[f]
 	if fp == nil then
@@ -71,10 +75,16 @@ function M.search_and_invoke_automatic_routes(zone, automatic_routes,
 	    io_chat.infof("移動するのはリーダーだけ: %s => %s", f, route)
 	    exec_auto_route = false
 	end
-	if t.need_level ~= nil and level < t.need_level then
-	    io_chat.setNextColor(4) -- ピンク
-	    io_chat.infof("移動するのに level 20 必要: %s => %s", f, route)
-	    exec_auto_route = false
+	local player = windower.ffxi.get_player()
+	local level = player.main_job_level
+	--if level ~= nil and t.need_level ~= nil then
+	if t.need_level ~= nil then
+	    if level < t.need_level then
+		io_chat.infof("移動するのに level 20 必要: %s => %s", f, route)
+		exec_auto_route = false
+	    end
+	else
+	    -- print("level, t.need_level",level, t.need_level)
 	end
 	if control.debug then
 	    io_chat.print(f, "fp:", fp, "nearDist:", nearDist, "nexrDistX,Y:", nearDistX, nearDistY)
@@ -91,6 +101,11 @@ function M.search_and_invoke_automatic_routes(zone, automatic_routes,
 end
 
 function M.automatic_routes_handler(zone, automatic_routes)
+    print("zone/change.automatic_routes_handler", zone)
+    if not control.automove then
+	print("control.automove is false")
+	return
+    end
     local zone_object = aczone.zoneTable[zone]
     if zone_object == nil then
 	return
