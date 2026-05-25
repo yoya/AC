@@ -67,11 +67,26 @@ M.nameTable = {
     [M.GobMys]     = {'GobMys', 'Gob'},
 }
 
+function M.setType(c)
+    local prevContents = M.type
+    if prevContents ~= c then
+	local prevC = M.contentsTable[prevContents]
+	local nextC = M.contentsTable[c]
+	if prevC ~= nil and prevC.contents_out ~= nil then
+	    prevC.contents_out()
+	end
+	M.type = c
+	if nextC ~= nil and nextC.contents_in ~= nil then
+	    prevC.contents_in()
+	end
+    end
+end
+
 function M.setContents(name)
     for c, names in pairs(M.nameTable) do
 	for _, n in ipairs(names) do
 	    if name:lower() == n:lower() then
-		M.type = c
+		M.setType(c)
 		return true
 	    end
 	end
@@ -113,12 +128,12 @@ function M.zone_out()
 end
 
 function M.getContentsByName(name)
-    print("contents.getContentsByName(name)", name)
+    -- print("contents.getContentsByName(name)", name)
     local names = M.nameTable[M.type]
     if names == nil then return false end
     for i, n in ipairs(names) do
 	if name:lower() == n:lower() then
-	    return i, M.contentsTable[n]
+	    return M.type, M.contentsTable[M.type]
 	end
     end
     return 0, nil
