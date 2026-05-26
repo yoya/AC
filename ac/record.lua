@@ -42,8 +42,8 @@ function M.record_char()
 	f:write(string.rep(" ", 7 - namelen))
     end
     -- https://github.com/Windower/Resources/blob/master/resources_data/statuses.lua
-    if 2 <= player.status  and player.status <= 3 then
-	-- k2 Dead, 3: Engaged Dead
+    if 2 <= player.status and player.status <= 3 then
+	-- 2 Dead, 3: Engaged Dead
 	f:write("(status:"..player.status..")")
     end
     f:write(" "..player.main_job..":"..player.main_job_level.."/"..player.sub_job)
