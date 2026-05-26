@@ -25,6 +25,10 @@ function M.record_char()
 	print("record_path not found: "..record_path)
 	return
     end
+    if player.sub_job == nil then
+	print("no subjob, no recoed: "..record_path)
+	return
+    end
     local filename = record_path .. "/"..(player.name)..".txt"
     -- print(filename, M.eminence_point)
     local f = io.open(filename, "w")
