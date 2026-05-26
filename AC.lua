@@ -1580,6 +1580,7 @@ windower.register_event('addon command', function(...)
 		{id=19246, name="モグのへそくり"},
 		{id=19776, name="モグのおひねり"},
 		{id=21369, name="モグのたなぼた"},
+		{id=21370, name="ゴブのたなぼた"},
 	    }
 	    io_chat.notice("ac moolah # start")
 	    acitem.useEquipItemSequence(slot_ammo, moolah_item_list, 11)
