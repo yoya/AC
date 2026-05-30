@@ -1,4 +1,6 @@
 local M = {}
+__AC = __AC or {}
+__AC.contents = M
 
 local io_chat = require 'io/chat'
 

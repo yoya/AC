@@ -5,6 +5,8 @@ local utils = require 'utils'
 local ac_pos = require 'ac/pos'
 
 local M = {}
+__AC = __AC or {}
+__AC.zone = M
 
 M.city_zone_id_list = {
     230, 231, 232, 233, -- サンドリア
