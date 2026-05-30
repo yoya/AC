@@ -32,46 +32,75 @@ local furrow_check = false  -- 畑
 local pond_check = false  -- 池
 local rearing_check = false  -- モンスター飼育
 
+M.furrow_count   = -1  -- 畑
+M.arboreal_count = -1  -- 木立
+M.mineral_count  = -1  -- 鉱脈
+M.pond_count     = -1  -- 池
+M.coast_count    = -1  -- 海
+M.rearing_count  = -1  -- お世話
+--
+M.furrow_rank   = -1  -- 畑
+M.arboreal_rank = -1  -- 木立
+M.mineral_rank  = -1  -- 鉱脈
+M.pond_rank     = -1  -- 池
+M.coast_rank    = -1  -- 海
+M.rearing_rank  = -1  -- お世話
+
+M.rankup_count_table = {
+    furrow   = { 0,  3, 10, 46, 127, 256, 512 },  -- 畑
+    arboreal = { 0 , 9, 20, 74, 195, 300, 750 },  -- 木立
+    mineral  = { 0,  9, 20, 74, 196, 300, 750 },  -- 鉱脈
+    pond     = { 0,  3,  7, 16,  29,  50,  80 },  -- 池
+    coast    = { 0,  3,  7, 16,  29,  50,  80 },  -- 海
+    rearing  = { 0, 15, 20, 40,  60,  80, 100 },  -- お世話
+}
+
 function M.incoming_text_handler(text)
     if string.contains(text, "の記録を") then
 	furrow_check = true
 	pond_check = true
 	rearing_check = true
     end
+    if M.coast_rank < 0 and string.contains(text, "海岸に仕掛けられた網") then
+	local s = split_multi(text, {"ランク"})
+	M.coast_rank = utils.tonumber(s[2])
+	io_chat.info("coast_rank ", M.coast_rank)
+    end
+    -- 
     if furrow_check and	string.contains(text, "畑での収穫回数：") then
 	local s = split_multi(text, {"畑での収穫回数：", "木立の収穫回数：", "鉱脈の収穫回数："})
-	local furrow_count = utils.tonumber(s[2])
-	local arboreal_count = utils.tonumber(s[3])
-	local mineral_count = utils.tonumber(s[4])
+	M.furrow_count = utils.tonumber(s[2])
+	M.arboreal_count = utils.tonumber(s[3])
+	M.mineral_count = utils.tonumber(s[4])
 	io_chat.setNextColor(7)
-	io_chat.print("furrow_count ", furrow_count, "arboreal_count", arboreal_count, "mineral_count", mineral_count)
+	io_chat.print("furrow_count ", M.furrow_count,
+		      "arboreal_count", M.arboreal_count,
+		      "mineral_count", M.mineral_count)
 	furrow_check = false
     end
     if pond_check and string.contains(text, "池での漁獲回数：") then
 	local s = split_multi(text, {"池での漁獲回数：", "海での漁獲回数："})
-	local pond_count = utils.tonumber(s[2])
-	local coast_count = utils.tonumber(s[3])
+	M.pond_count = utils.tonumber(s[2])
+	M.coast_count = utils.tonumber(s[3])
 	io_chat.setNextColor(7)
-	io_chat.print("pond_count", pond_count, "coast_count", coast_count)
+	io_chat.print("pond_count", M.pond_count,
+		      "coast_count", M.coast_count)
 	pond_check = false
     end
     if rearing_check and text:contains( "モンスター飼育完了総数：") then
 	local s = split_multi(text, {"お世話した回数：", "モンスター飼育完了総数："})
-	local rearing_count = utils.tonumber(s[2])
+	M.rearing_count = utils.tonumber(s[2])
 	io_chat.setNextColor(7)
-	io_chat.print("rearing_count", rearing_count)
+	io_chat.print("rearing_count", M.rearing_count)
 	rearing_check = false
     end
 end
 
 function M.contents_in()
-    print("M.zone_in")
     listener_idx = incoming_text.addListener("", M.incoming_text_handler)
 end
 
 function M.contents_out()
-    print("M.zone_out")
-    
     if listener_idx > 0 then
 	incoming_text.removeListener(listener_idx)
 	listener_idx = 0
