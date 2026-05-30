@@ -77,7 +77,7 @@ function M.setType(c)
 	end
 	M.type = c
 	if nextC ~= nil and nextC.contents_in ~= nil then
-	    prevC.contents_in()
+	    nextC.contents_in()
 	end
     end
 end
