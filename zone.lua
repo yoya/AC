@@ -198,6 +198,9 @@ for z, m in pairs(M.zoneTable) do
     end
     -- 各々の zone handler から routeTable を参照できるようにする
     m.parent = M
+    if m.init ~= nil then
+	m.init(M)
+    end
 end
 
 function M.getRouteTable(zone)
