@@ -9,7 +9,7 @@ function M.incoming_text_handler(text)
     -- レースが終わったらデジョンする
     -- エミネンス目標対応で、レースの連続観戦はしない前提
     if string.contains(text, "次回の開催までごきげんよう！") then
-	command.send("ac warp")
+	task.setTaskSimple("ac warp", 10, 5)
     end
 end
 
