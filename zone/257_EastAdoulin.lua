@@ -6,20 +6,31 @@ local io_chat = require 'io/chat'
 
 M.routes = {
     -- モグハウス
-    hp2m = {
-	{x=-53.7,y=-128.5,z=-0.1}, -- {x=-54,y=-100,z=0,d=2},
+    hp2mog = {
+	{x=-53.7,y=-128.5,z=-0.1,desc="HPからモグハウス"},
+	-- {x=-54,y=-100,z=0,d=2},
 	{x=-54,y=-99,d=1},
 	-- -- {x=-54,y=-91,d=1}, -- {x=-48,y=-90,d=1}, {x=-50,y=-92,d=1},
 	{a="f8"}, {target="Home Point #2"}, {a="touch"}
     },
+    gob = {
+	{x=-56,y=-128.5,z=-0.1,desc="ゴブの不思議箱"},
+	--{x=-58,y=-100}, {x=-63,y=-94},
+	{x=-58,y=-101}, {x=-64,y=-94},
+	{x=-80,y=-94,d=1}, {target="Winrix"}, {a="touch"}, {wait=1},
+	{a="touch"}, {keys={"down", "right", "right", "enter", 10, "escape"}},
+	--{wait=5}, {a="esc"},
+	{x=-64,y=-94}, {x=-58,y=-101},
+	{x=-58,y=-118,z=-0.1}, {}
+    },
     auction = {
-	{x=-56,y=-128.5,z=-0.1}, {x=-54,y=-99}, {x=-48,y=-94},
+	{x=-56,y=-128.5,z=-0.1,desc="モグハウスからオークションへ"},
+	{x=-54,y=-99}, {x=-48,y=-94},
 	{x=-24.5,y=-92.3,z=-0.6}, {target="Auction Counter"}
     },
     -- HP#2(M)
     moghouse = {
-	-- {x=-50.5,y=-95,z=-0.1}, {x=-54,y=-100},
-	{x=-50.5,y=-95,z=-0.1}, {x=-55,y=-101},
+	{x=-50.5,y=-95,z=-0.1,desc="HPからモグハウス"}, {x=-55,y=-101},
 	{x=-56,y=-109}, {}
     },
     -- PCK
@@ -89,6 +100,7 @@ M.essentialPoints = {
     pck = {x=-101.3,y=-10.7,z=-0.1},
     -- x=(-59.4,-51.5),y=-128.5
     from_moghouse = {x=-56,y=-128.5,z=-0.1, dx=5,dy=1},
+    from_moghouse_gob = {x=-56,y=-128.5,z=-0.1, dx=5,dy=1},
     -- HP#2(M) x=(-51.3,-50.5), y=(-95.7-93.9)
     homepoint_1 = {x=-52.9,y=58.9,z=-0.1, d=1.5},
     homepoint_2_M = {x=-50.5,y=-95.5,z=-0.1, d=1.5},
@@ -98,7 +110,9 @@ M.essentialPoints = {
 
 M.automatic_routes = {
     pck = { route="pck" },
-    from_moghouse = { route="hp2m" },
+    from_moghouse = { route="hp2mog" },
+    -- Gobbie Mystery Box
+    from_moghouse_gob = { route="gob", contents="GobMys" },
     homepoint_2_M = { route="moghouse" },
     yahse_dock = { route="ionis-wp" },
     homepoint_1 = { route="ionis-hp" },
