@@ -27,6 +27,13 @@ M.routes = {
         {x=313.2,y=-18.2}, {x=324.4,y=-23.2,z=29.6,d=1}
 	-- {x=353,y=-20,d=1}  -- {x=333.8,y=-17.3}
     },
+    h10 = {
+        {x=179.5,y=40.5}, {x=190,y=56.3}, {x=209.8,y=64.9},
+        {x=230,y=96.8},{x=239.9,y=99.8},{x=258.5,y=100,z=30.9,d=1},
+	{stop="raives"}, {x=280,y=100}, {x=290,y=97}, {stop="raives"},
+        {x=300,y=94,z=30.4}, {x=298.8,y=64.4}, {x=289.5,y=48.9},
+	--- 共通
+    },
     i11 = { -- かえる狩場
         {x=179.5,y=40.5}, {x=190,y=56.3}, {x=209.8,y=64.9},
         {x=230,y=96.8},{x=239.9,y=99.8},{x=258.5,y=100,z=30.9,d=1},
@@ -49,15 +56,17 @@ M.routes = {
 }
 
 M.essentialPoints = {
-    from_mariami1 = {x=179.5,y=40.5},      -- あとで調整
-    from_mariami2 = {x=181.5,y=40.5,z=30}, -- あとで調整
-    from_mariami = {x=180.5,y=40.5,z=30, d=2},
+    -- x={179.5-180.5}
+    --from_mariami1 = {x=179.5,y=40.5,z=0,dx=2},      -- あとで調整
+    --from_mariami2 = {x=181.5,y=40.5,z=30}, -- あとで調整
+    from_mariami = {x=180.5,y=40.5,z=30, dx=3},
 }
 
 M.automatic_routes = {
-    from_mariami = { route="i11" },
-    from_mariami1 = { route="i11" },
-    from_mariami2 = { route="i11" },
+    --from_mariami = { route="i11" },
+    from_mariami = { route="h10" },
+    --from_mariami1 = { route="h10" },
+    --from_mariami2 = { route="h10" },
 }
 
 return M
