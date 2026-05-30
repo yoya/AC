@@ -12,7 +12,7 @@ M.Works      =  4  -- ワークス
 M.Trove      =  5  -- AMANトローブ
 M.Mission    =  6
 M.AbysYellow =  7  -- アビセアの黄色発光
-M.MogGarden  =  8
+M.Garden     =  8  -- モグガーデン
 M.Trial      =  9  -- 試練(各属性プロトクリスタル)
 M.Raives     = 10  -- コロナイズ/レイアレイブス
 M.WKR        = 11  -- ワイルドキーパーレイブス
@@ -22,20 +22,23 @@ M.Synergy    = 14  -- 窯錬成 (スキル上げ)
 M.Redeem     = 15  -- 換金(エミネンス/ユニティポイント)
 M.GobMys     = 16  -- ゴブの不思議箱 (Gobbie Mystery Box)
 
-M.allContents = { M.Idle, M.Leveling, M.Ambus, M.Works, M.Trove,  M.Mission, M.AbysYellow, M.MogGarden, M.Trial, M.Raives, M.WKR, M.LoginPoint, M.Vagary, M.Synergy, M.Redeem, M.GobMys }
+M.allContents = { M.Idle, M.Leveling, M.Ambus, M.Works, M.Trove,  M.Mission, M.AbysYellow, M.Garden, M.Trial, M.Raives, M.WKR, M.LoginPoint, M.Vagary, M.Synergy, M.Redeem, M.GobMys }
 
 M.ambus   = require 'contents/ambus'
 M.trial   = require 'contents/trial'
+M.garden  = require 'contents/garden'
 M.raives  = require 'contents/raives'
 M.wkr     = require 'contents/wkr'
 M.vagary  = require 'contents/vagary'
 M.synergy = require 'contents/synergy'
 M.trove   = require 'contents/trove'
 M.redeem  = require 'contents/redeem'
+
 M.contentsTable = {
     -- モードが必要なだけで特別な処理のないcontentsは、ここに追加しない
     [M.Ambus]   = M.ambus,
     [M.Trial]   = M.trial,
+    [M.Garden]  = M.garden,
     [M.Trove]   = M.trove,
     [M.Raives]  = M.raives,
     [M.WKR]     = M.wkr,
@@ -58,7 +61,7 @@ M.nameTable = {
     [M.Trove]      = {'Trove'},
     [M.Mission]    = {'Mission'},
     [M.AbysYellow] = {'AbysYellow', 'yellow'},
-    [M.MogGarden]  = {'MogGarden', 'garden'},
+    [M.Garden]     = {'MogGarden', 'garden'},
     [M.Trial]      = {'Trial'},
     [M.Raives]     = {'Raives'},
     [M.WKR]        = {'WKR'},
