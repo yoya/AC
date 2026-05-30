@@ -1,7 +1,12 @@
 -- 突風の回廊
 
 local M = { id = 201 }
-local contents = require 'contents'
+
+function M.init()
+    local contents = __AC.contents
+    M.routes.bc = contents.trial.bc_route
+    M.essentialPoints.bc_in = contents.trial.bc_point
+end
 
 M.routes = {
     proto = {
@@ -9,12 +14,10 @@ M.routes = {
 	{x=-378,y=-396}, {x=-372,y=-385}, {x=-362.5,y=-381.4,z=0.8},
 	{a="f8touch"}
     },
-    bc = contents.trial.bc_route,
 }
 
 M.essentialPoints = {
     entrance = {x=-399.5,y=-421.5,z=0},
-    bc_in = contents.trial.bc_point,    
 }
 
 M.automatic_routes = {

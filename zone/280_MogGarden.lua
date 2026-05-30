@@ -2,12 +2,19 @@
 
 local M = { id = 280 }
 
-local utils = require 'utils'
-local io_chat = require 'io/chat'
-local io_net = require 'io/net'
-local incoming_text = require 'incoming/text'
+M.origContents = nil
+function M.zone_in()
+    local contents = require 'contents'
+    M.origContents = contents.type
+    contents.setType(contents.Garden)  -- モグガーデン
+end
 
-local split_multi = utils.string.split_multi
+function M.zone_out()
+    local contents = require 'contents'
+    if M.origContents ~= nil then
+	contents.setType(M.origContents)
+    end
+end
 
 M.routes = {
     mogsale = {

@@ -2,16 +2,16 @@
 
 local M = { id = 287 }
 
-local contents = require('contents')
-
 function M.zone_in()
     print("Ambus in")
-    contents.type = contents.Ambus
+    local contents = __AC.contents
+    contents.setType(contents.Ambus)
 end
 
 function M.zone_out()
     print("Ambus out")
-    contents.type = contents.Idle
+    local contents = __AC.contents
+    contents.setType(contents.Idle)
 end
 
 M.routes = {

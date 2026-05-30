@@ -1,7 +1,5 @@
 -- ホルレーの岩峰
 
-local contents = require 'contents'
-
 local M = { id = 139 }
 
 M.routes = {
@@ -36,8 +34,9 @@ M.routes = {
 }
 
 function M.warp_in()
+    local contents = __AC.contents
     if M.parent.isNear(139, "entrance", 10) then
-	contents.type = contents.Trove
+	M.parent.type = contents.Trove
     end
 end
 

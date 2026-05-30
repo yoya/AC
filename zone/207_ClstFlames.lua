@@ -2,19 +2,23 @@
 
 local M = { id = 207 }
 
-local contents = require 'contents'
+function M.init()
+    local contents = __AC.contents
+    M.routes.bc = contents.trial.bc_route
+    M.essentialPoints.bc_in = contents.trial.bc_point
+end
 
 M.routes = {
     proto = {
 	{x=-699.5,y=-646.7,z=0.9}, {x=-704,y=-622},
 	{x=-720,y=-600.7,z=0}, {a="f8touch"}
     },
-    bc = contents.trial.bc_route
+    -- bc = contents.trial.bc_route
 }
 
 M.essentialPoints = {
     entrance = {x=-699.5,y=-646.7,z=0.9},
-    bc_in = contents.trial.bc_point,
+    -- bc_in = contents.trial.bc_point,
 }
 
 M.automatic_routes = {

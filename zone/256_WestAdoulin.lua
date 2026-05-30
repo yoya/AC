@@ -5,9 +5,21 @@ local M = { id = 256 }
 local acitem = require 'item'
 local utils = require 'utils'
 local io_net = require 'io/net'
-local ac_move = require 'ac/move'
-local turnToPos = ac_move.turnToPos
 local control = require 'control'
+
+M.origContents = nil
+function M.zone_in()
+    local contents = require 'contents'
+    M.origContents = contents.type
+    contents.type = contents.Redeem  -- エミネンス、ユニティポイント交換
+end
+
+function M.zone_out()
+    local contents = require 'contents'
+    if M.origContents ~= nil then
+	contents.type = M.origContents
+    end
+end
 
 M.routes = {
     moogle = {  -- 開始地点が他にマッチしないように

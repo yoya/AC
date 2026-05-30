@@ -2,7 +2,11 @@
 
 local M = { id = 203 }
 
-local contents = require 'contents'
+function M.init()
+    local contents = __AC.contents
+    M.routes.bc = contents.trial.bc_route
+    M.essentialPoints.bc_in = contents.trial.bc_point
+end
 
 M.routes = {
     -- CL135 ワープ
@@ -20,12 +24,12 @@ M.routes = {
 	-- ここまで共通
 	{x=558.5,y=598}, {a="f8touch"}
     },
-    bc = contents.trial.bc_route,
+    -- bc = contents.trial.bc_route,
 }
 
 M.essentialPoints = {
     entrance = {x=500,y=523.3,z=0},
-    bc_in = contents.trial.bc_point,
+    -- bc_in = contents.trial.bc_point,
 }
 
 M.automatic_routes = {
