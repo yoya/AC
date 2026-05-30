@@ -83,7 +83,10 @@ M.routes = {
     -- Defliaa から
     def2nuna = {--  Nunaarl(子ミスラ)へ
 	{x=41,y=-117,z=2}, {x=32,y=-121,z=0,d=1},
-	{x=24,y=-121,d=1}, {x=15,y=-112,z=-0.1,d=1}
+	{x=24,y=-121,d=1}, --{x=15,y=-112,z=-0.1,d=1},
+	{x=16,y=-113,z=0,d=1},
+	{target="Nunaarl Bthtrogg"}, {show="bag_empty_epace"},
+	{a="touch"}
     },
     def2mog = { -- モグハウスへ
 	{x=41,y=-117,z=2}, {x=32,y=-121,z=0,d=1},
@@ -128,6 +131,15 @@ local sell_items = {
     12385, -- アケロンシールド
     12387, -- ケーニヒシールド
     --
+    3520, -- 炎将の赤石
+    3521, -- 女王の透石
+    3522, -- 鳥王の翠石
+    3523, -- 巨人の黄石
+    3524, -- 隠者の紫石
+    3525, -- 海蛇の藍石
+    3526, -- 七色の白石
+    3527, -- 星月の黒石
+    --
     1155, -- 砂鉄
     17296, -- 石つぶて
 }
@@ -137,6 +149,7 @@ local sell_itemsT = utils.table.convertArrayToTrueTable(sell_items)
 local selljunk_running = false
 
 function M.tick(player)
+    local ac_move = require 'ac/move'
     if acitem.inventoryHasItemT(sell_itemsT) then
 	local mob = windower.ffxi.get_mob_by_name("Defliaa")
 	local me = windower.ffxi.get_mob_by_target("me")
