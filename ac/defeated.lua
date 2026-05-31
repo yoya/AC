@@ -9,9 +9,9 @@ local task = require 'task'
 
 -- 敵を倒した時に呼ばれる関数
 function M.done()
+    task.allClear() -- 戦闘後の動きが不自然なので、一旦タスク削除
     ac_stat.print()
     ac_record.record_char()
-    task.allClear() -- 戦闘後の動きが不自然なので、一旦タスク削除
     local player = windower.ffxi.get_player()
     if player == nil then  -- フェイルセーフ
 	io_chat.error("defeated: player == nil")
