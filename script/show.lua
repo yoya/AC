@@ -64,6 +64,10 @@ for i, file in ipairs(files) do
     -- 一行目
     local line1 = f:read()
     local table1 = split_multi(line1, {" "})
+    if table1 == nil then
+	print("Wronf file:"..savedDir..file)
+	exit(1)
+    end
     local name = table1[1]
     -- 二行目
     local line2 = f:read()
@@ -113,7 +117,7 @@ for i, file in ipairs(files) do
 	    end
 	end
     end
-local time, err = lfs.attributes(savedDir..file, 'modification')
+    local time, err = lfs.attributes(savedDir..file, 'modification')
     -- print(name, eminence_point, unity_point, time)
     local char  = {
 	line1 = line1,
