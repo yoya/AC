@@ -38,11 +38,15 @@ function M.incoming_text_handler(text)
 	string.contains(text, "エミネンスが足りません") or
 	string.contains(text, "アイテム等の交換に使用できるエミネンスポイントは、") then
 	M.eminence_point_redeem_enable = false
-	windower.ffxi.run(24 - me.x, -120 - me.y)
+	-- windower.ffxi.run(24 - me.x, -120 - me.y)
     elseif string.contains(text, "0回売却 end") then
-	if t ~= nil and t.name == 'Defliaa' then
-	    utils.target_lockon(false)  -- ロックオンしてたら外す
+	utils.target_lockon(false)  -- ロックオンしてたら外す
+	if t ~= nil and t.name == 'Defliaa' and
+	    (M.eminence_point_redeem_enable or M.unity_point_redeem_enable) then
 	    command.send("ac move def2nuna")
+	else
+	    -- モグハウスに行く
+	    windower.ffxi.run(26 - me.x, -128 - me.y)
 	end
     --elseif string.contains(text, "まいどありにゃ〜") then
     elseif string.contains(text, "まいどありにゃ") then
