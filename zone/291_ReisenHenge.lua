@@ -8,6 +8,12 @@ M.routes = {
 	{x=-500,y=-487.7,z=-19.1}, {wait=3},
 	{target="Shiftrix"}, {a="touch"}
     },
+    -- Ethereal Ingress #1
+    shift2 = { -- Shiftrix
+	{x=-495.4,y=-476.5,z=-19.3}, {wait=3},
+	{x=-500,y=-484,z=-19.4},
+	{target="Shiftrix"}, {a="touch"}
+    },
     -- ドメイン
     quet = {  -- Quetzalcoatl
 	{x=640,y=-921,z=-372},--{x=618,y=-949,z=-371,d=2},
@@ -33,6 +39,7 @@ M.routes = {
 
 M.essentialPoints = {
     entrance = {x=-500,y=-487.7,z=-19.1},
+    ingress_1 = {x=-495.4,y=-476.5,z=-19.3},
     domain = {x=640,y=-921,z=-372},
     ingress = {x=-390.2,y=-835.1,z=-439.8},
     from_omen = {x=-378,y=-820,z=-441.3},
@@ -41,6 +48,7 @@ M.essentialPoints = {
 
 M.automatic_routes = {
     entrance = { route="shift" },  -- Shiftrix
+    ingress_1 = { route="shift2" }, -- Shiftrix
     ingress = { route="omen" },
     from_omen = { route="incant" }, -- Incantrix
     domain = { route="quet"}, -- Quetzalcoatl
