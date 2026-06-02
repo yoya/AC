@@ -41,8 +41,9 @@ function M.incoming_text_handler(text)
 	-- windower.ffxi.run(24 - me.x, -120 - me.y)
     elseif string.contains(text, "0回売却 end") then
 	utils.target_lockon(false)  -- ロックオンしてたら外す
-	if t ~= nil and t.name == 'Defliaa' and
-	    (M.eminence_point_redeem_enable or M.unity_point_redeem_enable) then
+	if  M.eminence_point_redeem_enable then
+	    command.send("ac move eminence")
+	elseif M.unity_point_redeem_enable then
 	    command.send("ac move def2nuna")
 	else
 	    -- モグハウスに行く
