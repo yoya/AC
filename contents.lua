@@ -5,24 +5,25 @@ __AC.contents = M
 local io_chat = require 'io/chat'
 
 -- Idle, Leveling, Ambus, Works, Mission, ...
-M.Idle       =  1
-M.Leveling   =  2  -- レベル上げ
-M.Ambus      =  3  -- アンバス
-M.Works      =  4  -- ワークス
-M.Trove      =  5  -- AMANトローブ
-M.Mission    =  6
-M.AbysYellow =  7  -- アビセアの黄色発光
-M.Garden     =  8  -- モグガーデン
-M.Trial      =  9  -- 試練(各属性プロトクリスタル)
-M.Raives     = 10  -- コロナイズ/レイアレイブス
-M.WKR        = 11  -- ワイルドキーパーレイブス
-M.LoginPoint = 12
-M.Vagary     = 13  -- ベガリーインスペクター
-M.Synergy    = 14  -- 窯錬成 (スキル上げ)
-M.Redeem     = 15  -- 換金(エミネンス/ユニティポイント)
-M.GobMys     = 16  -- ゴブの不思議箱 (Gobbie Mystery Box)
+M.Idle        =  1
+M.Leveling    =  2  -- レベル上げ
+M.Ambus       =  3  -- アンバス
+M.Works       =  4  -- ワークス
+M.Trove       =  5  -- AMANトローブ
+M.Mission     =  6
+M.AbysYellow  =  7  -- アビセアの黄色発光
+M.Garden      =  8  -- モグガーデン
+M.Trial       =  9  -- 試練(各属性プロトクリスタル)
+M.Raives      = 10  -- コロナイズ/レイアレイブス
+M.WKR         = 11  -- ワイルドキーパーレイブス
+M.LoginPoint  = 12
+M.Vagary      = 13  -- ベガリーインスペクター
+M.Synergy     = 14  -- 窯錬成 (スキル上げ)
+M.Redeem      = 15  -- 換金(エミネンス/ユニティポイント)
+M.GobMys      = 16  -- ゴブの不思議箱 (Gobbie Mystery Box)
+M.UnityWanted = 17  -- ユニティ・ウォンテッド
 
-M.allContents = { M.Idle, M.Leveling, M.Ambus, M.Works, M.Trove,  M.Mission, M.AbysYellow, M.Garden, M.Trial, M.Raives, M.WKR, M.LoginPoint, M.Vagary, M.Synergy, M.Redeem, M.GobMys }
+M.allContents = { M.Idle, M.Leveling, M.Ambus, M.Works, M.Trove,  M.Mission, M.AbysYellow, M.Garden, M.Trial, M.Raives, M.WKR, M.LoginPoint, M.Vagary, M.Synergy, M.Redeem, M.GobMys, M.UnityWanted }
 
 M.ambus   = require 'contents/ambus'
 M.trial   = require 'contents/trial'
@@ -54,22 +55,23 @@ M.type = M.Idle
 
 
 M.nameTable = {
-    [M.Idle]       = {'Idle', nil, ''},
-    [M.Leveling]   = {'Leveling', 'level'},
-    [M.Ambus]      = {"Ambus"},
-    [M.Works]      = {'Works'},
-    [M.Trove]      = {'Trove'},
-    [M.Mission]    = {'Mission'},
-    [M.AbysYellow] = {'AbysYellow', 'yellow'},
-    [M.Garden]     = {'MogGarden', 'garden'},
-    [M.Trial]      = {'Trial'},
-    [M.Raives]     = {'Raives'},
-    [M.WKR]        = {'WKR'},
-    [M.LoginPoint] = {'LoginPoint', 'login', 'logpo'},
-    [M.Vagary]     = {'Vagary'},
-    [M.Synergy]    = {'Synergy'},
-    [M.Redeem]     = {'Redeem'},
-    [M.GobMys]     = {'GobMys', 'Gob'},
+    [M.Idle]        = {'Idle', nil, ''},
+    [M.Leveling]    = {'Leveling', 'level'},
+    [M.Ambus]       = {"Ambus"},
+    [M.Works]       = {'Works'},
+    [M.Trove]       = {'Trove'},
+    [M.Mission]     = {'Mission'},
+    [M.AbysYellow]  = {'AbysYellow', 'yellow'},
+    [M.Garden]      = {'MogGarden', 'garden'},
+    [M.Trial]       = {'Trial'},
+    [M.Raives]      = {'Raives'},
+    [M.WKR]         = {'WKR'},
+    [M.LoginPoint]  = {'LoginPoint', 'login', 'logpo'},
+    [M.Vagary]      = {'Vagary'},
+    [M.Synergy]     = {'Synergy'},
+    [M.Redeem]      = {'Redeem'},
+    [M.GobMys]      = {'GobMys', 'Gob'},
+    [M.UnityWanted] = {'UnityWanted', 'wanted'},
 }
 
 function M.setType(c)
