@@ -101,6 +101,10 @@ M.routes = {
 	{x=7.7,y=-147.1,z=0.7}, {x=5,y=-141},
 	{x=12,y=-123,d=1}, {target="Eternal Flame"}, {auto=true}
     },
+    mog2unity = {  -- ミスラ
+	{x=7.7,y=-147.1,z=0.7}, {x=5,y=-141},
+	{x=15.2,y=-111.3,z=-0.1}, {a="f8touch"}
+    },
 }
 
 M.essentialPoints = {
@@ -112,6 +116,7 @@ M.essentialPoints = {
     hp_2_M = {x=31,y=-163,z=0},
     -- x=(-2.3, 7.7), y=(-147.1, -141.6), z={-0.7,0.7}
     moghouse = {x=2.7,y=-145,z=-0.7,d=7},
+    -- moghouse2 = {x=2.7,y=-145,z=-0.7,d=7},  -- 動かないので一旦無効化
 }
 
 M.automatic_routes = {
@@ -122,6 +127,7 @@ M.automatic_routes = {
     wp_inv = { route="inv" },
     hp_2_M = { route="unity" },
     moghouse = { route="eminence" }, -- エミネンスのガルカ
+    moghouse2 = { route="mog2unity", contents="UnityWanted" },
 }
 
 local sell_items = {
