@@ -34,18 +34,19 @@ M.vagary  = require 'contents/vagary'
 M.synergy = require 'contents/synergy'
 M.trove   = require 'contents/trove'
 M.redeem  = require 'contents/redeem'
-
+M.wanted  = require 'contents/wanted'
 M.contentsTable = {
     -- モードが必要なだけで特別な処理のないcontentsは、ここに追加しない
-    [M.Ambus]   = M.ambus,
-    [M.Trial]   = M.trial,
-    [M.Garden]  = M.garden,
-    [M.Trove]   = M.trove,
-    [M.Raives]  = M.raives,
-    [M.WKR]     = M.wkr,
-    [M.Vagary]  = M.vagary,
-    [M.Synergy] = M.synergy,
-    [M.Redeem]  = M.redeem,
+    [M.Ambus]       = M.ambus,
+    [M.Trial]       = M.trial,
+    [M.Garden]      = M.garden,
+    [M.Trove]       = M.trove,
+    [M.Raives]      = M.raives,
+    [M.WKR]         = M.wkr,
+    [M.Vagary]      = M.vagary,
+    [M.Synergy]     = M.synergy,
+    [M.Redeem]      = M.redeem,
+    [M.UnityWanted] = M.wanted,
 }
 for c, m in pairs(M.contentsTable) do
     m.parent = M
