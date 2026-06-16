@@ -3,26 +3,72 @@
 local M = {}
 
 local utils = require 'utils'
-local io_chat = require 'io/chat'
-local io_net = require 'io/net'
-local aczone = require 'zone'
-local incoming_text = require 'incoming/text'
-
 local split_multi = utils.string.split_multi
 
-function garden_furrow(player, mob)
-    io_net.targetByMobId(mob.id)
-    coroutine.sleep(3)
-end
+local control = require 'control'
+local keyboard = require 'keyboard'
+local pushKeys = keyboard.pushKeys
+
+local io_chat = require 'io/chat'
+local io_net = require 'io/net'
+
+local incoming_text = require 'incoming/text'
+local aczone = require 'zone'
+local acitem = require 'item'
+
+local item_data = require 'item/data'
+local crystal_ids = item_data.crystal_ids -- クリスタル/塊
 
 function M.tick(player)
-    if aczone.isNear(280, "furrow", 3) then
-	local mobArr = windower.ffxi.get_mob_array()
-        for i, m in pairs(mobArr) do
-            if string.find(m.name, "Garden Furrow") then
-		-- garden_furrow(player, m)
+    if not control.auto then return end
+    local mob = windower.ffxi.get_mob_by_target("t")
+    if mob == nil then
+---        print("no target")
+        return
+    end
+    if mob.name == "Green Thumb Moogle" then
+	M.parent.AC.idleFunctionSellJunkItems(mob)
+    elseif mob.name == "Ephemeral Moogle" then
+        if acitem.checkInventoryFreespace() then
+            for i, id in pairs(crystal_ids) do
+                if acitem.bagsHasItem(id) then
+                    acitem.bagsToInventory(id)
+                    coroutine.sleep(1)
+                end
             end
         end
+        for i, id in pairs(crystal_ids) do
+            if acitem.inventoryHasItem(id) then
+                acitem.tradeByItemId(mob, id)
+                coroutine.sleep(3)
+                io_net.targetByMob(mob)
+            end
+        end
+        coroutine.sleep(7)
+        io_net.targetByMob(mob)
+    elseif mob.name == "Garden Furrow" or mob.name == "Garden Furrow #2"
+           or mob.name == "Garden Furrow #3" then
+        local id = 940 -- 反魂樹の根
+        acitem.tradeByItemId(mob, id)
+        control.auto = false
+    elseif string.find(mob.name, "Mineral Vein") or
+	string.find(mob.name, "Arboreal Grove") then
+        while control.auto do
+            pushKeys({"escape", "f8", "enter"})
+            coroutine.sleep(2)
+            pushKeys({"enter"})
+            coroutine.sleep(3)
+            if acitem.diffInventoryTotalNum() == 0 or
+                acitem.checkInventoryFreespace() == false then
+                control.auto = false
+            end
+        end
+    elseif mob.name == "Pond Dredger" then
+        control.auto = false
+        coroutine.sleep(2)
+        pushKeys({"escape", "f8", "enter"})
+        coroutine.sleep(3)
+        pushKeys({"enter"})
     end
 end
 

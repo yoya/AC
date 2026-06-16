@@ -16,6 +16,7 @@ local command = require 'command'
 local task = require 'task'
 local works = require 'works'
 local contents = require 'contents'
+contents.AC = M
 local pull = require 'pull'
 local puller = false
 local defaults = {
@@ -776,57 +777,6 @@ function dropJunkItemsInInventory()
     end
 end
 
---- モグガーデン(280)のみ動作する
-local idleFunctionMobGarden = function()
-    local mob = windower.ffxi.get_mob_by_target("t")
-    if mob == nil then
----        print("no target")
-        return
-    end
-    if mob.name == "Ephemeral Moogle" then
-        if acitem.checkInventoryFreespace() then
-            for i, id in pairs(crystal_ids) do
-                if acitem.bagsHasItem(id) then
-                    acitem.bagsToInventory(id)
-                    coroutine.sleep(1)
-                end
-            end
-        end
-        for i, id in pairs(crystal_ids) do
-            if acitem.inventoryHasItem(id) then
-                acitem.tradeByItemId(mob, id)
-                coroutine.sleep(3)
-                io_net.targetByMob(mob)
-            end
-        end
-        coroutine.sleep(7)
-        io_net.targetByMob(mob)
-    elseif mob.name == "Garden Furrow" or mob.name == "Garden Furrow #2"
-           or mob.name == "Garden Furrow #3" then
-        local id = 940 -- 反魂樹の根
-        acitem.tradeByItemId(mob, id)
-        control.auto = false
-    elseif string.find(mob.name, "Mineral Vein") or
-	string.find(mob.name, "Arboreal Grove") then
-        while control.auto do
-            pushKeys({"escape", "f8", "enter"})
-            coroutine.sleep(2)
-            pushKeys({"enter"})
-            coroutine.sleep(3)
-            if acitem.diffInventoryTotalNum() == 0 or
-                acitem.checkInventoryFreespace() == false then
-                control.auto = false
-            end
-        end
-    elseif mob.name == "Pond Dredger" then
-        control.auto = false
-        coroutine.sleep(2)
-        pushKeys({"escape", "f8", "enter"})
-        coroutine.sleep(3)
-        pushKeys({"enter"})
-    end
-end
-
 local idleFunctionJeunoPort = function()
     idleFunctionTradeItems("Shemo", seal_ids, 3, {2,4})  --- or Shami
 end
@@ -890,13 +840,7 @@ local idleFunction = function()
     if mob == nil then
         return
     end
-    if zone == 280 then
-        --- 以下はモグガーデンのみ処理
-        idleFunctionMobGarden()
-        if mob and mob.name == "Green Thumb Moogle" then
-            idleFunctionSellJunkItems(mob)
-        end
-    elseif zone == 246 then --- ジュノ港
+    if zone == 246 then --- ジュノ港
         idleFunctionJeunoPort()
     elseif zone == 230 then -- 南サンドリア
         idleFunctionSouthSand()
