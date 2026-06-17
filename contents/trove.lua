@@ -65,18 +65,22 @@ function BurningCircleFunction(zone, mob)
 	    end
 	end
     end
-    coroutine.sleep(10)
+    coroutine.sleep(10)  -- 動く
+    -- coroutine.sleep(8)  -- あとで試す
+    -- coroutine.sleep(5)  -- 動かない
     print("----------")
     pushKeys({"down"}) -- ひとつ下を選択。
     coroutine.sleep(1)
     pushKeys({"enter"}) -- BCに入る
 end
 
-function GreysonFunctionFunction(zone, mob)
+function GreysonFunction(zone, mob)
+    -- print("contents/grove.GreysonFunction(", zone, mob, ")")
     for _, item_id in ipairs(M.item_list) do
 	if acitem.inventoryHasItem(item_id) then
 	    acitem.tradeByItemId(mob, item_id)
-	    coroutine.sleep(10)
+	    -- 「これは使用済みっと」
+	    coroutine.sleep(5)
 	end
     end
 end
@@ -87,8 +91,8 @@ end
 --- 切り替え
 
 M.npcActionHandlers = {
-    ["Burning Circle"] = BurningCircleFunction,
     ["Greyson"] = GreysonFunction,
+    ["Burning Circle"] = BurningCircleFunction,
 }
 
 M.listener_id = incoming_text.addListener("", M.incoming_text_handler)
