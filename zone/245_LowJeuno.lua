@@ -44,6 +44,7 @@ M.routes = {
     grey = { -- grayson (A.M.A.N.トローブ)
 	{x=-99.6,y=-183.4,z=0}, {x=-98,y=-172,d=1},
 	{x=-94,y=-167,z=0,d=1}, {a="f8"}, {target="Greyson"},
+	{auto=true}, {wait=2}, {auto=false},
 	{a="touch"}
     },
     nantoto = { -- エミネンスのタル娘
