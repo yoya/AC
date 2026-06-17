@@ -5,30 +5,30 @@ local M = { id = 139 }
 M.routes = {
     -- 入り口
     circle = {
-	{x=-536,y=-211.6,z=160.5}, {x=-518,y=-210,d=1},
+	{x=-536,y=-211.6,z=160.5}, {auto=false}, {x=-518,y=-210,d=1},
 	--{x=-508.4,y=-211.6,z=158.6,d=1},
 	{x=-507,y=-212,z=158.6,d=2}, {target="Burning Circle"}
     },
     -- BC
     bc = {
-	{x=-316.3,y=-102.5}, {x=-346.8,y=-127},
+	{x=-316.3,y=-102.5}, {auto=false}, {x=-346.8,y=-127},
 	{x=-366,y=-121.7}, {x=-381,y=-98},
 	--
 	{x=-387.5,y=-85,z=92.8},
     },
     -- AMAN トローブ
     trove = {
-	{x=-316.3,y=-102.5}, {x=-346.8,y=-127},
+	{x=-316.3,y=-102.5}, {auto=false}, {x=-346.8,y=-127},
 	{x=-366,y=-121.7}, {x=-381,y=-98},
 	{x=-392.9, y=-71.3},
     },
     trove2 = {  -- AMAN トローブ
-	{x=-75.3,y=77.4}, {x=-107.26, y=52.38},
+	{x=-75.3,y=77.4}, {auto=false}, {x=-107.26, y=52.38},
 	{x=-131,y=64}, {x=-147,y=95},
 	{x=-152.9,y=108.5}
     },
     trove3 = {  -- AMAN トローブ
-	{x=163.6,y=257.2}, {x=133.2,y=232.6},
+	{x=163.6,y=257.2}, {auto=false}, {x=133.2,y=232.6},
 	{x=110.6,y=242.9}, {x=92.6,y=276.5}, {x=87.1,y=288.4}
     },
 }
@@ -50,8 +50,8 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    entrance = { route="circle", contents="trove"},
-    trove_in = { route="trove", contents="trove" },
+    entrance =  { route="circle", contents="trove" },
+    trove_in =  { route="trove",  contents="trove" },
     trove2_in = { route="trove2", contents="trove" },
     trove3_in = { route="trove3", contents="trove" },
     bc_in = { route="bc", contents="mission" },
