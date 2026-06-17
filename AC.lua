@@ -760,6 +760,7 @@ local idleFunctionSellJunkItems = function(mob)
     end
     -- ついでに売れないゴミも捨てる
     dropJunkItemsInInventory()
+    io_chat.notice("all売却 end")
 end
 M.idleFunctionSellJunkItems = idleFunctionSellJunkItems
 
