@@ -198,6 +198,13 @@ function M.incoming_text_handler(text)
 	io_chat.print("rearing_count", M.rearing_count)
 	rearing_check = false
     end
+    if text:contains( "all売却 end") then
+	local player = windower.ffxi.get_player()
+	if player.target_locked then
+	    io_chat.info("移動", M.mineral_rank)
+	    windower.ffxi.run(true)
+	end
+    end
 end
 
 function M.contents_in()
