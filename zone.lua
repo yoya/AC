@@ -49,6 +49,7 @@ M.zoneTable = {
     [48] = require('zone/48_AlZahbi'),      -- アルザビ
     [50] = require('zone/50_WhiteGate'),    -- アトルガン白門
     [51] = require('zone/51_Wajaom'),       -- ワジャーム樹林
+    [52] = require('zone/52_BhafThicket'),  -- バフラウ段丘
     [54] = require('zone/54_ArrpgoReef'),   -- アラパゴ暗礁域
     [57] = require('zone/57_Talacca'),      -- タラッカ入江
     [61] = require('zone/61_Zhayolm'),      -- ゼオルム火山
