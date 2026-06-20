@@ -131,6 +131,33 @@ function containPos(route, pos)
     return false
 end
 
+function moveToActionFaith(f)
+    local faithList = f
+    if type(f) == "string" then
+	if f == "ambus" then
+	    faithList = { "ヴァレンラール", "モンブロー",
+			  "テルセウス", "コルモル", "シルヴィ(UC)" }
+	elseif f == "balance" then
+	    faithList = { "ヴァレンラール", "モンブロー",
+			  "ヨアヒム", "コルモル", "シルヴィ(UC)" }
+	elseif f == "raise" then
+	    faithList = { "モンブロー", "フェリアスコフィン",
+			  "ブリジッド", "クピピ", "コルモル" }
+	elseif f == "guard" then
+	    faithList = { "ブリジッド", "サクラ", "モーグリ", }
+	else
+	    faithList = { "ヨアヒム", "クピピ",
+			  "ブリジッド", "モーグリ", "サクラ" }
+	end
+    end
+    windower.ffxi.run(false)
+    coroutine.sleep(1)
+    for _, f in ipairs(faithList) do
+	command.send('input /ma '..f..' <me>')
+	coroutine.sleep(7.0)
+    end
+end
+
 function moveToAction(p, reverse)
     if (not reverse and p.a == "dismount") or (reverse and p.a=="mount") then
 	command.send('input /dismount')
@@ -142,12 +169,7 @@ function moveToAction(p, reverse)
 	control.enemy_filter = p.enemy_filter
     end
     if p.a == "faith" then
-	windower.ffxi.run(false)
-	coroutine.sleep(1)
-	for _, f in ipairs(p.faithList) do
-	    command.send('input /ma '..f..' <me>')
-	    coroutine.sleep(7.0)
-	end
+	moveToActionFaith(p.faithList)
     end
     if p.a == "insne" then
 	print("insne")
@@ -189,6 +211,9 @@ function moveToAction(p, reverse)
     if p.enemy_range ~= nil then
 	io_chat.info("enemy_range:"..p.enemy_range)
 	control.enemy_range = p.enemy_range
+    end
+    if p.faith ~= nil then
+	moveToActionFaith(p.faith)
     end
     if p.keys ~= nil then
 	pushKeys(p.keys)
