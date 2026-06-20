@@ -3,6 +3,7 @@
 
 local utils = require 'utils'
 local ac_pos = require 'ac/pos'
+local acitem = require 'item'
 
 local M = {}
 __AC = __AC or {}
@@ -256,6 +257,14 @@ function M.event_handler(event_type)
 		    handler.handler()
 		end
 	    end
+	end
+	local items = z.essentialItems
+	local key_items = z.essentialKeyItems
+	if items ~= nil then
+	    acitem.showOwnItems(items)
+	end
+	if key_items ~= nil then
+	    acitem.showOwnKeyItems(key_items)
 	end
     end
 end
