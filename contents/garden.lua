@@ -115,6 +115,7 @@ function M.check_garden_rankup(name, label)
     end
 end
 
+--[[
 function M.check_coast_rankup()
     if M.coast_count >= 0 and M.coast_rank >= 0 then
 	io_chat.printf("海 rank:%d => %d???, count:%d <= %d",
@@ -131,6 +132,7 @@ function M.check_coast_rankup()
 	end
     end
 end
+]]
 
 function M.incoming_text_handler(text)
     if string.contains(text, "の記録を") then
@@ -141,31 +143,31 @@ function M.incoming_text_handler(text)
     if M.furrow_rank < 0 and string.contains(text, "モーグリの畑") then
 	local s = split_multi(text, {"ランク"})
 	M.furrow_rank = utils.tonumber(s[2])
-	io_chat.info("furrow_rank ", M.furrow_rank)
+	io_chat.info("畑(furrow_rank)", M.furrow_rank)
 	M.check_garden_rankup("畑", "furrow")
     end
     if M.arboreal_rank < 0 and string.contains(text, "よく手入れされた木立") then
 	local s = split_multi(text, {"ランク"})
 	M.arboreal_rank = utils.tonumber(s[2])
-	io_chat.info("arboreal_rank ", M.arboreal_rank)
+	io_chat.info("木立(arboreal_rank)", M.arboreal_rank)
 	M.check_garden_rankup("木立", "arboreal")
     end
     if M.coast_rank < 0 and string.contains(text, "海岸に仕掛けられた網") then
 	local s = split_multi(text, {"ランク"})
 	M.coast_rank = utils.tonumber(s[2])
-	io_chat.info("coast_rank ", M.coast_rank)
+	io_chat.info("海(coast_rank)", M.coast_rank)
 	M.check_garden_rankup("海", "coast")
     end
     if M.pond_rank < 0 and string.contains(text, "淡水の池に仕掛けられた網") then
 	local s = split_multi(text, {"ランク"})
 	M.pond_rank = utils.tonumber(s[2])
-	io_chat.info("pond_rank ", M.pond_rank)
+	io_chat.info("池(pond_rank)", M.pond_rank)
 	M.check_garden_rankup("淡水の池", "pond")
     end
     if M.mineral_rank < 0 and string.contains(text, "露出した鉱脈") then
 	local s = split_multi(text, {"ランク"})
 	M.mineral_rank = utils.tonumber(s[2])
-	io_chat.info("mineral_rank ", M.mineral_rank)
+	io_chat.info("鉱脈(mineral_rank)", M.mineral_rank)
 	M.check_garden_rankup("鉱脈", "mineral")
     end
     -- 
