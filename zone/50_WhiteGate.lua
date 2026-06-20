@@ -90,24 +90,31 @@ M.routes = {
         {x=114.2,y=30.3}, {x=125.2,y=31.8},
         {x=125,y=60.2}, {a="f8touch"}
     },
-    -- HP#4(A)
+    -- HP#3(A)
     choco = {
 	{x=-107,y=108,z=-6,desc="チョコボサーキット"},
 	{x=-103,y=102,z=-6}, {x=-83,y=102,z=0},
 	{x=-81.2,y=105.6,z=0}, {target="Gate: Chocobo Circuit"},
 	{a="touch"}, {a="wait"}, {a="up"}, {a="wait"}, {a="enter"}
     },
+    -- HP#4(M)
+    moghouse = {
+	{x=-98,y=-70,z=0}, {x=-100,y=-79,z=0}, {x=-108,y=-80,z=0}, {}
+	-- {x=-101,y=-80,z=0},
+    },
 }
 
 M.essentialPoints = {
     hp_1 = {x=-20.1,y=-19.9,z=0},
-    hp_4_a = {x=-107,y=108,z=-6},
+    hp_3_a = {x=-107,y=108,z=-6},
+    hp_4_m = {x=-98,y=-68,z=0},
 }
 
 M.automatic_routes = {
     -- hp_1 = { route="naja" },
     -- hp_1 = { route="gha" },
-    hp_4_a = { route="choco" }
+    hp_3_a = { route="choco" },
+    hp_4_m = { route="moghouse" },
 }
 
 return M
