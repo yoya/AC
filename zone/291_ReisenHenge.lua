@@ -18,10 +18,8 @@ M.routes = {
     quet = {  -- Quetzalcoatl
 	{x=640,y=-921,z=-372},--{x=618,y=-949,z=-371,d=2},
 	--{x=620,y=-948,z=-371,d=2}, -- 右前すぎる気がする
-	{x=621,y=-947,z=-371,d=2},
-	{a="faith", faithList={"クピピ", "コルモル", "サクラ",
-			       "モーグリ", "ブリジッド"}},
-	{puller=true},
+	{x=621,y=-947,z=-371,d=2}, {faith="raise"},
+	{enemy_range=20}, {puller=true}
     },
     -- Ethereal Ingress
     omen = { -- Earthly Convrescence (オーメン入り口

@@ -14,8 +14,7 @@ M.routes = {
 	-- {x=2,y=38,z=0,d=2},  -- 右足小指
 	{x=3,y=39,z=0,d=2},  -- 右足小指
 	-- {x=-5,y=38,z=0.1,d=2},  -- 左足小指
-	{a="faith", faithList={"クピピ", "コルモル", "サクラ",
-			       "モーグリ", "ブ\リジッド"}},
+	{faith="raise"},
 	{enemy_filter="Azi"}, {puller=true}
     },
     -- wp#2
