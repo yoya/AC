@@ -45,6 +45,7 @@ M.automatic_routes = {
 }
 
 function M.statprint_handler()
+    -- M.essentialItems, M.essentialKeyItems で同じ事出来るよ。
     print("zone/253 statprint_handler")
     local items = {
 	-- 鋼鉄の鎧板
