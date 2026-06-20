@@ -311,7 +311,7 @@ function moveTo(route, routeTable, nextRoute, reverse)
 	if i <= 1 and p.x ~= nil then
 	     do end  -- ひとつ目が座標の場合に skip
 	elseif i < start_idx then
-            print("skip route idx:", i)
+            print("skip route["..i.."] pos:("..tostring(p.x)..", "..tostring(p.y)..")")
         else
 	    if p.route ~= nil then
 		local r = routeTable[p.route]
