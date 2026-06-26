@@ -93,6 +93,7 @@ M.zoneTable = {
     [129] = require('zone/129_GhoyusRev'),  -- ゴユの空洞
     [130] = require('zone/130_RuAunGard'), -- ル・オンの庭
     [132] = require('zone/132_AbysLaThein'), -- アビセア-ラテーヌ
+    [133] = require('zone/133_OutRaKaz_U2'), -- ラ・カザナル宮外郭〔Ｕ２〕
     [136] = require('zone/136_BeaGlacier_S'), -- ボスディン氷河〔Ｓ〕
     [137] = require('zone/137_Xarcabard_S'), -- ザルカバード〔Ｓ〕
     [138] = require('zone/138_ZvBaileys_S'), -- ズヴァール城外郭〔Ｓ〕
