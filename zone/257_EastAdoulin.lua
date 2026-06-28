@@ -67,10 +67,11 @@ M.routes = {
 	-- Waypoint
 	{x=-57.8,y=85.2,z=-0.1},{x=-54.3,y=85,d=1},
 	{target="Quiri-Aliri"},
-	{a="enter"}, {wait=1}, {a="enter"},
-	{a="up"}, {a="enter"},
+	{a="enter"}, {wait=1}, {a="enter"}, {keys={"up", "enter"}},
 	{wait=2}, {x=-57.6,y=85.1,d=1},
-	{target="Waypoint"}, {a="touch"}
+	{target="Waypoint"}, {a="touch"}, {wait=1},
+	{keys={"right", "right", "right", "enter"}}, -- マリアミ渓谷を選択
+	{keys={"right", "right", "enter"}}, -- #4 を選択
     },
     ['ionis-hp'] = {
 	-- HP#1
@@ -78,10 +79,11 @@ M.routes = {
 	{x=-53.5,y=82,d=1},
 	-- HP#1
 	{target="Quiri-Aliri"},
-	{a="enter"}, {wait=1}, {a="enter"},
-	{a="up"}, {a="enter"},
+	{a="enter"}, {wait=1}, {a="enter"}, {keys={"up", "enter"}},
 	{wait=2}, {x=-57.6,y=85.1,d=1},
-	{target="Waypoint"}, {a="touch"}
+	{target="Waypoint"}, {a="touch"}, {wait=1},
+	{keys={"right", "right", "right", "enter"}}, -- マリアミ渓谷を選択
+	{keys={"right", "right", "enter"}}, -- #4 を選択
     },
     -- 太陽の広場 (Coronal Esplanade)
     bayld = { -- ベヤルド交換
