@@ -7,6 +7,7 @@ M.INIT_VALUES = {
     auto = false,
     automove = true, -- zone change での automove
     attack = false,  -- 敵と戦う
+    reactive = false, -- 殴られたら反応する
     calm = false,    -- 戦闘中動かない
     debug = false,   -- デバッグメッセージ
     do_my_best = false, -- 本気を出す (1H アビを使う)
