@@ -115,7 +115,8 @@ function M.sub_tick(player)
     if role_Healer.sub_tick ~= nil then
 	role_Healer.sub_tick(player)
     end
-    if ac_party.count_member( { main_job="RDM" } ) >= 1 then
+    if ac_party.count_member( { main_job="RDM" } ) >= 1 or
+	ac_party.count_member() == 1 then -- ソロの時も無し
 	return  -- 本職に任せる
     end
     if player.status == 1 then -- 戦闘中

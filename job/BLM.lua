@@ -76,7 +76,8 @@ function M.sub_tick(player)
 	utils.table.contains(acjob.meleeJobs, player.main_job) then
 	return  -- 前衛は精霊弱体しない。時間が勿体無い
     end
-    if ac_party.count_member( { main_job="BLM" } ) >= 1 then
+    if ac_party.count_member( { main_job="BLM" } ) >= 1 or
+	ac_party.count_member() == 1 then -- ソロの時も無し
 	return  -- 本職に任せる
     end
     if player.status == 1 then -- 戦闘中
