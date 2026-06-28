@@ -27,4 +27,10 @@ M.automatic_routes = {
     homepoint_2_M = { route="oboro" },
 }
 
+function M.incoming_text_listener(text)
+    if string.contains(text, "↑ トレード終了 ↑") then
+	command.send("ac move -shemo")
+    end
+end
+
 return M
