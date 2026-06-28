@@ -56,7 +56,7 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    --ent_west_d12 = { route="ent" },
+    --ent_west_d12 = { route="ent" },  -- 時間かかるので放置しかねないので
     ent_east_h10 = { route="kings" },
 }
 
