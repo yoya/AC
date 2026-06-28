@@ -194,6 +194,7 @@ M.zoneTable = {
     [288] = require('zone/288_EschaZiTah'), -- エスカ-ジ・タ
     [289] = require('zone/289_EschaRuAun'), -- エスカ-ル・オン
     [291] = require('zone/291_ReisenHenge'), -- 醴泉島-秘境
+    [292] = require('zone/292_ReisenHenge'), -- 醴泉島-秘境
     [295] = require('zone/295_DynamisBas'), -- デュナミス-バストゥーク
 }
 
