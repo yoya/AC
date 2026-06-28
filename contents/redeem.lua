@@ -8,15 +8,16 @@ local command = require 'command'
 local incoming_text = require 'incoming/text'
 local keyboard = require 'keyboard'
 local pushKeys = keyboard.pushKeys
+local ac_char = require("ac/char")
 
 function M.tick(player)
 end
-
 
 M.eminence_point_redeem_enable = true
 M.unity_point_redeem_enable = true
 
 function M.contents_in(player)
+    print("contents/redeem.contents_in")
     M.eminence_point_redeem_enable = true
     M.unity_point_redeem_enable = true
 end
@@ -41,13 +42,18 @@ function M.incoming_text_handler(text)
 	-- windower.ffxi.run(24 - me.x, -120 - me.y)
     elseif string.contains(text, "all売却 end") then
 	utils.target_lockon(false)  -- ロックオンしてたら外す
-	if t == nil then
-	    -- モグハウスに行く （誤爆が多いので一度無効化)
-	    windower.ffxi.run(26 - me.x, -128 - me.y)
-	elseif M.eminence_point_redeem_enable then
-	    command.send("ac move eminence")
-	elseif M.unity_point_redeem_enable then
+	local eminence_point = ac_char.eminence_point()
+	local unity_point = ac_char.unity_point()
+	print("what???? > emi, uni:",
+	      M.eminence_point_redeem_enable,
+	      M.unity_point_redeem_enable)
+	if M.eminence_point_redeem_enable and eminence_point > 1000 then
+	    command.send("ac move def2emi")
+	elseif M.unity_point_redeem_enable and unity_point > 9 then
 	    command.send("ac move def2nuna")
+	else
+	    -- モグハウスに行く
+	    windower.ffxi.run(26 - me.x, -128 - me.y)
 	end
     --elseif string.contains(text, "まいどありにゃ〜") then
     elseif string.contains(text, "まいどありにゃ") then
