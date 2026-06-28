@@ -3,12 +3,30 @@
 local M = { id = 208 }
 
 M.routes = {
+    -- 西アルテパ D-5 から
+    altar = {
+	-- x=-381.6,y={859.2-860},z=-0.1}
+	{x=-381.6,y=860,z=-0.1,desc="南西(H-8)の祭壇"},
+	{x=-375,y=860}, {faith="balance"}, {a="sneak"},
+	{x=-345,y=858}, {x=-342,y=856},
+	{x=-346,y=748}, {x=-348,y=746},
+	-- {x=-410,y=740},
+	{x=-420,y=740}, {w=5}, {x=-420,y=733}, {x=-420,y=727},
+	{x=-418,y=715},
+	{x=-410,y=705}, {target="Sandstone Door"}, {a="opendoor"},
+	{x=-410,y=700},
+	{x=-400,y=672}, {w=5}, {x=-410,y=661}, {x=-410,y=655},
+	{x=-416,y=647}, {x=-418,y=642}, {x=-422,y=624}, {x=-424,y=623},
+	{x=-449,y=620}, {target="Sandstone Door"}, {a="opendoor"},
+	{x=-455,y=620}, {x=-467,y=620,z=0},
+	{target="???"}, {a="touch"}, {auto=true}
+    },
     -- 西アルテパ D-12 から
     ent = {
 	{x=-738.9,y=-521.8,z=-16,desc="重量扉まで？"},
-	{x=-742,y=-576,z=-4}, {a="sneak"},
+	{x=-742,y=-576,z=-4}, {faith="balance"}, {a="sneak"},
 	{x=-744,y=-578}, {x=-776,y=-578}, {x=-778,y=-576},
-	{x=-780,y=-460,z=-0.4},
+	{x=-780,y=-460,z=-0.4}, {auto=true}
     },
     -- 東アルテパ H-10 から
     kings = {
@@ -32,12 +50,13 @@ M.routes = {
 }
 
 M.essentialPoints = {
+    -- たまに反応しない ので、次 pos する
     ent_west_d12 = {x=-738.9,y=-521.8,z=-16},
     ent_east_h10 = {x=700,y=-688.2,z=-24},
 }
 
 M.automatic_routes = {
-    ent_west_d12 = { route="ent" },
+    --ent_west_d12 = { route="ent" },
     ent_east_h10 = { route="kings" },
 }
 
