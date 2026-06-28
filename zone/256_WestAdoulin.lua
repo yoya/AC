@@ -11,13 +11,15 @@ M.origContents = nil
 function M.zone_in()
     local contents = require 'contents'
     M.origContents = contents.type
-    contents.type = contents.Redeem  -- エミネンス、ユニティポイント交換
+    contents.setType(contents.Idle)    -- contents_in を読ませる為
+    contents.setType(contents.Redeem)  -- エミネンス、ユニティポイント交換
 end
 
 function M.zone_out()
     local contents = require 'contents'
     if M.origContents ~= nil then
-	contents.type = M.origContents
+	contents.setType(M.origContents)
+	M.origContents = nil
     end
 end
 
@@ -95,6 +97,10 @@ M.routes = {
     unity = {  -- 子ミスラ
 	{x=31,y=-163,z=0}, {x=23,y=-151}, {x=18,y=-113},
 	{x=15.2,y=-111.3,z=-0.1}, {a="f8touch"}
+    },
+    def2emi = {  -- エミネンスのガルカ
+	{x=42,y=-117,z=2}, {x=33,y=-121},
+	{x=16,y=-122,d=1}, {target="Eternal Flame"}, {auto=true}
     },
     -- モグハウスから出たとこ
     eminence = {  -- エミネンスのガルカ
