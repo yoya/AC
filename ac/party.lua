@@ -116,11 +116,18 @@ function M.updatePartyMemberInfo(id, info)
     object_assign(M.member_table[id], info)
 end
 
+-- conf { main_job, }
 function M.count_member(cond)
     local count = 0
     for id, info in pairs(M.member_table) do
-	if info.index > 0 and info.main_job == cond.main_job then
-	    count = count + 1
+	if info.index > 0 then
+	    local match = true
+	    if cond.main_job ~= nil and info.main_job ~= cond.main_job then
+		match = false
+	    end
+	    if match then
+		count = count + 1
+	    end
 	end
     end
     return count
