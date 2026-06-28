@@ -314,7 +314,7 @@ local notLeaderFunction = function()
     -- リーダーと離れたのを確率的に気づくように
     -- あと離れすぎたり、エリアが違う時や、やめる。
     if p1.hpp > 0 then
-	if math.random(1, 3) <= 1 and dist > math.random(3, 5) and
+	if math.random(1, 3) <= 2 and dist > math.random(3, 5) and
 	    dist < 24 then
 	    isFar = true
 	elseif dist > math.random(6, 7) then -- 離れすぎたらすぐ気付く
