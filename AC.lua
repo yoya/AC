@@ -57,6 +57,7 @@ M.start_pos = nil
 
 local useSilt = false
 local useBeads = false
+local useFaith = false
 local doPointCheer = false
 
 local ProbRecastTime = {}
@@ -833,7 +834,12 @@ local idleFunction = function()
         useBeads = acitem.useItemIncludeBags(6392, 4)
         return 
     end
-    if useSilt or useBeads then
+    if  useFaith then -- フェイス手引書
+        windower.ffxi.run(false)
+        useFaith = acitem.useItemIncludeBags(6716, 4)
+        return
+    end
+    if useSilt or useBeads or useFaith then
         return
     end
     local zone = windower.ffxi.get_info().zone
@@ -1512,10 +1518,13 @@ windower.register_event('addon command', function(...)
     elseif subcommand == 'use' then
 	if arg1 == 'silt' then
 	    useSilt = not useSilt
-	    io_chat.print({"item silt using start", useSilt})
+	    io_chat.print("item silt using start", useSilt)
 	elseif arg1 == 'beads' then
 	    useBeads = not useBeads
-	    io_chat.print({"item beads using start", useBeads})
+	    io_chat.print("item beads using start", useBeads)
+	elseif arg1 == 'faith' then
+	    useFaith = not useFaith
+	    io_chat.print("item faith using start", useFaith)
 	elseif arg1 == 'moolah' then
 	    -- モグのおひねり
 	    local slot_ammo = 3

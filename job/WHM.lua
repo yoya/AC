@@ -44,6 +44,10 @@ M.subJobProbTable = {
 }
 
 function M.main_tick(player)
+    if player.status == 1 and player.vitals.hp < 300 then  -- 女神の祝福
+	local c = "input /ja 女神の祝福 <me>"
+	task.setTaskSimple(c, 0, 2)
+    end
     if role_Healer.main_tick ~= nil then
 	role_Healer.main_tick(player)
     end

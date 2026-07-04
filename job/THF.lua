@@ -30,9 +30,11 @@ M.subJobProbTable = {
 }
 
 function M.main_tick(player)
-    if player.status == 1 and player.vitals.hp < 300 then  -- 緊急回復
-	local c = "input /ja 絶対回避 <me>"
-	task.setTaskSimple(c, 0, 2)
+    if player.status == 1 then
+	if 1 < player.vitals.hp and player.vitals.hp < 300 then
+	    local c = "input /ja 絶対回避 <me>"
+	    task.setTaskSimple(c, 0, 2)
+	end
     end
     if role_Melee.main_tick ~= nil then
 	role_Melee.main_tick(player)
