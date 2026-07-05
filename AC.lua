@@ -1061,6 +1061,10 @@ windower.register_event('addon command', function(...)
     local arg2 = select(3, ...)
     local arg3 = select(4, ...)
     local arg4 = select(5, ...)
+    M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
+end)
+
+function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
     local player = windower.ffxi.get_player()
     local zone = windower.ffxi.get_info().zone
     subcommand = subcommand and subcommand:lower() or 'help'
@@ -1606,7 +1610,7 @@ windower.register_event('addon command', function(...)
     else
         io_chat.error("See ac help!!!")
     end
-end)
+end
 
 windower.register_event('load', function()
     local player = windower.ffxi.get_player()
