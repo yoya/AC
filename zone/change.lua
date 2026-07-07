@@ -163,7 +163,7 @@ function M.zone_in_handler(zone, prevZone)
 	    print("zone_in:", zone)
 	    zone_in()
 	end
-	if incoming_text_listenerr ~= nil then
+	if incoming_text_listener ~= nil then
 	    M.incoming_text_listener_id = incoming_text.addListener("", incoming_text_listener)
 	end
 	local automatic_routes = zone_object.automatic_routes
