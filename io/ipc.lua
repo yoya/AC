@@ -173,19 +173,7 @@ function M.recieve_all(arg1, arg2, arg3)
     if control.debug then
 	print("io/ipc.recieve_all", arg1, arg2, arg3)
     end
-    if arg1 == "logout"  then
-	task.setTaskSimple("input /logout", 0, 1)
-    elseif arg1 == "reload" then
-	task.setTaskSimple("lua u AC; wait 1; lua l AC", 0, 1)
-    elseif arg1 == "shutdown" then
-	task.setTaskSimple("input /shutdown", 0, 1)
-    elseif arg1 == "dim" or arg1 == "holla" or arg1 == "mea" or arg1 == "warp" then
-	M.warp_with_ring(arg1)
-    elseif arg1 == 'wstp' then
-	control.setWSTP(arg2)
-    else
-	print("io/ipc.recieve_all: unknown arg1:"..arg1)
-    end
+    M.AC.addon_command_handler(arg1, arg2, arg3)
 end
 
 function M.inParty()
@@ -196,23 +184,23 @@ function M.inParty()
     return true -- パーティに入ってる
 end
 
-function M.recieve_party(source, arg)
---     io_chat.print("io/ipc.recieve_party", arg)
-    if arg == "build" then
+function M.recieve_party(source, arg1, arg2, arg3)
+    if control.debug then
+	io_chat.print("io/ipc.recieve_party", arg)
+    end
+    if arg1 == "build" then
 	if not M.inParty() then
 	    M.send(source, "party", "submit")
 	end
-    elseif arg == "submit" then
+    elseif arg1 == "submit" then
 	local c = "input /pcmd add "..source
 	-- print("io/ipc.recieve_party", c)
 	--  command, delay, period
 	task.setTaskSimple(c, 1, 2)
-    elseif arg == "dim" or arg == "holla" or arg == "mea" or arg == "warp" then
-	if M.inParty() then
-	    M.warp_with_ring(arg)
-	end
     else
-	print("io/ipc.recieve_party: unknown arg:"..arg)
+	if M.inParty() then
+	    M.AC.addon_command_handler(arg1, arg2, arg3)
+	end
     end
 end
 
