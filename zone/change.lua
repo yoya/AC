@@ -9,8 +9,11 @@ local iamLeader = ac_party.iamLeader
 local task = require 'task'
 local control = require 'control'
 local contents = require 'contents'
+local incoming_text = require 'incoming/text'
 
 local M = {}
+
+M.incoming_text_listener_id = null
 
 function posStr(pos)
     if pos == nil then
@@ -155,9 +158,13 @@ function M.zone_in_handler(zone, prevZone)
     local zone_object = aczone.zoneTable[zone]
     if zone_object ~= nil then
 	local zone_in = zone_object.zone_in
+	local incoming_text_listener = zone_object.incoming_text_listener
 	if zone_in ~= nil then
 	    print("zone_in:", zone)
 	    zone_in()
+	end
+	if incoming_text_listenerr ~= nil then
+	    M.incoming_text_listener_id = incoming_text.addListener("", incoming_text_listener)
 	end
 	local automatic_routes = zone_object.automatic_routes
 	if automatic_routes ~= nil then
@@ -190,6 +197,10 @@ function M.zone_change_handler(zone, prevZone)
 	    if zone_out ~= nil then
 		print("zone_out:", prevZone)
 		zone_out()
+	    end
+	    if M.incoming_text_listener_id ~= nil then
+		incoming_text.removeListener(M.incoming_text_listener_id)
+		M.incoming_text_listener_id = nil
 	    end
 	end
 	contents.zone_out()
