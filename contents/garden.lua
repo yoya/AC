@@ -12,7 +12,6 @@ local pushKeys = keyboard.pushKeys
 local io_chat = require 'io/chat'
 local io_net = require 'io/net'
 
-local incoming_text = require 'incoming/text'
 local aczone = require 'zone'
 local acitem = require 'item'
 
@@ -206,17 +205,6 @@ function M.incoming_text_handler(text)
 	    io_chat.info("移動", M.mineral_rank)
 	    windower.ffxi.run(true)
 	end
-    end
-end
-
-function M.contents_in()
-    listener_idx = incoming_text.addListener("", M.incoming_text_handler)
-end
-
-function M.contents_out()
-    if listener_idx > 0 then
-	incoming_text.removeListener(listener_idx)
-	listener_idx = 0
     end
 end
 

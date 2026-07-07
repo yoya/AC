@@ -7,7 +7,6 @@ local utils = require 'utils'
 local acitem = require 'item'
 local io_chat = require 'io/chat'
 local io_net = require 'io/net'
-local incoming_text = require('incoming/text')
 
 local keyboard = require 'keyboard'
 local pushKeys = keyboard.pushKeys
@@ -531,9 +530,5 @@ M.npcActionHandlers = {
     ["Synergy Furnace"] = SynergyFurnaceFunction_old,
     ["Synergy Engineer"] = SynergyEngineerFunction_old,
 }
-
--- M.listener_id = incoming_text.addListener("", M.incoming_text_handler)
-M.listener_id = incoming_text.addListener("", M.incoming_text_handler_old)
-
 
 return M

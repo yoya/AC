@@ -4,6 +4,7 @@ __AC.contents = M
 
 local io_chat = require 'io/chat'
 
+
 -- Idle, Leveling, Ambus, Works, Mission, ...
 M.Idle        =  1
 M.Leveling    =  2  -- レベル上げ
@@ -75,6 +76,8 @@ M.nameTable = {
     [M.UnityWanted] = {'UnityWanted', 'wanted'},
 }
 
+M.incoming_text_listener_id = nil
+
 function M.setType(c)
     local prevContents = M.type
     if prevContents ~= c then
@@ -82,10 +85,16 @@ function M.setType(c)
 	local nextC = M.contentsTable[c]
 	if prevC ~= nil and prevC.contents_out ~= nil then
 	    prevC.contents_out()
+	    if M.incoming_text_listener_id ~= nil then
+		incoming_text.removeListener(M.incoming_text_listener_id)
+		M.incoming_text_listener_id = nil
+	    end
 	end
 	M.type = c
 	if nextC ~= nil and nextC.contents_in ~= nil then
 	    nextC.contents_in()
+	    local incoming_text_handler = nextC.incoming_text_handler
+	    M.incoming_text_listener_id = incoming_text.addListener("", incoming_text_handler)
 	end
     end
 end

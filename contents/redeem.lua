@@ -5,7 +5,6 @@ local M = {}
 
 local utils = require 'utils'
 local command = require 'command'
-local incoming_text = require 'incoming/text'
 local keyboard = require 'keyboard'
 local pushKeys = keyboard.pushKeys
 local ac_char = require("ac/char")
@@ -63,7 +62,5 @@ function M.incoming_text_handler(text)
 	M.unity_point_redeem_enable = false
     end
 end
-
-incoming_text.addListener("", M.incoming_text_handler)
 
 return M

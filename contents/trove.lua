@@ -3,7 +3,6 @@
 local M = {}
 
 local control =  require 'control'
-local incoming_text = require 'incoming/text'
 local acitem =  require 'item'
 local keyboard = require 'keyboard'
 local pushKeys = keyboard.pushKeys
@@ -94,8 +93,5 @@ M.npcActionHandlers = {
     ["Greyson"] = GreysonFunction,
     ["Burning Circle"] = BurningCircleFunction,
 }
-
-M.listener_id = incoming_text.addListener("", M.incoming_text_handler)
-
 
 return M
