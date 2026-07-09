@@ -3,7 +3,7 @@ __AC = __AC or {}
 __AC.contents = M
 
 local io_chat = require 'io/chat'
-
+local incoming_text = require 'incoming/text'
 
 -- Idle, Leveling, Ambus, Works, Mission, ...
 M.Idle        =  1
@@ -91,10 +91,15 @@ function M.setType(c)
 	    end
 	end
 	M.type = c
-	if nextC ~= nil and nextC.contents_in ~= nil then
-	    nextC.contents_in()
+	if nextC ~= nil then
+	    if nextC.contents_in ~= nil then
+		nextC.contents_in()
+	    end
 	    local incoming_text_handler = nextC.incoming_text_handler
-	    M.incoming_text_listener_id = incoming_text.addListener("", incoming_text_handler)
+	    print("incoming_text_handler", incoming_text_handler)
+	    if incoming_text_handler ~= nil then
+		M.incoming_text_listener_id = incoming_text.addListener("", incoming_text_handler)
+	    end
 	end
     end
 end
