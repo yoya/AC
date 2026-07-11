@@ -5,6 +5,7 @@ local M = {}
 local utils = require 'utils'
 local split_multi = utils.string.split_multi
 
+local command = require 'command'
 local control = require 'control'
 local keyboard = require 'keyboard'
 local pushKeys = keyboard.pushKeys
@@ -205,6 +206,11 @@ function M.incoming_text_handler(text)
 	    io_chat.info("移動", M.mineral_rank)
 	    windower.ffxi.run(true)
 	end
+	-- local flotsam = windower.ffxi.get_mob_by_name("Flotsam")
+	-- 消えても情報に変化なしなので困る
+    end
+    if text:contains("を手にいれた！") or text:contains("を処分しました") then
+	command.send("ac move mogsale")
     end
 end
 
