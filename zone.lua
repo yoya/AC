@@ -238,8 +238,8 @@ function M.isNear(zone, name, distance)
 	local points = z.essentialPoints
 	local me = windower.ffxi.get_mob_by_target("me")
 	if points ~= nil and me ~= nil then
-	    for name, pos in pairs(points) do
-		if ac_pos.distance(me, pos) <= distance then
+	    for name2, pos in pairs(points) do
+		if name == name2 and ac_pos.distance(me, pos) <= distance then
 		    return true
 		end
 	    end
