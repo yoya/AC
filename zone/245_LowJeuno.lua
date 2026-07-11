@@ -39,7 +39,14 @@ M.routes = {
     },
     -- HP (E)
     gob = { {x=-99.6,y=-183.4}, {x=-93.8,y=-150.4},
-	{x=-68.7,y=-102.6},{x=-51.2,y=-113.2}
+	{x=-72,y=-115,z=6}, {x=-62,y=-108}, {x=-59,y=-109},
+	{target="Door:Muckvix's Junk Shop"}, {a="opendoor"},
+	{x=-54,y=-112}, {x=-38,y=-116},
+	{target="Door:Muckvix's Junk Shop"}, {a="opendoor"},
+	{x=-35,y=-118}, {x=-44,y=-135},
+	{target="Door:\"Goblins' Goblet\""}, {a="opendoor"},
+	{x=-42,y=-137}, {x=-36,y=-136}, {x=-30,y=-138,z=5.5,d=1},
+	{target="Muckvix"}, {a="touch"}
     },
     grey = { -- grayson (A.M.A.N.トローブ)
 	{x=-99.6,y=-183.4,z=0}, {x=-98,y=-172,d=1},
@@ -56,11 +63,13 @@ M.routes = {
 }
 
 M.essentialPoints = {
-    hp1 = {x=-99.6,y=-183.4,z=0}
+    hp1 = {x=-99.6,y=-183.4,z=0},
+    hp1_mission = {x=-99.6,y=-183.4,z=0},
 }
 
 M.automatic_routes = {
     hp1 = { route="grey" },
+    hp1_mission = { route="gob", contents="Mission" },
 }
 
 return M
