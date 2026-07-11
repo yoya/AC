@@ -1255,6 +1255,64 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    -- index が自分以外なら他にフォーカスを譲る
 	    io_ipc.send_all("focus", arg1)
 	end
+    elseif subcommand == 'garden' or subcommand == 'g' then
+	if arg1 == 'out' or arg1 == 'o' then
+	    local moogle = windower.ffxi.get_mob_by_name("Green Thumb Moogle")
+	    ac_move.runToMob(moogle)
+	    coroutine.sleep(1)
+	    io_net.targetByMob(moogle)
+	    coroutine.sleep(2)
+	    utils.target_lockon(true)
+	    coroutine.sleep(2)
+	    pushKeys({"enter"})
+	    coroutine.sleep(1)
+	    -- 別の場所に移動したい
+	    pushKeys({"right", "right", "up", "enter"})
+	    coroutine.sleep(1)
+	    -- 元の場所に戻る
+	    pushKeys({"down", "enter"})
+	elseif arg1 == 'flot' or arg1 == 'f' then
+	    local flotsam = windower.ffxi.get_mob_by_name("Flotsam")
+	    ac_move.runToMob(flotsam)
+	    coroutine.sleep(1)
+	    io_net.targetByMob(flotsam)
+	    coroutine.sleep(2)
+	    utils.target_lockon(true)
+	    coroutine.sleep(1)
+	    pushKeys({"enter"})
+	    coroutine.sleep(1)
+	    pushKeys({"enter"})
+	else
+	    io_chat.errorf("ac garden in|out|flot", zone)
+	end
+    elseif subcommand == 'house' or subcommand == 'h' then
+	if arg1 == 'west' or arg1 == 'w' or  -- 西アドゥリン
+	    arg1 == 'east' or arg1 == 'e' or  -- 東アドゥリン
+	    arg1 == 'garden' or arg1 == 'g' then  -- モグガーデン
+	    local door_pos = {x=-1, y=-7}
+	    ac_move.runToMob(door_pos)
+	    coroutine.sleep(1)
+	    ac_move.lookForward()
+	    windower.ffxi.run(false)
+	    coroutine.sleep(1)
+	    pushKeys({"enter"})
+	    coroutine.sleep(1)
+	    pushKeys({"enter"})
+	    coroutine.sleep(1)
+	    pushKeys({"up", "enter"})  -- 出るエリアを選択する
+	    coroutine.sleep(1)
+	    if arg1 == 'west' or arg1 == 'w' then
+		pushKeys({"enter"})  -- 西アドゥリン
+	    elseif arg1 == 'east' or arg1 == 'e' then
+		pushKeys({"down", "enter"})  -- 東アドゥリン
+	    elseif arg1 == 'garden' or arg1 == 'g' then
+		pushKeys({"up", "enter"})  -- モグガーデン
+	    else
+		io_chat.error("ac house ???")
+	    end
+	else
+	    io_chat.error("ac house west|east|garden")
+	end
     elseif subcommand == 'inject' then
 	if arg1 == 'currinfo1' then
 	    local p = packets.new('outgoing', 0x10F, {}) -- Curr Info
@@ -1268,10 +1326,13 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	else
 	    print("ac inject currinfo1 | currinfo2")
 	end
+    elseif subcommand == 'login' then
+	pushKeys({"enter"})
+	coroutine.sleep(1)
+	pushKeys({"enter"})
     elseif subcommand == 'logout' then
 	io_chat.notice("#### Logout!!!")
 	task.setTaskSimple("input /logout", 1, 1)
-
     elseif subcommand == 'magic' or subcommand == 'magick' then
 	role_Sorcerer.setMagic(arg1)
     elseif subcommand == 'move' then
