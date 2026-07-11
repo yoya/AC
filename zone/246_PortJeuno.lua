@@ -2,6 +2,8 @@
 
 local M = { id = 246 }
 
+local command = require 'command'
+
 M.routes = {
    -- HP (E)
     shemo = { {x=36,y=8.8,z=0},{x=-29,y=3},
