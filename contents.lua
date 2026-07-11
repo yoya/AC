@@ -1,5 +1,5 @@
 local M = {}
-__AC = __AC or {}
+11;rgb:158e/193a/1e75__AC = __AC or {}
 __AC.contents = M
 
 local io_chat = require 'io/chat'
@@ -82,21 +82,20 @@ function M.setType(c)
     local prevContents = M.type
     if prevContents ~= c then
 	local prevC = M.contentsTable[prevContents]
-	local nextC = M.contentsTable[c]
 	if prevC ~= nil and prevC.contents_out ~= nil then
 	    prevC.contents_out()
-	    if M.incoming_text_listener_id ~= nil then
-		incoming_text.removeListener(M.incoming_text_listener_id)
-		M.incoming_text_listener_id = nil
-	    end
+	end
+	if M.incoming_text_listener_id ~= nil then
+	    incoming_text.removeListener(M.incoming_text_listener_id)
+	    M.incoming_text_listener_id = nil
 	end
 	M.type = c
+	local nextC = M.contentsTable[c]
 	if nextC ~= nil then
 	    if nextC.contents_in ~= nil then
 		nextC.contents_in()
 	    end
 	    local incoming_text_handler = nextC.incoming_text_handler
-	    print("incoming_text_handler", incoming_text_handler)
 	    if incoming_text_handler ~= nil then
 		M.incoming_text_listener_id = incoming_text.addListener("", incoming_text_handler)
 	    end
