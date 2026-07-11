@@ -49,7 +49,7 @@ function M.send_all(method, arg1, arg2, arg3)
     M.send("*", method, arg1, arg2, arg3)
 end
 
-function M.send_party(method, arg)
+function M.send_party(method, arg1, arg2, arg3)
     -- print("io/ipc.send_party", method, arg)
     local party = windower.ffxi.get_party()
     for _, x in pairs({"p", "a1", "a2"}) do -- アライアンス全員
@@ -60,7 +60,7 @@ function M.send_party(method, arg)
 		local mob = member.mob
 		if not mob.is_npc then
 		    -- io_chat.print("send_party:", mob.name)
-		    M.send(mob.name, method, arg)
+		    M.send(mob.name, method, arg1, arg2, arg3)
 		    coroutine.sleep(0.2)
 		end
             end

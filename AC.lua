@@ -1077,26 +1077,9 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
     elseif subcommand == 'stop' then
         stop()
     elseif subcommand == 'all' then
-	if arg1 == 'logout' then
-	    io_ipc.send_all("all", arg1)
-	    task.setTaskSimple("input /logout", 0, 1)
-	elseif arg1 == 'reload' then
-	    io_chat.notice("ac all reload")
-	    io_ipc.send_all("all", "reload")
-	    task.setTaskSimple("lua u AC; wait 1; lua l AC", 0, 1)
-	elseif arg1 == 'shutdown' then
-	    io_ipc.send_all("all", arg1)
-	    task.setTaskSimple("input /shutdown", 0, 1)
-	elseif arg1 == 'warp' or
-	    arg1 == 'dim' or arg1 == 'holla' or arg1 == 'mea' then
-	    io_ipc.send_all("all", arg1)
-	    M.warp_with_equip(arg1, 15)
-	elseif arg1 == 'wstp' then
-	    io_ipc.send_all("all", arg1, arg2)
-	    control.setWSTP(arg2)
-	else
-	    print("ac all reload | warp | holla | dim | mea")
-	end
+	io_chat.notice("ac all ", arg1, arg2, arg3, arg4)
+	io_ipc.send_all("all", arg1, arg2, arg3, arg4)
+	M.addon_command_handler(arg1, arg2, arg3, arg4)
     elseif subcommand == 'attack' or subcommand == 'att' or subcommand == 'at' then
 	local onoff = argument_means_on(arg1)
 	if onoff ~= nil then
@@ -1304,15 +1287,9 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    start_party()
 	elseif arg1 == 'stop' then
 	    stop_party()
-	--elseif arg1 == 'build' then
-	--    io_chat.notice("パーティ作成開始")
-	--    io_ipc.send_all("party", "build")
-	elseif arg1 == 'warp' or
-	    arg1 == 'dim' or arg1 == 'holla' or arg1 == 'mea' then
-	    io_ipc.send_party("party", arg1)
-	    M.warp_with_equip(arg1)
 	else
-	    print("ac party build | warp | holla | dim | mea")
+	    io_ipc.send_party("party", arg1, arg2, arg3, arg4)
+	    M.addon_command_handler(arg1, arg2, arg3, arg4)
 	end
     elseif subcommand == 'patrol' or subcommand == 'pat' then
 	if zone ~= nil and zone ~= 0 then
