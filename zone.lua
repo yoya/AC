@@ -124,6 +124,7 @@ M.zoneTable = {
     [170] = require('zone/170_FullMoonFn'), -- 満月の泉
     [172] = require('zone/172_Zeruhn'),     -- ツェールン鉱山
     [173] = require('zone/173_Korroloka'),  -- コロロカの洞門
+    [174] = require('zone/174_Kuftal'),     -- クフタルの洞門
     [180] = require('zone/180_Lalloff'),    -- ラ・ロフの劇場
     [182] = require('zone/182_WalkEchoes'), -- ウォークオブエコーズ
     [183] = require('zone/183_Legion'),     -- アブダルスの模型-レギオン
