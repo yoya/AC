@@ -6,6 +6,8 @@ package.path = package.path .. ";../?.lua"
 local utils = require('utils')
 local split_multi = utils.string.split_multi
 
+local now = os.time()
+
 function array_slice(arr, i1, i2)
     local a = {}
     for i = i1, i2 do
@@ -61,6 +63,7 @@ for i, file in ipairs(files) do
 	print("Can't open file:"..savedDir..file)
 	exit(1)
     end
+    local modtime = lfs.attributes(savedDir..file, 'modification')
     -- 一行目
     local line1 = f:read()
     local table1 = split_multi(line1, {" "})
@@ -120,6 +123,7 @@ for i, file in ipairs(files) do
     local time, err = lfs.attributes(savedDir..file, 'modification')
     -- print(name, eminence_point, unity_point, time)
     local char  = {
+	modtime = modtime,
 	line1 = line1,
 	line2 = line2,
 	name = name,
@@ -190,6 +194,9 @@ end
 total_gil = 0
 
 for i, char in pairs(charTable) do
+    if 60 + char.modtime < now then
+	print("old file:"..char.name..": "..(now-char.modtime).."secs")
+    end
     local gil_str = string.gsub(char.gil, ',', '')
     gil_num = tonumber(gil_str)
     if gil_num ~= nil and gil_num > 0 then
