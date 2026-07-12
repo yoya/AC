@@ -1256,7 +1256,9 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    io_ipc.send_all("focus", arg1)
 	end
     elseif subcommand == 'garden' or subcommand == 'g' then
-	if arg1 == 'out' or arg1 == 'o' then
+	if arg1 == 'return' or arg1 == 'ret' or arg1 == 'r' or -- 元に戻る
+	    arg1 == 'west' or arg1 == 'w' or  -- 西アドゥリン
+	    arg1 == 'east' or arg1 == 'e' then  -- 東アドゥリン
 	    local moogle = windower.ffxi.get_mob_by_name("Green Thumb Moogle")
 	    ac_move.runToMob(moogle)
 	    coroutine.sleep(1)
@@ -1269,8 +1271,13 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    -- 別の場所に移動したい
 	    pushKeys({"right", "right", "up", "enter"})
 	    coroutine.sleep(1)
-	    -- 元の場所に戻る
-	    pushKeys({"down", "enter"})
+	    if arg1 == 'return' or arg1 == 'ret' or arg1 == 'r' then
+		pushKeys({"down", "enter"})          -- 元に戻る
+	    elseif arg1 == 'west' or arg1 == 'w' then
+		pushKeys({"down", "down", "enter"})  -- 西アドゥリン
+	    elseif arg1 == 'east' or arg1 == 'e' then
+		pushKeys({"right", "enter"})         -- 東アドゥリン
+	    end
 	elseif arg1 == 'flot' or arg1 == 'f' then
 	    local flotsam = windower.ffxi.get_mob_by_name("Flotsam")
 	    ac_move.runToMob(flotsam)
