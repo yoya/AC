@@ -194,10 +194,12 @@ end
 total_gil = 0
 
 for i, char in pairs(charTable) do
-    if char.modtime < now - 3*60 then
-	local oldtime = os.date("%x %X", char.modtime)
-	print("OLD file:"..char.name..": "..(now-char.modtime)..
-	      "secs since "..oldtime)
+    if method == 'l' and num <= 4 then
+	if char.modtime < now - 3*60 then
+	    local oldtime = os.date("%x %X", char.modtime)
+	    print("OLD file:"..char.name..": "..(now-char.modtime)..
+		  "secs since "..oldtime)
+	end
     end
     local gil_str = string.gsub(char.gil, ',', '')
     gil_num = tonumber(gil_str)
