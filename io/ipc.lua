@@ -4,11 +4,12 @@
 local M = {}
 
 local control = require 'control'
-local io_chat = require("io/chat")
-local utils = require('utils')
+local io_chat = require "io/chat"
+local utils = require 'utils'
 local split = utils.split
 local task = require 'task'
 local acitem = require 'item'
+local ac_focus = require 'ac/focus'
 
 --[[
     AC.*.Upaupa.WS.1
@@ -127,9 +128,7 @@ function M.recieve(message)
 	    print("ac all build party")
 	end
     elseif method == 'focus' then
-	if M.AC.focusMyIndex == tonumber(arg1) then
-	    windower.take_focus()
-	end
+	ac_focus.focus(arg1)
     elseif method == 'party' then
 	M.recieve_party(source, arg1, arg2, arg3)
     elseif method == 'submit' then
