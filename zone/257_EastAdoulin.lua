@@ -23,6 +23,13 @@ M.routes = {
 	{x=-64,y=-94}, {x=-58,y=-101},
 	{x=-58,y=-118,z=-0.1}, {}
     },
+    works = {
+	{x=-56,y=-128.5,z=-0.1,desc="ワークス消化"},
+	{x=-61,y=-123,z=0,d=1},
+	{target="Waypoint"}, {a="touch"}, {wait=1},
+	{keys={"right", "right", "right", "down", "enter"}}, -- カミール山麓
+	{wait=0.5}, {keys={"right", "enter"}}, -- #2
+    },
     auction = {
 	{x=-56,y=-128.5,z=-0.1,desc="モグハウスからオークションへ"},
 	{x=-54,y=-99}, {x=-48,y=-94},
@@ -103,6 +110,7 @@ M.essentialPoints = {
     -- x=(-59.4,-51.5),y=-128.5
     from_moghouse = {x=-56,y=-128.5,z=-0.1, dx=5,dy=1},
     from_moghouse_gob = {x=-56,y=-128.5,z=-0.1, dx=5,dy=1},
+    from_moghouse_works = {x=-56,y=-128.5,z=-0.1, dx=5,dy=1},
     -- HP#2(M) x=(-51.3,-50.5), y=(-95.7-93.9)
     homepoint_1 = {x=-52.9,y=58.9,z=-0.1, d=1.5},
     homepoint_2_M = {x=-50.5,y=-95.5,z=-0.1, d=1.5},
@@ -115,6 +123,7 @@ M.automatic_routes = {
     from_moghouse = { route="hp2mog" },
     -- Gobbie Mystery Box
     from_moghouse_gob = { route="gob", contents="GobMys" },
+    from_moghouse_works = { route="works", contents="works" },
     homepoint_2_M = { route="moghouse" },
     yahse_dock = { route="ionis-wp" },
     homepoint_1 = { route="ionis-hp" },

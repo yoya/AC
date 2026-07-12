@@ -36,6 +36,13 @@ M.routes = {
 	{a="dismount"}, {x=321.5,y=47.6}
     },
     -- WP#2から
+    works = { -- レイブ
+	{x=8.2,y=-283,z=43,desc="ワークス消化"}, {wait=5},
+	{target="Bivouac#2 Administrator"}, {a="touch"}, {wait=3},
+	{target="Waypoint"}, {a="touch"}, {wait=1},
+	{keys={"down", "down", "enter"}}, -- 西アドゥリン
+	{keys={"down", "enter"}}, -- 凱旋広場 (COU.ワークス)
+    },
     raive1 = { -- レイブ
 	{x=8.2,y=-283,z=43}, {x=-2.4,y=-284},{a="mount"},
 	{x=-3,y=-285.6}, {x=-18.3,y=-256.8},
@@ -134,6 +141,14 @@ M.routes = {
 	{x=-10,y=486.4}, {a="dismount"}, {x=-10.8,y=486.4},
 	{a="f8touch"}, {a="wait"}, {a="enter"}
     },
+}
+
+M.essentialPoints = {
+    wp2 = {x=8.2,y=-283,z=43},
+}
+
+M.automatic_routes = {
+    wp2 = { route="works", contents="Works" },
 }
 
 return M
