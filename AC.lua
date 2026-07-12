@@ -352,6 +352,7 @@ local notLeaderFunction = function()
 	    local target_name = target.name
 	    if string.find(target_name, "Home Point") or
 		string.find(target_name, "Survival Guide") or
+		string.find(target_name, "Shimmering Circle") or
 		string.find(target_name, "Waypoint") or
 		string.find(target_name, "Nunaarl Bthtrogg") or
 		string.find(target_name, "Undulating Confluence") or
