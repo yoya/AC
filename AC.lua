@@ -33,25 +33,9 @@ local settings = config.load(defaults)
 local io_chat = require 'io/chat'
 local acevent = require 'event'
 
-local _focusList = { }
+local ac_focus = require 'ac/focus'
 
-for i, charalist in pairs(settings.AccountList) do
-    local ii = tonumber(i)
-    if _focusList[ii] == nil then
-	_focusList[ii] = {}
-    end
-    for _, name in ipairs(string.split(charalist, ",")) do
-	table.insert(_focusList[ii], utils.string.trim(name))
-    end
-end
-
-local focusTable = {}
-for idx, name_list in pairs(_focusList) do
-    for _, name in ipairs(name_list) do
-	focusTable[name] = idx
-    end
-end
-M.focusMyIndex = 0
+ac_focus.init(settings.AccountList)
 
 M.start_pos = nil
 
@@ -128,14 +112,6 @@ command.send('bind ^d ac party start') -- alt-d
 command.send('bind !d ac party stop')  -- ctl-d
 command.send('bind @d ac stop')        -- win-d
 command.send('bind ^f ac show mob')
-for i,_ in pairs(_focusList) do
-    -- ex) command.send('bind @1 ac focus 1')
-    local bind_command = 'bind @'..tostring(i)..' ac focus '..tostring(i)
-    command.send(bind_command)
-end
--- Alt-tab は乗っ取れなかった。残念。
-command.send('bind ^tab ac focus -1')
-command.send('bind ^DIK_TAB ac focus -1')
 
 local keyboard = require 'keyboard'
 local pushKeys = keyboard.pushKeys
@@ -1252,7 +1228,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	if control.debug then
 	    print("ac focus", arg1)
 	end
-	if M.focusMyIndex ~= arg1 then
+	if ac_focus.focusMyIndex ~= arg1 then
 	    -- index が自分以外なら他にフォーカスを譲る
 	    io_ipc.send_all("focus", arg1)
 	end
@@ -1661,8 +1637,7 @@ end
 windower.register_event('load', function()
     local player = windower.ffxi.get_player()
     if player ~= nil then
-	M.focusMyIndex = focusTable[player.name]
-	io_chat.notice("[load] focus #", M.focusMyIndex, player.name, "=======")
+	ac_focus.load(player)
     end
     ws.init()
     local zone = windower.ffxi.get_info().zone
@@ -1712,9 +1687,7 @@ end)
 windower.register_event('login', function()
     -- ws.init()  -- このタイミングだと前のキャラのジョブが反映される
     ac_stat.init()
-    local player = windower.ffxi.get_player()
-    M.focusMyIndex = focusTable[player.name]
-    io_chat.notice("[login] focus", M.focusMyIndex, player.name)
+    ac_focus.login()
 end)
 
 windower.register_event('logout', function()
