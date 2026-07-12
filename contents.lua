@@ -1,5 +1,5 @@
 local M = {}
-11;rgb:158e/193a/1e75__AC = __AC or {}
+__AC = __AC or {}
 __AC.contents = M
 
 local io_chat = require 'io/chat'
