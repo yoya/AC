@@ -154,7 +154,11 @@ local acmob = require 'mob'
 local getMobPosition = acmob.getMobPosition
 
 local acjob = require 'job'
+
+local battle = require('battle')
 local role_Sorcerer = require('role/Sorcerer')
+local role_Leader = require('role/Leader')
+local role_Follower = require('role/Follower')
 local ac_defeated = require 'ac/defeated'
 local ac_equip = require 'ac/equip'
 
@@ -875,7 +879,7 @@ function tick_serial()
     end
     --
     -- ここからは control.auto のみ
-   --
+    --
     ac_equip.tick(player)
     acjob.tick(player)
     -- クリスタルはカバンに仕舞う
@@ -897,12 +901,15 @@ function tick_serial()
 	else -- automove 中は敵を探索して戦ったり、所定の位置に戻ったりしない
 	    if iamLeader() == true or control.puller then
 		leaderFunction()
+		role_Leader.tick_idle(player, me)
 	    elseif iamLeader() == false then
 		notLeaderFunction()
+		role_Follower.tick_idle(player, me)
 	    end
 	end
     elseif player.status == 1 then  -- 戦闘中
 	fightingFunction()
+	battle.tick(player, me)
     elseif player.status == 3 then  -- 死亡
     elseif player.status == 4 then  -- イベント中
     elseif player.status == 33 then  -- 休憩中

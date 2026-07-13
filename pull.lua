@@ -1,17 +1,17 @@
 local M = {}
 
-M.MELEE   = 1  -- 漢釣り
-M.DISTANT = 2  -- 遠隔釣り。挑発/気功弾、フラッシュ/ディア、矢弾など
+M.PULL_MELEE   = 1  -- 漢釣り
+M.PULL_DISTANT = 2  -- 遠隔釣り。挑発/気功弾、フラッシュ/ディア、矢弾など
 
-M.pull_type = M.MELEE  -- デフォルト、漢釣り
+M.pull_type = M.PULL_MELEE  -- デフォルト、漢釣り
 
 function M.set_pull_type(pull_type)
     M.pull_type = pull_type
 end
 
 M.pullTable = {
-    [M.MELEE]   = require 'pull/melee',   -- 漢釣り
-    [M.DISTANT] = require 'pull/distant',   -- 遠隔釣り
+    [M.PULL_MELEE]   = require 'pull/melee',   -- 漢釣り
+    [M.PULL_DISTANT] = require 'pull/distant',   -- 遠隔釣り
 }
 for _, obj in pairs(M.pullTable) do obj.parent = M end
 

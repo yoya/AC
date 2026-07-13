@@ -3,7 +3,7 @@
 local M = {}
 
 function M.tick(player)
-    
+    print("pull.melee")
 end
 
 return M
