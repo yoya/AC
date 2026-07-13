@@ -11,8 +11,8 @@ function M.pushKeys(keys)
 	if type(k) == "number" then
 	    command = command.."wait "..k.."; "
 	else
-	    command = command.."setkey "..k.." down; wait 0.1; setkey "..k.." up; wait 0.1; "
-	    wait = wait + 0.1 + 0.1
+	    command = command.."setkey "..k.." down; wait 0.1; setkey "..k.." up; wait 0.2; "
+	    wait = wait + 0.1 + 0.2
 	end
     end
     -- local io_chat = require 'io/chat'
