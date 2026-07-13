@@ -1344,7 +1344,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	-- ログイン
 	local n = tonumber(arg1, 10)
 	if n == nil or
-	    not utils.table.contains({"mailbox", "garden", "m", "g", "gob"}, arg2) then
+	    not utils.table.contains({"mailbox", "garden", "m", "mm", "g", "gob"}, arg2) then
 	    print("ac partrol <chara number> {all | mailbox | garden | gob} ")
 	else
 	    for i = 1, n do
@@ -1353,9 +1353,23 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 		coroutine.sleep(1)
 		pushKeys({"enter"})
 		coroutine.sleep(19)
-		if arg2 == "mailbox" or arg2 == "m" then
+		if arg2 == "mailbox" or arg2 == "m" or arg2 == "mm" then
 		    command.send('input /mailbox')  -- 宅配ポストを開ける
 		    coroutine.sleep(4)
+		    if arg2 == "mm" then
+			for i = 1, 8 do
+			    pushKeys({"enter", "enter"})
+			    coroutine.sleep(1)
+			    pushKeys({"right"})
+			    coroutine.sleep(1)
+			    if i == 4 then
+				pushKeys({"left", "left", "left", "down"})
+				coroutine.sleep(1)
+			    end
+			end
+		    end
+		    coroutine.sleep(1)
+		    ---
 		    pushKeys({"escape"})
 		elseif arg2 == "garden" or arg2 == "g" then  -- 栽培
 		    command.send('input /garden')  -- 宅配ポストを開ける
@@ -1392,6 +1406,9 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 		command.send('input /logout')
 		coroutine.sleep(5)
 		pushKeys({"down"})
+	    end
+	    for i = 1, n do
+		pushKeys({"up"})
 	    end
 	end
     elseif subcommand == 'point' then
