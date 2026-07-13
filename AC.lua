@@ -1561,13 +1561,13 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
     elseif subcommand == 'use' then
 	if arg1 == 'silt' then
 	    useSilt = not useSilt
-	    io_chat.print("item silt using start", useSilt)
+	    io_chat.info("item silt using start", useSilt)
 	elseif arg1 == 'beads' then
 	    useBeads = not useBeads
-	    io_chat.print("item beads using start", useBeads)
+	    io_chat.info("item beads using start", useBeads)
 	elseif arg1 == 'faith' then
 	    useFaith = not useFaith
-	    io_chat.print("item faith using start", useFaith)
+	    io_chat.info("item faith using start", useFaith)
 	elseif arg1 == 'moolah' then
 	    -- モグのおひねり
 	    local slot_ammo = 3
