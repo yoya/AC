@@ -26,6 +26,7 @@ local iamLeader = ac_party.iamLeader
 local pull = require 'pull'
 local ws = require 'ws'
 
+M.so_long_to_get_fight_count = 0
 --- 戦闘中。リーダー、メンバー共通。
 function M.tick(player, me)
     -- print("battle.melee")
@@ -34,20 +35,20 @@ function M.tick(player, me)
     -- もしくは殴れる距離なのに敵が赤字に変わらない
     if mob == nil or (mob.distance < (mob.model_scale * 1.5) and mob.status == 0) then
 	if control.debug then
-	    io_chat.printf("so_long_to_get_fight_count:%d/7",
-			   so_long_to_get_fight_count)
+	    io_chat.printf("M.so_long_to_get_fight_count:%d/7",
+			   M.so_long_to_get_fight_count)
 	end
-	if so_long_to_get_fight_count < 7 then
-	    so_long_to_get_fight_count = so_long_to_get_fight_count  + 1
+	if M.so_long_to_get_fight_count < 7 then
+	    M.so_long_to_get_fight_count = M.so_long_to_get_fight_count  + 1
 	else
 	    command.send('input /attack off')  -- 一旦諦める
-	    io_chat.noticef("so_long_to_get_fight_count:%d/7",
-			    so_long_to_get_fight_count)
-	    so_long_to_get_fight_count = 0
+	    io_chat.noticef("M.so_long_to_get_fight_count:%d/7",
+			    M.so_long_to_get_fight_count)
+	    M.so_long_to_get_fight_count = 0
 	end
 	return
     end
-    so_long_to_get_fight_count = 0
+    M.so_long_to_get_fight_count = 0
     local player = windower.ffxi.get_player()
     local mainJob = player.main_job
     local subJob = player.sub_job
@@ -115,7 +116,7 @@ function M.tick(player, me)
             -- 向きが悪くて戦闘が開始しない問題への対策
             -- command.send('setkey numpad5 down; wait 0.05; setkey numpad5 up')
             return
-        elseif control.calm == false then
+        elseif not control.calm then
 	    sendCommandProb({
                 { 150, 0, 'setkey a down; wait 0.05; setkey a up', 0 }, -- 左
                 { 150, 0, 'setkey d down; wait 0.05; setkey d up', 0 }, -- 右
@@ -200,7 +201,6 @@ function M.tick(player, me)
         end
     end
     --- たまに左や右にずれる。前や後にも。
-    --    if not settings.Calm then
     if not control.calm then
 	sendCommandProb({
 		{ 10, 10, 'setkey a down; wait 0.1; setkey a up', 0 }, -- left

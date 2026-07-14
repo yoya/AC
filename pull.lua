@@ -18,6 +18,7 @@ M.pullTable = {
 for _, obj in pairs(M.pullTable) do obj.parent = M end
 
 function M.tick(player)
+    -- print("pull.tick")
     local pull_object = M.pullTable[M.pull_type]
     if pull_object ~= nil then
 	if pull_object.tick ~= nil then

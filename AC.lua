@@ -20,9 +20,6 @@ contents.AC = M
 local pull = require 'pull'
 local puller = false
 local defaults = {
-    PullMethod = pull.MELEE,
-    Attack = true,
-    Calm = true,
     AccountList = { },
     Control = { Debug = "off", },
 }
@@ -140,7 +137,7 @@ local fightingMobName = nil
 local prevDx = 0
 local prevDy = 0
 local leaderFunction = function()
----    print("I am a reader")
+    -- print("I am a leader")
     local me_pos = {}
     if getMobPosition(me_pos, "me") ~= true then
 	-- zone チェンジでよくある
@@ -176,7 +173,7 @@ local leaderFunction = function()
 	}
 	mob = acmob.searchNearestMob(pull.base_pos, condition)
     end
-    if mob ~= nil and settings.Attack then
+    if mob ~= nil and control.attack then
         windower.ffxi.run(false)
 	io_net.targetByMob(mob)
 	coroutine.sleep(0.2)
@@ -211,7 +208,7 @@ local leaderFunction = function()
 	    windower.ffxi.run(false)
 	end
     end
-    if settings.Attack then
+    if control.attack then
         command.send('input /attack on')
 	acprob.clearProbRecastTime(acprob.ProbRecastTime)
 	task.resetByFight()
@@ -320,7 +317,7 @@ local notLeaderFunction = function()
 	    end
 	end
     end
-    if settings.Attack then
+    if control.attack then
         windower.ffxi.run(false)
 	local condition = {
 	    range = control.enemy_range,
@@ -577,7 +574,7 @@ local idleFunctionEastAdoulin = function(mob) -- 東アドゥリン
 end
 
 local idleFunction = function()
---  87print("idleFunction")
+    -- print("idleFunction")
     local ret
     if  useSilt then
         windower.ffxi.run(false)
@@ -636,7 +633,7 @@ function tick()
 end
 
 function tick_serial()
-    -- print("tick_serial").
+    -- print("tick_serial")
     local player = windower.ffxi.get_player()
     local me = windower.ffxi.get_mob_by_target("me")
     if player == nil or me == nil then
@@ -666,6 +663,7 @@ function tick_serial()
     end
     -- 待機、マウント(85)
     -- https://github.com/Windower/Resources/blob/master/resources_data/statuses.lua
+    print("XXX player.status", player.status)
     if player.status == 0 or player.status == 85 then
 	--- 待機中
 	idleFunction()
@@ -700,8 +698,8 @@ local start = function()
 		    math.round(pull.base_pos.x,2), math.round(pull.base_pos.y,2),
 		    math.round(pull.base_pos.z,2))
     ac_defeated.done()
-    io_chat.infof("attack=%s enemy_range=%d, enemy_filter=%s ", tostring(settings.Attack), control.enemy_range, tostring(control.enemy_filter))
-    io_chat.infof("puller=%s wstp=%d provoke=%d, calm=%s", tostring(control.puller), control.wstp, control.provoke, tostring(settings.Calm))
+    io_chat.infof("attack=%s enemy_range=%d, enemy_filter=%s ", tostring(control.attack), control.enemy_range, tostring(control.enemy_filter))
+    io_chat.infof("puller=%s wstp=%d provoke=%d, calm=%s", tostring(control.puller), control.wstp, control.provoke, tostring(control.calm))
 end
 M.start = start
 
@@ -840,7 +838,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
     elseif subcommand == 'attack' or subcommand == 'att' or subcommand == 'at' then
 	local onoff = argument_means_on(arg1)
 	if onoff ~= nil then
-	    settings.Attack = onoff
+	    control.attack = onoff
 	    io_chat.info("attack mode "..arg1)
 	else
 	    io_chat.error("Usage: ac attack (on|off)")
@@ -1478,7 +1476,7 @@ windower.register_event('load', function()
     end
     incoming_text.addListener("", incoming_text_handler)
     -- 全ての準備が整ってから tick 起動
-    tick:loop(1.0)
+    tick:loop(control.period)
 end)
 
 windower.register_event('login', function()
