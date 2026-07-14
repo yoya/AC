@@ -158,7 +158,7 @@ local leaderFunction = function()
     if mob == nil then
 	local condition = {
 	    range = control.enemy_range,
-	    preferMobs = utils.table.merge_lists(moreAttractiveEnemyList, preferedEnemyList),
+	    preferMobs = utils.table.merge_lists(acmob.moreAttractiveEnemyList, preferedEnemyList),
 	    nameMatch = control.enemy_filter,
 	}
 	local mob = acmob.searchNearestMob(pull.base_pos, condition)

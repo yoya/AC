@@ -25,33 +25,6 @@ local iamLeader = ac_party.iamLeader
 local pull = require 'pull'
 local ws = require 'ws'
 
--- 他との戦闘を中断してでも先に倒すべき敵
-local moreAttractiveEnemyList = {
-    -- カオス戦
-    "Profane Circle",
-    -- アンバス
-    "Tyny Lycopodium",
-    "Skullcap", "Bozzetto Elemental",
-    -- 醴泉島
-    "Wretched Poroggo", "Water Elemental",
-    -- Void Watch
-    "Gloam Servitor", -- ルフェーゼ
-    "Bloodswiller Fly", -- "Tsui-Goab", -- ミザレオ
-    "Little Wingman", -- ウルガラン
-    "Bloody Skull", -- アットワ
-    "Primordial Pugil", -- ビビキー
-    -- プロマシア
-    "Gargoyle",
-    -- アルタナM
-    "Atomos", "Aquila", "Haudrale",
-}
-
--- ドメインベーションの敵一覧
-local domain_enemy_list = { "Azi Dahaka","Azi Dahaka's Dragon",
-			    "Naga Raja", "Naga Raja's Lamia",
-			    "Quetzalcoatl", "Quetzalcoatl's Sibilus",
-			    "Mireu" }
-
 --- 戦闘中。リーダー、メンバー共通。
 function M.tick(player, me)
     -- print("battle.melee")
@@ -81,12 +54,12 @@ function M.tick(player, me)
     -- 中断してでも優先する敵
     local condition = {
 	range = control.enemy_range,
-	preferMobs = moreAttractiveEnemyList,
+	preferMobs = acmob.moreAttractiveEnemyList,
 	nameMatch = control.enemy_filter,
     }
     local preferMob = acmob.searchNearestMob(pull.base_pos, condition)
     ---    print("prefereMob", preferMob)
-    if not utils.table.contains(moreAttractiveEnemyList, mob.name) and preferMob ~= nil and mob.name ~= preferMob.name then
+    if not utils.table.contains(acmob.moreAttractiveEnemyList, mob.name) and preferMob ~= nil and mob.name ~= preferMob.name then
 	--        print("preferMob:", mob.name)
         if iamLeader() then
             io_net.targetByMob(preferMob)
@@ -141,7 +114,7 @@ function M.tick(player, me)
             -- 向きが悪くて戦闘が開始しない問題への対策
             -- command.send('setkey numpad5 down; wait 0.05; setkey numpad5 up')
             return
-        elseif settings.Calm == false then
+        elseif control.calm == false then
 	    sendCommandProb({
                 { 150, 0, 'setkey a down; wait 0.05; setkey a up', 0 }, -- 左
                 { 150, 0, 'setkey d down; wait 0.05; setkey d up', 0 }, -- 右
@@ -154,7 +127,7 @@ function M.tick(player, me)
                 { 300, 0, 'setkey a down; wait 0.25; setkey a up', 0 },
                 { 300, 0, 'setkey d down; wait 0.25; setkey d up', 0 },
                 { 500, 0, 'setkey s down; wait 0.01; setkey s up', 0 }, -- 後ろ
-         }, 1.0, acprob.ProbRecastTime)
+         }, 1.0, acprob.probRecastTime)
 	    --- 一回だけなので 1 を入れる。
 	else
 	    windower.ffxi.run(false)
@@ -201,7 +174,7 @@ function M.tick(player, me)
 --	ws_request = true
 --    end
     -- ドメインベーションはTP1000即撃ち
-    if player.vitals.tp >= 1000 and utils.table.contains(domain_enemy_list, mob.name) then
+    if player.vitals.tp >= 1000 and utils.table.contains(acmob.domain_enemy_list, mob.name) then
 	ws_request = true
     end
     if control.wstp ~= nil and control.wstp ~= -1 and control.wstp <= player.vitals.tp then
@@ -214,8 +187,8 @@ function M.tick(player, me)
         if player.item_level > 99 then
             local commprob = getSendCommandProbTable(mainJob, subJob, 1)
 --            io_chat.print(commprob)
-            --sendCommandProb(commprob, settings.Period, acprob.ProbRecastTime)
-	    sendCommandProb(commprob, control.period, acprob.ProbRecastTime)
+            --sendCommandProb(commprob, settings.Period, acprob.probRecastTime)
+	    sendCommandProb(commprob, control.period, acprob.probRecastTime)
         end
     end
 ---    if math.random(1, 100) <= 1 then
@@ -233,7 +206,7 @@ function M.tick(player, me)
 		{ 10, 10, 'setkey d down; wait 0.1; setkey d up', 0 }, -- right
 		{ 20, 10, 'setkey w down; wait 0.1; setkey w up', 0 }, -- forward
 		{ 20, 10, 'setkey s down; wait 0.1; setkey s up', 0 }, -- back
-			}, control.period, acprob.ProbRecastTime)
+			}, control.period, acprob.probRecastTime)
     end
     if doPointCheer then  --- アンバス：マンドラ
         sendCommandProb({
@@ -242,7 +215,7 @@ function M.tick(player, me)
             { 100, 1, 'input /cheer <p2>', 1 },
             { 100, 1, 'input /clap <p1>', 1 },
             { 100, 1, 'input /clap <p2>', 1 },
-        }, control.period, acprob.ProbRecastTime)
+        }, control.period, acprob.probRecastTime)
     end  
 end
 

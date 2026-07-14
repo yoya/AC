@@ -5,6 +5,33 @@ local io_chat = require('io/chat')
 
 local M = {}
 
+-- 他との戦闘を中断してでも先に倒すべき敵
+M.moreAttractiveEnemyList = {
+    -- カオス戦
+    "Profane Circle",
+    -- アンバス
+    "Tyny Lycopodium",
+    "Skullcap", "Bozzetto Elemental",
+    -- 醴泉島
+    "Wretched Poroggo", "Water Elemental",
+    -- Void Watch
+    "Gloam Servitor", -- ルフェーゼ
+    "Bloodswiller Fly", -- "Tsui-Goab", -- ミザレオ
+    "Little Wingman", -- ウルガラン
+    "Bloody Skull", -- アットワ
+    "Primordial Pugil", -- ビビキー
+    -- プロマシア
+    "Gargoyle",
+    -- アルタナM
+    "Atomos", "Aquila", "Haudrale",
+}
+
+-- ドメインベーションの敵一覧
+M.domain_enemy_list = { "Azi Dahaka","Azi Dahaka's Dragon",
+			"Naga Raja", "Naga Raja's Lamia",
+			"Quetzalcoatl", "Quetzalcoatl's Sibilus",
+			"Mireu" }
+
 -- 敵のヘイトが自分のパーティ/アライアンスに向いてるか
 function isMobLinked(mob)
     local party = windower.ffxi.get_party()

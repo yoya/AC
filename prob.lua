@@ -10,7 +10,7 @@ local task = require 'task'
 local io_chat = require 'io/chat'
 local M = {}
 
-M.ProbRecastTime = {}
+M.probRecastTime = {}
 
 -- job = { probPermil(1/1000), recast, command, wait }
 
@@ -66,7 +66,7 @@ M.getSendCommandProbTable = function(mainJob, subJob, rankInJob)
     return merged
 end 
 
-M.sendCommandProb = function(table, period, ProbRecastTime)
+M.sendCommandProb = function(table, period)
     -- print("sendCommandProb")
     local rnd = math.random(1, 1000)
     local pp = 0
@@ -85,7 +85,7 @@ M.sendCommandProb = function(table, period, ProbRecastTime)
 	    return
 	end
         pn = pp + p*period
-        if ProbRecastTime[c] == nil then
+        if M.probRecastTime[c] == nil then
             if pp < rnd and rnd <= pn then
 --                windower.ffxi.run(false)
 --                coroutine.sleep(0.5)
@@ -104,9 +104,9 @@ M.sendCommandProb = function(table, period, ProbRecastTime)
 		task.setTask(level,
 			     task.newTask(c, 0, t, r, f))
 		-- タイマーセット
-                ProbRecastTime[c] = { }
-		ProbRecastTime[c][1] = os.time() + r
-		ProbRecastTime[c][2] = f  -- 戦闘毎にリセットするかフラグ
+                M.probRecastTime[c] = { }
+		M.probRecastTime[c][1] = os.time() + r
+		M.probRecastTime[c][2] = f  -- 戦闘毎にリセットするかフラグ
                 if t > 0 then
                     coroutine.sleep(t)
                 end
@@ -114,8 +114,8 @@ M.sendCommandProb = function(table, period, ProbRecastTime)
             end
             pp = pn
 	else
-	    if ProbRecastTime[c][1] < os.time() then
-		ProbRecastTime[c] = nil
+	    if M.probRecastTime[c][1] < os.time() then
+		M.probRecastTime[c] = nil
 	    end
         end
     end

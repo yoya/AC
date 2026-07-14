@@ -37,6 +37,7 @@ function M.array_reverse(arr)
 end
 
 function M.merge_lists(t1, t2)
+    if type(t1) ~= "table" then print(debug.traceback()) end
     local merged = {}
     for _, v in ipairs(t1) do
         table.insert(merged, v)
