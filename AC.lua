@@ -663,7 +663,6 @@ function tick_serial()
     end
     -- 待機、マウント(85)
     -- https://github.com/Windower/Resources/blob/master/resources_data/statuses.lua
-    print("XXX player.status", player.status)
     if player.status == 0 or player.status == 85 then
 	--- 待機中
 	idleFunction()
