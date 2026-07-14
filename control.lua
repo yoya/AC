@@ -5,6 +5,7 @@ local M = { }
 
 M.INIT_VALUES = {
     auto = false,
+    period = 1.0, -- tick period
     automove = true, -- zone change での automove
     attack = false,  -- 敵と戦う
     reactive = false, -- 殴られたら反応する

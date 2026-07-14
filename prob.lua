@@ -10,6 +10,8 @@ local task = require 'task'
 local io_chat = require 'io/chat'
 local M = {}
 
+M.ProbRecastTime = {}
+
 -- job = { probPermil(1/1000), recast, command, wait }
 
 local sendCommandProbTable = {
@@ -120,11 +122,11 @@ M.sendCommandProb = function(table, period, ProbRecastTime)
     return false
 end
 
-M.clearProbRecastTime = function(probRecastTime)
-    for i, v in pairs(probRecastTime) do
+M.clearProbRecastTime = function()
+    for i, v in pairs(M.probRecastTime) do
 	local f = v[2]  -- 戦闘毎にリセットするかフラグ
 	if f == true then
-	    probRecastTime[i] = nil
+	    M.probRecastTime[i] = nil
 	end
     end
 end

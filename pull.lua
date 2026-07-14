@@ -5,6 +5,8 @@ M.PULL_DISTANT = 2  -- 遠隔釣り。挑発/気功弾、フラッシュ/ディ�
 
 M.pull_type = M.PULL_MELEE  -- デフォルト、漢釣り
 
+M.base_pos = nil  -- {x,y,z}
+
 function M.set_pull_type(pull_type)
     M.pull_type = pull_type
 end

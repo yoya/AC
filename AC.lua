@@ -20,7 +20,6 @@ contents.AC = M
 local pull = require 'pull'
 local puller = false
 local defaults = {
-    Period = 1.0,
     PullMethod = pull.MELEE,
     Attack = true,
     Calm = true,
@@ -37,14 +36,10 @@ local ac_focus = require 'ac/focus'
 
 ac_focus.init(settings.AccountList)
 
-M.start_pos = nil
-
 local useSilt = false
 local useBeads = false
 local useFaith = false
 local doPointCheer = false
-
-local ProbRecastTime = {}
 
 local item_data = require 'item/data'
 
@@ -52,33 +47,6 @@ local crystal_ids = item_data.crystal_ids -- クリスタル/塊
 local seal_ids = item_data.seal_ids -- 印章
 local cipher_ids = item_data.cipher_ids --  盟スクロール
 local bayld_swap_ids = item_data.bayld_swap_ids --  ベヤルド交換品
-
--- ドメインベーションの敵一覧
-local domain_enemy_list = { "Azi Dahaka","Azi Dahaka's Dragon",
-			    "Naga Raja", "Naga Raja's Lamia",
-			    "Quetzalcoatl", "Quetzalcoatl's Sibilus",
-			    "Mireu" }
-
--- 他との戦闘を中断してでも先に倒すべき敵
-local moreAttractiveEnemyList = {
-    -- カオス戦
-    "Profane Circle",
-    -- アンバス
-    "Tyny Lycopodium",
-    "Skullcap", "Bozzetto Elemental",
-    -- 醴泉島
-    "Wretched Poroggo", "Water Elemental",
-    -- Void Watch
-    "Gloam Servitor", -- ルフェーゼ
-    "Bloodswiller Fly", -- "Tsui-Goab", -- ミザレオ
-    "Little Wingman", -- ウルガラン
-    "Bloody Skull", -- アットワ
-    "Primordial Pugil", -- ビビキー
-    -- プロマシア
-    "Gargoyle",
-    -- アルタナM
-    "Atomos", "Aquila", "Haudrale",
-}
 
 -- 優先して釣る敵
 local preferedEnemyList = {
@@ -140,9 +108,9 @@ local acinspect = require 'inspect'
 local acitem = require 'item'
 
 local ws = require 'ws'
-local aprob = require 'prob'
-local sendCommandProb = aprob.sendCommandProb
-local getSendCommandProbTable = aprob.getSendCommandProbTable
+local acprob = require 'prob'
+local sendCommandProb = acprob.sendCommandProb
+local getSendCommandProbTable = acprob.getSendCommandProbTable
 local aczone = require 'zone'
 aczone.AC = M  -- for callback
 local zone_change = require 'zone/change'
@@ -193,7 +161,7 @@ local leaderFunction = function()
 	    preferMobs = utils.table.merge_lists(moreAttractiveEnemyList, preferedEnemyList),
 	    nameMatch = control.enemy_filter,
 	}
-	local mob = acmob.searchNearestMob(M.start_pos, condition)
+	local mob = acmob.searchNearestMob(pull.base_pos, condition)
 	---    print("nearest prefered mob", mob)
     end
     if mob == nil then
@@ -206,7 +174,7 @@ local leaderFunction = function()
 	    range = control.enemy_range,
 	    nameMatch = control.enemy_filter,
 	}
-	mob = acmob.searchNearestMob(M.start_pos, condition)
+	mob = acmob.searchNearestMob(pull.base_pos, condition)
     end
     if mob ~= nil and settings.Attack then
         windower.ffxi.run(false)
@@ -215,9 +183,9 @@ local leaderFunction = function()
 	command.send('input /target <t>')
 	coroutine.sleep(0.2)
         command.send('input /attack on')
-    elseif M.start_pos ~= nil then
-        local dx = M.start_pos.x - me_pos.x
-        local dy = M.start_pos.y - me_pos.y
+    elseif pull.base_pos ~= nil then
+        local dx = pull.base_pos.x - me_pos.x
+        local dy = pull.base_pos.y - me_pos.y
         local dist = math.sqrt(dx*dx + dy*dy)
         if dist > 4 then
             isFar = true
@@ -245,7 +213,7 @@ local leaderFunction = function()
     end
     if settings.Attack then
         command.send('input /attack on')
-	aprob.clearProbRecastTime(ProbRecastTime)
+	acprob.clearProbRecastTime(acprob.ProbRecastTime)
 	task.resetByFight()
     end
 end 
@@ -388,202 +356,8 @@ local notLeaderFunction = function()
 		end
 	    end
         end
-        ProbRecastTime = {}
+        acprob.ProbRecastTime = {}
     end
-end
-
-local so_long_to_get_fight_count = 0
---- 戦闘中。リーダー、メンバー共通。
-local fightingFunction = function()
----    print("fightingFunction")
---- io_chat.print("fightingFunction")
-    local mob = windower.ffxi.get_mob_by_target("t")
-    -- 戦闘モードだけどタゲが外れる(稀に発生)
-    -- もしくは殴れる距離なのに敵が赤字に変わらない
-    if mob == nil or (mob.distance < (mob.model_scale * 1.5) and mob.status == 0) then
-	if control.debug then
-	    io_chat.printf("so_long_to_get_fight_count:%d/7",
-			   so_long_to_get_fight_count)
-	end
-	if so_long_to_get_fight_count < 7 then
-	    so_long_to_get_fight_count = so_long_to_get_fight_count  + 1
-	else
-	    command.send('input /attack off')  -- 一旦諦める
-	    io_chat.noticef("so_long_to_get_fight_count:%d/7",
-			    so_long_to_get_fight_count)
-	    so_long_to_get_fight_count = 0
-	end
-	return
-    end
-    so_long_to_get_fight_count = 0
-    local player = windower.ffxi.get_player()
-    local mainJob = player.main_job
-    local subJob = player.sub_job
----    print("XXX", preferedEnemyList)
-    -- 中断してでも優先する敵
-    local condition = {
-	range = control.enemy_range,
-	preferMobs = moreAttractiveEnemyList,
-	nameMatch = control.enemy_filter,
-    }
-    local preferMob = acmob.searchNearestMob(M.start_pos, condition)
-    ---    print("prefereMob", preferMob)
-    if not utils.table.contains(moreAttractiveEnemyList, mob.name) and preferMob ~= nil and mob.name ~= preferMob.name then
---        print("preferMob:", mob.name)
-        if iamLeader() then
-            io_net.targetByMob(preferMob)
-            coroutine.sleep(1)
-            command.send('input /attack <t>')
-        else
-            --- リーダー(p1)が戦闘している敵に切り替える
-            command.send('input /assist <p1>')
-        end
-    end
- ---   if not player or not player.target_index then
- ---       return
- ---   end
-    --- サポ白はPLなので、ずっとインビジ
-    local subJob = player.sub_job
-    if false and subJob == "WHM" then
-        if math.random(1, 100) <= 1 then
----            command.send('input /ma インビジ <me>')
----            coroutine.sleep(2)
-        end
-        return 
-    end
-    local enemy_pos = {}
-    local me_pos = {}
-    getMobPosition(enemy_pos, "t")
-    getMobPosition(me_pos, "me")
-    --- 戦闘してない？
-    if enemy_pos.x == nil then
-        print("if enemy_pos.x == nil")
-        return
-    end
-    local dx = enemy_pos.x - me_pos.x
-    local dy = enemy_pos.y - me_pos.y
-    local dist =  math.sqrt(dx*dx + dy*dy)
-    local enemy_space = 1
-    if control.enemy_space == control.ENEMY_SPACE_NEAR then
-	enemy_space = 2
-    elseif control.enemy_space ==  control.ENEMY_SPACE_MAGIC then
-	enemy_space = 4
-    elseif control.enemy_space ==  control.ENEMY_SPACE_MANUAL then
-	enemy_space = 99999
-    end
-    if iamLeader() then
-	if dist > enemy_space then
-	    isFar = true
-	end
-    end
-    if isFar then
-        --　戦闘中でないときは、WSやMAを自粛。フェイスが動かないので。
-        if dist / mob.model_size > enemy_space or player.status == 0 then
-            windower.ffxi.run(dx, dy)
-            -- 向きが悪くて戦闘が開始しない問題への対策
-            -- command.send('setkey numpad5 down; wait 0.05; setkey numpad5 up')
-            return
-        elseif settings.Calm == false then
-	    sendCommandProb({
-                { 150, 0, 'setkey a down; wait 0.05; setkey a up', 0 }, -- 左
-                { 150, 0, 'setkey d down; wait 0.05; setkey d up', 0 }, -- 右
-                { 150, 0, 'setkey a down; wait 0.1; setkey a up', 0 }, 
-                { 150, 0, 'setkey d down; wait 0.1; setkey d up', 0 },
-                { 200, 0, 'setkey a down; wait 0.15; setkey a up', 0 },
-                { 200, 0, 'setkey d down; wait 0.15; setkey d up', 0 },
-                { 200, 0, 'setkey a down; wait 0.2; setkey a up', 0 },
-                { 200, 0, 'setkey d down; wait 0.2; setkey d up', 0 },
-                { 300, 0, 'setkey a down; wait 0.25; setkey a up', 0 },
-                { 300, 0, 'setkey d down; wait 0.25; setkey d up', 0 },
-                { 500, 0, 'setkey s down; wait 0.01; setkey s up', 0 }, -- 後ろ
-         }, 1.0, ProbRecastTime)
-	    --- 一回だけなので 1 を入れる。
-	else
-	    windower.ffxi.run(false)
-        end
-    end
-    --- 止まって戦闘開始
-    isFar = false
-    windower.ffxi.run(false)
-    --- atan2 のままだと右を向くので、90度の補正
---    local dir = math.atan2(dx, dy) - 3.14/2
---    windower.ffxi.turn(dir)
-    turnToTarget("t")
----    if player.vitals.tp >= math.random(1100, 1200) then
-    --- PLD はタゲ取り.RNG はエヴィ用。"BLM", "SMN", "SCH"はミルキル
-    -- local tp100Jobs = {-"RNG", "BLM", "SMN", "SCH"}
-    local tp100Jobs = {}
-    --- WAR はスチサイ用。DNC はダンス用？
-    local tpJobs = {"DNC"}
---    local tpMin = 1200
---    local tpMax = 1500
-    local tpMin = 2000
-    local tpMax = 2500
-    if utils.table.contains(tp100Jobs, player.main_job) then
-        tpMin = 1050
-        tpMax = 1150
-    elseif utils.table.contains(tpJobs, player.main_job) then
-        tpMin = 2000
-        tpMax = 2300
-    end
-    local ws_request = false
-    local now = os.time()
-    -- 連携になるよう 3秒あける。MB を邪魔しないよう 連携から 10秒あける。
-    if player.vitals.tp >= 1000 and
-	(acinspect.ws_time + 2) < now and (acinspect.sc_time + 10) < now then
-	ws_request = true
-    end
-    if player.vitals.tp >= 2000 and
-	(acinspect.ws_time + 1) < now and (acinspect.sc_time + 10) < now then
-	-- TP:2000 超えは少しピーキーにする。
-	ws_request = true
-    end
---    if player.vitals.tp >= 2500 and (acinspect.sc_time + 10) < now then
-	-- print("(now - sc_time):"..(now - acinspect.sc_time), acinspect.sc_time)
---	ws_request = true
---    end
-    -- ドメインベーションはTP1000即撃ち
-    if player.vitals.tp >= 1000 and utils.table.contains(domain_enemy_list, mob.name) then
-	ws_request = true
-    end
-    if control.wstp ~= nil and control.wstp ~= -1 and control.wstp <= player.vitals.tp then
-	ws_request = true
-    end
-    if ws_request == true then
-	task.setTaskSimple("//ws exec", 0, 3)
-	return
-    else
-        if player.item_level > 99 then
-            local commprob = getSendCommandProbTable(mainJob, subJob, 1)
---            io_chat.print(commprob)
-            sendCommandProb(commprob, settings.Period, ProbRecastTime)
-        end
-    end
----    if math.random(1, 100) <= 1 then
-    --- 戦闘ターゲットがたまに外れる対策。とりあえずの方法。
-    if iamLeader() or control.puller then
-        if math.random(1, 10) <= 1 then
-            command.send('input /attack <t>')
-        end
-    end
-    --- たまに左や右にずれる。前や後にも。
-    if not settings.Calm then
-	sendCommandProb({
-		{ 10, 10, 'setkey a down; wait 0.1; setkey a up', 0 }, -- left
-		{ 10, 10, 'setkey d down; wait 0.1; setkey d up', 0 }, -- right
-		{ 20, 10, 'setkey w down; wait 0.1; setkey w up', 0 }, -- forward
-		{ 20, 10, 'setkey s down; wait 0.1; setkey s up', 0 }, -- back
-			}, settings.Period, ProbRecastTime)
-    end
-    if doPointCheer then  --- アンバス：マンドラ
-        sendCommandProb({
-            { 200, 1, 'input /point <t>', 1 },
-            { 100, 1, 'input /cheer <p1>', 1 },
-            { 100, 1, 'input /cheer <p2>', 1 },
-            { 100, 1, 'input /clap <p1>', 1 },
-            { 100, 1, 'input /clap <p2>', 1 },
-        }, settings.Period, ProbRecastTime)     
-    end  
 end
 
 local idleFunctionTradeItems = function(tname, items, wait, enterWaits)
@@ -896,8 +670,8 @@ function tick_serial()
 	--- 待機中
 	idleFunction()
 	if ac_move.auto then  -- automove 中
-	    M.start_pos = {x=0, y=0, z=0}
-	    getMobPosition(M.start_pos, "me")  -- start pos を更新
+	    pull.base_pos = {x=0, y=0, z=0}
+	    getMobPosition(pull.base_pos, "me")  -- start pos を更新
 	else -- automove 中は敵を探索して戦ったり、所定の位置に戻ったりしない
 	    if iamLeader() == true or control.puller then
 		leaderFunction()
@@ -908,7 +682,6 @@ function tick_serial()
 	    end
 	end
     elseif player.status == 1 then  -- 戦闘中
-	fightingFunction()
 	battle.tick(player, me)
     elseif player.status == 3 then  -- 死亡
     elseif player.status == 4 then  -- イベント中
@@ -920,12 +693,12 @@ end
 
 local start = function()
     settings = config.load(defaults)
-    M.start_pos = {x=0,y=0,z=0}
-    getMobPosition(M.start_pos, "me")
+    pull.base_pos = {x=0,y=0,z=0}
+    getMobPosition(pull.base_pos, "me")
     control.auto = true
     io_chat.noticef('<<<<<<< AC START >>>>>>> {x=%d y=%d z=%d}',
-		    math.round(M.start_pos.x,2), math.round(M.start_pos.y,2),
-		    math.round(M.start_pos.z,2))
+		    math.round(pull.base_pos.x,2), math.round(pull.base_pos.y,2),
+		    math.round(pull.base_pos.z,2))
     ac_defeated.done()
     io_chat.infof("attack=%s enemy_range=%d, enemy_filter=%s ", tostring(settings.Attack), control.enemy_range, tostring(control.enemy_filter))
     io_chat.infof("puller=%s wstp=%d provoke=%d, calm=%s", tostring(control.puller), control.wstp, control.provoke, tostring(settings.Calm))
@@ -1135,7 +908,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 		range = control.enemy_range,
 		nameMatch = control.enemy_filter,
 	    }
-	    local mob = acmob.searchNearestMob(M.start_pos, condition)
+	    local mob = acmob.searchNearestMob(pull.base_pos, condition)
 	    io_chat.print("nearest preferMob=====================")
 	    io_chat.print(preferMob)
 	    io_chat.print("nearest mob =====================")
@@ -1328,11 +1101,11 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	role_Sorcerer.setMagic(arg1)
     elseif subcommand == 'move' then
 	local routeTable = aczone.getRouteTable(zone)
-	M.start_pos = nil
+	pull.base_pos = nil
         ac_move.autoMoveTo(zone, {arg1, arg2}, routeTable)
     elseif subcommand == 'moverev' then
 	local routeTable = aczone.getRouteTable(zone)
-	M.start_pos = nil
+	pull.base_pos = nil
         ac_move.autoMoveTo(zone, {"-"..arg1}, routeTable)
     elseif subcommand == 'party' then
 	if arg1 == 'start' then
@@ -1498,7 +1271,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
     elseif subcommand == 'tick' then
 	local period = tonumber(arg1, 10)
 	if period ~= nil and 0.1 < period and period < 10 then
-	    settings.Period = period
+	    control.period = period
 	else
 	    print("ac tick <period> illegal:", arg1)
 	end
@@ -1546,7 +1319,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	end
 	local mob = windower.ffxi.get_mob_by_name(mob_name)
 	control.auto = true
-	M.start_pos = nil
+	pull.base_pos = nil
 	local counter = 0
 	while control.auto and mob == nil do
 	    if counter == 0 then
@@ -1758,7 +1531,7 @@ windower.register_event('zone change', function(zone, prevZone)
     control.enemy_range = control.INIT_VALUES.enemy_range
     control.puller = control.INIT_VALUES.puller
     control.wstp = control.INIT_VALUES.wstp
-    M.start_pos = nil
+    pull.base_pos = nil
 end)
 
 windower.register_event('incoming chunk', function(id, data, modified, injected, blocked)
