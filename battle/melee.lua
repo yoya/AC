@@ -2,6 +2,7 @@ local M = {}
 
 local utils = require 'utils'
 local control = require 'control'
+local command = require 'command'
 
 local io_chat = require 'io/chat'
 local io_net = require 'io/net'
