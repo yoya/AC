@@ -10,6 +10,7 @@ local utils = require 'utils'
 
 local M = {
     data = require 'item/data',
+    junk = require 'item/junk',
     vagary = require 'item/vagary',
 }
 
@@ -47,6 +48,18 @@ local inventoryTotalNum = function()
     return totalNum
 end
 M.inventoryTotalNum = inventoryTotalNum
+
+function M.inventoryCountByItemId(item_id)
+    local items = windower.ffxi.get_items()
+    local item = items.inventory
+    local totalNum = 0
+    for i, e in ipairs(item) do
+	if e.id == item_id then
+	    totalNum = totalNum + e.count
+	end
+    end
+    return totalNum
+end
 
 local prevInventoryTotalNum = inventoryTotalNum()
 local diffInventoryTotalNum = function()
@@ -287,7 +300,7 @@ M.bagsHasItemsT = function(idsT)
     for bname, bagid in pairs(BagsList) do
         local bag = items[bname]
         for i, item in ipairs(bag) do
-            if isdT[item.id] == true then
+            if idsT[item.id] == true then
                 return true
             end
         end

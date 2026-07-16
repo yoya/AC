@@ -127,8 +127,8 @@ local role_Follower = require('role/Follower')
 local ac_defeated = require 'ac/defeated'
 local ac_equip = require 'ac/equip'
 
-local JunkItems = item_data.JunkItems
-local JunkItemsT = item_data.JunkItemsT
+local JunkItems = acitem.junk.JunkItems
+local JunkItemsT = acitem.junk.JunkItemsT
 
 local isFar = false
 local fightingMobName = nil
@@ -412,7 +412,7 @@ end
 -- ジャンクアイテムをかばんに集める (多分、ここが重たい)
 local aggregateJunkItemsToInventory___ = function()
     local count = 0
-    for i, id in pairs(JunkItems) do
+    for i, id in pairs(JunkItems) do  --XXX 重たい理由
         if acitem.checkInventoryFreespace() == false then
             break
         end
@@ -1359,6 +1359,18 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    io_chat.notice("ac moolah # start")
 	    acitem.useEquipItemSequence(slot_ammo, moolah_item_list, 11)
 	    io_chat.notice("ac moolah # end")
+	elseif arg1 == 'dec' then
+	    io_chat.print("【包】使用開始")
+	    coroutine.sleep(0.5)
+	    print(item_data.decItems)
+	    for i,id in ipairs(item_data.decItems) do
+		local c = acitem.inventoryCountByItemId(id)
+		print(c)
+		for i = 1, c do
+		    acitem.useItemIncludeBags(id)
+		end
+	    end
+	    io_chat.print("【包】使用終わり")
 	elseif arg1 == 'scroll' then
 	    io_chat.print("スクロール学習開始")
 	    coroutine.sleep(0.5)
@@ -1381,7 +1393,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    end
 	    io_chat.notice("石の袋開き終わり")
 	else
-	    io_chat.error("ac use { silt | beads | moolah | scroll | soulstonesack}")
+	    io_chat.error("ac use { silt | beads | moolah | dec | scroll | soulstonesack}")
 	end
     elseif subcommand == 'warp' or
 	subcommand == 'dim' or subcommand == 'holla' or subcommand == 'mea' then
