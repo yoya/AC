@@ -217,7 +217,7 @@ end
 
 --- メンバー待機用
 local notLeaderFunction = function()
----    print("I am not a reader")
+---    print("I am not a leader")
     local player = windower.ffxi.get_player()
 ---    if not player or not player.target_index then
     if not player then
@@ -230,8 +230,6 @@ local notLeaderFunction = function()
             end
         end
     end
-    local mainJob = player.main_job
-    local subJob = player.sub_job
 ---    local level = player.main_job_level
     local item_level = player.item_level
     local me_pos = {}
