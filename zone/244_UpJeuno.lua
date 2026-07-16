@@ -14,6 +14,11 @@ M.routes = {
 	{x=-98,y=170}, {x=-98,y=174}, {x=-102,y=183},
 	{x=-103.6,y=187.9,z=0}, {}
     },
+    eli = {
+	{x=-100,y=167.6,z=0,desc="Elijah"},
+	{x=-83,y=159,d=1,z=0},
+	{target="Elijah"}, {a="touch"}
+    },
     -- HP (A)
     choco = {
 	{x=-52,y=15,z=1,desc="チョコボ厩舎"},
@@ -26,6 +31,14 @@ M.routes = {
 	{x=-60,y=6.5}, {a="opendoor"}, {x=-57,y=3}, {x=-50,y=3},
 	{x=-45,y=0,z=-0.5}, {target="Monberaux"}, {a="touch"},
     },
+}
+
+M.essentialPoints = {
+    hp1E = {x=-100,y=167.6,z=0},
+}
+
+M.automatic_routes = {
+    hp1E = { route="eli" }, -- Elijah
 }
 
 return M
