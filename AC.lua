@@ -317,15 +317,18 @@ local notLeaderFunction = function()
     end
     if control.attack then
         windower.ffxi.run(false)
-	local condition = {
-	    range = control.enemy_range,
-	    linkedOnly = true,
-	    -- nameMatch = control.enemy_filter,
-	}
-	local mob = acmob.searchNearestMob(me_pos, condition)
+	local mob = windower.ffxi.get_mob_by_target("bt")
 	if mob ~= nil then
-	    io_net.targetByMob(mob)
+	    command.send('input /target <bt>')
 	else
+	    local condition = {
+		range = control.enemy_range,
+		linkedOnly = true,
+		-- nameMatch = control.enemy_filter,
+	    }
+	    mob = acmob.searchNearestMob(me_pos, condition)
+	end
+	if mob == nil then
 	    --- p1 がターゲットしてる敵に合わせる
 	    if p1 == nil or p1.status ~= 1 or p1.target_index == 0 then
 		return
@@ -339,9 +342,9 @@ local notLeaderFunction = function()
 	    io_net.targetByMobIndex(p1.target_index)
 	    mob = windower.ffxi.get_mob_by_target("t")
 	end
-	---        command.send('input /target <bt>')
 	--if mob ~= nil and mob.hpp < 100 then
 	if mob ~= nil then
+	    io_net.targetByMob(mob)
 	    if item_level >= 119 or mob.hpp < 100 then
 		-- 5 が近接攻撃できるギリギリの距離
 		if ac_pos.distance(p1, mob) <= 5 then  -- 敵が近づくまで待つ
@@ -688,6 +691,7 @@ end
 
 local start = function()
     settings = config.load(defaults)
+    control.attack = true
     pull.base_pos = {x=0,y=0,z=0}
     getMobPosition(pull.base_pos, "me")
     control.auto = true
