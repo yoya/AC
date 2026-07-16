@@ -15,6 +15,8 @@ local pushKeys = keyboard.pushKeys
 local contents = require 'contents'
 local ac_pos = require 'ac/pos'
 local distance = ac_pos.distance
+local currentPos = ac_pos.currentPos
+
 local io_net = require 'io/net'
 local acmob = require 'mob'
 local getMobPosition = acmob.getMobPosition
