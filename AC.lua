@@ -3,6 +3,7 @@ _addon.version = '1.3.0'
 _addon.commands = {'accountcluster', 'ac'}
 
 local M = {}
+__AC = M
 
 require('functions')
 local res = require 'resources'
