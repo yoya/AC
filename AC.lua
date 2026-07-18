@@ -1514,10 +1514,9 @@ windower.register_event('job change', function()
 end)
 
 windower.register_event('status change', function(new, old)
+    local acstatus = require 'status'
     -- command, delay, duration
-    task.setTaskSimple("ac inject currinfo1", 2, 1)
-    task.setTaskSimple("ac inject currinfo2", 3, 1)
-    task.setTaskSimple("//record char", 6, 1)
+    acstatus.status_change_handler(new, old)
 end)
 
 --- ゾーンが変わったらリーダーだけ停止する
