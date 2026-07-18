@@ -141,14 +141,21 @@ M.routes = {
 	{x=-10,y=486.4}, {a="dismount"}, {x=-10.8,y=486.4},
 	{a="f8touch"}, {a="wait"}, {a="enter"}
     },
+    -- WS#4 から
+    sortie = {
+	{x=-228.9,y=364.5,z=3.3,desc="ソーティ(Sortie)"},
+	{x=-240,y=365,z=2.8,d=1},
+    },
 }
 
 M.essentialPoints = {
     wp2 = {x=8.2,y=-283,z=43},
+    wp4 = {x=-228.9,y=364.5,z=3.3},
 }
 
 M.automatic_routes = {
     wp2 = { route="works", contents="Works" },
+    wp4 = { route="sortie" },
 }
 
 return M
