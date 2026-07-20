@@ -4,6 +4,7 @@ local M = {}
 
 local utils = require 'utils'
 local acevent = require 'event'
+local io_chat = require 'io/chat'
 
 M.JunkItems = {
     55, -- キャビネット
@@ -520,7 +521,7 @@ M.JunkItems = {
     4058, -- ビスマス鉱 -- 1D相場15万
 --  4077, -- 月虹鋼 -- 1個6万
 --  4098, -- 風のクリスタル (モグ預けが溢れそうなら売る)
-    4101, -- 水のクリスタル  (モグ預けが溢れそうなら売る)
+--  4101, -- 水のクリスタル  (モグ預けが溢れそうなら売る)
     4112, -- ポーション
     4113, -- ポーション+1
     4114, -- ポーション+2
@@ -915,7 +916,7 @@ M.JunkItems = {
     28458, -- ジャキジュサッシュ -- Hurkan
 }
 
--- クリスタルを売るか否か、透明モグに預けている量で判断する
+-- クリスタルを売るか否か、半透明モグに預けている量で判断する
 M.crystal_char_table = {
     -- [item_id] = char_property_name
     [4096] = "fire_crystals",    -- 炎のクリスタル
@@ -937,13 +938,14 @@ M.crystal_char_table = {
 --  [4111] = "fire_crystals",    -- 闇の塊
 }
 function M.char_update_handler(char)
-    for i, c in pairs(M.crystal_char_table) do
-	local p = char[c]
-	if p ~= nil and p > 4800 then  -- モグ預けが溢れそうなら店売り
-	    table.insert(M.JunkItems, i)
+    for id, name in pairs(M.crystal_char_table) do
+	local p = char[name]
+	if p ~= nil and p > 4500 then  -- モグ預けが溢れそうなら店売り
+	    table.insert(M.JunkItems, id)
+	    M.JunkItemsT[id] = true
 	end
     end
-    M.JunkItemsT = utils.table.convertArrayToTrueTable(M.JunkItems)
+    -- M.JunkItemsT = utils.table.convertArrayToTrueTable(M.JunkItems)
 end
 acevent.addListener("char update", M.char_update_handler)
 
