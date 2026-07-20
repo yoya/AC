@@ -40,7 +40,7 @@ M.phantom_roll_table = {
     -- ["スカラーロール"] = {job="", lucky=, unlucky=},
     -- ["ナチュラリストロール"] = {job="", lucky=, unlucky=},
     ["ルーニストロール"] = {job="RUN", lucky=4, unlucky=8},
-    -- ["ボルターズロール"] = {job="", lucky=, unlucky=},
+    ["ボルターズロール"] = {job=nil, lucky=3, unlucky=9},
     -- ["キャスターズロール"] = {job="", lucky=, unlucky=},
     -- ["コアサーズロール"] = {job="", lucky=, unlucky=},
     ["ブリッツァロール"] = {job=nil, lucky=4, unlucky=9},
