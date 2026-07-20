@@ -1357,12 +1357,11 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	elseif arg1 == 'dec' then
 	    io_chat.print("【包】使用開始")
 	    coroutine.sleep(0.5)
-	    print(item_data.decItems)
 	    for i,id in ipairs(item_data.decItems) do
 		local c = acitem.inventoryCountByItemId(id)
-		print(c)
 		for i = 1, c do
 		    acitem.useItemIncludeBags(id)
+		    coroutine.sleep(3)  -- 2 だと NG
 		end
 	    end
 	    io_chat.print("【包】使用終わり")
