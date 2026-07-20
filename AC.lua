@@ -45,6 +45,7 @@ local crystal_ids = item_data.crystal_ids -- クリスタル/塊
 local seal_ids = item_data.seal_ids -- 印章
 local cipher_ids = item_data.cipher_ids --  盟スクロール
 local bayld_swap_ids = item_data.bayld_swap_ids --  ベヤルド交換品
+local gob_dial_key_ids = item_data.gob_dial_key_ids -- 不思議箱ダイヤルキー
 
 -- 優先して釣る敵
 local preferedEnemyList = {
@@ -533,19 +534,7 @@ function dropJunkItemsInInventory()
     end
 end
 
-local idleFunctionJeunoPort = function()
-    idleFunctionTradeItems("Shemo", seal_ids, 3, {2,4})  --- or Shami
-end
 
-local idleFunctionSouthSand = function()
-    idleFunctionTradeItems("Gondebaud", cipher_ids, 4, {15,2})
-    -- 盟-マルグレートで失敗するので、以下の調整をしてみたがダメだった
-    -- idleFunctionTradeItems("Gondebaud", cipher_ids, 7, {14,14})
-end
-
-local idleFunctionSandPort = function()
-    idleFunctionTradeItems("Joulet", {4401,5789}, 5, {}) -- 堀ブナ
-end
 
 local idleFunctionWestAdoulin = function()
     local mob = windower.ffxi.get_mob_by_target("t")
@@ -573,6 +562,7 @@ local idleFunctionEastAdoulin = function(mob) -- 東アドゥリン
 	idleFunctionSellJunkItems(mob)
     end
     idleFunctionTradeItems("Runje Desaali", bayld_swap_ids, 5, {})
+--  idleFunctionTradeItems("Winrix", gob_dial_key_ids, 5, {})
 end
 
 local idleFunction = function()
@@ -602,11 +592,13 @@ local idleFunction = function()
         return
     end
     if zone == 246 then --- ジュノ港
-        idleFunctionJeunoPort()
+	idleFunctionTradeItems("Shemo", seal_ids, 3, {2,4})  --- or Shami
     elseif zone == 230 then -- 南サンドリア
-        idleFunctionSouthSand()
+	idleFunctionTradeItems("Gondebaud", cipher_ids, 4, {15,2})
+	-- 盟-マルグレートで失敗するので、以下の調整をしてみたがダメだった
+	-- idleFunctionTradeItems("Gondebaud", cipher_ids, 7, {14,14})
     elseif zone == 232 then -- サンドリア港
-        idleFunctionSandPort()
+	idleFunctionTradeItems("Joulet", {4401,5789}, 5, {}) -- 堀ブナ
     elseif zone == 256 then -- 西アドゥリン
         idleFunctionWestAdoulin()
     elseif zone == 257 then -- 東アドゥリン
