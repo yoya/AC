@@ -61,6 +61,14 @@ function M.inventoryCountByItemId(item_id)
     return totalNum
 end
 
+function M.inventoryCountByItemIds(item_ids)
+    local totalNum = 0
+    for _, item_id in ipairs(item_ids) do
+	totalNum = totalNum + M.inventoryCountByItemId(item_id)
+    end
+    return totalNum
+end
+
 local prevInventoryTotalNum = inventoryTotalNum()
 local diffInventoryTotalNum = function()
     local next = inventoryTotalNum()
