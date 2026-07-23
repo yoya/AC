@@ -49,9 +49,53 @@ end
 local keyword = arg[1]
 local chara_name = arg[2]
 
+local lacking = false
+
+if chara_name:sub(1,1) == "-" then
+    lacking = true
+    chara_name = chara_name:sub(2)
+end
+
 -- print("keyword:"..keyword.." chara_name:"..tostring(chara_name))
 
 local chara_name_list = {}
+local everyone_item_count = {}
+
+function item_match(item_name, kw)
+    if keyword == 'Vagary' then
+	for _, id in pairs(item_vagary.drop_items) do
+	    local item = res_items[id]
+	    if item_name == item.ja then
+		return true
+	    end
+	end
+    end
+    if string.find(item_name, kw) ~= nil then
+	return true
+    end
+    return false
+end
+
+function own_item_count(chara_data)
+    local count = 0
+    local item_ids = {}
+    for _, bag in ipairs(bag_name_ja_list) do
+	local items = chara_data[bag.name]
+	for item_id, count in pairs(items) do
+	    local id = tonumber(item_id)
+	    local item = res_items[id]
+            if item ~= nil then
+		if item_match(item.ja, keyword) then
+		    if item_ids[id] == nil then
+			item_ids[id] = 0
+		    end
+		    item_ids[id] = item_ids[id] + count
+		end
+	    end
+	end
+    end
+    return item_ids  -- {[id] = count, ...}
+end
 
 for entry in lfs.dir('findAll/data/') do
     local m = entry: match "(%w+).lua$"
@@ -59,8 +103,27 @@ for entry in lfs.dir('findAll/data/') do
 	if chara_name == nil or string.find(m, chara_name) ~= nil then
 	    table.insert(chara_name_list, m)
 	end
+	if lacking then
+	    local chara_file = 'findAll/data/'..m
+	    local chara_data = require(chara_file)
+	    for _, bag in ipairs(bag_name_ja_list) do
+		local items = chara_data[bag.name]
+		for item_id, count in pairs(items) do
+		    local id = tonumber(item_id)
+		    local item = res_items[id]
+		    if item_match(item.ja, keyword) then
+			if everyone_item_count[id] == nil then
+			    everyone_item_count[id] = 0
+			end
+			everyone_item_count[id] = everyone_item_count[id] + count
+		    end
+		end
+	    end
+	end
     end
 end
+
+-- for id, count in pairs(everyone_item_count) do print(id, count) end
 
 function strspacepad(s, n)
     local l = string.len(s)
@@ -84,24 +147,7 @@ local key_items_category_list = {
     {name='Active Effects', name2="応援"},
 }
 
-function item_match(item_name, keyword)
-    if keyword == 'Vagary' then
-	for _, id in pairs(item_vagary.drop_items) do
-	    local item = res_items[id]
-	    if item_name == item.ja then
-		return true
-	    end
-	end
-    end
-    if string.find(item_name, keyword) ~= nil then
-	return true
-    end
-    return false
-end
-
-for _, name in ipairs(chara_name_list) do
-    local chara_file = 'findAll/data/'..name
-    local chara_data = require(chara_file)
+function show_item_and_bag(name, chara_data, kw)
     for _, bag in ipairs(bag_name_ja_list) do
 	local bag_name = bag.name
 	local bag_name_ja = bag.ja
@@ -110,7 +156,7 @@ for _, name in ipairs(chara_name_list) do
 	    local id = tonumber(item_id)
 	    local item = res_items[id]
 	    if item ~= nil then
-		if item_match(item.ja, keyword) then
+		if item_match(item.ja, kw) then
 		    local count_str = ""
 		    if count > 1 then
 			count_str = "("..count..")"
@@ -130,7 +176,7 @@ for _, name in ipairs(chara_name_list) do
 	    local item = res_key_items[id]
 	    -- print(item.id, item.ja, item.category)
 	    if item.category == key_item_category.name and
-		string.find(item.ja, keyword) ~= nil then
+		string.find(item.ja, kw) ~= nil then
 		-- だいじと()をまとめた文字列に対して pad かけたいので。
 		-- あらかじめ一つの文字列にする
 		local name_with_category = string.format(
@@ -143,5 +189,28 @@ for _, name in ipairs(chara_name_list) do
 				  item.ja)
 	    end
 	end
+    end
+end
+function show_lacking_item(name, chara_data, kw)
+    local own_items = own_item_count(chara_data, kw)
+    for id, count in pairs(everyone_item_count) do
+	if count > 3 then
+	    if own_items[id] == nil or own_items[id] == 0 then
+		local item = res_items[id]
+		io_console.printf("%s %s",
+				  strspacepad(name, 7), item.ja)
+	    end
+	end
+    end
+
+end
+
+for _, name in ipairs(chara_name_list) do
+    local chara_file = 'findAll/data/'..name
+    local chara_data = require(chara_file)
+    if not lacking then
+	show_item_and_bag(name, chara_data, keyword)
+    else
+	show_lacking_item(name, chara_data, keyword)
     end
 end
