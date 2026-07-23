@@ -12,6 +12,7 @@ local M = {
     data = require 'item/data',
     junk = require 'item/junk',
     vagary = require 'item/vagary',
+    shishin = require 'item/shishin',
 }
 
 -- 金庫系のkeyリスト

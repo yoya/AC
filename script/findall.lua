@@ -8,6 +8,7 @@ local res_key_items = require 'res/key_items'
 local utils = require 'utils'
 local io_console = require 'io/console'
 local item_vagary = require 'item/vagary'
+local item_shishin = require 'item/shishin'
 
 local bag_name_ja_list = {
     { name='inventory', ja='バッグ'},     -- マイバッグ
@@ -43,6 +44,8 @@ if #arg < 1 then
     print("Usage: <item name substring> [<chara name>]")
     print("ex) lua script/findall.lua ヘルクリア")
     print("ex) lua script/findall.lua ヘルクリア Upaupa ")
+    print("ex) lua script/findall.lua Vagary Upaupa ")
+    print("ex) lua script/findall.lua Shishin Upaupa ")
     return 1
 end
 
@@ -62,8 +65,12 @@ local chara_name_list = {}
 local everyone_item_count = {}
 
 function item_match(item_name, kw)
-    if keyword == 'Vagary' then
-	for _, id in pairs(item_vagary.drop_items) do
+    if kw == 'Vagary' or kw == 'Shishin' then
+	local items = item_vagary.drop_items
+	if kw == 'Shishin' then
+	    items = item_shishin.items
+	end
+	for _, id in pairs(items) do
 	    local item = res_items[id]
 	    if item_name == item.ja then
 		return true
