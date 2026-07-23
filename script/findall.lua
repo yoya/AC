@@ -54,7 +54,7 @@ local chara_name = arg[2]
 
 local lacking = false
 
-if chara_name:sub(1,1) == "-" then
+if chara_name ~= nil and chara_name:sub(1,1) == "-" then
     lacking = true
     chara_name = chara_name:sub(2)
 end
