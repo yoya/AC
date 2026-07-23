@@ -16,6 +16,10 @@ function array_slice(arr, i1, i2)
     return a
 end
 
+function print_color(text)
+    print("\27[36m"..text.."\27[0m")  -- Cyan
+end
+
 function usage()
     print("Usage: ./show.lua <l|p|a|d> <num>")
     print("    ./show.lua l 4 # latest 4 entries")
@@ -197,8 +201,8 @@ for i, char in pairs(charTable) do
     if method == 'l' and num <= 4 then
 	if char.modtime < now - 3*60 then
 	    local oldtime = os.date("%x %X", char.modtime)
-	    print("OLD file:"..char.name..": "..(now-char.modtime)..
-		  "secs since "..oldtime)
+	    print_color("OLD file:"..char.name..": "..(now-char.modtime)..
+			"secs since "..oldtime)
 	end
     end
     local gil_str = string.gsub(char.gil, ',', '')
