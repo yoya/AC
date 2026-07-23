@@ -7,6 +7,7 @@ local res_items = require 'res/items'
 local res_key_items = require 'res/key_items'
 local utils = require 'utils'
 local io_console = require 'io/console'
+local item_vagary = require 'item/vagary'
 
 local bag_name_ja_list = {
     { name='inventory', ja='バッグ'},     -- マイバッグ
@@ -83,6 +84,21 @@ local key_items_category_list = {
     {name='Active Effects', name2="応援"},
 }
 
+function item_match(item_name, keyword)
+    if keyword == 'Vagary' then
+	for _, id in pairs(item_vagary.drop_items) do
+	    local item = res_items[id]
+	    if item_name == item.ja then
+		return true
+	    end
+	end
+    end
+    if string.find(item_name, keyword) ~= nil then
+	return true
+    end
+    return false
+end
+
 for _, name in ipairs(chara_name_list) do
     local chara_file = 'findAll/data/'..name
     local chara_data = require(chara_file)
@@ -94,7 +110,7 @@ for _, name in ipairs(chara_name_list) do
 	    local id = tonumber(item_id)
 	    local item = res_items[id]
 	    if item ~= nil then
-		if string.find(item.ja, keyword) ~= nil then
+		if item_match(item.ja, keyword) then
 		    local count_str = ""
 		    if count > 1 then
 			count_str = "("..count..")"
