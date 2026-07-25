@@ -28,7 +28,7 @@ M.routes = {
     },
     mog2wp = {
 	{x=-53.7,y=-128.5,z=-0.1,desc="モグハウスすぐのWaypoint"},
-	{x=-62,y=-122,z=0}, {target="Waypoint"}, {a="touch"}, {wait=1},
+	{x=-62,y=-122,z=0}, {target="Waypoint"}, {a="touch"}, {wait=2},
 	{keys={"right", "enter"}}, -- 東アドゥリン
 	{keys={"right", "down", "enter"}}, -- ヤッセ方面船着き場前
     },
