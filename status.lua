@@ -2,6 +2,7 @@ local M = {}
 
 local io_chat = require 'io/chat'
 local actask = require 'task'
+local battle = require 'battle'
 
 M.status_handlers = { }
 
@@ -15,11 +16,15 @@ M.status_handlers[0] = function(new, old)
 	--  敵が近くにいない場合、移動用装備に着替える。
 	--  -移動用の歌やロールをかける
     end
+    if old == 1 or old == 4 then
+	-- 1: 戦闘 4:魅了
+	battle.finish()
+    end
 end
 
 M.status_handlers[1] = function(new, old)
     -- io_chat.print("status change: Battle")
-    -- 戦闘用装備に着替える
+    battle.start()
 end
 
 -- 魅了
