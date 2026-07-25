@@ -6,12 +6,31 @@ local io_chat = require 'io/chat'
 
 M.routes = {
     -- モグハウス
-    hp2mog = {
+    mog2hp = {
 	{x=-53.7,y=-128.5,z=-0.1,desc="HPからモグハウス"},
 	-- {x=-54,y=-100,z=0,d=2},
 	{x=-54,y=-99,d=1},
 	-- -- {x=-54,y=-91,d=1}, -- {x=-48,y=-90,d=1}, {x=-50,y=-92,d=1},
 	{a="f8"}, {target="Home Point #2"}, {a="touch"}
+    },
+    ['mog2hp-spm'] = {
+	{x=-53.7,y=-128.5,z=-0.1,desc="HPからモグハウス>サンド港(M)"},
+	-- {x=-54,y=-100,z=0,d=2},
+	{x=-54,y=-99,d=1},
+	-- -- {x=-54,y=-91,d=1}, -- {x=-48,y=-90,d=1}, {x=-50,y=-92,d=1},
+	{a="f8"}, {target="Home Point #2"}, {a="touch"}, {wait=2},
+	{keys={"enter"}}, -- どのロージョンにする
+	{keys={"right"}}, -- サンドリア王国
+	{keys={"enter"}}, -- どのエリアにワープする？
+	{keys={"right", "enter"}}, -- サンドリア港
+	{keys={"down", "down", "enter"}}, -- #2(M)
+	{keys={"up", "enter"}}, -- ワープする？＞はい
+    },
+    mog2wp = {
+	{x=-53.7,y=-128.5,z=-0.1,desc="モグハウスすぐのWaypoint"},
+	{x=-62,y=-122,z=0}, {target="Waypoint"}, {a="touch"}, {wait=1},
+	{keys={"right", "enter"}}, -- 東アドゥリン
+	{keys={"right", "down", "enter"}}, -- ヤッセ方面船着き場前
     },
     gob = {
 	{x=-56,y=-128.5,z=-0.1,desc="ゴブの不思議箱"},
@@ -75,9 +94,19 @@ M.routes = {
 	{x=-57.8,y=85.2,z=-0.1},{x=-54.3,y=85,d=1},
 	{target="Quiri-Aliri"},
 	{a="enter"}, {wait=1}, {a="enter"}, {keys={"up", "enter"}},
-	{wait=2}, {x=-57.6,y=85.1,d=1},
+	{wait=2}, {x=-57.6,y=85.1,d=1}, {a="esc"},
 	{target="Waypoint"}, {a="touch"}, {wait=1},
 	{keys={"right", "right", "right", "enter"}}, -- マリアミ渓谷を選択
+	{keys={"right", "right", "enter"}}, -- #4 を選択
+    },
+    ['ionis-wp-sortie'] = {
+	-- Waypoint
+	{x=-57.8,y=85.2,z=-0.1},{x=-54.3,y=85,d=1},
+	{target="Quiri-Aliri"},
+	{a="enter"}, {wait=1}, {a="enter"}, {keys={"up", "enter"}},
+	{wait=2}, {x=-57.6,y=85.1,d=1}, {a="esc"},
+	{target="Waypoint"}, {a="touch"}, {wait=1},
+	{keys={"right", "right", "right", "down", "enter"}}, -- カミール
 	{keys={"right", "right", "enter"}}, -- #4 を選択
     },
     ['ionis-hp'] = {
@@ -103,31 +132,47 @@ M.routes = {
 	{x=70,y=-54,d=1}, {x=71,y=-16,d=1},
 	{target="Zaffeld"}
     },
+    -- モグハウス内
+    house2garden = {
+	{x=0,y=0,z=0}, {x=-1, y=-7},
+	{keys={"escape", "escape", "escape", "numpad5"}},
+	{wait=1},
+	{a="opendoor"},
+	{keys={"up", "enter"}}, -- 出るエリアを選択する
+	{keys={"up", "enter"}}, -- モグガーデン
+    },
 }
 
 M.essentialPoints = {
     pck = {x=-101.3,y=-10.7,z=-0.1},
     -- x=(-59.4,-51.5),y=-128.5
     from_moghouse = {x=-56,y=-128.5,z=-0.1, dx=5,dy=1},
-    from_moghouse_gob = {x=-56,y=-128.5,z=-0.1, dx=5,dy=1},
-    from_moghouse_works = {x=-56,y=-128.5,z=-0.1, dx=5,dy=1},
     -- HP#2(M) x=(-51.3,-50.5), y=(-95.7-93.9)
     homepoint_1 = {x=-52.9,y=58.9,z=-0.1, d=1.5},
     homepoint_2_M = {x=-50.5,y=-95.5,z=-0.1, d=1.5},
     yahse_dock = {x=-57.8,y=85.2,z=-0.1},
     sun_square = {x=27.1,y=-60.8,z=-40.2}, -- 太陽の広場 (Coronal Esplanade)
+    moghouse_in = {x=0,y=0,z=0}
 }
 
 M.automatic_routes = {
     pck = { route="pck" },
-    from_moghouse = { route="hp2mog" },
-    -- Gobbie Mystery Box
-    from_moghouse_gob = { route="gob", contents="GobMys" },
-    from_moghouse_works = { route="works", contents="works" },
+    from_moghouse = {
+	{ route="mog2hp" },
+	{ route="mog2hp-spm", contents="LoginPoint" },
+	{ route="gob", contents="GobMys" },-- Gobbie Mystery Box
+	{ route="works", contents="works" },
+	{ route="mog2wp", contents="Sortie" },
+	{ route="mog2wp", contents="Leveling" },
+    },
     homepoint_2_M = { route="moghouse" },
-    yahse_dock = { route="ionis-wp" },
+    yahse_dock = {
+	{ route="ionis-wp" },
+	{ route="ionis-wp-sortie", contents="Sortie"},
+    },
     homepoint_1 = { route="ionis-hp" },
     sun_square = { route="bayld" }, -- ベヤルド交換
+    moghouse_in = { route="house2garden", contents="Leveling", zone_from=-280},
 }
 
 return M
