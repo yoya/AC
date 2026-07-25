@@ -2,15 +2,15 @@
 
 local M = {}
 
-local utils = require('utils')
-local control = require('control')
-local io_chat = require('io/chat')
-local ac_data = require('ac/data')
-local ac_pos = require('ac/pos')
+local utils = require 'utils'
+local control = require 'control'
+local io_chat = require 'io/chat'
+local ac_data = require 'ac/data'
+local ac_pos = require 'ac/pos'
 local task = require 'task'
 local role_Melee = require 'role/Melee'
-local incoming_text = require('incoming/text')
-local aczone = require('zone')
+local incoming_text = require 'incoming/text'
+local aczone = require 'zone'
 local contents = require 'contents'
 
 local split_multi = utils.string.split_multi
