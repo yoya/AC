@@ -173,4 +173,16 @@ function M.tick(player)
     end
 end
 
+M.city_equip = {
+    -- body = { 27923 }, -- カウンセラーガーブ
+    right_ring = { 27590 }, -- シュネデックリング
+}
+
+M.walk_equip = { -- status 0 の時
+    left_ring = {
+	26184 -- スティキニリング+1
+    },
+    right_ring = { 27590 }, -- シュネデックリング
+}
+
 return M
