@@ -32,26 +32,41 @@ function posStr(pos)
     return str
 end
 
-function M.search_and_invoke_automatic_routes(zone, automatic_routes,
+function M.search_and_invoke_automatic_routes(zone, prevZone, automatic_routes,
 					      contents_match)
+    -- if prevZone == nil then print(debug.traceback()) end
     print("zone/change.search_and_invoke_automatic_routes")
+    if type(automatic_routes) ~= "table" then
+	return false
+    end
     -- コンテンツに応じて有効な宛先を切り替える
     local new_routes = {}
-    for f, route in pairs(automatic_routes) do
-	if route ~= nil then
-	    if contents_match then
-		if route.contents ~= nil and
-		    contents.matchContentsName(route.contents) then
-		    new_routes[f] = route
-		end
-	    else
-		if route.contents == nil then
-		    new_routes[f] = route
+    -- io_chat.notice("automatic_routes", automatic_routes)
+    for f, rr in pairs(automatic_routes) do
+	local routes = (rr[1] == nil) and { rr } or rr
+	for _, route in ipairs(routes) do
+	    if route ~= nil then
+		if route.zone_from ~= nil and prevZone ~= nil and
+		    ((route.zone_from > 0 and route.zone_from ~= prevZone) or
+		     (route.zone_from < 0 and -route.zone_from == prevZone)) then
+		    -- route を skip
+		    -- io_chat.error("route を skip", route.zone_from, prevZone)
+		elseif contents_match then
+		    if route.contents ~= nil and
+			contents.matchContentsName(route.contents) then
+			new_routes[f] = route
+		    end
+		else
+		    -- コンテンツ制限ありの方を優先
+		    if new_routes[f] == nil and route.contents == nil then
+			new_routes[f] = route
+		    end
 		end
 	    end
 	end
     end
     automatic_routes = new_routes
+    -- io_chat.notice("new_routes", new_routes)
     local zone_object = aczone.zoneTable[zone]
     for f, t in pairs(automatic_routes) do
 	local fp = zone_object.essentialPoints[f]
@@ -80,7 +95,6 @@ function M.search_and_invoke_automatic_routes(zone, automatic_routes,
 	end
 	local player = windower.ffxi.get_player()
 	local level = player.main_job_level
-	--if level ~= nil and t.need_level ~= nil then
 	if t.need_level ~= nil then
 	    if level < t.need_level then
 		io_chat.infof("移動するのに level 20 必要: %s => %s", f, route)
@@ -94,7 +108,6 @@ function M.search_and_invoke_automatic_routes(zone, automatic_routes,
 	end
 	if exec_auto_route then
 	    io_chat.printf("移動 %s => %s", f, route)
-	    -- ac_move.moveTo(zone_object.routes[route], zone_object.routes)
 	    aczone.AC.start_pos = nil
 	    autoMoveTo(zone, {route}, zone_object.routes)
 	    return true
@@ -103,10 +116,15 @@ function M.search_and_invoke_automatic_routes(zone, automatic_routes,
     return false
 end
 
-function M.automatic_routes_handler(zone, automatic_routes)
+function M.automatic_routes_handler(zone, prevZone, automatic_routes)
     print("zone/change.automatic_routes_handler", zone)
     if not control.automove then
 	print("control.automove is false")
+	return
+    end
+    local pos = ac_pos.currentPos()
+    if prevZone == nil and aczone.in_moghouse(zone, pos) then
+	io_chat.print("ログインしてすぐのモグハウスは自動移動オフ")
 	return
     end
     local zone_object = aczone.zoneTable[zone]
@@ -123,22 +141,22 @@ function M.automatic_routes_handler(zone, automatic_routes)
 	    return
 	end
     end
-    local level = player.main_job_level
     coroutine.sleep(3)
-    local pos = ac_pos.currentPos()
+    pos = ac_pos.currentPos()
     coroutine.sleep(5)
     if ac_pos.isNear(pos, 0.5) then
-	local ret = M.search_and_invoke_automatic_routes(zone,
+	local ret = M.search_and_invoke_automatic_routes(zone, prevZone,
 							 automatic_routes,
 							 true)
 	if not ret then
-	    M.search_and_invoke_automatic_routes(zone, automatic_routes,
+	    M.search_and_invoke_automatic_routes(zone, prevZone,
+						 automatic_routes,
 						 false)
 	end
     end
 end
 
-function M.automatic_trust_handler(zone, automatic_trust)
+function M.automatic_trust_handler(zone, prevZone, automatic_trust)
     io_chat.print("automatic_trust")
     local zone_object = aczone.zoneTable[zone]
     if zone_object == nil then
@@ -168,14 +186,14 @@ function M.zone_in_handler(zone, prevZone)
 	end
 	local automatic_routes = zone_object.automatic_routes
 	if automatic_routes ~= nil then
-	    M.automatic_routes_handler(zone, automatic_routes)
+	    M.automatic_routes_handler(zone, prevZone, automatic_routes)
 	end
 	if iamLeader() then
 	    local automatic_trust = zone_object.automatic_trust
 	    if automatic_trust ~= nil then
 		io_chat.setNextColor(6)
 		io_chat.print("automatic_trust", automatic_trust);
-		M.automatic_trust_handler(zone, automatic_trust)
+		M.automatic_trust_handler(zone, prevZone, automatic_trust)
 	    end
 	end
     end
@@ -183,7 +201,7 @@ end
 
 function M.zone_change_handler(zone, prevZone)
     -- zone 毎の処理
-    print("zone/change zone_change_handler", zone, prevZone)
+    print("zone/change zone_change_handler: "..zone.." <= "..prevZone)
     ac_stat.init()
     task.allClear()
     aczone.AC.start_pos = nil
@@ -271,7 +289,7 @@ function M.warp_handler(zone, pos, prevZone, prevPos, dist)
     end
     local automatic_routes = zone_object.automatic_routes
     if automatic_routes ~= nil then
-	M.automatic_routes_handler(zone, automatic_routes)
+	M.automatic_routes_handler(zone, prevZone, automatic_routes)
     end
 end
 
