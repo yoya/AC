@@ -1017,9 +1017,9 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    ac_move.runToMob(moogle)
 	    coroutine.sleep(1)
 	    io_net.targetByMob(moogle)
-	    coroutine.sleep(2)
+	    coroutine.sleep(1)
 	    utils.target_lockon(true)
-	    coroutine.sleep(2)
+	    coroutine.sleep(3)
 	    pushKeys({"enter"})
 	    coroutine.sleep(1)
 	    -- 別の場所に移動したい
@@ -1054,6 +1054,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	if arg1 == 'west' or arg1 == 'w' or  -- 西アドゥリン
 	    arg1 == 'east' or arg1 == 'e' or  -- 東アドゥリン
 	    arg1 == 'garden' or arg1 == 'g' then  -- モグガーデン
+	    pushKeys({"escape", "escape", "escape"})
 	    local door_pos = {x=-1, y=-7}
 	    ac_move.runToMob(door_pos)
 	    coroutine.sleep(1)
