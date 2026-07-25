@@ -2,10 +2,13 @@
 
 local M = {}
 
+local control = require 'control'
+local contents = require 'contents'
 local task = require 'task'
 local role_Melee = require 'role/Melee'
 local aczone = require('zone')
 local io_chat = require('io/chat')
+local acmob = require 'mob'
 
 local piani_prefix = "input /ja ピアニッシモ <me>; wait 2; "
 
@@ -23,8 +26,8 @@ M.subJobProbTable = {
     -- { 200, 120, 'input /ma 戦場のエレジー <t>', 8, true },
 }
 
-function song(song_name, onoff, period, delay)
-    local c = "input /song "..song_name.." <me>"
+function song(song_name, onoff, period, delay, target)
+    local c = "input /song "..song_name.." <"..target..">"
     local level = task.PRIORITY_MIDDLE
     -- command, delay, duration, period, eachfight
     local t = task.newTask(c, delay, 10, period, true)
@@ -42,30 +45,43 @@ end
 function song_tick(player)
     local zone = windower.ffxi.get_info().zone
     local onoff = player.status > 0
+    local me = windower.ffxi.get_mob_by_target("me")
     if isDefensive() then
-	song("重装騎兵のミンネV", onoff, 15*60 / 3, 2)
-	song("闘龍士のマンボ", onoff, 15*60 / 2, 12)
-	-- song("活力のエチュード", onoff, 15*60 / 3, 12*2)
-	song("戦士達のピーアンVI", onoff, 15*60 / 3, 12*3)
-	song("栄光の凱旋マーチ", onoff, 15*60 / 3, 12)
+	song("重装騎兵のミンネV", onoff, 15*60 / 3, 2, "me")
+	song("闘龍士のマンボ", onoff, 15*60 / 2, 12, "me")
+	-- song("活力のエチュード", onoff, 15*60 / 3, 12*2, "me")
+	song("戦士達のピーアンVI", onoff, 15*60 / 3, 12*3, "me")
+	song("栄光の凱旋マーチ", onoff, 15*60 / 3, 12, "me")
     elseif false then  -- 魔法強化
-	-- song("無敵の進撃マーチ", onoff, 15*60 / 3, 12)
-	song("栄光の凱旋マーチ", onoff, 15*60 / 3, 12*2)
-	song("魔道士のバラードII", onoff, 15*60 / 2, 12*3)
-	song("魔道士のバラードIII", onoff, 15*60 / 2, 12*3)
-	song("英知のエチュード", onoff, 15*60 / 3, 12*4)
-	song("知恵のエチュード", onoff, 15*60 / 2, 12*4)
+	-- song("無敵の進撃マーチ", onoff, 15*60 / 3, 12, "me")
+	song("栄光の凱旋マーチ", onoff, 15*60 / 3, 12*2, "me")
+	song("魔道士のバラードII", onoff, 15*60 / 2, 12*3, "me")
+	song("魔道士のバラードIII", onoff, 15*60 / 2, 12*3, "me")
+	song("英知のエチュード", onoff, 15*60 / 3, 12*4, "me")
+	song("知恵のエチュード", onoff, 15*60 / 2, 12*4, "me")
     else
 	-- TODO auto かつ街中以外で以下を実行。status 1 で弱体系実行
-	-- song("無敵の進撃マーチ",   onoff, 15*60 / 2, 12*1)
-	song("栄光の凱旋マーチ",   onoff, 15*60 / 3, 12*1)
-	song("猛者のメヌエットV",  onoff, 15*60 / 3, 12*2)
-	song("猛者のメヌエットIV", onoff, 15*60 / 2, 12*3)
-	song("猛者のメヌエットIII", onoff, 15*60 , 12*4)
-	-- song("剣豪のマドリガル",   onoff, 15*60 / 4, 12*5)
-	song("怪力のエチュード",   onoff, 15*60 / 3, 12*5)
-	song("妙技のエチュード",   onoff, 15*60 / 2, 12*6)
+	-- song("無敵の進撃マーチ",   onoff, 15*60 / 2, 12*1, "me")
+	song("栄光の凱旋マーチ",   onoff, 15*60 / 3, 12*1, "me")
+	song("猛者のメヌエットV",  onoff, 15*60 / 3, 12*2, "me")
+	song("猛者のメヌエットIV", onoff, 15*60 / 2, 12*3, "me")
+	song("猛者のメヌエットIII", onoff, 15*60 , 12*4, "me")
+	-- song("剣豪のマドリガル",   onoff, 15*60 / 4, 12*5, "me")
+	song("怪力のエチュード",   onoff, 15*60 / 3, 12*5, "me")
+	song("妙技のエチュード",   onoff, 15*60 / 2, 12*6, "me")
     end
+    local condition = {
+        linkedOnly = true,
+	range = control.enemy_range,
+    }
+    local lullaby = false
+    if contents.matchContentsName("sortie") and player.status == 1 then
+--    local linkedMobs = acmob.searchMobs(me, condition)
+	--  io_chat.print(linkedMobs)
+	lullaby = true
+    end
+    song("魔物達のララバイ", lullaby, 24, 0, "t")
+    song("魔物達のララバイII", lullaby, 24, 20, "t")
 end
 
 function M.main_tick(player)
@@ -84,7 +100,7 @@ function M.dothebest_main(player)
 	task.setTask(level, task.newTask(c, (i-1)*2, 2, 10, false))
     end
     windower.ffxi.run(false)
-    level = task.PRIORITY_MIDDLE
+    level = task.PRIORITY_HIGH
     local songList = { "栄光の凱旋マーチ", "猛者のメヌエットV",
 		       "怪力のエチュード", "妙技のエチュード",
 		       "剣豪のマドリガル", "猛者のメヌエットV",
