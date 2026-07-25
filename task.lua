@@ -13,7 +13,7 @@ local ws = require 'ws'
 -- 優先度
 local PRIORITY_FIRST  = 1
 M.PRIORITY_TOP    = 1  -- 最優先。スタンや緊急ケアル
-M.PRIORITY_HIGH   = 2  -- 優先度高。サイレス。MB
+M.PRIORITY_HIGH   = 2  -- 優先度高。サイレス。MB, WS
 M.PRIORITY_MIDDLE = 3  -- 優先度中。デバフ。通常ケアル
 M.PRIORITY_LOW    = 4  -- 優先度低。バフ。通常の魔法、遠隔武器
 local PRIORITY_LAST  = 4
@@ -142,6 +142,18 @@ function M.setTaskSimple(c, delay, duration)
     local t = M.newTask(c, delay, duration, 10, false)
     M.setTask(level, t)
 end
+
+function M.setTaskEx(c, opts)
+    local level = opts.level and opts.level or M.PRIORITY_MIDDLE
+    local delay = opts.delay and opts.delay or 0
+    local duration = opts.duration and opts.delay or 2
+    local period = opts.period and opts.period or 10
+    local eachfight = opts.eachfight and opts.eachfight or false
+    -- command, delay, duration, period, eachfight
+    local t = M.newTask(c, delay, duration, period, eachfight)
+    M.setTask(level, t)
+end
+
 
 function M.removeTaskSimple(c)
     local level = PRIORITY_SIMPLE
