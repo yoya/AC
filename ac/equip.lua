@@ -35,6 +35,9 @@ local equip_bags_keys = utils.table.swap_key_value_table(equip_bags)
 
 -- Usage: equip_item("right_ring")
 function M.equip_item_by_slot_name(slot_name)
+    if type(slot_name) == "number" then  -- 番号でも指定できるように
+	slot_name = equip_slots_keys[slot_name]
+    end
     local items = windower.ffxi.get_items()
     local id = items.equipment[slot_name]  -- bag 内 id
     local bag = items.equipment[slot_name.."_bag"]  -- どの bag か
@@ -134,6 +137,9 @@ function M.equip_show(arg)
 end
 
 function M.equip_item(slot, item_id)
+    if type(slot) == "string" then  -- 文字列でも指定できるように
+	slot = equip_slots[slot]
+    end
     bag, inv_id = M.searchEquipItem(item_id)
     -- print("ac/equip", slot, item_id, bag, inv_id)
     windower.ffxi.set_equip(inv_id, slot, bag)
