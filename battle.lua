@@ -4,6 +4,7 @@ local M = {}
 
 local command = require 'command'
 local ac_equip = require 'ac/equip'
+local acjob = require 'job'
 -- 戦闘スタイル
 
 M.BATTLE_MELEE = 1 -- 物理攻撃
@@ -33,6 +34,7 @@ function M.start()
     if item_id ~= nil then
 	ac_equip.equip_item(slot, item_id)
     end
+    acjob.battle_start()
 end
 
 function M.finish()
