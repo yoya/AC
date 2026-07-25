@@ -23,8 +23,9 @@ M.Synergy     = 14  -- 窯錬成 (スキル上げ)
 M.Redeem      = 15  -- 換金(エミネンス/ユニティポイント)
 M.GobMys      = 16  -- ゴブの不思議箱 (Gobbie Mystery Box)
 M.UnityWanted = 17  -- ユニティ・ウォンテッド
+M.Sortie      = 18  -- ソーティ
 
-M.allContents = { M.Idle, M.Leveling, M.Ambus, M.Works, M.Trove,  M.Mission, M.AbysYellow, M.Garden, M.Trial, M.Raives, M.WKR, M.LoginPoint, M.Vagary, M.Synergy, M.Redeem, M.GobMys, M.UnityWanted }
+M.allContents = { M.Idle, M.Leveling, M.Ambus, M.Works, M.Trove,  M.Mission, M.AbysYellow, M.Garden, M.Trial, M.Raives, M.WKR, M.LoginPoint, M.Vagary, M.Synergy, M.Redeem, M.GobMys, M.UnityWanted, M.Sortie }
 
 M.ambus   = require 'contents/ambus'
 M.trial   = require 'contents/trial'
@@ -36,6 +37,7 @@ M.synergy = require 'contents/synergy'
 M.trove   = require 'contents/trove'
 M.redeem  = require 'contents/redeem'
 M.wanted  = require 'contents/wanted'
+M.sortie  = require 'contents/sortie'
 M.contentsTable = {
     -- モードが必要なだけで特別な処理のないcontentsは、ここに追加しない
     [M.Ambus]       = M.ambus,
@@ -48,6 +50,7 @@ M.contentsTable = {
     [M.Synergy]     = M.synergy,
     [M.Redeem]      = M.redeem,
     [M.UnityWanted] = M.wanted,
+    [M.Sortie]      = M.sortie,
 }
 for c, m in pairs(M.contentsTable) do
     m.parent = M
@@ -74,6 +77,7 @@ M.nameTable = {
     [M.Redeem]      = {'Redeem'},
     [M.GobMys]      = {'GobMys', 'Gob'},
     [M.UnityWanted] = {'UnityWanted', 'wanted'},
+    [M.Sortie]      = {'Sortie'},
 }
 
 M.incoming_text_listener_id = nil
