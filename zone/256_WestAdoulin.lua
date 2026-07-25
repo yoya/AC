@@ -86,7 +86,7 @@ M.routes = {
     def2nuna = {--  Nunaarl(子ミスラ)へ
 	{x=41,y=-117,z=2}, {x=32,y=-121,z=0,d=1},
 	{x=24,y=-121,d=1}, --{x=15,y=-112,z=-0.1,d=1},
-	{x=16,y=-113,z=0,d=1},
+	{x=16,y=-113,z=0,d=1}, {a="f8"},
 	{target="Nunaarl Bthtrogg"}, {show="bag_empty_epace"},
 	{a="touch"}
     },
@@ -96,16 +96,19 @@ M.routes = {
     },
     unity = {  -- 子ミスラ
 	{x=31,y=-163,z=0}, {x=23,y=-151}, {x=18,y=-113},
-	{x=15.2,y=-111.3,z=-0.1}, {a="f8touch"}
+	{x=15.2,y=-111.3,z=-0.1}, {a="f8"},
+	{target="Nunaarl Bthtrogg"}, {a="f8touch"}
     },
     def2emi = {  -- エミネンスのガルカ
-	{x=42,y=-117,z=2}, {x=33,y=-121},
-	{x=16,y=-122,d=1}, {target="Eternal Flame"}, {auto=true}
+	{x=42,y=-117,z=2}, {x=33,y=-121}, {x=16,y=-122,d=1}, {a="f8"},
+	{target="Eternal Flame"}, {auto=true},
+	{wait=2}, {target_lockon=false}  -- タゲロックは外す
     },
     -- モグハウスから出たとこ
     eminence = {  -- エミネンスのガルカ
 	{x=7.7,y=-147.1,z=0.7}, {x=5,y=-141},
-	{x=12,y=-123,d=1}, {target="Eternal Flame"}, {auto=true}
+	{x=12,y=-123,d=1}, {target="Eternal Flame"}, {auto=true},
+	{wait=2}, {target_lockon=false}  -- タゲロックは外す
     },
     mog2unity = {  -- ミスラ
 	{x=7.7,y=-147.1,z=0.7}, {x=5,y=-141},
