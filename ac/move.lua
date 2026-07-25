@@ -22,6 +22,8 @@ local acmob = require 'mob'
 local getMobPosition = acmob.getMobPosition
 local acitem = require 'item'
 
+local ac_party = require 'ac/party'
+
 local turnToFront = function(target)
     local push_numpad5 = 'setkey numpad5 down; wait 0.1; setkey numpad5 up'
     command.send(push_numpad5..'; wait 0.5; '..push_numpad5)
@@ -134,6 +136,9 @@ function containPos(route, pos)
 end
 
 function moveToActionFaith(f)
+    if not ac_party.iamLeader() then
+	return -- リーダーじゃないとフェイスを呼べないので
+    end
     local faithList = f
     if type(f) == "string" then
 	if f == "ambus" then
@@ -154,10 +159,18 @@ function moveToActionFaith(f)
     end
     windower.ffxi.run(false)
     coroutine.sleep(1)
-    for _, f in ipairs(faithList) do
+    local party_count = ac_party.count_member()
+    for i = 1, (6 - party_count) do
+	f = faithList[i]
 	command.send('input /ma '..f..' <me>')
 	coroutine.sleep(7.0)
     end
+    --[[
+    for _, f in ipairs(faithList) do
+	command.send('input /ma '..f..' <me>')
+	coroutine.sleep(7.0)
+	end
+    ]]
 end
 
 function moveToAction(p, reverse)
