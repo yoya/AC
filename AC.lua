@@ -815,6 +815,7 @@ end)
 
 function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
     local player = windower.ffxi.get_player()
+    local me = windower.ffxi.get_mob_by_target("me")
     local zone = windower.ffxi.get_info().zone
     subcommand = subcommand and subcommand:lower() or 'help'
     if control.debug then
@@ -1005,6 +1006,10 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    io_ipc.send_all("focus", arg1)
 	end
     elseif subcommand == 'garden' or subcommand == 'g' then
+	if zone ~= 280 then
+	    io_chat.warn("ガーデン以外にいます zone: "..zone)
+	    return
+	end
 	if arg1 == 'return' or arg1 == 'ret' or arg1 == 'r' or -- 元に戻る
 	    arg1 == 'west' or arg1 == 'w' or  -- 西アドゥリン
 	    arg1 == 'east' or arg1 == 'e' then  -- 東アドゥリン
@@ -1042,6 +1047,10 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    io_chat.errorf("ac garden in|out|flot", zone)
 	end
     elseif subcommand == 'house' or subcommand == 'h' then
+	if not aczone.in_moghouse(zone, me) then
+	    io_chat.warn("モグハウス以外にいます zone: "..zone)
+	    return
+	end
 	if arg1 == 'west' or arg1 == 'w' or  -- 西アドゥリン
 	    arg1 == 'east' or arg1 == 'e' or  -- 東アドゥリン
 	    arg1 == 'garden' or arg1 == 'g' then  -- モグガーデン
