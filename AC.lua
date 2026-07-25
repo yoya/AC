@@ -1373,6 +1373,30 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 		end
 	    end
 	    io_chat.print("【包】使用終わり")
+	elseif arg1 == 'insne' then
+	    io_chat.notice("アイテムでインス二開始")
+	    local insne_items = {
+		[4165] = "サイレントオイル",
+		[4164] = "プリズムパウダー",
+	    }
+	    for item_id, item_name in pairs(insne_items) do
+		if not acitem.inventoryHasItem(item_id) then
+		    local count = acitem.bagsToInventory(item_id)
+		    if count < 1 then
+			io_chat.error("アイテムがバッグに見つかりません:"..item_name)
+			return
+		    else
+			io_chat.info("アイテムをバックに移動:"..item_name)
+		    end
+		    coroutine.sleep(1)
+		end
+	    end
+	    for _, item_name in pairs(insne_items) do
+		windower.ffxi.run(false)
+		local c = 'input /item '..item_name..' <me>'
+		command.send(c)
+		coroutine.sleep(3)
+	    end
 	elseif arg1 == 'scroll' then
 	    io_chat.print("スクロール学習開始")
 	    coroutine.sleep(0.5)
