@@ -8,11 +8,18 @@ local io_net = require 'io/net'
 local control = require 'control'
 
 M.origContents = nil
+
+M.orig_body_item_id = 0
 function M.zone_in()
     local contents = require 'contents'
     M.origContents = contents.type
     contents.setType(contents.Idle)    -- contents_in を読ませる為
     contents.setType(contents.Redeem)  -- エミネンス、ユニティポイント交換
+    local orig_item_id = M.equip_item_by_slot_name("body")
+    if orig_item_id ~= 27923 then
+	M.orig_body_item_id = orig_item_id
+    end
+    M.equip_item("body", 27923)  -- カウンセラーガーブ
 end
 
 function M.zone_out()
@@ -20,6 +27,10 @@ function M.zone_out()
     if M.origContents ~= nil then
 	contents.setType(M.origContents)
 	M.origContents = nil
+    end
+    if  M.orig_body_item_id > 0 then
+	M.equip_item("body", M.orig_body_item_id) -- 前のに戻す
+	M.orig_body_item_id = 0
     end
 end
 
