@@ -201,10 +201,15 @@ function M.incoming_text_handler(text)
 	rearing_check = false
     end
     if text:contains( "all売却 end") then
-	local player = windower.ffxi.get_player()
-	if player.target_locked then
-	    io_chat.info("移動", M.mineral_rank)
-	    windower.ffxi.run(true)
+	local item_ids = acitem.data.crystal_ids
+	if acitem.inventoryCountByItemIds(item_ids) > 0 then
+	    command.send("ac move ephe")
+	else
+	    local player = windower.ffxi.get_player()
+	    if player.target_locked then
+		io_chat.info("移動", M.mineral_rank)
+		windower.ffxi.run(true)
+	    end
 	end
 	-- local flotsam = windower.ffxi.get_mob_by_name("Flotsam")
 	-- 消えても情報に変化なしなので困る
