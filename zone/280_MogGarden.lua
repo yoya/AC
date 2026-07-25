@@ -18,8 +18,14 @@ end
 
 M.routes = {
     mogsale = {
-	{x=2.5,y=-5.1,z=0.2}, {x=1,y=-2,z=-0.2},
+	{x=2.5,y=-5.1,z=0.2,desc="Green Thumb Moogle"}, {x=1,y=-2,z=-0.2},
 	{target="Green Thumb Moogle"}, {auto=true},
+	{target_lockon=false}  -- タゲロックは外す
+    },
+    ephe = {
+	{x=2.5,y=-5.1,z=0.2,desc="Ephemeral Moogle (クリスタル預けモグ)"},
+	{x=-21,y=-20,z=1.5},
+	{target="Ephemeral Moogle"}, {auto=true},
 	{target_lockon=false}  -- タゲロックは外す
     }
 }
