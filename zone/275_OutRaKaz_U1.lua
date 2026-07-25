@@ -1,15 +1,29 @@
 -- ラ・カザナル宮外郭〔Ｕ１〕
 
+
 local M = { id = 275 }
 
+M.origContentType = nil
+
 function M.zone_in()
+    local contents =  __AC.contents
     print("Vagary in")
-    contents.type = contents.Vagary
+    -- 場所によってはソーティもあるので、一旦なくす
+    --[[
+    M.origContentType = contents.type
+	contents.setType(contents.Vagary)
+    ]]
 end
 
 function M.zone_out()
+    local contents =  __AC.contents
     print("Vagary out")
-    contents.type = contents.Idle
+    --[[
+    if M.origContentType ~= nil then
+	contents.setType(M.origContentType)
+	M.origContentType = nil
+	end
+    ]]
 end
 
 M.routes = { }
@@ -26,7 +40,7 @@ M.essentialPoints = {
 M.automatic_routes = { }
 
 function M.tick(player)
-    print(player)
+    print("sortie??? zone 275!!!!")
 end
 
 return M
