@@ -132,43 +132,44 @@ function M.magicBurst(player, magickRank)
 		return -- MB を打たない
 	    end
 	end
+	local level = task.PRIORITY_HIGH
 	-- 一旦、FC 少なめでタイミング調整。
 	if within_time(now, sc_time, sc_time + 1)
 	    and magickRank >= 5 and mp >= 306 then
-	    invoke_magic(5, true)
+	    invoke_magic(5, true, level)
 	else
-	    invoke_magic(5, false)
+	    invoke_magic(5, false, level)
 	end
 	if within_time(now, sc_time, sc_time + 2)
 	    and magickRank >= 4 and mp >= 195 then
-	    invoke_magic(4, true)
+	    invoke_magic(4, true, level)
 	else
-	    invoke_magic(4, false)
+	    invoke_magic(4, false, level)
 	end
 	if within_time(now, sc_time, sc_time + 3)
 	    and magickRank >= 3 and mp >= 91 then
-	    invoke_magic(3, true)
+	    invoke_magic(3, true, level)
 	else
-	    invoke_magic(3, false)
+	    invoke_magic(3, false, level)
 	end
 	if within_time(now, sc_time, sc_time + 4)
 	    and magickRank >= 2 and mp >= 37 then
-	    invoke_magic(2, true)
+	    invoke_magic(2, true, level)
 	else
-	    invoke_magic(2, false)
+	    invoke_magic(2, false, level)
 	end
 	if within_time(now, sc_time, sc_time + 5)
 	    and magickRank >= 1 and mp >= 9 then
-	    invoke_magic(1, true)
+	    invoke_magic(1, true, level)
 	else
-	    invoke_magic(1, false)
+	    invoke_magic(1, false, level)
 	end
     else  -- 戦闘終了してる場合は、魔法のタスク予約を取り消す。暴発防止
-	invoke_magic(1, false)
-	invoke_magic(2, false)
-	invoke_magic(3, false)
-	invoke_magic(4, false)
-	invoke_magic(5, false)
+	invoke_magic(1, false, level)
+	invoke_magic(2, false, level)
+	invoke_magic(3, false, level)
+	invoke_magic(4, false, level)
+	invoke_magic(5, false, level)
     end
 end
 
