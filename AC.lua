@@ -1141,9 +1141,9 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 		    if arg2 == "mm" then
 			for i = 1, 8 do
 			    pushKeys({"enter", "enter"})
-			    coroutine.sleep(1)
+			    coroutine.sleep(0.5)
 			    pushKeys({"right"})
-			    coroutine.sleep(1)
+			    coroutine.sleep(0.5)
 			    if i == 4 then
 				pushKeys({"left", "left", "left", "down"})
 				coroutine.sleep(1)
