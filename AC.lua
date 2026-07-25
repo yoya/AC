@@ -1555,6 +1555,10 @@ windower.register_event('zone change', function(zone, prevZone)
     useSilt = false
     useBeads = false
     doPointCheer = false
+    if zone == prevZone then
+	-- ログイン直後は zone ==  prevZone なので細工する
+	prevZone = nil
+    end
     zone_change.zone_change_handler(zone, prevZone)
     ws.init()
     -- command, delay, duration
