@@ -4,7 +4,9 @@ local M = {}
 local task = require 'task'
 local utils = require 'utils'
 local aczone = require 'zone'
-local contents_wkr = require 'contents/wkr'
+local contents = require 'contents'
+local acitem = require 'item'
+local ac_equip = require 'ac/equip'
 
 M.jobTable = {
     -- スタンダードジョブ
@@ -123,6 +125,14 @@ function M.tick(player)
     end
 end
 
+function M.battle_start()
+    local player = windower.ffxi.get_player()
+    local battle_equip = M.jobTable[player.main_job].battle_equip
+    if battle_equip ~= nil then
+	ac_equip.equip_item_by_priority_tree(battle_equip)
+    end
+end
+
 -- 本気出す
 function M.dothebest(player)
         local zone_id = windower.ffxi.get_info().zone
@@ -147,12 +157,13 @@ function M.needSafety()
 	return true
     end
     -- WKR ボス相手
-    local WKR_Zones = contents_wkr.Zones
-    local WKR_MobNames = contents_wkr.BossNames
+    local WKR_Zones = contents.wkr.Zones
+    local WKR_MobNames = contents.wkr.BossNames
     local zone = windower.ffxi.get_info().zone
     local mob = windower.ffxi.get_mob_by_target("t")
     if mob == nil then
-	return false -- XXX
+	-- print("job.needSafety: target t mob == nil")
+	return false -- 分からないので安全側に倒す
     end
     if utils.table.contains(WKR_Zones, zone) then
 	if utils.table.contains(WKR_MobNames, mob.name) then
