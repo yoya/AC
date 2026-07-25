@@ -96,7 +96,10 @@ function roll_tick(player)
 	phantom_roll("サムライロール", sam_roll, 0)
 	phantom_roll("カオスロール", drk_roll, 61)
 	phantom_roll("ファイターズロール", war_roll, 61*2)
-	phantom_roll("コルセアズロール", cor_roll, 0)
+	-- ソーティでは使わない
+	if not contents.matchContentsName("sortie") then
+	    phantom_roll("コルセアズロール", cor_roll, 0)
+	end
 	phantom_roll("ブリッツァロール", blitzer_roll, 61)
     end
 end
