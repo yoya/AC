@@ -65,7 +65,6 @@ end
 
 function M.hasJobMemberInParty(jobName)
     local stat = M.parent.stat
-    print(stat)
     local party = windower.ffxi.get_party()
     for i = 0, 5 do -- 自分含めて全員
 	local target = "p"..i
@@ -116,17 +115,24 @@ function M.updatePartyMemberInfo(id, info)
     object_assign(M.member_table[id], info)
 end
 
--- conf { main_job, }
+-- conf { main_job, name }
+
+function M.prop_match_if_exist(info, cond, propname)
+    if cond == nil or cond[propname] == nil then
+	return true
+    end
+    if info[propname] == cond[propname] then
+	return true
+    end
+    return false
+end
+
 function M.count_member(cond)
     local count = 0
     for id, info in pairs(M.member_table) do
 	if info.index > 0 then
-	    local match = true
-	    if cond ~= nil and cond.main_job ~= nil and
-		info.main_job ~= cond.main_job then
-		match = false
-	    end
-	    if match then
+	    if M.prop_match_if_exist(info, cond, "main_job") or
+		M.prop_match_if_exist(info, cond, "name") then
 		count = count + 1
 	    end
 	end
