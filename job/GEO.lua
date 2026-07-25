@@ -164,4 +164,15 @@ function M.dothebest_main(player)
     inde_setup(1)
 end
 
+M.battle_equip = {
+    left_ring = {
+	26184,  -- スティキニリング+1
+    },
+    right_ring = {
+	26225,  -- メダダリング
+	26183,  -- スティキニリング
+    },
+}
+
+
 return M

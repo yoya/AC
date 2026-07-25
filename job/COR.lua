@@ -11,6 +11,7 @@ local task = require 'task'
 local role_Melee = require 'role/Melee'
 local incoming_text = require('incoming/text')
 local aczone = require('zone')
+local contents = require 'contents'
 
 local split_multi = utils.string.split_multi
 local phantom_roll_table = ac_data.phantom_roll_table
@@ -210,6 +211,24 @@ function M.incoming_text_handler(text)
     end
 end
 
+M.battle_equip = {
+    left_ring = {
+	26229,  -- レコリング
+	10772,  -- ペトロフリング
+	26190,  -- 月光の指輪
+	26189,  -- 月明の指輪
+	26182,  -- シーリチリング+1
+	26212,  -- ムンムリング
+    },
+    right_ring = {
+	26186,  -- イラブラットリング
+	26212,  -- ムンムリング
+	26173,  -- アペートリング
+	15543,  -- ラジャスリング
+	26182,  -- シーリチリング+1
+	26181,  -- シーリチリング
+    },
+}
 
 M.listener_id = incoming_text.addListener("ロール", M.incoming_text_handler)
 
