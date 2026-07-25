@@ -201,7 +201,7 @@ end
 
 function M.zone_change_handler(zone, prevZone)
     -- zone 毎の処理
-    print("zone/change zone_change_handler: "..zone.." <= "..prevZone)
+    print("zone/change zone_change_handler: "..zone.." <= "..tostring(prevZone))
     ac_stat.init()
     task.allClear()
     aczone.AC.start_pos = nil
