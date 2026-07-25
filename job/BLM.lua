@@ -23,7 +23,7 @@ M.mainJobProbTable = {
     -- { 200,10, 'input /ma アスピル <t>', 2 },
     -- { 200,10, 'input /ma アスピルII <t>', 2 },
     --- 弱体スキル
-    { 10,10, 'input /ma ディア <t>', 5, true },
+    -- { 10,10, 'input /ma ディア <t>', 5, true },
     --- 強化スキル
     -- { 100, 180, 'input /ma ショックスパイク <me>', 5 },
 }
