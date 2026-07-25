@@ -1198,11 +1198,9 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
         io_chat.print({"do point&cheer for ambus", doPointCheer})
     elseif subcommand == 'pos' then  -- よく使うので ac 直下のまま
         io_chat.print("zone id:"..zone)
-        local me_pos = {}
-        getMobPosition(me_pos, "me")
-        local x = math.round(me_pos.x, 1)
-        local y = math.round(me_pos.y, 1)
-        local z = math.round(me_pos.z, 1)
+        local x = math.round(me.x, 1)
+        local y = math.round(me.y, 1)
+        local z = math.round(me.z, 1)
 ---    print は - 記号を誤認しやすいので、表示しない
 ---        print("me potision", " x="..x, "  y="..y, "  z="..z)
         io_chat.print("me potision  x="..x.."  y="..y.."  z="..z)
