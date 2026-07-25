@@ -28,6 +28,7 @@ M.mainJobProbTable = {
     { 100, 180, 'input /ma ヘイストII <p1>', 3 },
     { 100, 180, 'input /ma ヘイストII <p2>', 3 },
     { 100, 180, 'input /ma ヘイストII <p3>', 3 },
+    { 100, 60*4-20, 'input /ma ファランクスII <p1>', 3 },
     { 5, 600, 'input /ma アクアベール <me>', 5},
     { 5, 300, 'input /ma ブリンク <me>', 5},
     { 5, 300, 'input /ma ストンスキン <me>', 5},
