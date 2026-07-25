@@ -140,6 +140,8 @@ function M.equip_item(slot, item_id)
     if type(slot) == "string" then  -- 文字列でも指定できるように
 	slot = equip_slots[slot]
     end
+    local bag = nil
+    local inv_id = nil
     bag, inv_id = M.searchEquipItem(item_id)
     -- print("ac/equip", slot, item_id, bag, inv_id)
     windower.ffxi.set_equip(inv_id, slot, bag)
@@ -157,6 +159,31 @@ function M.searchEquipItem(item_id)
 	    end
 	end
     end
+end
+
+local equiped_ring_item_id = 0
+function M.equip_item_by_priority_tree(item_tree)
+    for slot_name, items in pairs(item_tree) do
+	local slot = equip_slots[slot_name]
+	for _, id in ipairs(items) do
+	    if acitem.inventoryHasItem(id) or acitem.wardrobeHasItem(id)  then
+		if equiped_ring_item_id == id then
+		    -- skip
+		else
+		    local bag = nil
+		    local inv_id = nil
+		    bag, inv_id = M.searchEquipItem(id)
+		    -- print("slot, id, bag, inv_id", slot, id, bag, inv_id)
+		    windower.ffxi.set_equip(inv_id, slot, bag)
+		    if bag_name == "left_ring" or bag_name == "right_ring" then
+			equiped_ring_item_id = id
+		    end
+		end
+		break
+	    end
+	end
+    end
+    equiped_ring_item_id = 0
 end
     
 function M.tick(player)
