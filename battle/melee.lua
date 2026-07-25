@@ -28,8 +28,8 @@ local ws = require 'ws'
 
 M.so_long_to_get_fight_count = 0
 --- 戦闘中。リーダー、メンバー共通。
-function M.tick(player, me)
-    -- print("battle.melee")
+function M.tick(player, me, mob)
+    -- print("battle/melee.tick")
     local mob = windower.ffxi.get_mob_by_target("t")
     -- 戦闘モードだけどタゲが外れる(稀に発生)
     -- もしくは殴れる距離なのに敵が赤字に変わらない
@@ -183,7 +183,8 @@ function M.tick(player, me)
 	ws_request = true
     end
     if ws_request == true then
-	actask.setTaskSimple("//ws exec", 0, 3)
+	local params = { level = actask.PRIORITY_HIGH}
+	actask.setTaskEx("//ws exec", params)
 	return
     else
         if player.item_level > 99 then
