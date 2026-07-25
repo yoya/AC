@@ -155,6 +155,17 @@ function M.conditionMatch(pos, condition, mob)
     return true
 end
 
+function M.searchMobs(pos, condition)
+    local mobArr = windower.ffxi.get_mob_array()
+    local mobs = {}
+    for i, m in pairs(mobArr) do
+	if M.conditionMatch(pos, condition, m) and isMobAttackable(m) then
+	    table.insert(mobs, m)
+	end
+    end
+    return mobs
+end
+
 function M.searchNearestMob(pos, condition)
     local mobArr = windower.ffxi.get_mob_array()
     local mob = nil
