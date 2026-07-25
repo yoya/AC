@@ -18,9 +18,28 @@ M.city_zone_id_list = {
     252, -- ノーグ
     256, 257 -- アドゥリン
 }
+
 function M.is_city_zone(zone_id)
     if utils.table.contains(M.city_zone_id_list, zone_id) then
 	return true
+    end
+    return false
+end
+
+function M.in_moghouse(zone_id, pos)
+    local x = pos.x
+    local y = pos.y
+    if zone_id == 256 then
+	-- x={-6.4, 4.3} y= {-6.2, 9.3}, z=-0.2
+	if -7 < x and x < 5 and -7 < y and y < 10 and -1 < z and z < 1 then
+	    return true
+	end
+    elseif zone_id == 257 then
+	-- x={-6.2, 4.3}, y={-6.6, 9.3}, z=0
+	--if -7 < x and x < 5 and -7 < y and y < 10 and -1 < z and z < 1 then
+	if -7 < x and x < 5 and -7 < y and y < 10 then
+	    return true
+	end
     end
     return false
 end
