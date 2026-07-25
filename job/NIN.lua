@@ -56,7 +56,7 @@ function toolbag_proc(ninja_tools_list)
 		acitem.useItemIncludeBags(toolbag_id)
 		toolbag_proc_guard_count = 30
 	    else -- インベントリーにない場合、かばんから移動する
-		acitem.bagsToInventory(id)
+		acitem.bagsToInventory(item_id)
 	    end
 	end
     end
