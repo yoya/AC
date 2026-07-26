@@ -124,7 +124,7 @@ M.get_weapon_skill_usage = function()
         for key2, name2 in pairs(abilities.weapon_skills) do
             local n = res_name.weapon_skill_ja(name2)
             if name == n then
-                entry =  key .. " = " .. name
+                local entry =  key .. " = " .. name
                 weaponSkillUsage = weaponSkillUsage .. entry .. "\n"
             end
         end
@@ -135,9 +135,9 @@ end
 M.get_any_weapon_skill = function()
     local abilities = windower.ffxi.get_abilities()
     for k_, k in pairs(preferWeaponSkill) do
-        v = M.weaponskillTable[k]
+        local v = M.weaponskillTable[k]
         for k2, v2 in pairs(abilities.weapon_skills) do
-            name = res_name.weapon_skill_ja(v2)
+            local name = res_name.weapon_skill_ja(v2)
             if name == v then
                 return k
             end
@@ -164,7 +164,7 @@ M.exec = function()
         return
 	end
     ]]
-    wsname = M.weaponskillTable[M.weaponskill]
+    local wsname = M.weaponskillTable[M.weaponskill]
     local target = "<t>"
     if utils.table.contains(M.weaponskillTargetMeTable, M.weaponskill) then
         target = "<me>"

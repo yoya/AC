@@ -150,7 +150,7 @@ end
 function M.search_equip_item(item_id)
     local items = windower.ffxi.get_items()
     for name, bag_id in pairs(equip_bags) do
-	bag = items[name]
+	local bag = items[name]
 	if bag ~= nil then
 	    for i, e in ipairs(bag) do
 		if e.id == item_id then

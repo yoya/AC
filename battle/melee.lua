@@ -13,6 +13,9 @@ local actask = require 'task'
 local acmob = require 'mob'
 local get_mob_position = acmob.get_mob_position
 
+-- 敵から離れているか。M.tick 内の return で true のまま次の tick へ持ち越す
+local isFar = false
+
 local acprob = require 'prob'
 local send_command_prob = acprob.send_command_prob
 local get_send_command_prob_table = acprob.get_send_command_prob_table

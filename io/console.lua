@@ -16,7 +16,7 @@ function M.print(...)
 end
 
 function M.printf(...)
-    success, retval = pcall(string.format, ...)
+    local success, retval = pcall(string.format, ...)
     if success then
 	M.print(retval)
     else

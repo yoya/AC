@@ -45,7 +45,7 @@ end
 
 function M.printf(...)
     -- local s = string.format(...)
-    success, retval = pcall(string.format, ...)
+    local success, retval = pcall(string.format, ...)
     if success then
 	M.print(retval)
     else

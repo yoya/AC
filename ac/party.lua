@@ -95,7 +95,7 @@ function create_member_info()
     return { buffs = {} }
 end
 
-function  object_assign(obj1, obj2)
+local function object_assign(obj1, obj2)
     for k, v in pairs(obj2) do
 	obj1[k] = v
     end

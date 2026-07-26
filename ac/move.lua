@@ -64,7 +64,7 @@ function nearest_idx(pos, posTable)
     local near_dis = 99999
     for i, p in ipairs(posTable) do
         if p.x ~= nil then
-            d = distance(pos, p)
+            local d = distance(pos, p)
             if d < near_dis then
                 near_idx = i
                 near_dis = d
@@ -239,7 +239,7 @@ function move_to_action(p, reverse)
     end
     if p.show ~= nil then
 	if p.show == "bag_empty_epace" then
-	    n = acitem.inventory_freespace_num()
+	    local n = acitem.inventory_freespace_num()
 	    io_chat.info("かばんの空きは"..n.."*99 = "..(n*99))
 	end
     end
@@ -499,6 +499,7 @@ function auto_move_to(zone_id, destTable, routeTable)
 	for i, dest in ipairs(destTable) do
 	    io_chat.set_next_color(6) -- 緑
 	    io_chat.print("["..i.."] dest: "..dest)
+	    local reverse
 	    if dest:sub(1,1) == '-' then
 		dest = dest:sub(2)
 		reverse = true

@@ -221,7 +221,7 @@ function M.record_spells()
 	f:write("  \""..k.."\": {\n")
 	local first = true
 	for i, _ in ipairs(spells) do
-	    s = v[i]
+	    local s = v[i]
 	    if s ~= nil then
 		if first == false then
 		    f:write(",\n")

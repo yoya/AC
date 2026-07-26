@@ -113,6 +113,8 @@ end
 M.invoke_magic = invoke_magic
 
 function M.magic_burst(player, magickRank)
+    -- 戦闘終了側 (else 節) でも使うので関数スコープで宣言する
+    local level = task.PRIORITY_HIGH
     if player.status == 1 then -- 戦闘中
 	local sc_time = acinspect.sc_time
 	local sc_attr = acinspect.sc_attr
@@ -132,7 +134,6 @@ function M.magic_burst(player, magickRank)
 		return -- MB を打たない
 	    end
 	end
-	local level = task.PRIORITY_HIGH
 	-- 一旦、FC 少なめでタイミング調整。
 	if within_time(now, sc_time, sc_time + 1)
 	    and magickRank >= 5 and mp >= 306 then

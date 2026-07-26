@@ -29,7 +29,7 @@ function M.swap_key_value_table(t)
 end
 
 function M.array_reverse(arr)
-    rev = {}
+    local rev = {}
     for i=#arr, 1, -1 do
         rev[#rev+1] = arr[i]
     end

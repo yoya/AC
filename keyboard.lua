@@ -24,7 +24,7 @@ end
 function M.longpush_key(key, wait)
     assert(type(key) == "string")
     assert(type(wait) == "number")
-    command = "setkey "..key.." down; wait "..wait.."; setkey "..key.." up"
+    local command = "setkey "..key.." down; wait "..wait.."; setkey "..key.." up"
     windower.send_command(command)
     coroutine.sleep(wait)
 end

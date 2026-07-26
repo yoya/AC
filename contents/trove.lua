@@ -7,6 +7,8 @@ local acitem =  require 'item'
 local keyboard = require 'keyboard'
 local push_keys = keyboard.push_keys
 
+local last_time = nil
+
 M.item_list = {
     9275, -- マーズオーブ
     9276, -- ビーナスオーブ
