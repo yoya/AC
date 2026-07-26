@@ -229,7 +229,7 @@ for z, m in pairs(M.zoneTable) do
     end
 end
 
-function M.getRouteTable(zone)
+function M.get_route_table(zone)
     local t = M.zoneTable[zone]
     if t ~= nil and t.routes ~= nil then
 	return t.routes
@@ -248,7 +248,7 @@ function M.tick(player)
     end
 end
 
-function M.isNear(zone, name, distance)
+function M.is_near(zone, name, distance)
     if zone ~= windower.ffxi.get_info().zone then
 	return false
     end
@@ -283,10 +283,10 @@ function M.event_handler(event_type)
 	local items = z.essentialItems
 	local key_items = z.essentialKeyItems
 	if items ~= nil then
-	    acitem.showOwnItems(items)
+	    acitem.show_own_items(items)
 	end
 	if key_items ~= nil then
-	    acitem.showOwnKeyItems(key_items)
+	    acitem.show_own_key_items(key_items)
 	end
     end
 end

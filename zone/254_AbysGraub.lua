@@ -41,7 +41,7 @@ function M.defeated_handler()
 	-- 三日月形の変色ジェイド (Dark Elemental, Air Elemental)
 	-- 三日月形の藍色のジェイド (Gamayun)
     }
-    acitem.showOwnItems(items)
+    acitem.show_own_items(items)
 end
 
 M.event_handlers = {

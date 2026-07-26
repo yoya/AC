@@ -35,7 +35,7 @@ M.routes = {
 
 function M.warp_in()
     local contents = __AC.contents
-    if M.parent.isNear(139, "entrance", 10) then
+    if M.parent.is_near(139, "entrance", 10) then
 	M.parent.type = contents.Trove
     end
 end

@@ -8,7 +8,7 @@ local split_multi = utils.string.split_multi
 local command = require 'command'
 local control = require 'control'
 local keyboard = require 'keyboard'
-local pushKeys = keyboard.pushKeys
+local push_keys = keyboard.push_keys
 
 local io_chat = require 'io/chat'
 local io_net = require 'io/net'
@@ -27,48 +27,48 @@ function M.tick(player)
         return
     end
     if mob.name == "Green Thumb Moogle" then
-	M.parent.AC.idleFunctionSellJunkItems(mob)
+	M.parent.AC.idle_function_sell_junk_items(mob)
     elseif mob.name == "Ephemeral Moogle" then
-        if acitem.checkInventoryFreespace() then
+        if acitem.check_inventory_freespace() then
             for i, id in pairs(crystal_ids) do
-                if acitem.bagsHasItem(id) then
-                    acitem.bagsToInventory(id)
+                if acitem.bags_has_item(id) then
+                    acitem.bags_to_inventory(id)
                     coroutine.sleep(1)
                 end
             end
         end
         for i, id in pairs(crystal_ids) do
-            if acitem.inventoryHasItem(id) then
-                acitem.tradeByItemId(mob, id)
+            if acitem.inventory_has_item(id) then
+                acitem.trade_by_item_id(mob, id)
                 coroutine.sleep(3)
-                io_net.targetByMob(mob)
+                io_net.target_by_mob(mob)
             end
         end
         coroutine.sleep(7)
-        io_net.targetByMob(mob)
+        io_net.target_by_mob(mob)
     elseif mob.name == "Garden Furrow" or mob.name == "Garden Furrow #2"
            or mob.name == "Garden Furrow #3" then
         local id = 940 -- 反魂樹の根
-        acitem.tradeByItemId(mob, id)
+        acitem.trade_by_item_id(mob, id)
         control.auto = false
     elseif string.find(mob.name, "Mineral Vein") or
 	string.find(mob.name, "Arboreal Grove") then
         while control.auto do
-            pushKeys({"escape", "f8", "enter"})
+            push_keys({"escape", "f8", "enter"})
             coroutine.sleep(2)
-            pushKeys({"enter"})
+            push_keys({"enter"})
             coroutine.sleep(3)
-            if acitem.diffInventoryTotalNum() == 0 or
-                acitem.checkInventoryFreespace() == false then
+            if acitem.diff_inventory_total_num() == 0 or
+                acitem.check_inventory_freespace() == false then
                 control.auto = false
             end
         end
     elseif mob.name == "Pond Dredger" then
         control.auto = false
         coroutine.sleep(2)
-        pushKeys({"escape", "f8", "enter"})
+        push_keys({"escape", "f8", "enter"})
         coroutine.sleep(3)
-        pushKeys({"enter"})
+        push_keys({"enter"})
     end
 end
 
@@ -176,7 +176,7 @@ function M.incoming_text_handler(text)
 	M.furrow_count = utils.tonumber(s[2])
 	M.arboreal_count = utils.tonumber(s[3])
 	M.mineral_count = utils.tonumber(s[4])
-	io_chat.setNextColor(7)
+	io_chat.set_next_color(7)
 	io_chat.print("furrow_count ", M.furrow_count,
 		      "arboreal_count", M.arboreal_count,
 		      "mineral_count", M.mineral_count)
@@ -186,7 +186,7 @@ function M.incoming_text_handler(text)
 	local s = split_multi(text, {"池での漁獲回数：", "海での漁獲回数："})
 	M.pond_count = utils.tonumber(s[2])
 	M.coast_count = utils.tonumber(s[3])
-	io_chat.setNextColor(7)
+	io_chat.set_next_color(7)
 	io_chat.print("pond_count", M.pond_count,
 		      "coast_count", M.coast_count)
 	pond_check = false
@@ -196,13 +196,13 @@ function M.incoming_text_handler(text)
     if rearing_check and text:contains( "モンスター飼育完了総数：") then
 	local s = split_multi(text, {"お世話した回数：", "モンスター飼育完了総数："})
 	M.rearing_count = utils.tonumber(s[2])
-	io_chat.setNextColor(7)
+	io_chat.set_next_color(7)
 	io_chat.print("rearing_count", M.rearing_count)
 	rearing_check = false
     end
     if text:contains( "all売却 end") then
 	local item_ids = acitem.data.crystal_ids
-	if acitem.inventoryCountByItemIds(item_ids) > 0 then
+	if acitem.inventory_count_by_item_ids(item_ids) > 0 then
 	    command.send("ac move ephe")
 	else
 	    local player = windower.ffxi.get_player()

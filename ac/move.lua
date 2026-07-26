@@ -10,36 +10,36 @@ local control = require 'control'
 local io_chat = require 'io/chat'
 local command = require 'command'
 local keyboard = require 'keyboard'
-local pushKeys = keyboard.pushKeys
+local push_keys = keyboard.push_keys
 
 local contents = require 'contents'
 local ac_pos = require 'ac/pos'
 local distance = ac_pos.distance
-local currentPos = ac_pos.currentPos
+local current_pos = ac_pos.current_pos
 
 local io_net = require 'io/net'
 local acmob = require 'mob'
-local getMobPosition = acmob.getMobPosition
+local get_mob_position = acmob.get_mob_position
 local acitem = require 'item'
 
 local ac_party = require 'ac/party'
 
-local turnToFront = function(target)
+local turn_to_front = function(target)
     local push_numpad5 = 'setkey numpad5 down; wait 0.1; setkey numpad5 up'
     command.send(push_numpad5..'; wait 0.5; '..push_numpad5)
 end
-M.turnToFront = turnToFront
+M.turn_to_front = turn_to_front
 
-local turnToPos = function(x1, y1, x2, y2)
+local turn_to_pos = function(x1, y1, x2, y2)
     local dx = x2 - x1
     local dy = y2 - y1
     --- atan2 のままだと右を向くので、90度の補正
     local dir = math.atan2(dx, dy) - 3.14/2
     windower.ffxi.turn(dir)
 end
-M.turnToPos = turnToPos
+M.turn_to_pos = turn_to_pos
 
-M.runToMob = function(mob)
+M.run_to_mob = function(mob)
     local me = windower.ffxi.get_mob_by_target("me")
     local dx = mob.x - me.x
     local dy = mob.y - me.y
@@ -48,15 +48,15 @@ M.runToMob = function(mob)
     windower.ffxi.run(dx, dy)
 end
 
-M.turnToTarget = function(target)
----    print("turnToTarget:"..target)
+M.turn_to_target = function(target)
+---    print("turn_to_target:"..target)
     local mob = windower.ffxi.get_mob_by_target(target)
     if mob == nil then
----        print("turnToTarget: target:"..#target.." not found")
+---        print("turn_to_target: target:"..#target.." not found")
         return false
     end
     local me = windower.ffxi.get_mob_by_target("me")
-    turnToPos(me.x, me.y, mob.x, mob.y)
+    turn_to_pos(me.x, me.y, mob.x, mob.y)
 end
 
 function nearest_idx(pos, posTable)
@@ -89,8 +89,8 @@ function relay_idx(pos, dest, routeTable)
 end
 
 -- 指定した方向に向く
-local turnTo = function(pos)
-    local me = currentPos()
+local turn_to = function(pos)
+    local me = current_pos()
     if me == nil then
 	return
     end
@@ -100,17 +100,17 @@ local turnTo = function(pos)
     local dir = math.atan2(dx, dy) - 3.14/2
     windower.ffxi.turn(dir)
 end
-M.turnTo = turnTo
+M.turn_to = turn_to
 
 -- 視界を前を向ける
-local lookForward = function()
+local look_forward = function()
     local push_numpad5 = 'setkey numpad5 down; wait 0.1; setkey numpad5 up'
     command.send(push_numpad5..'; wait 0.5; '..push_numpad5)
 end
-M.lookForward = lookForward
+M.look_forward = look_forward
 
 --
--- moveTo
+-- move_to
 --
 
 M.auto = false
@@ -122,7 +122,7 @@ end
 M.stop = stop
 
 
-function containPos(route, pos)
+function contain_pos(route, pos)
     for i, p in ipairs(route) do
 	local d = 1
 	if p.d ~= nil then
@@ -135,8 +135,8 @@ function containPos(route, pos)
     return false
 end
 
-function moveToActionFaith(f)
-    if not ac_party.iamLeader() then
+function move_to_action_faith(f)
+    if not ac_party.iam_leader() then
 	return -- リーダーじゃないとフェイスを呼べないので
     end
     local faithList = f
@@ -173,18 +173,18 @@ function moveToActionFaith(f)
     ]]
 end
 
-function moveToAction(p, reverse)
+function move_to_action(p, reverse)
     if (not reverse and p.a == "dismount") or (reverse and p.a=="mount") then
 	command.send('input /dismount')
 	coroutine.sleep(3.0)
     end
     if p.enemy_filter ~= nil then
-	io_chat.setNextColor(6)
+	io_chat.set_next_color(6)
 	io_chat.print("enemy_filter:", p.enemy_filter)
 	control.enemy_filter = p.enemy_filter
     end
     if p.a == "faith" then
-	moveToActionFaith(p.faithList)
+	move_to_action_faith(p.faithList)
     end
     if p.a == "insne" then
 	print("insne")
@@ -220,7 +220,7 @@ function moveToAction(p, reverse)
     if p.auto ~= nil then
 	control.auto = p.auto
 	if p.auto then
-	    getMobPosition(M.AC.start_pos, "me")  -- start pos を更新
+	    get_mob_position(M.AC.start_pos, "me")  -- start pos を更新
 	end
     end
     if p.enemy_range ~= nil then
@@ -228,10 +228,10 @@ function moveToAction(p, reverse)
 	control.enemy_range = p.enemy_range
     end
     if p.faith ~= nil then
-	moveToActionFaith(p.faith)
+	move_to_action_faith(p.faith)
     end
     if p.keys ~= nil then
-	pushKeys(p.keys)
+	push_keys(p.keys)
     end
     if p.puller ~= nil then
 	control.puller = p.puller
@@ -239,19 +239,19 @@ function moveToAction(p, reverse)
     end
     if p.show ~= nil then
 	if p.show == "bag_empty_epace" then
-	    n = acitem.inventoryFreespaceNum()
+	    n = acitem.inventory_freespace_num()
 	    io_chat.info("かばんの空きは"..n.."*99 = "..(n*99))
 	end
     end
     if p.target ~= nil then
 	print("target:"..p.target)
 	while M.auto do
-	    io_net.targetByMobName(p.target)
+	    io_net.target_by_mob_name(p.target)
 	    coroutine.sleep(0.3)
 	    local mob = windower.ffxi.get_mob_by_target("t")
 	    if mob == nil or mob.name ~= p.target then
 		-- print("tab")
-		pushKeys({"tab"})
+		push_keys({"tab"})
 		coroutine.sleep(0.2)
 	    else
 		utils.target_lockon(true)
@@ -274,8 +274,8 @@ function moveToAction(p, reverse)
     return true
 end
 
-function moveTo(route, routeTable, nextRoute, reverse)
-    local pos = currentPos()
+function move_to(route, routeTable, nextRoute, reverse)
+    local pos = current_pos()
     local r1List = {}  -- 各routeの一個目をリスト化
     local r1ListName = {}
     if routeTable == nil then
@@ -289,7 +289,7 @@ function moveTo(route, routeTable, nextRoute, reverse)
 	end
         if p.route ~= nil then
             print("p.r="..(p.route))
-	    -- moveTo(p.r, routeTable)
+	    -- move_to(p.r, routeTable)
 	    --[[
             local r = routeTable[p.r]
             table[p.r] = r[1]
@@ -303,12 +303,12 @@ function moveTo(route, routeTable, nextRoute, reverse)
         local name = r1ListName[idx]
         local r = routeTable[name]
 	if r == nil then
-	    io_chat.setNextColor(3)
+	    io_chat.set_next_color(3)
 	    io_chat.printf("route name:%s is not found", name)
 	    return
 	end
         print(idx, name, r)
-        moveTo(r, routeTable)
+        move_to(r, routeTable)
     end
     print("moveFrom", math.round(pos.x, 2), math.round(pos.y, 2))
     local start_idx = nearest_idx(pos, route)
@@ -330,7 +330,7 @@ function moveTo(route, routeTable, nextRoute, reverse)
         else
 	    if p.route ~= nil then
 		local r = routeTable[p.route]
-		moveTo(r, routeTable)
+		move_to(r, routeTable)
 	    end
 	    if utils.table.count_keys(p) == 0 then
                 -- {} の時はオートラン
@@ -345,7 +345,7 @@ function moveTo(route, routeTable, nextRoute, reverse)
 		    end
 		end
 	    end
-	    if not moveToAction(p, reverse) then
+	    if not move_to_action(p, reverse) then
 		return false
 	    end
             if p.x ~= nil then
@@ -366,7 +366,7 @@ function moveTo(route, routeTable, nextRoute, reverse)
 		x = x + math.random(-d*100,d*100)/100
 		y = y + math.random(-d*100,d*100)/100
 		local dpos = {x=x,y=y,z=p.z}
-		local currPos = currentPos()
+		local currPos = current_pos()
 		M.AC.start_pos = currPos  -- 開始位置を更新
 		if prevPos ~= nil then
 		    local d = distance(prevPos, currPos)
@@ -393,14 +393,14 @@ function moveTo(route, routeTable, nextRoute, reverse)
 		    end
 		end
 		prevPos = {x=currPos.x, y=currPos.y}
-                while (distance(currentPos(), dpos) > 0.5 and M.auto) do
-                    if distance(currentPos(), dpos) > 6468 and false then
+                while (distance(current_pos(), dpos) > 0.5 and M.auto) do
+                    if distance(current_pos(), dpos) > 6468 and false then
                         io_chat.warn("not near position")
                         -- M.stop()
                         return false
                     end
-                    turnTo(dpos)
-                    pos = currentPos()
+                    turn_to(dpos)
+                    pos = current_pos()
 		    if pos ~= nil and pos.x ~= nil then
 			windower.ffxi.run(dpos.x - pos.x, dpos.y - pos.y)
 			coroutine.sleep(0.1)
@@ -410,7 +410,7 @@ function moveTo(route, routeTable, nextRoute, reverse)
 		    end
                 end
 		windower.ffxi.run(false)
-		if nextRoute ~= nil and containPos(nextRoute, p) then
+		if nextRoute ~= nil and contain_pos(nextRoute, p) then
 		    return  -- 次のルートに重なるのでこのルートは終了
 		end
             end
@@ -419,33 +419,33 @@ function moveTo(route, routeTable, nextRoute, reverse)
                 coroutine.sleep(0.5)
             end
 	    if p.a == "f8" then
-                pushKeys({"f8"})
+                push_keys({"f8"})
                 coroutine.sleep(1.0)
 	    end
             if p.a == "f8touch" or p.a == "opendoor" then
-                pushKeys({"escape", "f8", "enter"})
+                push_keys({"escape", "f8", "enter"})
                 coroutine.sleep(1.0)
                 touch = true
             end
             if p.a == "esc" then
-                pushKeys({"escape"})
+                push_keys({"escape"})
                 coroutine.sleep(0.5)
             end
             if p.a == "tab" then
-                pushKeys({"tab"})
+                push_keys({"tab"})
                 coroutine.sleep(0.5)
             end
             if p.a == "touch" then
-                pushKeys({"enter"})
+                push_keys({"enter"})
                 coroutine.sleep(1.0)
             end
             if p.a == "rmstatus" then
-                pushKeys({"escape", "numpad+", "numpad+", "enter"})
+                push_keys({"escape", "numpad+", "numpad+", "enter"})
                 coroutine.sleep(2.0)
             end
             if p.a == "enter" then
 		print("ac/move pushkey enter")
-                pushKeys({"enter"})
+                push_keys({"enter"})
                 coroutine.sleep(1.0)
             end
             if p.a == "wait" then
@@ -454,12 +454,12 @@ function moveTo(route, routeTable, nextRoute, reverse)
             end
             if p.a == "up" then
 		print("ac/move pushkey up")
-                pushKeys({"up"})
+                push_keys({"up"})
                 coroutine.sleep(1.0)
             end
             if p.a == "down" then
 		print("ac/move: pushkey down")
-                pushKeys({"down"})
+                push_keys({"down"})
                 coroutine.sleep(1.0)
             end
         end
@@ -467,17 +467,17 @@ function moveTo(route, routeTable, nextRoute, reverse)
     return true
 end
 
-function autoMoveTo(zone_id, destTable, routeTable)
+function auto_move_to(zone_id, destTable, routeTable)
     if destTable[1] == nil then
         if routeTable == nil then
-	    io_chat.setNextColor(3) -- 赤
+	    io_chat.set_next_color(3) -- 赤
             print("not defined zone route", zone_id)
         else
-	    io_chat.setNextColor(5) -- 水色
+	    io_chat.set_next_color(5) -- 水色
 	    io_chat.printf("### routa table: (num:%d)", utils.table.count_keys(routeTable))
 	    local NGlist = {}
             for dest, route in pairs(routeTable) do
-		local pos = currentPos()
+		local pos = current_pos()
 		local idx = nearest_idx(pos, route)
 		local desc = ""
 		if route[1] ~= nil and route[1].desc then
@@ -485,19 +485,19 @@ function autoMoveTo(zone_id, destTable, routeTable)
 		end
 		local d = distance(pos, route[idx])
 		if d < 64 then
-		    io_chat.setNextColor(6) -- 緑
+		    io_chat.set_next_color(6) -- 緑
 		    io_chat.printf("O %s(%d=>%d) %s", dest, d, idx, desc)
 		else
 		    local NGstr = string.format("%s(%d)", dest, d)
 		    table.insert(NGlist, NGstr)
 		end
             end
-	    io_chat.setNextColor(3) -- 赤
+	    io_chat.set_next_color(3) -- 赤
 	    io_chat.print("X "..table.concat(NGlist, '  '))
         end
     else
 	for i, dest in ipairs(destTable) do
-	    io_chat.setNextColor(6) -- 緑
+	    io_chat.set_next_color(6) -- 緑
 	    io_chat.print("["..i.."] dest: "..dest)
 	    if dest:sub(1,1) == '-' then
 		dest = dest:sub(2)
@@ -506,18 +506,18 @@ function autoMoveTo(zone_id, destTable, routeTable)
 		reverse = false
 	    end
 	    local nextDest = destTable[i+1]
-	    _autoMoveTo(zone_id, dest, routeTable, reverse, nextDest)
+	    _auto_move_to(zone_id, dest, routeTable, reverse, nextDest)
 	end
     end
     -- M.stop()
 end
-M.autoMoveTo = autoMoveTo
+M.auto_move_to = auto_move_to
 
-function _autoMoveTo(zone_id, dest, routeTable, reverse, nextDest)
+function _auto_move_to(zone_id, dest, routeTable, reverse, nextDest)
     local route = routeTable[dest]
     local nextRoute = routeTable[nextDest]
     if route == nil then
-	io_chat.setNextColor(3) -- 赤
+	io_chat.set_next_color(3) -- 赤
 	io_chat.printf("route dest:%s is not found", dest)
 	return
     end
@@ -525,11 +525,11 @@ function _autoMoveTo(zone_id, dest, routeTable, reverse, nextDest)
 	route = array_reverse(route)
     end
     if M.auto == true then
-	print("_autoMoveTo: singleton guard", destTable)
+	print("_auto_move_to: singleton guard", destTable)
 	return
     end
     M.auto = true
-    moveTo(route, routeTable, nextRoute, reverse)
+    move_to(route, routeTable, nextRoute, reverse)
     M.stop() -- M.auto = false
 end
 

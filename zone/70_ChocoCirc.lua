@@ -9,18 +9,18 @@ function M.incoming_text_handler(text)
     -- レースが終わったらデジョンする
     -- エミネンス目標対応で、レースの連続観戦はしない前提
     if string.contains(text, "次回の開催までごきげんよう！") then
-	task.setTaskSimple("ac warp", 10, 5)
+	task.set_task_simple("ac warp", 10, 5)
     end
 end
 
 M.text_handler_idx = nil
 function M.zone_in()
-    M.text_handler_idx = incoming_text.addListener("", M.incoming_text_handler)
+    M.text_handler_idx = incoming_text.add_listener("", M.incoming_text_handler)
 end
 
 function M.zone_out()
     if M.text_handler_idx ~= nil then
-	incoming_text.removeListener(M.text_handler_idx)
+	incoming_text.remove_listener(M.text_handler_idx)
     end
 end
 

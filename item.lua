@@ -39,7 +39,7 @@ local bag_name_ja_list = {
 
 -- アイテムの量
 
-local inventoryTotalNum = function()
+local inventory_total_num = function()
     local items = windower.ffxi.get_items()
     local item = items.inventory
     local totalNum = 0
@@ -48,9 +48,9 @@ local inventoryTotalNum = function()
     end
     return totalNum
 end
-M.inventoryTotalNum = inventoryTotalNum
+M.inventory_total_num = inventory_total_num
 
-function M.inventoryCountByItemId(item_id)
+function M.inventory_count_by_item_id(item_id)
     local items = windower.ffxi.get_items()
     local item = items.inventory
     local totalNum = 0
@@ -62,25 +62,25 @@ function M.inventoryCountByItemId(item_id)
     return totalNum
 end
 
-function M.inventoryCountByItemIds(item_ids)
+function M.inventory_count_by_item_ids(item_ids)
     local totalNum = 0
     for _, item_id in ipairs(item_ids) do
-	totalNum = totalNum + M.inventoryCountByItemId(item_id)
+	totalNum = totalNum + M.inventory_count_by_item_id(item_id)
     end
     return totalNum
 end
 
-local prevInventoryTotalNum = inventoryTotalNum()
-local diffInventoryTotalNum = function()
-    local next = inventoryTotalNum()
+local prevInventoryTotalNum = inventory_total_num()
+local diff_inventory_total_num = function()
+    local next = inventory_total_num()
     local diff = next - prevInventoryTotalNum
     prevInventoryTotalNum = next
     return diff
 end
-M.diffInventoryTotalNum = diffInventoryTotalNum
+M.diff_inventory_total_num = diff_inventory_total_num
 
 --- アイテムの空き
-M.showInventory = function()
+M.show_inventory = function()
     local items = windower.ffxi.get_items()
     local item = items.inventory
     for i, e in ipairs(item) do
@@ -90,7 +90,7 @@ M.showInventory = function()
     end
 end
 
-M.checkInventoryFreespace = function()
+M.check_inventory_freespace = function()
     local items = windower.ffxi.get_items()
     
     local item = items.inventory
@@ -101,14 +101,14 @@ M.checkInventoryFreespace = function()
 end
 
 --- かばんの空き数
-local inventoryFreespaceNum = function()
+local inventory_freespace_num = function()
     local items = windower.ffxi.get_items()
     local inventory = items.inventory
     return inventory.max - inventory.count
 end
-M.inventoryFreespaceNum = inventoryFreespaceNum
+M.inventory_freespace_num = inventory_freespace_num
 
-local safesToInventory = function(id)
+local safes_to_inventory = function(id)
 ---    print("safesToInventry")
     local count = 0
     for bname, bagid in pairs(SafesList) do
@@ -128,10 +128,10 @@ local safesToInventory = function(id)
     end
     return count
 end
-M.safesToInventory = safesToInventory
+M.safes_to_inventory = safes_to_inventory
 
-function M.safesToInventoryBySet(id_set)
-    -- print("safesToInventoryBySet")
+function M.safes_to_inventory_by_set(id_set)
+    -- print("safes_to_inventory_by_set")
     local count = 0
     for bname, bagid in pairs(SafesList) do
         local items = windower.ffxi.get_items()
@@ -140,7 +140,7 @@ function M.safesToInventoryBySet(id_set)
             local bag = items[bname]
             for i, item in ipairs(bag) do
                 if id_set[item.id] == true and item.count > 0 then
-		    if M.checkInventoryFreespace() then
+		    if M.check_inventory_freespace() then
 			windower.ffxi.get_item(bagid, item.slot, item.count)
 			count = count + 1
 			if control.debug then
@@ -148,7 +148,7 @@ function M.safesToInventoryBySet(id_set)
 			    if res.items[item.id] ~= nil then
 				item_name = res.items[item.id].name
 			    end
-			    io_chat.printf("safesToInventory:%s %s(%d)", bname, item_name, item.id)
+			    io_chat.printf("safes_to_inventory:%s %s(%d)", bname, item_name, item.id)
 			end
 		    end
                 end
@@ -161,7 +161,7 @@ function M.safesToInventoryBySet(id_set)
 end
 
 --- 持ち歩きバッグの空き
-local checkBagsFreespace = function()
+local check_bags_freespace = function()
     local items = windower.ffxi.get_items()
     for bname, bagid in pairs(BagsList) do
         local bag = items[bname]
@@ -171,10 +171,10 @@ local checkBagsFreespace = function()
     end
     return false
 end
-M.checkBagsFreespace = checkBagsFreespace
+M.check_bags_freespace = check_bags_freespace
 
-local bagsToInventory = function(id)
----    print("bagsToInventory")
+local bags_to_inventory = function(id)
+---    print("bags_to_inventory")
     local count = 0
     for bname, bagid in pairs(BagsList) do
         local items = windower.ffxi.get_items()
@@ -190,7 +190,7 @@ local bagsToInventory = function(id)
 			if res.items[item.id] ~= nil then
 			    item_name = res.items[item.id].name
 			end
-			io_chat.printf("bagsToInventory:%s %s(%d)", bname, item_name, item.id)
+			io_chat.printf("bags_to_inventory:%s %s(%d)", bname, item_name, item.id)
 		    end
                 end
             end
@@ -200,10 +200,10 @@ local bagsToInventory = function(id)
     end
     return count
 end
-M.bagsToInventory = bagsToInventory
+M.bags_to_inventory = bags_to_inventory
 
-function M.bagsToInventoryBySet(id_set)
-    -- print("bagsToInventoryBySet")
+function M.bags_to_inventory_by_set(id_set)
+    -- print("bags_to_inventory_by_set")
     local count = 0
     for bname, bagid in pairs(BagsList) do
         local items = windower.ffxi.get_items()
@@ -212,7 +212,7 @@ function M.bagsToInventoryBySet(id_set)
             local bag = items[bname]
             for i, item in ipairs(bag) do
                 if id_set[item.id] == true and item.count > 0 then
-		    if M.checkInventoryFreespace() then
+		    if M.check_inventory_freespace() then
 			windower.ffxi.get_item(bagid, item.slot, item.count)
 			count = count + 1
 		    end
@@ -225,8 +225,8 @@ function M.bagsToInventoryBySet(id_set)
     return count
 end
 
-M.moveToBags = function(id)
----    print("moveToBags")
+M.move_to_bags = function(id)
+---    print("move_to_bags")
     local items = windower.ffxi.get_items()
     for bname, bagid in pairs(BagsList) do
         local bag = items[bname]
@@ -242,7 +242,7 @@ M.moveToBags = function(id)
     end
 end
 
-local inventoryHasItem = function(id)
+local inventory_has_item = function(id)
     local items = windower.ffxi.get_items()
     local inventory = items.inventory
     for i, item in ipairs(inventory) do
@@ -252,9 +252,9 @@ local inventoryHasItem = function(id)
     end
     return false
 end
-M.inventoryHasItem = inventoryHasItem
+M.inventory_has_item = inventory_has_item
 
-function M.inventoryHasItemInSet(id_set)
+function M.inventory_has_item_in_set(id_set)
     local items = windower.ffxi.get_items()
     local inventory = items.inventory
     for i, item in ipairs(inventory) do
@@ -265,7 +265,7 @@ function M.inventoryHasItemInSet(id_set)
     return false
 end
 
-M.safesHasItem = function(id)
+M.safes_has_item = function(id)
     local items = windower.ffxi.get_items()
     for bname, bagid in pairs(SafesList) do
         local bag = items[bname]
@@ -278,7 +278,7 @@ M.safesHasItem = function(id)
     return false
 end
 
-M.safesHasItemInSet = function(id_set)
+M.safes_has_item_in_set = function(id_set)
     local items = windower.ffxi.get_items()
     for bname, bagid in pairs(SafesList) do
         local bag = items[bname]
@@ -291,7 +291,7 @@ M.safesHasItemInSet = function(id_set)
     return false
 end
 
-M.bagsHasItem = function(id)
+M.bags_has_item = function(id)
     local items = windower.ffxi.get_items()
     for bname, bagid in pairs(BagsList) do
         local bag = items[bname]
@@ -304,7 +304,7 @@ M.bagsHasItem = function(id)
     return false
 end
 
-M.bagsHasItemInSet = function(id_set)
+M.bags_has_item_in_set = function(id_set)
     local items = windower.ffxi.get_items()
     for bname, bagid in pairs(BagsList) do
         local bag = items[bname]
@@ -317,10 +317,10 @@ M.bagsHasItemInSet = function(id_set)
     return false
 end
 
-M.wardrobeHasItem = function(id)
+M.wardrobe_has_item = function(id)
     local items = windower.ffxi.get_items()
     for bname, bagid in pairs(WardrobeList) do
-	-- print("item.wardrobeHasItem", bname, bagid)
+	-- print("item.wardrobe_has_item", bname, bagid)
         local bag = items[bname]
         for i, item in ipairs(bag) do
             if item.id == id then
@@ -331,7 +331,7 @@ M.wardrobeHasItem = function(id)
     return false
 end
 
-M.wardrobeHasItemInSet = function(id_set)
+M.wardrobe_has_item_in_set = function(id_set)
     local items = windower.ffxi.get_items()
     for bname, bagid in pairs(WardrobeList) do
         local bag = items[bname]
@@ -344,10 +344,10 @@ M.wardrobeHasItemInSet = function(id_set)
     return false
 end
 
-M.tradeByItemId = function(mob, id)
----    print("tradeByItemId", mob, id)
+M.trade_by_item_id = function(mob, id)
+---    print("trade_by_item_id", mob, id)
     if mob == nil then
-        print("tradeByItemId: mob not found. id:"..tostring(id))
+        print("trade_by_item_id: mob not found. id:"..tostring(id))
         return false
     end
     local items = windower.ffxi.get_items()
@@ -383,10 +383,10 @@ M.tradeByItemId = function(mob, id)
 end
 
 -- item_table = { { item_id = count }, ... }
-M.tradeByItemTable = function(mob, item_table)
----    print("tradeByItemTable", mob, item_table)
+M.trade_by_item_table = function(mob, item_table)
+---    print("trade_by_item_table", mob, item_table)
     if mob == nil then
-        print("tradeByItemTable: mob not found")
+        print("trade_by_item_table: mob not found")
         return false
     end
     item_table = utils.table.deepclone(item_table)  -- 非破壊的にする
@@ -430,33 +430,33 @@ M.tradeByItemTable = function(mob, item_table)
 end
 
 -- アイテムの使用。スクロールの学習など
-M.useItemIncludeBags = function(item_id, duration)
+M.use_item_include_bags = function(item_id, duration)
     if duration == nil then
 	duration = 5
     end
     local ret = false
-    if checkBagsFreespace(item_id) then
-        bagsToInventory(item_id)
+    if check_bags_freespace(item_id) then
+        bags_to_inventory(item_id)
     end
-    if inventoryHasItem(item_id) then
+    if inventory_has_item(item_id) then
         local name = res.items[item_id].name
 	local c = 'input /item '..name..' <me>'
-	task.setTaskSimple(c, 0, duration)
+	task.set_task_simple(c, 0, duration)
         ret = true
         coroutine.sleep(duration)
     end
     return ret
 end
 
--- useEquipItem(14, 28540, 'デジョンリング', 9)
+-- use_equip_item(14, 28540, 'デジョンリング', 9)
 -- 右指にデジョンリングをつけて使用
 
 local EQUIP_ITEM_BANK_KEY = 'use_equip_item'
 
-function M.useEquipItem(slot, item_id, item_name, delay)
+function M.use_equip_item(slot, item_id, item_name, delay)
     local ac_equip = require('ac/equip')
     local task = require('task')
-    task.allClear() -- 他タスクが邪魔しないよう全消去
+    task.all_clear() -- 他タスクが邪魔しないよう全消去
     ac_equip.equip_save(EQUIP_ITEM_BANK_KEY) -- 今の装備を記録
     coroutine.sleep(1)
     ac_equip.equip_item(slot, item_id)  -- 装備する
@@ -464,24 +464,24 @@ function M.useEquipItem(slot, item_id, item_name, delay)
     coroutine.sleep(delay + 1)  -- delay ぴったりだと50%程度失敗する
     local c = "input /item "..item_name.." <me>"
     -- command, delay, duration
-    task.setTaskSimple(c, 0, 5)  -- delay が信用できないので一旦 sleep で。
+    task.set_task_simple(c, 0, 5)  -- delay が信用できないので一旦 sleep で。
     coroutine.sleep(2)
     ac_equip.equip_restore(EQUIP_ITEM_BANK_KEY)  -- 前の装備に戻す
     -- coroutine.sleep(2)
     -- ac_equip.equip_restore(EQUIP_ITEM_BANK_KEY)
 end
 
-function M.useEquipItemSequence(slot, item_list, delay)
+function M.use_equip_item_sequence(slot, item_list, delay)
     for _, item in ipairs(item_list) do
 	local id = item.id
-	if M.inventoryHasItem(id) or M.wardrobeHasItem(id)  then
-	    io_chat.print("useEquipItemSequence", id, item.name)
-	    M.useEquipItem(slot, id, item.name, delay)
+	if M.inventory_has_item(id) or M.wardrobe_has_item(id)  then
+	    io_chat.print("use_equip_item_sequence", id, item.name)
+	    M.use_equip_item(slot, id, item.name, delay)
 	end
     end
 end
 
-function M.showOwnItems(item_list)
+function M.show_own_items(item_list)
     io_chat.info("=== Important Items I have ===")
     local items = windower.ffxi.get_items()
     for i, item_id in ipairs(item_list) do
@@ -501,7 +501,7 @@ function M.showOwnItems(item_list)
     end
 end
 
-function M.showOwnKeyItems(key_item_list)
+function M.show_own_key_items(key_item_list)
     io_chat.info("=== Important Key Items I have ===")
     local key_items = windower.ffxi.get_key_items()
     for i, key_item_id in ipairs(key_item_list) do

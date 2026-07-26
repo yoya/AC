@@ -5,7 +5,7 @@ local control = require 'control'
 local io_chat = require 'io/chat'--
 local io_net = require 'io/net'
 local keyboard = require 'keyboard'
-local pushKeys = keyboard.pushKeys
+local push_keys = keyboard.push_keys
 
 M.wantedMobs = {
     "Vedrfolnir" -- テリガン
@@ -17,7 +17,7 @@ function M.tick(player)
     local jct_name = "Ethereal Junction"
     local jct = windower.ffxi.get_mob_by_name(jct_name)
     if jct ~= nil and jct.valid_target then
-	io_net.targetByMob(jct)
+	io_net.target_by_mob(jct)
     end
     local t = windower.ffxi.get_mob_by_target("t")
     if t ~= nil and t.name == jct_name and t.valid_target then
@@ -25,9 +25,9 @@ function M.tick(player)
 	windower.ffxi.run(true)
 	coroutine.sleep(1)
 	windower.ffxi.run(false)
-	pushKeys({"enter"})
+	push_keys({"enter"})
 	coroutine.sleep(1)
-	pushKeys({"up", "enter"})
+	push_keys({"up", "enter"})
 	coroutine.sleep(3)
     end
 end

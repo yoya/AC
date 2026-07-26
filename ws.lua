@@ -116,7 +116,7 @@ M.weaponskillTargetMeTable = {
     "myrkr", "moon",
 }
 
-M.getWeaponSkillUsage = function()
+M.get_weapon_skill_usage = function()
     local abilities = windower.ffxi.get_abilities()
     -- local weaponSkillUsage = table.concat(get_keys(M.weaponskillTable), " | ") .. "\n"
     local weaponSkillUsage = "  "
@@ -132,7 +132,7 @@ M.getWeaponSkillUsage = function()
     return weaponSkillUsage
 end
 
-M.getAnyWeaponSkill = function()
+M.get_any_weapon_skill = function()
     local abilities = windower.ffxi.get_abilities()
     for k_, k in pairs(preferWeaponSkill) do
         v = M.weaponskillTable[k]
@@ -176,7 +176,7 @@ end
 
 M.init = function()
     local prevWS = M.weaponskill
-    M.weaponskill = M.getAnyWeaponSkill()
+    M.weaponskill = M.get_any_weapon_skill()
     if M.weaponskill ~= nil and M.weaponskill ~= prevWS then
 	io_chat.print('set any ' .. M.weaponskill .. ' => ' .. M.weaponskillTable[M.weaponskill])
     end

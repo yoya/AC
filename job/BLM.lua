@@ -51,11 +51,11 @@ function M.invoke_magick_debuff(player, magic, onoff, need_mp)
     local level = task.PRIORITY_LOW
     local c = 'input /ma '..magic..' <t>'
     -- command, delay, duration, period, eachfight
-    local t = task.newTask(c, 1, 5, 90, true)
+    local t = task.new_task(c, 1, 5, 90, true)
     if onoff then
-	task.setTask(level, t)
+	task.set_task(level, t)
     else
-	task.removeTask(level, t)
+	task.remove_task(level, t)
     end
 end
 

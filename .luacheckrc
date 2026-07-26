@@ -36,7 +36,7 @@ globals = {
 --
 -- 現状これらは `function foo()` と local なしで定義されており、
 -- 全ファイルが同一の Lua state を共有するため衝突リスクがある。
--- (実例: isDefensive は job/{BRD,COR,DNC,GEO}.lua で 4 重定義されており、
+-- (実例: is_defensive は job/{BRD,COR,DNC,GEO}.lua で 4 重定義されており、
 --        最後に require された GEO の定義だけが生き残っていた。
 --        4 つとも本体が同一だった為に偶然無害だっただけ。修正済み)
 --
@@ -45,26 +45,26 @@ globals = {
 --------------------------------------------------------------------
 local legacy_globals = {
     -- AC.lua
-    "tick", "tick_serial", "dropJunkItemsInInventory", "argument_means_on",
+    "tick", "tick_serial", "drop_junk_items_in_inventory", "argument_means_on",
     -- task.lua
-    "assertTask", "assertLevel", "taskEqual", "taskIndex", "taskContain",
+    "assert_task", "assert_level", "task_equal", "task_index", "task_contain",
     -- mob.lua
-    "isMobLinked", "isMobTouchable", "isMobAttackable",
+    "is_mob_linked", "is_mob_touchable", "is_mob_attackable",
     -- inspect.lua / zone / utils
-    "is_alliance_joined", "posStr", "_tableToString", "norm", "numsign",
+    "is_alliance_joined", "pos_str", "_table_to_string", "norm", "numsign",
     -- ac/
-    "nearest_idx", "relay_idx", "stop", "containPos", "moveTo", "moveToAction",
-    "moveToActionFaith", "autoMoveTo", "_autoMoveTo", "createMemberInfo",
-    "targetPos", "targetDistance", "currentPos", "distance", "distance2",
-    "distanceX", "distanceY", "isNear", "tableHasData",
+    "nearest_idx", "relay_idx", "stop", "contain_pos", "move_to", "move_to_action",
+    "move_to_action_faith", "auto_move_to", "_auto_move_to", "create_member_info",
+    "target_pos", "target_distance", "current_pos", "distance", "distance2",
+    "distance_x", "distance_y", "is_near", "table_has_data",
     -- contents/
     "BurningCircleFunction", "GreysonFunction", "target_and_lockon", "forward",
     "SynergyFurnaceFunction", "SynergyEngineerFunction",
     "SynergyFurnaceFunction_old", "SynergyEngineerFunction_old",
     "setup", "start", "add", "operate", "finish", "common",
-    "wind", "thunder", "dark", "searchPreferEnemy", "searchEnemy",
+    "wind", "thunder", "dark", "search_prefer_enemy", "search_enemy",
     -- role/
-    "getLowerHPTarget", "within_time", "invoke_magic",
+    "get_lower_hp_target", "within_time", "invoke_magic",
     -- job/
     "invoke_ninjutsu", "toolbag_proc", "has_shika",
     "phantom_roll", "roll_tick", "phantom_roll_double_up", "COR_phantom_roll_up",
@@ -95,8 +95,8 @@ max_line_length = false  -- 既存コードに長い行が多い
 files["script/"] = {
     -- WSL から単体実行する CLI スクリプト群。addon とは別プロセス。
     std = "lua51",
-    globals = { "usage", "parseArgs", "print_color", "array_slice",
-		"compPoint", "compAmbus", "compDomain",
+    globals = { "usage", "parse_args", "print_color", "array_slice",
+		"comp_point", "comp_ambus", "comp_domain",
 		"item_match", "own_item_count", "strspacepad",
 		"show_item_and_bag", "show_lacking_item",
 		"table_union", "table_count", "table_diff",

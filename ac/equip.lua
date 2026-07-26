@@ -142,12 +142,12 @@ function M.equip_item(slot, item_id)
     end
     local bag = nil
     local inv_id = nil
-    bag, inv_id = M.searchEquipItem(item_id)
+    bag, inv_id = M.search_equip_item(item_id)
     -- print("ac/equip", slot, item_id, bag, inv_id)
     windower.ffxi.set_equip(inv_id, slot, bag)
 end
 
-function M.searchEquipItem(item_id)
+function M.search_equip_item(item_id)
     local items = windower.ffxi.get_items()
     for name, bag_id in pairs(equip_bags) do
 	bag = items[name]
@@ -166,13 +166,13 @@ function M.equip_item_by_priority_tree(item_tree)
     for slot_name, items in pairs(item_tree) do
 	local slot = equip_slots[slot_name]
 	for _, id in ipairs(items) do
-	    if acitem.inventoryHasItem(id) or acitem.wardrobeHasItem(id)  then
+	    if acitem.inventory_has_item(id) or acitem.wardrobe_has_item(id)  then
 		if equiped_ring_item_id == id then
 		    -- skip
 		else
 		    local bag = nil
 		    local inv_id = nil
-		    bag, inv_id = M.searchEquipItem(id)
+		    bag, inv_id = M.search_equip_item(id)
 		    -- print("slot, id, bag, inv_id", slot, id, bag, inv_id)
 		    windower.ffxi.set_equip(inv_id, slot, bag)
 		    if bag_name == "left_ring" or bag_name == "right_ring" then

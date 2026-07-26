@@ -103,16 +103,16 @@ function invoke_magic(magicRank, onoff, level)
     end
     local c = 'input /ma '..magic..' <t>'
     -- command, delay, duration, period, eachfight
-    local t = task.newTask(c, 0, param.dur, param.per, false)
+    local t = task.new_task(c, 0, param.dur, param.per, false)
     if onoff == true then
-	task.setTask(level, t)
+	task.set_task(level, t)
     else
-	task.removeTask(level, t)
+	task.remove_task(level, t)
     end
 end
 M.invoke_magic = invoke_magic
 
-function M.magicBurst(player, magickRank)
+function M.magic_burst(player, magickRank)
     if player.status == 1 then -- 戦闘中
 	local sc_time = acinspect.sc_time
 	local sc_attr = acinspect.sc_attr
@@ -185,7 +185,7 @@ function M.main_tick(player)
     else
 	return -- MB しない
     end
-    M.magicBurst(player, magickRank)
+    M.magic_burst(player, magickRank)
 end
 
 function M.sub_tick(player)
@@ -194,11 +194,11 @@ function M.sub_tick(player)
     if sub_job == "BLM" then
 	magickRank = 2
     end
-    M.magicBurst(player, magickRank)
+    M.magic_burst(player, magickRank)
 end
 
-function M.setMagic(magic)
-    -- print("setMagic("..tostring(magic)..")")
+function M.set_magic(magic)
+    -- print("set_magic("..tostring(magic)..")")
     if magic ~= nil then
 	if magicTable[magic] ~= nil then
 	    MB_magic = magicTable[magic]

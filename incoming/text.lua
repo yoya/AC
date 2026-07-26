@@ -15,7 +15,7 @@ function M.incoming_handler(data, modified, original_mode, modified_mode, blocke
     end
 end
 
-function M.duplicationCheck(keyword, callback)
+function M.duplication_check(keyword, callback)
     for i, listener in pairs(listener_table) do
 	if listener.keyword == keyword and listener.callback == callback then
 	    return true
@@ -24,11 +24,11 @@ function M.duplicationCheck(keyword, callback)
     return false
 end
 
-function M.addListener(keyword, callback)
+function M.add_listener(keyword, callback)
     assert(type(keyword) == "string")
     assert(type(callback) == "function")
-    if M.duplicationCheck(keyword, callback) then
-	print("M.duplicationCheck true")
+    if M.duplication_check(keyword, callback) then
+	print("M.duplication_check true")
 	return
     end
     local caller_info = debug.getinfo(2)
@@ -39,19 +39,19 @@ function M.addListener(keyword, callback)
     return idx
 end
 
-function M.removeListener(idx)
+function M.remove_listener(idx)
     listener_table[idx] = nil
 end
 
-function M.showListener()
+function M.show_listener()
     local io_chat = require 'io/chat'
-    io_chat.setNextColor(6)
-    io_chat.printf("=== incoming/text.showListener: %d", listener_table_last_idx)
+    io_chat.set_next_color(6)
+    io_chat.printf("=== incoming/text.show_listener: %d", listener_table_last_idx)
     for i, listener in pairs(listener_table) do
 	local caller_info = listener.caller_info
 	local caller_name = caller_info.name and caller_info.name or "(nil)"
 	local source_path = caller_info.source:sub(windower.addon_path:len()+1)
-	io_chat.setNextColor(7)
+	io_chat.set_next_color(7)
 	io_chat.printf("[%d] keyword=%s caller_func=%s source=%s", i, listener.keyword, caller_name, source_path)
     end
 end

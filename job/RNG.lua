@@ -25,11 +25,11 @@ function invoke_shoot(onoff)
     local level = task.PRIORITY_LOW  -- 他にやる事ない時は常に shoot
     local c = 'input /shoot <t>'
     -- command, delay, duration, period, eachfight
-    local t = task.newTask(c, 0, 2, 3, true)
+    local t = task.new_task(c, 0, 2, 3, true)
     if onoff == true then
-	task.setTask(level, t)
+	task.set_task(level, t)
     else
-	task.removeTask(level, t)
+	task.remove_task(level, t)
     end
 end
 

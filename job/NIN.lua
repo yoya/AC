@@ -30,11 +30,11 @@ function invoke_ninjutsu(level, ninjutsu_command, duration, period, onoff)
     assert(type(onoff) == "boolean")
     local c = 'input '..ninjutsu_command
     -- command, delay, duration, period, eachfight
-    local t = task.newTask(c, 0, duration, period, true)
+    local t = task.new_task(c, 0, duration, period, true)
     if onoff == true then
-	task.setTask(level, t)
+	task.set_task(level, t)
     else
-	task.removeTask(level, t)
+	task.remove_task(level, t)
     end
 end
 
@@ -50,13 +50,13 @@ function toolbag_proc(ninja_tools_list)
     for _, ninja_tool in ipairs(ninja_tools_list) do
 	-- 札がない時に対応する忍だすきを使う。
 	local item_id = ninja_tool.item_id
-	if not acitem.inventoryHasItem(item_id) then -- 札
+	if not acitem.inventory_has_item(item_id) then -- 札
 	    local toolbag_id = ninja_tool.toolbag_id
-	    if acitem.inventoryHasItem(toolbag_id) then -- 忍だすき
-		acitem.useItemIncludeBags(toolbag_id)
+	    if acitem.inventory_has_item(toolbag_id) then -- 忍だすき
+		acitem.use_item_include_bags(toolbag_id)
 		toolbag_proc_guard_count = 30
 	    else -- インベントリーにない場合、かばんから移動する
-		acitem.bagsToInventory(item_id)
+		acitem.bags_to_inventory(item_id)
 	    end
 	end
     end
@@ -80,8 +80,8 @@ function M.main_tick(player)
     toolbag_proc(ninja_tools_list)
     local shika_onoff = false
     --  空蝉の術・遁甲の術・物見の術・妙手の術・身替の術・活火の術
-    if acitem.inventoryHasItem(1179) or -- 紙兵
-	acitem.inventoryHasItem(2972) then -- 鹿ノ札
+    if acitem.inventory_has_item(1179) or -- 紙兵
+	acitem.inventory_has_item(2972) then -- 鹿ノ札
 	shika_onoff = true
     end
     local level = task.PRIORITY_HIGH

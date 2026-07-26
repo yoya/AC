@@ -107,13 +107,13 @@ function M.receive(message)
 	return  -- 自分向けじゃない
     end
     if method == 'start' then
-	if M.inParty() then
+	if M.in_party() then
 	    M.AC.start()
 	else
 	    print("not in Party")
 	end
     elseif method == 'stop' then
-	if M.inParty() then
+	if M.in_party() then
 	    M.AC.stop()
 	else
 	    print("not in Party")
@@ -122,7 +122,7 @@ function M.receive(message)
 	M.receive_all(arg1, arg2, arg3)
     elseif method == 'build' then
 	if arg1 == 'party' then
-	    if not M.inParty() then
+	    if not M.in_party() then
 		M.send(source, "submit", "party")
 	    end
 	else
@@ -137,7 +137,7 @@ function M.receive(message)
 	    local c = "input /pcmd add "..source
 	    -- print("io/ipc.receive_party", c)
 	    --  command, delay, period
-	    task.setTaskSimple(c, 1, 2)
+	    task.set_task_simple(c, 1, 2)
 	end
     else
 	print("io/ipc.receive: unknown method:"..method)
@@ -149,7 +149,7 @@ function M.warp_with_ring(arg)
     if control.debug then
 	print("io/ipc.warp_with_ring", arg)
     end
-    task.allClear()
+    task.all_clear()
     local item_name = 'デジョンリング'
     local item_id = 28540
     -- io_chat.info(item_name.."発動 10-12秒前")
@@ -166,7 +166,7 @@ function M.warp_with_ring(arg)
     io_chat.info(item_name.."10-12秒前")
     coroutine.sleep(math.random(1,10)/5)
     local slot_right_ring = 14
-    acitem.useEquipItem(slot_right_ring, item_id, item_name, 10)
+    acitem.use_equip_item(slot_right_ring, item_id, item_name, 10)
 end
     
 function M.receive_all(arg1, arg2, arg3)
@@ -176,7 +176,7 @@ function M.receive_all(arg1, arg2, arg3)
     M.AC.addon_command_handler(arg1, arg2, arg3)
 end
 
-function M.inParty()
+function M.in_party()
     local party = windower.ffxi.get_party()
     if party.party1_leader == nil then
 	return false -- パーティに入っていない
@@ -189,16 +189,16 @@ function M.receive_party(source, arg1, arg2, arg3)
 	io_chat.print("io/ipc.receive_party", arg)
     end
     if arg1 == "build" then
-	if not M.inParty() then
+	if not M.in_party() then
 	    M.send(source, "party", "submit")
 	end
     elseif arg1 == "submit" then
 	local c = "input /pcmd add "..source
 	-- print("io/ipc.receive_party", c)
 	--  command, delay, period
-	task.setTaskSimple(c, 1, 2)
+	task.set_task_simple(c, 1, 2)
     else
-	if M.inParty() then
+	if M.in_party() then
 	    M.AC.addon_command_handler(arg1, arg2, arg3)
 	end
     end

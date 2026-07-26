@@ -32,11 +32,11 @@ function provoke(player) -- 挑発
     local level = task.PRIORITY_HIGH
     local c = "input /ja 挑発 <t>"
     -- command, delay, duration, period, eachfight
-    local t = task.newTask(c, 0, 1, 30, false)
+    local t = task.new_task(c, 0, 1, 30, false)
     if player.status == 1 then
-	task.setTask(level, t)
+	task.set_task(level, t)
     else
-	task.removeTask(level, t)
+	task.remove_task(level, t)
     end
 end
 
@@ -45,14 +45,14 @@ function attacker(player)  -- アタッカー
     local c1 = "input /ja バーサク <me>"
     local c2 = "input /ja アグレッサー <me>"
     -- command, delay, duration, period, eachfight
-    local t1 = task.newTask(c1, 0, 1, 30, false)
-    local t2 = task.newTask(c2, 0, 1, 30, false)
+    local t1 = task.new_task(c1, 0, 1, 30, false)
+    local t2 = task.new_task(c2, 0, 1, 30, false)
     if player.status == 1 then
-	task.setTask(level, t1)
-	task.setTask(level, t2)
+	task.set_task(level, t1)
+	task.set_task(level, t2)
     else
-	task.removeTask(level, t1)
-	task.removeTask(level, t2)
+	task.remove_task(level, t1)
+	task.remove_task(level, t2)
     end
 end
 
@@ -60,11 +60,11 @@ function defender(player) -- ディフェンダー
     local level = task.PRIORITY_HIGH
     local c = "input /ja ディフェンダー <me>"
     -- command, delay, duration, period, eachfight
-    local t = task.newTask(c, 0, 1, 30, false)
+    local t = task.new_task(c, 0, 1, 30, false)
     if player.status == 1 then
-	task.setTask(level, t)
+	task.set_task(level, t)
     else
-	task.removeTask(level, t)
+	task.remove_task(level, t)
     end
 end
 
@@ -91,7 +91,7 @@ function M.sub_tick(player)
 	    -- 頑丈なジョブは挑発もアタッカーアビも使う
 	    attacker(player)
 	    provoke(player)
-	elseif ac_party.hasTankJobMemberInParty() then
+	elseif ac_party.has_tank_job_member_in_party() then
 	    -- パーティに盾ジョブがいる場合は、安心してアタッカーアビを使う
 	    attacker(player)
 	else
@@ -99,7 +99,7 @@ function M.sub_tick(player)
 	end
 	local hp = player.vitals.hp
 	if hp < 1200 then -- 危ない時は防御
-	    io_chat.setNextColor(3)
+	    io_chat.set_next_color(3)
 	    io_chat.printf("HP:%d < 1200 => ディフェンダー", hp)
 	    defender(player) -- ディフェンダー
 	end
@@ -113,8 +113,8 @@ function M.dothebest_main(player)
     for i, ja_name in ipairs(jaList) do
 	local c = "input /ja "..ja_name.." <me>"
 	-- command, delay, duration, period, eachfight
-	local t = task.newTask(c, (i-1)*2, 2, 10, false)
-	task.setTask(level, t)
+	local t = task.new_task(c, (i-1)*2, 2, 10, false)
+	task.set_task(level, t)
     end
 end
 
@@ -124,8 +124,8 @@ function M.dothebest_sub(player)
     for i, ja_name in ipairs(jaList) do
 	local c = "input /ja "..ja_name.." <me>"
 	-- command, delay, duration, period, eachfight
-	local t = task.newTask(c, (i-1)*2, 2, 10, false)
-	task.setTask(level, t)
+	local t = task.new_task(c, (i-1)*2, 2, 10, false)
+	task.set_task(level, t)
     end
 end
 

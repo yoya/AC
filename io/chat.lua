@@ -11,14 +11,14 @@ local utils_table = require "utils/table"
 local textColor = nil
 local textColorOnce = false
 
-function M.setColor(col)
+function M.set_color(col)
     textColor = col
     textColorOnce = false
 end
-function M.clearColor()
+function M.clear_color()
     textColor = nil
 end
-function M.setNextColor(col)
+function M.set_next_color(col)
     textColor = col
     textColorOnce = true
 end
@@ -26,7 +26,7 @@ end
 function M.print(...)
     local text = ""
     for i, v in pairs({...}) do
-	local t = type(v) == "string" and v or utils_table.tableToString(v)
+	local t = type(v) == "string" and v or utils_table.table_to_string(v)
 	if i == 1 then
 	    text = text .. t
 	else
@@ -55,38 +55,38 @@ end
 
 -- 重要なメッセージ
 function M.notice(...)
-    M.setNextColor(5)  -- 水色
+    M.set_next_color(5)  -- 水色
     M.print(...)
 end
 function M.noticef(...)
-    M.setNextColor(5)  -- 水色
+    M.set_next_color(5)  -- 水色
     M.printf(...)
 end
 -- 通常のメッセージ
 function M.info(...)
-    M.setNextColor(6)  -- エメラルド
+    M.set_next_color(6)  -- エメラルド
     M.print(...)
 end
 function M.infof(...)
-    M.setNextColor(6)  -- エメラルド
+    M.set_next_color(6)  -- エメラルド
     M.printf(...)
 end
 -- 処理は続くレベルの警告
 function M.warn(...)
-    M.setNextColor(2)  -- 赤紫
+    M.set_next_color(2)  -- 赤紫
     M.print(...)
 end
 function M.warnf(...)
-    M.setNextColor(2)  -- 赤紫
+    M.set_next_color(2)  -- 赤紫
     M.printf(...)
 end
 -- 処理を止めるレベルのエラー
 function M.error(...)
-    M.setNextColor(4)
+    M.set_next_color(4)
     M.print(...)
 end
 function M.errorf(...)
-    M.setNextColor(3)  -- オレンジ
+    M.set_next_color(3)  -- オレンジ
     M.printf(...)
 end
 

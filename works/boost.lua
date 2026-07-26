@@ -7,7 +7,7 @@ local midangle = utils.angle.midangle
 
 local acmob = require 'mob'
 local keyboard = require 'keyboard'
-local pushKeys = keyboard.pushKeys
+local push_keys = keyboard.push_keys
 local io_chat = require 'io/chat'
 
 M.auto = false
@@ -45,7 +45,7 @@ local stationWorkerBoostTable = {
     },
 }
 
-local getStationWorkerBoostInfo = function(zone)
+local get_station_worker_boost_info = function(zone)
     local timeTable = stationWorkerBoostTable[zone]
     local time = windower.ffxi.get_info().time
     for t, i in pairs(timeTable) do
@@ -56,13 +56,13 @@ local getStationWorkerBoostInfo = function(zone)
     return nil
 end 
 
-function M.turnToDirection(mob, theta)
+function M.turn_to_direction(mob, theta)
     local done = false
     -- 向きをあわせる
     while done == false and M.auto do
         utils.left_move(0.005)
         local me_pos = {}
-        acmob.getMobPosition(me_pos, "me")
+        acmob.get_mob_position(me_pos, "me")
         local dx = me_pos.x - mob.x
         local dy = me_pos.y - mob.y
 	local t = math.atan2(dx, dy) - 2*math.pi/32
@@ -75,28 +75,28 @@ function M.turnToDirection(mob, theta)
     end
 end
 
-local stationWorkerFunction = function(zone, mob)
+local station_worker_function = function(zone, mob)
     M.auto = true
     utils.target_lockon(true)
-    local info = getStationWorkerBoostInfo(zone)
+    local info = get_station_worker_boost_info(zone)
     -- N = 0, E = 3.14*0.5, S = 3.14, W = 3.14*1.5
     local theta = midangle(info[1], info[2])
     io_chat.print("theta: "..theta.." select:"..info[3])
-    M.turnToDirection(mob, theta)
+    M.turn_to_direction(mob, theta)
     -- 応援方法を選択する
-    pushKeys({"enter"})
+    push_keys({"enter"})
     coroutine.sleep(2.5)
     if info[3] > 0 then
         for i = 1, info[3] do
 	    -- print("select down: "..i.."/"..info[3])
-            pushKeys({"down"})
+            push_keys({"down"})
             coroutine.sleep(0.2)
         end
     end
-    pushKeys({"enter"})
+    push_keys({"enter"})
     M.auto = false
 end
 
-M.stationWorkerFunction = stationWorkerFunction
+M.station_worker_function = station_worker_function
 
 return M

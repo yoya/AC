@@ -69,7 +69,7 @@ function M.contains(arr, val)
     return false
 end
 
-function M.containsSubstr(arr, text)
+function M.contains_substr(arr, text)
     for i=1,#arr do
 	if string.find(arr[i], text) ~= nil then
 	    return true
@@ -78,7 +78,7 @@ function M.containsSubstr(arr, text)
     return false
 end
 
-function M.isNumericalIndexedTable(table)
+function M.is_numerical_indexed_table(table)
     for k, v in pairs(table) do
         if type(k) ~= "number" then
             return false
@@ -88,8 +88,8 @@ function M.isNumericalIndexedTable(table)
 end
 
 -- キー指定なしのテーブル
-function M.isNaturalArray(table)
-    if M.isNumericalIndexedTable(table) == false then
+function M.is_natural_array(table)
+    if M.is_numerical_indexed_table(table) == false then
 	return false -- 必要ないかも？
     end
     local i = 1
@@ -103,7 +103,7 @@ function M.isNaturalArray(table)
 end
 
 -- 末端のテーブルなら true
-function M.isTableLeaf(table)
+function M.is_table_leaf(table)
     for k, v in pairs(table) do
         if type(v) == "table" then
             return false
@@ -112,7 +112,7 @@ function M.isTableLeaf(table)
     return true
 end
 
-function M.valueToString(data, depth)
+function M.value_to_string(data, depth)
     if data == nil then
 	return "(nil)"
     elseif type(data) == "string" then
@@ -125,19 +125,19 @@ function M.valueToString(data, depth)
 	local b = data and "true" or "false"
 	return b
     end
-    print("valueToString: unknown type: ".. type(data))
+    print("value_to_string: unknown type: ".. type(data))
     return nil
 end
 
-function _tableToString(data, depth)
+function _table_to_string(data, depth)
     local indent = string.rep('-', depth) .. " "
     if type(data) ~= "table" then
-	return M.valueToString(data)
+	return M.value_to_string(data)
     else
 	local text = ""
-	if M.isTableLeaf(data) == true then
+	if M.is_table_leaf(data) == true then
 	    text = text .. indent .. "{ "
-	    local natural = M.isNaturalArray(data)
+	    local natural = M.is_natural_array(data)
 	    for k,v in pairs(data) do
 		if natural == false then
 		    if type(k) == "number" then
@@ -147,20 +147,20 @@ function _tableToString(data, depth)
 		    end
 		    text = text .. k .. "="
 		end
-		text = text .. M.valueToString(v) .. ", "
+		text = text .. M.value_to_string(v) .. ", "
 	    end
 	    text = text .. "},\n"
 	else
-	    local natural = M.isNaturalArray(data)
+	    local natural = M.is_natural_array(data)
 	    for k,v in pairs(data) do
 		if type(k) == "number" then
 		    k = "["..k.."]"
 		end
 		if type(v) == "table" then
 		    text = text .. indent .. '"' .. k .. "\"=\n"
-		    text = text .. _tableToString(v, depth+1) 
+		    text = text .. _table_to_string(v, depth+1) 
 		else
-		    text = text .. indent .. k .. "=" .. _tableToString(v, depth+1) .. ",\n"
+		    text = text .. indent .. k .. "=" .. _table_to_string(v, depth+1) .. ",\n"
 		end
 	    end
 	end
@@ -168,12 +168,12 @@ function _tableToString(data, depth)
     end
 end
 
-function M.tableToString(data)
-    local str = _tableToString(data, 1)
+function M.table_to_string(data)
+    local str = _table_to_string(data, 1)
     return (string.gsub(str, "^%s*(.-)%s*$", "%1"))  -- trim
 end
 
-function M.convertArrayToSet(arr)
+function M.convert_array_to_set(arr)
     local t = {}
     for i, v in ipairs(arr) do
 	t[v] = true
@@ -181,14 +181,14 @@ function M.convertArrayToSet(arr)
     return t
 end
 
-function M.assignValues(to, from)
+function M.assign_values(to, from)
     assert(type(to) == 'table')
     assert(type(from) == 'table')
     for k, v in pairs(from) do
 	if type(v) ~= 'table' then
 	    to[k] = v
 	else
-	    M.assignValues(to[k], v)
+	    M.assign_values(to[k], v)
 	end
 
     end

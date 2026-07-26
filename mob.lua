@@ -33,7 +33,7 @@ M.domain_enemy_list = { "Azi Dahaka","Azi Dahaka's Dragon",
 			"Mireu" }
 
 -- 敵のヘイトが自分のパーティ/アライアンスに向いてるか
-function isMobLinked(mob)
+function is_mob_linked(mob)
     local party = windower.ffxi.get_party()
     for _, x in pairs({"p", "a1", "a2"}) do -- アライアンス全員
         for i = 0, 5 do -- 自分含めて全員
@@ -60,33 +60,33 @@ local nonAttackableMobs = {
     "Mnejing", -- 憂鬱なるガッサド
 }
 
-function isMobTouchable(mob)  -- 宝箱とか
+function is_mob_touchable(mob)  -- 宝箱とか
     if mob.valid_target and mob.is_npc and
 	(mob.status == 0 or mob.status == 1) and
 	not utils.table.contains(nonAttackableMobs, mob.name) then
 	-- 敵が平常、または味方にヘイトを向けている
 	if mob.status == 0 or mob.claim_id == 0 or
-	    isMobLinked(mob) or
+	    is_mob_linked(mob) or
 	    utils.table.contains(alwaysAttackableMobs, mob.name) then
 	    return true
 	end
     end
 end
 --- 多分、戦える敵 (レイド戦は上記の敵のみ対応)
-function isMobAttackable(mob)
+function is_mob_attackable(mob)
     if mob.valid_target and mob.is_npc and mob.spawn_type == 16 and
 	(mob.status == 0 or mob.status == 1) and
 	not utils.table.contains(nonAttackableMobs, mob.name) then
 	-- 敵が平常、または味方にヘイトを向けている
 	if mob.status == 0 or mob.claim_id == 0 or
-	    isMobLinked(mob) or
+	    is_mob_linked(mob) or
 	    utils.table.contains(alwaysAttackableMobs, mob.name) then
 	    return true
 	end
     end
 end
 
-M.isMobAttackable = isMobAttackable
+M.is_mob_attackable = is_mob_attackable
 
 local ignoreMobs = {
     "fep2",
@@ -108,7 +108,7 @@ end
 -- { fightable: bool, range: number,
 --   nameMatch:string, preferMobs: string[],
 --  linkedOnly: boolean }
-function M.conditionMatch(pos, condition, mob)
+function M.condition_match(pos, condition, mob)
     local d = M.distance(mob, pos)
     if condition.range ~= nil and condition.range <= d then
 	return false
@@ -119,7 +119,7 @@ function M.conditionMatch(pos, condition, mob)
 	end
     end
     if condition.fightable == true and
-	not isMobAttackable(mob) then
+	not is_mob_attackable(mob) then
 	return false
     end
     if condition.nameMatch ~= nil then
@@ -139,35 +139,35 @@ function M.conditionMatch(pos, condition, mob)
 	    return  false
 	end
     end
-    if condition.linkedOnly and not isMobLinked(mob) then
+    if condition.linkedOnly and not is_mob_linked(mob) then
 	return false
     end
     return true
 end
 
-function M.searchMobs(pos, condition)
+function M.search_mobs(pos, condition)
     local mobArr = windower.ffxi.get_mob_array()
     local mobs = {}
     for i, m in pairs(mobArr) do
-	if M.conditionMatch(pos, condition, m) and isMobAttackable(m) then
+	if M.condition_match(pos, condition, m) and is_mob_attackable(m) then
 	    table.insert(mobs, m)
 	end
     end
     return mobs
 end
 
-function M.searchNearestMob(pos, condition)
+function M.search_nearest_mob(pos, condition)
     local mobArr = windower.ffxi.get_mob_array()
     local mob = nil
     local dist = 99999    
     local linked = false
     if pos == nil then
 	pos = {x=0,y=0,z=0}
-	M.getMobPosition(pos, "me")
+	M.get_mob_position(pos, "me")
 	-- print(pos.x ,pos.y, pos.z)
     end
     for i, m in pairs(mobArr) do
-	if M.conditionMatch(pos, condition, m) and isMobAttackable(m) then
+	if M.condition_match(pos, condition, m) and is_mob_attackable(m) then
 	    local d = M.distance(m, pos)
 	    -- ヘイトが自分らに向いてる敵がいる場合、そっちを優先
 	    if d < dist or (linked == false and m.claim_id > 0) and
@@ -193,7 +193,7 @@ M.PartyTargetMob = function()
             local index = member.mob.target_index
             if index > 0 then
                 local mob = windower.ffxi.get_mob_by_index(index)
-                if isMobAttackable(mob) then
+                if is_mob_attackable(mob) then
                     return mob
                 end
             end
@@ -202,7 +202,7 @@ M.PartyTargetMob = function()
     return nil
 end
 
-function M.getMobPosition(pos, target)
+function M.get_mob_position(pos, target)
     if pos == nil then
 	print(debug.traceback())
 	return false

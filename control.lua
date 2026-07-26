@@ -22,7 +22,7 @@ M.INIT_VALUES = {
 }
 
 function M.init()
-    utils.table.assignValues(M, M.INIT_VALUES)
+    utils.table.assign_values(M, M.INIT_VALUES)
 end
 
 M.init()
@@ -49,7 +49,7 @@ M.finish_blow = M.FINISH_BLOW_ANY
 -- 全共通のグローバルな制御フラグ/データ
 -- config/settings とは分けたい
 
-function M.setWSTP(wstp)
+function M.set_wstp(wstp)
     if type(wstp) == 'string' then
 	wstp = tonumber(wstp)
     end

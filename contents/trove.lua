@@ -5,7 +5,7 @@ local M = {}
 local control =  require 'control'
 local acitem =  require 'item'
 local keyboard = require 'keyboard'
-local pushKeys = keyboard.pushKeys
+local push_keys = keyboard.push_keys
 
 M.item_list = {
     9275, -- マーズオーブ
@@ -49,18 +49,18 @@ function BurningCircleFunction(zone, mob)
     if not control.auto or mob == nil then
 	return
     end
-    if not acitem.inventoryHasItem(M.item_list[1]) and
-	not acitem.inventoryHasItem(M.item_list[2]) then
+    if not acitem.inventory_has_item(M.item_list[1]) and
+	not acitem.inventory_has_item(M.item_list[2]) then
 	return
     end
     print("BurningCircleFunction")
-    if acitem.inventoryHasItem(M.item_list[1]) and
-	acitem.inventoryHasItem(M.item_list[2]) then
-	acitem.tradeByItemTable(mob, M.item_table)
+    if acitem.inventory_has_item(M.item_list[1]) and
+	acitem.inventory_has_item(M.item_list[2]) then
+	acitem.trade_by_item_table(mob, M.item_table)
     else
 	for _, item_id in ipairs(M.item_list) do
-	    if acitem.inventoryHasItem(item_id) then
-		acitem.tradeByItemId(mob, item_id)
+	    if acitem.inventory_has_item(item_id) then
+		acitem.trade_by_item_id(mob, item_id)
 	    end
 	end
     end
@@ -68,16 +68,16 @@ function BurningCircleFunction(zone, mob)
     -- coroutine.sleep(8)  -- あとで試す
     -- coroutine.sleep(5)  -- 動かない
     print("----------")
-    pushKeys({"down"}) -- ひとつ下を選択。
+    push_keys({"down"}) -- ひとつ下を選択。
     coroutine.sleep(1)
-    pushKeys({"enter"}) -- BCに入る
+    push_keys({"enter"}) -- BCに入る
 end
 
 function GreysonFunction(zone, mob)
     -- print("contents/grove.GreysonFunction(", zone, mob, ")")
     for _, item_id in ipairs(M.item_list) do
-	if acitem.inventoryHasItem(item_id) then
-	    acitem.tradeByItemId(mob, item_id)
+	if acitem.inventory_has_item(item_id) then
+	    acitem.trade_by_item_id(mob, item_id)
 	    -- 「これは使用済みっと」
 	    coroutine.sleep(5)
 	end

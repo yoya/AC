@@ -84,7 +84,7 @@ M.soulStoneSacks = {
     6488,  -- 古い袋【黒魂石】
 } -- 石の袋
 
-M.soulStoneSackSet = utils.table.convertArrayToSet(M.soulStoneSacks)
+M.soulStoneSackSet = utils.table.convert_array_to_set(M.soulStoneSacks)
 
 -- EVWS 取得の試練
 M.trialWeapon = {
@@ -104,7 +104,7 @@ M.trialWeapon = {
     21066, -- トライアルワンド
 }
 
-M.trialWeaponSet = utils.table.convertArrayToSet(M.trialWeapon)
+M.trialWeaponSet = utils.table.convert_array_to_set(M.trialWeapon)
 
 -- 【包】アシェラ等。(Deed交換品)
 M.decItems = {}

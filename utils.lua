@@ -44,8 +44,8 @@ M.distance = function(target)
     return mob.distance;
 end
 
-M.rankInJob = function()
-    print("rankInJob")
+M.rank_in_job = function()
+    print("rank_in_job")
     local party = windower.ffxi.get_party()
     for i = 0, 5 do
         local member = party["p"..i]

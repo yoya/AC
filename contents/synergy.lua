@@ -9,8 +9,8 @@ local io_chat = require 'io/chat'
 local io_net = require 'io/net'
 
 local keyboard = require 'keyboard'
-local pushKeys = keyboard.pushKeys
-local longpushKey = keyboard.longpushKey
+local push_keys = keyboard.push_keys
+local longpush_key = keyboard.longpush_key
 
 local last_time = nil
 
@@ -39,15 +39,15 @@ end
 -- コマンド実行：無し。を前提にする。
 
 function target_and_lockon(mob)
-    io_net.targetByMobEx(mob)
+    io_net.target_by_mob_ex(mob)
     coroutine.sleep(1)
     utils.target_lockon(true)
     coroutine.sleep(1)
 end
 
 function forward()
-    longpushKey("w", 1)  -- 前に詰める
-    longpushKey("s", 0.2)  -- 後に下がる
+    longpush_key("w", 1)  -- 前に詰める
+    longpush_key("s", 0.2)  -- 後に下がる
 end
 
 local Furnace_setup = {
@@ -106,14 +106,14 @@ function M.incoming_text_handler(text)
     if not control.auto then return end -- auto 時だけ処理
     if string.contains(text, "素材を投入して錬成窯を稼働してください。") then
 	io_chat.info("錬成トレード")
-	acitem.tradeByItemTable(M.mob_Furnace, M.item_table)
+	acitem.trade_by_item_table(M.mob_Furnace, M.item_table)
 	io_chat.info("トレード終わり。3秒待つ")
 	coroutine.sleep(2)  --  2でもフライングする事がある？
 	io_chat.info("完成品を提示")
-	pushKeys({"enter"})  -- 完成品を提示。改行キー
+	push_keys({"enter"})  -- 完成品を提示。改行キー
 	io_chat.info("enter 押した。3秒待つ")
 	coroutine.sleep(2)
-	pushKeys({"enter"})  -- はい
+	push_keys({"enter"})  -- はい
 	io_chat.info("enter 押した。終わり")
     elseif string.contains(text, "属性力が爆発") then
 	M.FurnaceExplosion = true
@@ -121,7 +121,7 @@ function M.incoming_text_handler(text)
 	if M.mob_Furnace ~= nil then
 	    target_and_lockon(M.mob_Furnace)
 	end
-	pushKeys({"enter"})  -- アイテムを取り出す
+	push_keys({"enter"})  -- アイテムを取り出す
 	M.FurnaceDone = true
     end
 end
@@ -133,22 +133,22 @@ function M.action(mob, a)
     end
     -- 移動
     if a.forward ~= nil then
-	longpushKey("w", tonumber(a.forward))
+	longpush_key("w", tonumber(a.forward))
     end
     if a.backward ~= nil then
-	longpushKey("s", tonumber(a.backward))
+	longpush_key("s", tonumber(a.backward))
     end
     if a.trade ~= nil then
-	acitem.tradeByItemTable(mob, a.trade)
+	acitem.trade_by_item_table(mob, a.trade)
 	coroutine.sleep(1)
     end
     -- キーボード
     if a.keys ~= nil then
-	pushKeys(a.keys)
+	push_keys(a.keys)
     end
     if a.keylong ~= nil then
 	-- print(a.keylong[1],a.keylong[2])
-	longpushKey(a.keylong[1],a.keylong[2])
+	longpush_key(a.keylong[1],a.keylong[2])
     end
     -- その他
     if a.target_and_lockon then
@@ -173,8 +173,8 @@ function SynergyFurnaceFunction(zone, mob)
     M.FurnaceExplosion = false
     M.FurnaceDone = false
     -- メリックトルク(26012)を持っていない場合は、窯に置きっぱなしのはず
-    if not acitem.inventoryHasItem(26012) then
-	pushKeys({"enter"})  -- アイテムを窯から取り出す
+    if not acitem.inventory_has_item(26012) then
+	push_keys({"enter"})  -- アイテムを窯から取り出す
 	coroutine.sleep(1)
     end
     for _, actions in ipairs(Furnace_sequence) do
@@ -271,11 +271,11 @@ function setup(mob)
     target_and_lockon(mob)
     forward()
     -- メリックトルク(26012)
-    if not acitem.inventoryHasItem(26012) then
-	pushKeys({"enter"})  -- アイテムを取り出す
+    if not acitem.inventory_has_item(26012) then
+	push_keys({"enter"})  -- アイテムを取り出す
 	coroutine.sleep(1)
     end
-    pushKeys({"enter"})  -- 改行で開始
+    push_keys({"enter"})  -- 改行で開始
     coroutine.sleep(1)
     --[[
     item_table = {  -- インカンタートルク
@@ -283,14 +283,14 @@ function setup(mob)
 	[26013] = 1, -- "ヘニックトルク
 	[26014] = 1, -- デシーバートルク
     }
-    acitem.tradeByItemTable(mob, item_table)
+    acitem.trade_by_item_table(mob, item_table)
     coroutine.sleep(1)
     io_chat.info("完成品を提示")
-    pushKeys({"enter"})  -- 完成品を提示。改行キー
+    push_keys({"enter"})  -- 完成品を提示。改行キー
     ]]
     coroutine.sleep(2)  -- 1 だとたまにフライングする
     io_chat.info("錬成を開始する")
-    pushKeys({"enter"})  -- 錬成を開始する。改行キー
+    push_keys({"enter"})  -- 錬成を開始する。改行キー
     coroutine.sleep(4)
 end
 
@@ -310,66 +310,66 @@ local key_sequence = {
 function start(mob)
     target_and_lockon(mob)
     forward()
-    pushKeys({"enter"})  -- 前に詰めて改行
+    push_keys({"enter"})  -- 前に詰めて改行
     io_chat.info("錬成メニューを開く")
-    pushKeys({"enter"})  -- 錬成メニューを開く (時間かかる)
+    push_keys({"enter"})  -- 錬成メニューを開く (時間かかる)
     coroutine.sleep(4)
 end
 
 function add(mob, downCount)
     -- クリスタル燃料投入
-    pushKeys({"left"})  -- 初期位置
-    pushKeys({"enter"})  -- 燃料を投入する
+    push_keys({"left"})  -- 初期位置
+    push_keys({"enter"})  -- 燃料を投入する
     coroutine.sleep(1)
-    pushKeys({"left", "left", "left"}) -- 一番上に
+    push_keys({"left", "left", "left"}) -- 一番上に
     for i = 1, downCount do
-	pushKeys({"down"}) -- 属性を選択
+	push_keys({"down"}) -- 属性を選択
     end
-    pushKeys({"enter"})  -- 選択
+    push_keys({"enter"})  -- 選択
     coroutine.sleep(2)
 end
 
 function operate(mob) -- 操作する
     io_chat.info("操作する＞圧力ハンドル")
-    pushKeys({"left"})  -- 初期位置
-    pushKeys({"down", "enter"})  -- 操作する
+    push_keys({"left"})  -- 初期位置
+    push_keys({"down", "enter"})  -- 操作する
     coroutine.sleep(1)
-    pushKeys({"left", "left"}) -- 初期位置
-    pushKeys({"down", "enter"}) -- 圧力ハンドル調整
+    push_keys({"left", "left"}) -- 初期位置
+    push_keys({"down", "enter"}) -- 圧力ハンドル調整
     coroutine.sleep(3)
     if M.explosion == true then	return end
     io_chat.info("操作する＞安全レバー")
-    pushKeys({"enter"})  -- 操作する
+    push_keys({"enter"})  -- 操作する
     coroutine.sleep(1)
     io_chat.info("安全レバー")
-    pushKeys({"down", "enter"}) -- 安全レバー
+    push_keys({"down", "enter"}) -- 安全レバー
     coroutine.sleep(3)
     if M.explosion == true then	return end
     io_chat.info("操作する＞結界メンテナンス")
-    pushKeys({"enter"})  -- 操作する
+    push_keys({"enter"})  -- 操作する
     coroutine.sleep(1)
-    pushKeys({"down", "enter"}) -- 結界メンテナンス
+    push_keys({"down", "enter"}) -- 結界メンテナンス
     coroutine.sleep(2)
     if M.explosion == true then	return end
-    pushKeys({"enter"})  -- 操作する
+    push_keys({"enter"})  -- 操作する
     coroutine.sleep(1)
-    pushKeys({"enter"}) -- もう一度、結界メンテナンス
+    push_keys({"enter"}) -- もう一度、結界メンテナンス
     coroutine.sleep(2)
 end
 
 function finish(mob)
     io_chat.info("終了")
-    pushKeys({"left", "left"}) -- 初期位置
-    pushKeys({"down", "down", "down", "enter"})  --  錬成を終了(完成)
+    push_keys({"left", "left"}) -- 初期位置
+    push_keys({"down", "down", "down", "enter"})  --  錬成を終了(完成)
     coroutine.sleep(5)
-    io_net.targetByMob(mob)
+    io_net.target_by_mob(mob)
     coroutine.sleep(1)
     utils.target_lockon(true)
     coroutine.sleep(1)
-    -- pushKeys({"w", "w", "w", "enter"})  -- 前に詰めて改行
+    -- push_keys({"w", "w", "w", "enter"})  -- 前に詰めて改行
     coroutine.sleep(2)
     io_chat.info("取り出す")
-    pushKeys({"enter"})  -- 取り出す
+    push_keys({"enter"})  -- 取り出す
     coroutine.sleep(2)
 end
 
@@ -432,8 +432,8 @@ function SynergyFurnaceFunction_old(zone, mob)
     utils.target_lockon(false)
     coroutine.sleep(1)
     if M.mob_Engineer ~= nil then
-	pushKeys({"s", "s", "s"})  -- 後ろに下がる
-	pushKeys({"tab"})
+	push_keys({"s", "s", "s"})  -- 後ろに下がる
+	push_keys({"tab"})
 	target_and_lockon(M.mob_Engineer)
 	coroutine.sleep(1)
     else
@@ -455,22 +455,22 @@ function SynergyEngineerFunction_old(zone, mob)
     M.mob_Engineer = mob
     utils.target_lockon(true)
     forward()
-    pushKeys({"enter"})  -- 前に詰めて改行
+    push_keys({"enter"})  -- 前に詰めて改行
     coroutine.sleep(2)
-    pushKeys({"right"}) -- 右を押して燃料満タンに合わせる
+    push_keys({"right"}) -- 右を押して燃料満タンに合わせる
     coroutine.sleep(0.5)
-    pushKeys({"enter"}) -- 燃料満タンを選択
+    push_keys({"enter"}) -- 燃料満タンを選択
     coroutine.sleep(2)
-    pushKeys({"up"})  -- 上の「はい」を選択
+    push_keys({"up"})  -- 上の「はい」を選択
     coroutine.sleep(1)
-    pushKeys({"enter"})  -- 上の「はい」を実行
+    push_keys({"enter"})  -- 上の「はい」を実行
     coroutine.sleep(3)
     utils.target_lockon(false)
     coroutine.sleep(1)
     if M.engineer_retry then return end
     if M.mob_Furnace ~= nil then
-	pushKeys({"s", "s", "s"})  -- 後ろに下がる
---	pushKeys({"tab"})
+	push_keys({"s", "s", "s"})  -- 後ろに下がる
+--	push_keys({"tab"})
 	target_and_lockon(M.mob_Furnace)
 	coroutine.sleep(1)
     else

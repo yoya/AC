@@ -31,10 +31,10 @@ M.automatic_routes = {
 function M.tick(player)
     local mobArr = windower.ffxi.get_mob_array()
     -- ウォンテッド???の近くにいる時、??? が現れたらターゲットする
-    if M.parent.isNear(127, "wanted", 20) then
+    if M.parent.is_near(127, "wanted", 20) then
 	for i, m in pairs(mobArr) do
 	    if m.name == "???" and m.status == 0 then
-		io_net.targetByMobId(m.id)
+		io_net.target_by_mob_id(m.id)
 	    end
 	end
     end

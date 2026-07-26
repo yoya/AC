@@ -6,13 +6,13 @@ M.origContents = nil
 function M.zone_in()
     local contents = require 'contents'
     M.origContents = contents.type
-    contents.setType(contents.Garden)  -- モグガーデン
+    contents.set_type(contents.Garden)  -- モグガーデン
 end
 
 function M.zone_out()
     local contents = require 'contents'
     if M.origContents ~= nil then
-	contents.setType(M.origContents)
+	contents.set_type(M.origContents)
     end
 end
 

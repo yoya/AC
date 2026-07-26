@@ -82,7 +82,7 @@ M.nameTable = {
 
 M.incoming_text_listener_id = nil
 
-function M.setType(c)
+function M.set_type(c)
     local prevContents = M.type
     if prevContents ~= c then
 	local prevC = M.contentsTable[prevContents]
@@ -90,7 +90,7 @@ function M.setType(c)
 	    prevC.contents_out()
 	end
 	if M.incoming_text_listener_id ~= nil then
-	    incoming_text.removeListener(M.incoming_text_listener_id)
+	    incoming_text.remove_listener(M.incoming_text_listener_id)
 	    M.incoming_text_listener_id = nil
 	end
 	M.type = c
@@ -101,17 +101,17 @@ function M.setType(c)
 	    end
 	    local incoming_text_handler = nextC.incoming_text_handler
 	    if incoming_text_handler ~= nil then
-		M.incoming_text_listener_id = incoming_text.addListener("", incoming_text_handler)
+		M.incoming_text_listener_id = incoming_text.add_listener("", incoming_text_handler)
 	    end
 	end
     end
 end
 
-function M.setContents(name)
+function M.set_contents(name)
     for c, names in pairs(M.nameTable) do
 	for _, n in ipairs(names) do
 	    if name:lower() == n:lower() then
-		M.setType(c)
+		M.set_type(c)
 		return true
 	    end
 	end
@@ -132,7 +132,7 @@ function M.tick(player)
     end
 end
 
-function M.npcActionHandler(zone, mob)
+function M.npc_action_handler(zone, mob)
     for _, c in pairs(M.contentsTable) do
 	if c.npcActionHandlers ~= nil then
 	    for name, handler in pairs(c.npcActionHandlers) do
@@ -152,8 +152,8 @@ function M.zone_out()
     end
 end
 
-function M.getContentsByName(name)
-    -- print("contents.getContentsByName(name)", name)
+function M.get_contents_by_name(name)
+    -- print("contents.get_contents_by_name(name)", name)
     local names = M.nameTable[M.type]
     if names == nil then return false end
     for i, n in ipairs(names) do
@@ -164,16 +164,16 @@ function M.getContentsByName(name)
     return 0, nil
 end
 
-function M.matchContentsName(name)
-    -- print("contents.matchContentsName(name)", name)
-    local i, c = M.getContentsByName(name)
+function M.match_contents_name(name)
+    -- print("contents.match_contents_name(name)", name)
+    local i, c = M.get_contents_by_name(name)
     if i == M.type then
 	return true
     end
     return false
 end
 
-function M.showContents()
+function M.show_contents()
     local name = M.nameTable[M.type]
     if name == nil then
 	name = "<nil>"
@@ -183,12 +183,12 @@ function M.showContents()
     io_chat.infof("Contents: %s", name)
 end
 
-function M.listContents()
+function M.list_contents()
     local str = ''
     for c, names in pairs(M.nameTable) do
 	str = str .. names[1] .. " "
     end
-    io_chat.infof("listContents: %s", str)
+    io_chat.infof("list_contents: %s", str)
 end
 
 return M

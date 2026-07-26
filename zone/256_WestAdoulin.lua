@@ -13,8 +13,8 @@ M.orig_body_item_id = 0
 function M.zone_in()
     local contents = require 'contents'
     M.origContents = contents.type
-    contents.setType(contents.Idle)    -- contents_in を読ませる為
-    contents.setType(contents.Redeem)  -- エミネンス、ユニティポイント交換
+    contents.set_type(contents.Idle)    -- contents_in を読ませる為
+    contents.set_type(contents.Redeem)  -- エミネンス、ユニティポイント交換
     local orig_item_id = M.equip_item_by_slot_name("body")
     if orig_item_id ~= 27923 then
 	M.orig_body_item_id = orig_item_id
@@ -25,7 +25,7 @@ end
 function M.zone_out()
     local contents = require 'contents'
     if M.origContents ~= nil then
-	contents.setType(M.origContents)
+	contents.set_type(M.origContents)
 	M.origContents = nil
     end
     if  M.orig_body_item_id > 0 then
@@ -170,28 +170,28 @@ local sell_items = {
     17296, -- 石つぶて
 }
 
-local sell_item_set = utils.table.convertArrayToSet(sell_items)
+local sell_item_set = utils.table.convert_array_to_set(sell_items)
 
 local selljunk_running = false
 
 function M.tick(player)
     local ac_move = require 'ac/move'
-    if acitem.inventoryHasItemInSet(sell_item_set) then
+    if acitem.inventory_has_item_in_set(sell_item_set) then
 	local mob = windower.ffxi.get_mob_by_name("Defliaa")
 	local me = windower.ffxi.get_mob_by_target("me")
 	if mob ~= nil and me ~= nil and me.x > 25.5 then
 	    if mob.distance < 30 then
-		io_net.targetByMobId(mob.id)
+		io_net.target_by_mob_id(mob.id)
 		windower.ffxi.run(false)
 		if not selljunk_running then
 		    control.auto = true
-		    M.parent.AC.idleFunctionSellJunkItems(mob)
+		    M.parent.AC.idle_function_sell_junk_items(mob)
 		    selljunk_running = true
 		end
 	    else
 		selljunk_running = false
 		if mob.distance < 700 then
-		    ac_move.runToMob(mob)
+		    ac_move.run_to_mob(mob)
 		end
 	    end
 	end

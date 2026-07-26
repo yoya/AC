@@ -16,8 +16,8 @@ M.mainJobProbTable = {
     { 10,5*60/2, 'input /ja コリメイトファーバー <me>', 6 },
 }
 
-local function isDefensive()
-    return M.parent.needSafety()
+local function is_defensive()
+    return M.parent.need_safety()
 end
 
 function inde_setup(jobRank)
@@ -27,7 +27,7 @@ function inde_setup(jobRank)
 	local GEO_inde = "インデフューリー"
 	local GEO_entrust = "インデスト"
     end
-    if isDefensive() then
+    if is_defensive() then
 	GEO_inde = "インデバリア"  -- 防御up
 	if jobRank == 2 then
 	    GEO_inde = "インデアトゥーン"  -- 魔回避up
@@ -41,20 +41,20 @@ function inde_setup(jobRank)
     local level = task.PRIORITY_LOW
     local c = 'input /ma '..GEO_inde..' <me>'
     -- command, delay, duration, period, eachfight
-    local t = task.newTask(c, 2, 7, 180/2, false)
+    local t = task.new_task(c, 2, 7, 180/2, false)
     -- 戦闘開始で硬直してる可能性があるので、3秒待つ
-    local done = task.setTask(level, t)
+    local done = task.set_task(level, t)
     if done then
-	-- io_chat.setNextColor(6)
+	-- io_chat.set_next_color(6)
 	-- io_chat.print("インデ展開")
     end
     -- エントラスト TODO:実行可能な時に狙って処理する
     c = 'input /ja エントラスト <me>; wait 2; input /ma '..GEO_entrust..' <p2>'
     -- command, delay, duration, period, eachfight
-    t = task.newTask(c, 2, 7, 600, false)
-    local done = task.setTask(level, t)
+    t = task.new_task(c, 2, 7, 600, false)
+    local done = task.set_task(level, t)
     if done then
-	-- io_chat.setNextColor(6)
+	-- io_chat.set_next_color(6)
 	-- io_chat.print("エントラストインデ展開")
     end
 end
@@ -65,7 +65,7 @@ function geo_setup(jobRank)
     if jobRank == 2 then
 	GEO_geo = "ジオトーパー" -- 敵の回避率down
     end
-    if isDefensive() then
+    if is_defensive() then
 	GEO_geo = "ジオウィルト"  -- 敵の攻撃力down
 	if jobRank == 2 then
 	    GEO_geo = "ジオフェイド" -- 敵の魔法攻撃力down
@@ -79,11 +79,11 @@ function geo_setup(jobRank)
     local level = task.PRIORITY_MIDDLE
     local c = 'input /ja グローリーブレイズ <me>; wait 2; input /ma '..GEO_geo..' <t>; wait 2; input /ja サークルエンリッチ <me>'
     -- command, delay, duration, period, eachfight
-    local t = task.newTask(c, 2, 10, 5, false)
+    local t = task.new_task(c, 2, 10, 5, false)
     -- 戦闘開始で硬直してる可能性があるので、3秒待つ
-    local done = task.setTask(level, t)
+    local done = task.set_task(level, t)
     if done then
-	-- io_chat.setNextColor(6)
+	-- io_chat.set_next_color(6)
 	-- io_chat.print("ラバン設置します")
     end
 end
@@ -92,10 +92,10 @@ function geo_release(name)
     local level = task.PRIORITY_MIDDLE
     local c = 'input /ja '..name..' <me>'
     -- command, delay, duration, period, eachfight
-    local t = task.newTask(c, 1, 2, 0, false)
-    local done = task.setTask(level, t)
+    local t = task.new_task(c, 1, 2, 0, false)
+    local done = task.set_task(level, t)
     if done then
-	-- io_chat.setNextColor(4) -- ピンク
+	-- io_chat.set_next_color(4) -- ピンク
 	-- io_chat.print("ラバン消去します")
     end
 end
@@ -105,7 +105,7 @@ function geo_release_with_contexte(player, pet, mob)
     local mobpetdist = ac_pos.distance(pet, mob)
     if mobpetdist >= 6 then
 	-- 羅盤が戦闘場所から離れてたら消す
-	-- io_chat.setNextColor(4) -- ピンク
+	-- io_chat.set_next_color(4) -- ピンク
 	-- local pd = math.floor(mobpetdist * 100 + 0.5) / 100;
 	-- io_chat.print("羅盤と敵の距離="..pd)
 	geo_release("フルサークル")
@@ -153,8 +153,8 @@ function M.dothebest_main(player)
     for i, ja_name in ipairs(jaList) do
 	local c = "input /ja "..ja_name.." <me>"
 	-- command, delay, duration, period, eachfight
-	local ta = task.newTask(c, ti, 2, 10, false)
-	task.setTask(level, ta)
+	local ta = task.new_task(c, ti, 2, 10, false)
+	task.set_task(level, ta)
 	ti = ti + 2
     end
     windower.ffxi.run(false)

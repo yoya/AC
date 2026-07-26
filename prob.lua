@@ -38,7 +38,7 @@ for k,v in pairs(acjob.jobTable) do
     end
 end
 
-local isBacklineJob = function(job)
+local is_backline_job = function(job)
     if job == 'WHM' or job == 'RDM' or
     job == 'BLM' or job == 'SCH' or job == 'SMN' then
         return true
@@ -46,16 +46,16 @@ local isBacklineJob = function(job)
     return false
 end
 
-M.getSendCommandProbTable = function(mainJob, subJob, rankInJob)
+M.get_send_command_prob_table = function(mainJob, subJob, rank_in_job)
     local merged = {}
-    -- print("rankInJob", rankInJob)
+    -- print("rank_in_job", rank_in_job)
     for job, commprob in pairs(sendCommandProbTable) do
-        if job == mainJob or job == mainJob..'_'..rankInJob or job == "ALL" then
+        if job == mainJob or job == mainJob..'_'..rank_in_job or job == "ALL" then
             merged = merge_lists(merged, commprob)
         end
     end
-    if isBacklineJob(mainJob) == false and
-       isBacklineJob(subJob) == true then
+    if is_backline_job(mainJob) == false and
+       is_backline_job(subJob) == true then
         subJob = nil
     end
     for job, commprob in pairs(sendCommandProbTableSub) do
@@ -66,8 +66,8 @@ M.getSendCommandProbTable = function(mainJob, subJob, rankInJob)
     return merged
 end 
 
-M.sendCommandProb = function(table, period)
-    -- print("sendCommandProb")
+M.send_command_prob = function(table, period)
+    -- print("send_command_prob")
     local rnd = math.random(1, 1000)
     local pp = 0
     local pn = 0
@@ -101,8 +101,8 @@ M.sendCommandProb = function(table, period)
 		    level = task.PRIORITY_LOW
 		end
 		-- command, delay, duration, period, eachfight
-		task.setTask(level,
-			     task.newTask(c, 0, t, r, f))
+		task.set_task(level,
+			     task.new_task(c, 0, t, r, f))
 		-- タイマーセット
                 M.probRecastTime[c] = { }
 		M.probRecastTime[c][1] = os.time() + r
@@ -122,7 +122,7 @@ M.sendCommandProb = function(table, period)
     return false
 end
 
-M.clearProbRecastTime = function()
+M.clear_prob_recast_time = function()
     for i, v in pairs(M.probRecastTime) do
 	local f = v[2]  -- 戦闘毎にリセットするかフラグ
 	if f == true then

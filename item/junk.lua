@@ -1003,9 +1003,9 @@ function M.char_update_handler(char)
 	    M.JunkItemSet[id] = true
 	end
     end
-    -- M.JunkItemSet = utils.table.convertArrayToSet(M.JunkItems)
+    -- M.JunkItemSet = utils.table.convert_array_to_set(M.JunkItems)
 end
-acevent.addListener("char update", M.char_update_handler)
+acevent.add_listener("char update", M.char_update_handler)
 
 -- 1314-1318, -- 神木の免罪符 -- 修羅装束 Lv73～ モ侍忍
 -- 1319-1323, -- 地霊の免罪符 -- アダマンチェーンメイル Lv73～ 戦暗獣
@@ -1036,6 +1036,6 @@ for i=-3559,-3583,-1 do table.insert(M.JunkItems, i) end
 -- 8787-8791, -- 深海の免罪符 -- アポジ装備 召(Ilv119)
 -- 9105-9129, -- *星の免罪符 -- (Ilv119)
 
-M.JunkItemSet = utils.table.convertArrayToSet(M.JunkItems)
+M.JunkItemSet = utils.table.convert_array_to_set(M.JunkItems)
 
 return M

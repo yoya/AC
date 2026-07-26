@@ -29,7 +29,7 @@ function usage()
     print("    ./show.lua d 8 # point(dp|mogseg|gallimau)")
 end
 
-function parseArgs()
+function parse_args()
     if #arg == 0 then
 	return nil
     end
@@ -38,7 +38,7 @@ function parseArgs()
     return a1, a2
 end
 
-local method, num = parseArgs()
+local method, num = parse_args()
 
 if method == nil then
     usage()
@@ -147,7 +147,7 @@ for i, file in ipairs(files) do
     charTable[i] = char
 end
 
-function compPoint(a, b)
+function comp_point(a, b)
     -- print(a.eminence_point.." < "..b.eminence_point)
     local a_point_min = math.min(a.eminence_point, a.unity_point)
     local b_point_min = math.min(b.eminence_point, b.unity_point)
@@ -158,7 +158,7 @@ function compPoint(a, b)
     end
 end
 
-function compAmbus(a, b)
+function comp_ambus(a, b)
     if (a.hallmark + a.gallantry) < (b.hallmark + b.gallantry) then
 	return true
     else
@@ -166,7 +166,7 @@ function compAmbus(a, b)
     end
 end
 
-function compDomain(a, b)
+function comp_domain(a, b)
     if (a.domain_point + a.mog_segments + a.gallimaufry) <  (b.domain_point + b.mog_segments + b.gallimaufry) then
 	return true
     else
@@ -179,11 +179,11 @@ if method == 'l' then
 elseif method == 'e' then
     table.sort(charTable, function(a,b) return a.name > b.name end)
 elseif method == 'p' then
-    table.sort(charTable, compPoint)
+    table.sort(charTable, comp_point)
 elseif method == 'a' then
-    table.sort(charTable, compAmbus)
+    table.sort(charTable, comp_ambus)
 elseif method == 'd' then
-    table.sort(charTable, compDomain)
+    table.sort(charTable, comp_domain)
 else
     print("Unknown method:"..method)
     os.exit(1)

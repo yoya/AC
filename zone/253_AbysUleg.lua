@@ -63,8 +63,8 @@ function M.statprint_handler()
     local key_items = {
 	1525, -- 破れたキマイラの翼
     }
-    acitem.showOwnItems(items)
-    acitem.showOwnKeyItems(key_items)
+    acitem.show_own_items(items)
+    acitem.show_own_key_items(key_items)
 end
 
 M.event_handlers = {

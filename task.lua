@@ -28,20 +28,20 @@ local taskTable = {
 local taskPeriodTable = {}
 -- ex) command => time
 
--- newTask
+-- new_task
 ---  command: コマンド。/input  挑発 <t> 等々
 ---  delay 開始するまでの遅延
 ---  duration: command にかかる時間
 ---  period: 同じ command を次に実行できるまでの時間
 ---  eachfight: 戦闘毎に period をリセットするか否か
-M.newTask = function(command, delay, duration, period, eachfight)
+M.new_task = function(command, delay, duration, period, eachfight)
     local t = {command=command, delay=delay, duration=duration, period=period,
 	       eachfight=eachfight}
-    assertTask(t)
+    assert_task(t)
     return t
 end
 
-function assertTask(task)
+function assert_task(task)
     assert(type(task.command) == "string", "command need to be a string: "..task.command)
     assert(type(task.delay) == "number", "delay need to be a number: "..task.command)
     assert(type(task.duration) == "number", "duration need to be a number: "..task.command)
@@ -49,21 +49,21 @@ function assertTask(task)
     assert(type(task.eachfight) == "boolean", "eachfight need to be a boolean: "..task.command)
 end
 
-function assertLevel(level)
+function assert_level(level)
     assert(PRIORITY_FIRST <= level and level <= PRIORITY_LAST, "unknown level: "..level)
 end
 
-M.allClear = function()
+M.all_clear = function()
     for level = PRIORITY_FIRST, PRIORITY_LAST do
 	taskTable[level] = {}
     end
 end
 
-M.allReset = function()  -- 再使用タイマーのリセット
+M.all_reset = function()  -- 再使用タイマーのリセット
     taskPeriodTable = {}
 end
 
-M.resetByFight = function()
+M.reset_by_fight = function()
     -- eachfight が true のタスクをキューから外し、再使用タイマーをリセットする
     -- (prob.lua が新しい戦闘用に積み直す)
     for level = PRIORITY_FIRST, PRIORITY_LAST do
@@ -79,31 +79,31 @@ M.resetByFight = function()
     end
 end
 
-function taskEqual(task1, task2)
+function task_equal(task1, task2)
     return task1.command == task2.command
 end
 
-function taskIndex(level, task)
+function task_index(level, task)
     for i, t in ipairs(taskTable[level]) do
-	if taskEqual(t, task) then
+	if task_equal(t, task) then
 	    return i
 	end
     end
     return 0  -- 1 origin なので 0 を非存在とする
 end
 
-function taskContain(level, task)
-    if taskIndex(level, task) > 0 then
+function task_contain(level, task)
+    if task_index(level, task) > 0 then
 	return true
     end
     return false
 end
 
 -- タスク追加
-function M.setTask(level, task)
-    assertLevel(level)
-    assertTask(task)
-    if taskContain(level, task) == true then  -- 重複避け
+function M.set_task(level, task)
+    assert_level(level)
+    assert_task(task)
+    if task_contain(level, task) == true then  -- 重複避け
 	return false
     end
     table.insert(taskTable[level], task)
@@ -117,18 +117,18 @@ function M.setTask(level, task)
 end
 
 -- タスク削除
-function M.removeTask(level, task)
-    assertLevel(level)
-    assertTask(task)
-    local i = taskIndex(level, task)
+function M.remove_task(level, task)
+    assert_level(level)
+    assert_task(task)
+    local i = task_index(level, task)
     if i > 0 then
 	table.remove(taskTable[level], i)
     end
     return i
 end
 
-function M.resetTask(level, task)
-    local i = taskIndex(level, task)
+function M.reset_task(level, task)
+    local i = task_index(level, task)
     if i > 0 then
 	table.remove(taskTable[level], i)
 	taskPeriodTable[task.command] = nil  -- 再使用タイマーをリセット
@@ -138,34 +138,34 @@ end
 
 local PRIORITY_SIMPLE = M.PRIORITY_MIDDLE
 -- ある程度決め打ちの設定でタスク生成
-function M.setTaskSimple(c, delay, duration)
+function M.set_task_simple(c, delay, duration)
     local level = PRIORITY_SIMPLE
     -- command, delay, duration, period, eachfight
-    local t = M.newTask(c, delay, duration, 10, false)
-    M.setTask(level, t)
+    local t = M.new_task(c, delay, duration, 10, false)
+    M.set_task(level, t)
 end
 
-function M.removeTaskSimple(c)
+function M.remove_task_simple(c)
     local level = PRIORITY_SIMPLE
     -- command, delay, duration, period, eachfight
-    local t = M.newTask(c, 0, 0, 0, false)
-    M.removeTask(level, t)
+    local t = M.new_task(c, 0, 0, 0, false)
+    M.remove_task(level, t)
 end
 
-function M.setTaskEx(c, params)
+function M.set_task_ex(c, params)
     local level = params.level or PRIORITY_SIMPLE
     local delay = params.delay or 0
     local duration = params.duration or 2
     local period = params.period or 10
     local eachfight = params.eachfight  or false
-    local t = M.newTask(c, delay, duration, period, eachfight)
-    M.setTask(level, t)
+    local t = M.new_task(c, delay, duration, period, eachfight)
+    M.set_task(level, t)
 end
 
-function M.removeTaskEx(c)
+function M.remove_task_ex(c)
     for level = PRIORITY_FIRST, PRIORITY_LAST do
-	local t = M.newTask(c, 0, 0, 0, false)
-	M.removeTask(level, t)
+	local t = M.new_task(c, 0, 0, 0, false)
+	M.remove_task(level, t)
     end
 end
 
@@ -179,7 +179,7 @@ M.init = function()
 end
 
 -- 優先順の高い方から、1つだけタスクを取得
-function M.getTask()
+function M.get_task()
     local now = os.time()
     for level = PRIORITY_FIRST, PRIORITY_LAST do
 	for i, task in ipairs(taskTable[level]) do
@@ -201,12 +201,12 @@ M.tick = function()
     if now < tickNextTime then
 	return
     end
-    local level, task = M.getTask()
+    local level, task = M.get_task()
     if task == nil then
 	return
     end
     local c = task.command
-    -- auto run の時。/ma の command は実行せず setTask し直す
+    -- auto run の時。/ma の command は実行せず set_task し直す
     -- windower.ffxi.run(false)
     -- coroutine.sleep(0.25)
     -- io_chat.print("TASK command:"..task.command, task.duration)
@@ -221,7 +221,7 @@ M.tick = function()
     else
 	if string.find(c, '//echo ') == 1 then
 	    local io_chat = require('io/chat')
-	    io_chat.setNextColor(5)
+	    io_chat.set_next_color(5)
 	    io_chat.print(string.sub(c, 8))
 	elseif string.find(c, '//record char') == 1 then
 	    -- print("//record char")
@@ -236,10 +236,10 @@ end
 
 function M.print()
     local io_chat = require('io/chat')
-    io_chat.setNextColor(5)
+    io_chat.set_next_color(5)
     io_chat.print("=== task print")
     for l, taskArr in pairs(taskTable) do
-	io_chat.setNextColor(6)
+	io_chat.set_next_color(6)
 	io_chat.print("level:"..l)
 	for i, task in ipairs(taskArr) do
 	    local c = task.command
