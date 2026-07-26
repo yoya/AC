@@ -43,6 +43,18 @@ M.routes = {
 	{keys={"down", "down", "enter"}}, -- #2(M)
 	{keys={"up", "enter"}}, -- ワープする？＞はい
     },
+    ['mog2hp-abys'] = {
+	{x=-53.7,y=-128.5,z=-0.1,desc="HPからモグハウス>ジュノ港(E)"},
+	-- {x=-54,y=-100,z=0,d=2},
+	{x=-54,y=-99,d=1},
+	-- -- {x=-54,y=-91,d=1}, -- {x=-48,y=-90,d=1}, {x=-50,y=-92,d=1},
+	{a="f8"}, {target="Home Point #2"}, {a="touch"}, {wait=2},
+	{keys={"enter"}}, -- どのロージョンにする
+	{keys={"right", "right", "enter"}}, -- ジュノ
+	{keys={"right", "right", "enter"}}, -- ジュノ港
+	{keys={"down", "enter"}}, -- #1(E)
+	{keys={"up", "enter"}}, -- ワープする？＞はい
+    },
     mog2wp = {
 	{x=-53.7,y=-128.5,z=-0.1,desc="モグハウスすぐのWaypoint"},
 	{x=-62,y=-122,z=0}, {target="Waypoint"}, {a="touch"}, {wait=2},
@@ -181,6 +193,7 @@ M.automatic_routes = {
 	{ route="works", contents="works" },
 	{ route="mog2wp", contents="Sortie" },
 	{ route="mog2wp", contents="Leveling" },
+	{ route="mog2hp-abys", contents="Abyssea" },
     },
     homepoint_2_M = { route="moghouse" },
     yahse_dock = {
