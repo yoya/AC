@@ -267,13 +267,6 @@ end
 
 -- コマンド実行：無し。を前提にする。
 
-function target_and_lockon(mob)
-    io_net.targetByMobEx(mob)
-    coroutine.sleep(1)
-    utils.target_lockon(true)
-    coroutine.sleep(1)
-end
-
 function setup(mob)
     target_and_lockon(mob)
     forward()
@@ -484,42 +477,6 @@ function SynergyEngineerFunction_old(zone, mob)
 	control.auto = false
     end
     last_time = os.time()
-end
-
-function M.incoming_text_handler_old(text)
-    if string.contains(text, "ダメージ。") then
-	M.explosion = true
-    elseif string.contains(text, "錬成プロセスを完了！") then
-	M.synergy_finish = true
-    elseif string.contains(text, "錬成中のようですね！") then
-	M.engineer_retry = true
-    elseif string.contains(text, "燃料をマンタンにしました。") then
-	M.engineer_retry = false
-    elseif string.contains(text, "錬成窯を占有中です。") then
-	M.synergy_finish = true
-	coroutine.sleep(1)
-	pushKeys({"enter"})  --  占有解除。
-	coroutine.sleep(1)
-	pushKeys({"up", "enter"})  -- 上の「はい」を選択
-	coroutine.sleep(1)
-    elseif string.contains(text, "錬成窯の占有が解除されました") then
-	M.synergy_finish = false
-    elseif string.contains(text, "目的のアイテムはできなかった") then
-	if M.mob_Furnace ~= nil then
-	    coroutine.sleep(4)
-	    target_and_lockon(M.mob_Furnace)
-	    pushKeys({"enter"})  --  アイテム取り出し
-	end
-    elseif string.contains(text, "占有権が失われました") then
-	pushKeys({"enter"})  --  アイテム取り出し
-	coroutine.sleep(1)
-    elseif string.contains(text, "素材を投入して錬成窯を稼働してください。") then
-	io_chat.info("錬成トレード")
-	acitem.tradeByItemTable(M.mob_Furnace, M.item_table)
-	coroutine.sleep(3)  --  2でもフライングする事がある？
-	io_chat.info("完成品を提示")
-	pushKeys({"enter"})  -- 完成品を提示。改行キー
-    end
 end
 
 --- 切り替え
