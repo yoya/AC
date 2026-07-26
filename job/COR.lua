@@ -212,11 +212,25 @@ function M.incoming_text_handler(text)
 end
 
 M.battle_equip = {
+    main = {
+	21581, -- ロスタム
+	21565, -- トーレット
+    },
+    sub = {
+	21565, -- トーレット
+    },
+    head = {
+	26657, -- ＬＡトリコルヌ+1 ロール性能+50
+	24270, -- 無の面
+	23732, -- マリグナスシャポー
+	25614, -- アデマボンネット+1
+    },
+    body = {
+	23733, -- マリグナスタバード
+    },
     left_ring = {
 	26229,  -- レコリング
 	10772,  -- ペトロフリング
-	26190,  -- 月光の指輪
-	26189,  -- 月明の指輪
 	26182,  -- シーリチリング+1
 	26212,  -- ムンムリング
     },
@@ -230,6 +244,15 @@ M.battle_equip = {
     },
 }
 
-M.listener_id = incoming_text.add_listener("ロール", M.incoming_text_handler)
+M.roll_equip = {
+    main = {
+	21581, -- ロスタム
+    },
+    head = {
+	26657, -- ＬＡトリコルヌ+1 ロール性能+50
+    },
+}
+
+M.listener_id = incoming_text.addListener("ロール", M.incoming_text_handler)
 
 return M
