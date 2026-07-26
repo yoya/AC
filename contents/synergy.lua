@@ -481,7 +481,7 @@ end
 
 --- 切り替え
 
-M.npcActionHandlers = {
+M.npc_action_handlers = {
 --    ["Synergy Furnace"] = SynergyFurnaceFunction,
 --    ["Synergy Engineer"] = SynergyEngineerFunction,
     ["Synergy Furnace"] = SynergyFurnaceFunction_old,

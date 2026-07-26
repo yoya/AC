@@ -25,7 +25,7 @@ M.routes = {
     }
 }
 
-M.essentialPoints = {
+M.essential_points = {
     from_WoE = {x=-420,y=-32,z=13.5},
     ['conf11-in'] = {x=760,y=0,z=72},
 }

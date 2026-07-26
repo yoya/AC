@@ -43,7 +43,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     book_warp = {x=-658,y=341,z=-13},
     hp = {x=-450,y=-497,z=13.6},
     unity_warp = {x=660,y=239.5,z=-4},

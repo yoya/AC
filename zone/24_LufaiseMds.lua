@@ -41,7 +41,7 @@ M.routes = {
 	{a="dismount"}, {x=-40.6,y=-287.4,z=-8.4},
     },
 }
-M.essentialItems = {
+M.essential_items = {
     1843,  -- 赤霊布 (エンブリオ・ミッション)
 }
 

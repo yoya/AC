@@ -15,7 +15,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     hp2_M_logpo = {x=49,y=-106,z=-12},
     hp2_M = {x=49,y=-106,z=-12},
 }

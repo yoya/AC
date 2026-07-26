@@ -7,7 +7,7 @@ local task = require 'task'
 local role_Sorcerer = require 'role/Sorcerer'
 local ac_party = require 'ac/party'
 
-M.mainJobProbTable = {
+M.main_job_prob_table = {
     -- スキル上げ
     --- 精霊スキル
     -- { 500, 10, 'input /ma ストーン <t>', 3 },
@@ -28,7 +28,7 @@ M.mainJobProbTable = {
     -- { 100, 180, 'input /ma ショックスパイク <me>', 5 },
 }
 
-M.subJobProbTable = { }
+M.sub_job_prob_table = { }
 
 M.battle_equip = {
     body = {
@@ -80,14 +80,14 @@ end
 
 function M.sub_tick(player)
     local acjob = M.parent
-    if utils.table.contains(acjob.sorcererJobs, player.main_job) and
+    if utils.table.contains(acjob.sorcerer_jobs, player.main_job) and
 	player.vitals.mp >= 1000 then  -- MP に余裕があれば
 	if role_Sorcerer.sub_tick ~= nil then
 	    role_Sorcerer.sub_tick(player)
 	end
     end
-    if utils.table.contains(acjob.tankJobs, player.main_job) or
-	utils.table.contains(acjob.meleeJobs, player.main_job) then
+    if utils.table.contains(acjob.tank_jobs, player.main_job) or
+	utils.table.contains(acjob.melee_jobs, player.main_job) then
 	return  -- 前衛は精霊弱体しない。時間が勿体無い
     end
     if ac_party.count_member( { main_job="BLM" } ) >= 1 or

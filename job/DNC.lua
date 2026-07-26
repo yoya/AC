@@ -5,7 +5,7 @@ local M = {}
 local role_Melee = require 'role/Melee'
 local actask = require 'task'
 
-M.mainJobProbTable = {
+M.main_job_prob_table = {
     {50, 90, 'input /ja ヘイストサンバ <me>', 0 },
     {50, 90, 'input /ja ドレインサンバII <me>', 0 },
     {100, 60, 'input /ja B.フラリッシュ <me>', 0 },
@@ -17,7 +17,7 @@ M.mainJobProbTable = {
     {100, 5*3, 'input /ja フェザーステップ <t>', 0},
 }
 
-M.subJobProbTable = { }
+M.sub_job_prob_table = { }
 
 local function is_defensive()
     return M.parent.need_safety()

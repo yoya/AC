@@ -6,7 +6,7 @@ local io_chat = require('io/chat')
 local M = {}
 
 -- 他との戦闘を中断してでも先に倒すべき敵
-M.moreAttractiveEnemyList = {
+M.more_attractive_enemy_list = {
     -- カオス戦
     "Profane Circle",
     -- アンバス
@@ -48,11 +48,11 @@ function is_mob_linked(mob)
     return false
 end
 
-local alwaysAttackableMobs = {
+local always_attackable_mobs = {
     -- ドメインベーション
     "Azi Dahaka", "Naga Raja", "Quetzalcoatl", "Mireu",
 }
-local nonAttackableMobs = {
+local non_attackable_mobs = {
     "fep2",
     "Resolute Leafkin", -- ミッション「門」
     "Exenmille", -- 過去サンドクエスト「影」
@@ -63,11 +63,11 @@ local nonAttackableMobs = {
 function is_mob_touchable(mob)  -- 宝箱とか
     if mob.valid_target and mob.is_npc and
 	(mob.status == 0 or mob.status == 1) and
-	not utils.table.contains(nonAttackableMobs, mob.name) then
+	not utils.table.contains(non_attackable_mobs, mob.name) then
 	-- 敵が平常、または味方にヘイトを向けている
 	if mob.status == 0 or mob.claim_id == 0 or
 	    is_mob_linked(mob) or
-	    utils.table.contains(alwaysAttackableMobs, mob.name) then
+	    utils.table.contains(always_attackable_mobs, mob.name) then
 	    return true
 	end
     end
@@ -76,11 +76,11 @@ end
 function is_mob_attackable(mob)
     if mob.valid_target and mob.is_npc and mob.spawn_type == 16 and
 	(mob.status == 0 or mob.status == 1) and
-	not utils.table.contains(nonAttackableMobs, mob.name) then
+	not utils.table.contains(non_attackable_mobs, mob.name) then
 	-- 敵が平常、または味方にヘイトを向けている
 	if mob.status == 0 or mob.claim_id == 0 or
 	    is_mob_linked(mob) or
-	    utils.table.contains(alwaysAttackableMobs, mob.name) then
+	    utils.table.contains(always_attackable_mobs, mob.name) then
 	    return true
 	end
     end
@@ -88,7 +88,7 @@ end
 
 M.is_mob_attackable = is_mob_attackable
 
-local ignoreMobs = {
+local ignore_mobs = {
     "fep2",
     "Resolute Leafkin", -- ミッション「門」
 }
@@ -106,15 +106,15 @@ end
 
 -- condition
 -- { fightable: bool, range: number,
---   nameMatch:string, preferMobs: string[],
---  linkedOnly: boolean }
+--   name_match:string, prefer_mobs: string[],
+--  linked_only: boolean }
 function M.condition_match(pos, condition, mob)
     local d = M.distance(mob, pos)
     if condition.range ~= nil and condition.range <= d then
 	return false
     end
-    if condition.preferMobs ~= nil then
-	if not utils.table.contains(condition.preferMobs, mob.name) then
+    if condition.prefer_mobs ~= nil then
+	if not utils.table.contains(condition.prefer_mobs, mob.name) then
 	    return false
 	end
     end
@@ -122,33 +122,33 @@ function M.condition_match(pos, condition, mob)
 	not is_mob_attackable(mob) then
 	return false
     end
-    if condition.nameMatch ~= nil then
-	local nameMatchList = condition.nameMatch
-	if type(nameMatchList) ~= "table" then
-	    nameMatchList = { nameMatchList }
+    if condition.name_match ~= nil then
+	local name_match_list = condition.name_match
+	if type(name_match_list) ~= "table" then
+	    name_match_list = { name_match_list }
 	end
-	local nameMatch = false
-	for _, name in ipairs(nameMatchList) do
+	local name_match = false
+	for _, name in ipairs(name_match_list) do
 	    local a, b = string.find(mob.name, name)
 	    if a ~= nil then
-		nameMatch = true
+		name_match = true
 		break
 	    end
 	end
-	if not nameMatch then
+	if not name_match then
 	    return  false
 	end
     end
-    if condition.linkedOnly and not is_mob_linked(mob) then
+    if condition.linked_only and not is_mob_linked(mob) then
 	return false
     end
     return true
 end
 
 function M.search_mobs(pos, condition)
-    local mobArr = windower.ffxi.get_mob_array()
+    local mob_arr = windower.ffxi.get_mob_array()
     local mobs = {}
-    for i, m in pairs(mobArr) do
+    for i, m in pairs(mob_arr) do
 	if M.condition_match(pos, condition, m) and is_mob_attackable(m) then
 	    table.insert(mobs, m)
 	end
@@ -157,7 +157,7 @@ function M.search_mobs(pos, condition)
 end
 
 function M.search_nearest_mob(pos, condition)
-    local mobArr = windower.ffxi.get_mob_array()
+    local mob_arr = windower.ffxi.get_mob_array()
     local mob = nil
     local dist = 99999    
     local linked = false
@@ -166,12 +166,12 @@ function M.search_nearest_mob(pos, condition)
 	M.get_mob_position(pos, "me")
 	-- print(pos.x ,pos.y, pos.z)
     end
-    for i, m in pairs(mobArr) do
+    for i, m in pairs(mob_arr) do
 	if M.condition_match(pos, condition, m) and is_mob_attackable(m) then
 	    local d = M.distance(m, pos)
 	    -- ヘイトが自分らに向いてる敵がいる場合、そっちを優先
 	    if d < dist or (linked == false and m.claim_id > 0) and
-		not utils.table.contains(ignoreMobs, m.name) then
+		not utils.table.contains(ignore_mobs, m.name) then
 		dist = d
 		mob = m
 		if m.claim_id > 0 then

@@ -10,31 +10,31 @@ local task = require 'task'
 local io_chat = require 'io/chat'
 local M = {}
 
-M.probRecastTime = {}
+M.prob_recast_time = {}
 
 -- job = { probPermil(1/1000), recast, command, wait }
 
-local sendCommandProbTable = {
+local send_command_prob_table = {
     ALL = {
 	-- { 200, 900, 'input /item キャパシティリング <me>', 1 },
     },
 }
 
 -- サブジョブ用
-local sendCommandProbTableSub = { }
+local send_command_prob_table_sub = { }
 
--- jobTable から取り込む
-for k,v in pairs(acjob.jobTable) do
-    if v.mainJobProbTable ~= nil then
-	sendCommandProbTable[k] = v.mainJobProbTable
+-- job_table から取り込む
+for k,v in pairs(acjob.job_table) do
+    if v.main_job_prob_table ~= nil then
+	send_command_prob_table[k] = v.main_job_prob_table
     end
     for i = 1, 6 do
 	if (v["mainJobProbTable_" .. i]) ~= nil then
-	    sendCommandProbTable[k.."_" .. i] = v["mainJobProbTable_" .. i]
+	    send_command_prob_table[k.."_" .. i] = v["mainJobProbTable_" .. i]
 	end
     end
-    if v.subJobProbTable ~= nil then
-	sendCommandProbTableSub[k] = v.subJobProbTable
+    if v.sub_job_prob_table ~= nil then
+	send_command_prob_table_sub[k] = v.sub_job_prob_table
     end
 end
 
@@ -46,20 +46,20 @@ local is_backline_job = function(job)
     return false
 end
 
-M.get_send_command_prob_table = function(mainJob, subJob, rank_in_job)
+M.get_send_command_prob_table = function(main_job, sub_job, rank_in_job)
     local merged = {}
     -- print("rank_in_job", rank_in_job)
-    for job, commprob in pairs(sendCommandProbTable) do
-        if job == mainJob or job == mainJob..'_'..rank_in_job or job == "ALL" then
+    for job, commprob in pairs(send_command_prob_table) do
+        if job == main_job or job == main_job..'_'..rank_in_job or job == "ALL" then
             merged = merge_lists(merged, commprob)
         end
     end
-    if is_backline_job(mainJob) == false and
-       is_backline_job(subJob) == true then
-        subJob = nil
+    if is_backline_job(main_job) == false and
+       is_backline_job(sub_job) == true then
+        sub_job = nil
     end
-    for job, commprob in pairs(sendCommandProbTableSub) do
-        if job == subJob or job == "ALL" then
+    for job, commprob in pairs(send_command_prob_table_sub) do
+        if job == sub_job or job == "ALL" then
             merged = merge_lists(merged, commprob)
         end
     end
@@ -85,7 +85,7 @@ M.send_command_prob = function(table, period)
 	    return
 	end
         pn = pp + p*period
-        if M.probRecastTime[c] == nil then
+        if M.prob_recast_time[c] == nil then
             if pp < rnd and rnd <= pn then
 --                windower.ffxi.run(false)
 --                coroutine.sleep(0.5)
@@ -104,9 +104,9 @@ M.send_command_prob = function(table, period)
 		task.set_task(level,
 			     task.new_task(c, 0, t, r, f))
 		-- タイマーセット
-                M.probRecastTime[c] = { }
-		M.probRecastTime[c][1] = os.time() + r
-		M.probRecastTime[c][2] = f  -- 戦闘毎にリセットするかフラグ
+                M.prob_recast_time[c] = { }
+		M.prob_recast_time[c][1] = os.time() + r
+		M.prob_recast_time[c][2] = f  -- 戦闘毎にリセットするかフラグ
                 if t > 0 then
                     coroutine.sleep(t)
                 end
@@ -114,8 +114,8 @@ M.send_command_prob = function(table, period)
             end
             pp = pn
 	else
-	    if M.probRecastTime[c][1] < os.time() then
-		M.probRecastTime[c] = nil
+	    if M.prob_recast_time[c][1] < os.time() then
+		M.prob_recast_time[c] = nil
 	    end
         end
     end
@@ -123,10 +123,10 @@ M.send_command_prob = function(table, period)
 end
 
 M.clear_prob_recast_time = function()
-    for i, v in pairs(M.probRecastTime) do
+    for i, v in pairs(M.prob_recast_time) do
 	local f = v[2]  -- 戦闘毎にリセットするかフラグ
 	if f == true then
-	    M.probRecastTime[i] = nil
+	    M.prob_recast_time[i] = nil
 	end
     end
 end

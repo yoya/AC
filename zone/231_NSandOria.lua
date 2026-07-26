@@ -35,7 +35,7 @@ M.routes = {
 M.hp2_points = {x=10,y=94,z=-0.2}
 M.hp3_M_points = {x=69,y=9,z=-0.2}
 
-M.essentialPoints = {
+M.essential_points = {
     hp2 = M.hp2_points,
     hp2_mission = M.hp2_points,
     hp3_M = M.hp3_M_points,

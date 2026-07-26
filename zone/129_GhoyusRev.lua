@@ -96,7 +96,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     green_in = {x=-152.9,y=-62,z=-1},
     blue_in = {x=-236.2,y=-122.6,z=-0.2},
 }

@@ -80,7 +80,7 @@ M.routes = {
 
 M.book_point = {x=-120,y=248.5,z=0}
 
-M.essentialPoints = {
+M.essential_points = {
     book = M.book_point,
     book_mission = M.book_point,
 }

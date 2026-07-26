@@ -12,7 +12,7 @@ local acmob = require 'mob'
 
 local piani_prefix = "input /ja ピアニッシモ <me>; wait 2; "
 
-M.mainJobProbTable = {
+M.main_job_prob_table = {
     -- { 100, 60, 'input /ma 魔法のフィナーレ <t>', 8, true },
     -- { 200, 120, 'input /ma 修羅のエレジー <t>', 8, true },
     --    { 1000, 120, piani_prefix..'input /ma 魔物のレクイエムVII <t>', 8, true },
@@ -20,7 +20,7 @@ M.mainJobProbTable = {
     -- { 200, 120, 'input /ma 光のスレノディII <t>', 8, true },
 }
 
-M.subJobProbTable = {
+M.sub_job_prob_table = {
     { 300, 180/2, 'input /ma 無敵の進撃マーチ <me>', 8 },
     { 200, 180/2, 'input /ma 猛者のメヌエットIII <me>', 8 },
     -- { 200, 120, 'input /ma 戦場のエレジー <t>', 8, true },
@@ -71,7 +71,7 @@ function song_tick(player)
 	song("妙技のエチュード",   onoff, 15*60 / 2, 12*6, "me")
     end
     local condition = {
-        linkedOnly = true,
+        linked_only = true,
 	range = control.enemy_range,
     }
     local lullaby = false
@@ -93,23 +93,23 @@ end
 
 function M.dothebest_main(player)
     local level = task.PRIORITY_HIGH
-    local jaList = { "クラリオンコール", "ナイチンゲール", "ソウルボイス"}
-    for i, ja_name in ipairs(jaList) do
+    local ja_list = { "クラリオンコール", "ナイチンゲール", "ソウルボイス"}
+    for i, ja_name in ipairs(ja_list) do
 	local c = "input /ja "..ja_name.." <me>"
 	-- command, delay, duration, period, eachfight
 	task.set_task(level, task.new_task(c, (i-1)*2, 2, 10, false))
     end
     windower.ffxi.run(false)
     level = task.PRIORITY_HIGH
-    local songList = { "栄光の凱旋マーチ", "猛者のメヌエットV",
+    local song_list = { "栄光の凱旋マーチ", "猛者のメヌエットV",
 		       "怪力のエチュード", "妙技のエチュード",
 		       "剣豪のマドリガル", "猛者のメヌエットV",
 		       "栄光の凱旋マーチ" }
-    for i, song_name in ipairs(songList) do
+    for i, song_name in ipairs(song_list) do
 	local c = "input /song "..song_name.." <me>"
 	-- command, delay, duration, period, eachfight
-	local taskObj = task.new_task(c, 6+(i-1)*2, 5, 180/2, false)
-	task.set_task(level, taskObj)
+	local task_obj = task.new_task(c, 6+(i-1)*2, 5, 180/2, false)
+	task.set_task(level, task_obj)
     end
 
 end

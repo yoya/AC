@@ -42,7 +42,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     book = {x=5,y=-91,z=20.6},
     from_Wajaom_E10 = {x=-354.8,y=-260.7,z=-17.8},
 }

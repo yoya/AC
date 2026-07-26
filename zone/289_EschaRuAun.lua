@@ -15,7 +15,7 @@ M.routes = {
     }
 }
 
-M.essentialPoints = {
+M.essential_points = {
     entrance = {x=-0.4,y=-467,z=-34.3},
     domain_in = {x=0,y=-238,z=-43.8},
 }

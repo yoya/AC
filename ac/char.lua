@@ -1,7 +1,7 @@
 -- キャラクター情報
 
 local M = {
-    charTable = {},
+    char_table = {},
 }
 
 local res = require('resources')
@@ -11,7 +11,7 @@ local io_chat = require('io/chat')
 local jobs = res.jobs
 
 function M.init(id, char)
-    M.charTable = {}
+    M.char_table = {}
     --[[ user_id => eminence_point
 	         => login_point
                  => unity_point
@@ -32,7 +32,7 @@ function M.update_points(id, char)
     }
     for i, key in ipairs(point_keys) do
 	if char[key] ~= nil then
-	    M.charTable[id][key] = char[key]
+	    M.char_table[id][key] = char[key]
 	end
     end
 end
@@ -49,42 +49,42 @@ function M.update_job_info(id, main_job, sub_job, char)
     local next_exemplar_point = char.next_exemplar_point
     -- io_chat.print(id, main_job, char)
     --
-    M.charTable[id].main_job = main_job
-    M.charTable[id].sub_job = sub_job
+    M.char_table[id].main_job = main_job
+    M.char_table[id].sub_job = sub_job
     --
     if main_job_id ~= nil and main_job_id > 0 then
-	M.charTable[id].main_job = main_job
+	M.char_table[id].main_job = main_job
     end
     if sub_job_id ~= nil and sub_job_id > 0 then
-	M.charTable[id].sub_job = sub_job
+	M.char_table[id].sub_job = sub_job
     end
     --
     local limit_breaker = char.limit_breaker
     local current_merit_point = char.current_merit_point
     local max_merit_point = char.max_merit_point
     if limit_breaker ~= nil and limit_breaker == true then
-	M.charTable[id][main_job].current_merit_point = current_merit_point
-	M.charTable[id][main_job].max_merit_point = max_merit_point
+	M.char_table[id][main_job].current_merit_point = current_merit_point
+	M.char_table[id][main_job].max_merit_point = max_merit_point
     end
     -- master level
     if current_exp_point ~= nil then
-	M.charTable[id][main_job].current_exp_point = current_exp_point
+	M.char_table[id][main_job].current_exp_point = current_exp_point
     end
     if next_exp_point ~= nil then
-	M.charTable[id][main_job].next_exp_point = next_exp_point
+	M.char_table[id][main_job].next_exp_point = next_exp_point
     end
     if synched_master_level ~= nil then
-	M.charTable[id][main_job].synched_master_level = synched_master_level
+	M.char_table[id][main_job].synched_master_level = synched_master_level
     end
     if master_breaker ~= nil and master_breaker == true then
 	if current_exemplar_point ~= nil then
-	    M.charTable[id][main_job].current_exemplar_point = current_exemplar_point
+	    M.char_table[id][main_job].current_exemplar_point = current_exemplar_point
 	end
 	if next_exemplar_point ~= nil then
-	    M.charTable[id][main_job].next_exemplar_point = next_exemplar_point
+	    M.char_table[id][main_job].next_exemplar_point = next_exemplar_point
 	    for m, p in pairs(ac_data.next_exemplar_table) do
 		if next_exemplar_point == p then
-		    M.charTable[id][main_job].real_master_level = m
+		    M.char_table[id][main_job].real_master_level = m
 		    break
 		end
 	    end
@@ -93,8 +93,8 @@ function M.update_job_info(id, main_job, sub_job, char)
 end
 
 function M.update(id, char)
-    if M.charTable[id] == nil then
-	M.charTable[id] = {
+    if M.char_table[id] == nil then
+	M.char_table[id] = {
 	    eminence_point = -1,
 	    login_point = -1,
 	    unity_point = -1,
@@ -125,8 +125,8 @@ function M.update(id, char)
 	return  -- フェイスとか
     end
     M.update_points(id, char)
-    if M.charTable[id][main_job] == nil then
-	M.charTable[id][main_job] = {
+    if M.char_table[id][main_job] == nil then
+	M.char_table[id][main_job] = {
 	    current_merit_point = -1,
 	    max_merit_point = -1,
 	    current_exp_point = -1,
@@ -148,10 +148,10 @@ function M.get_char_point(key)
 	print("ac/char.get_char_point: player == nil")
 	return -1
     end
-    if M.charTable[player.id] == nil then
+    if M.char_table[player.id] == nil then
 	return -1
     end
-    return M.charTable[player.id][key]
+    return M.char_table[player.id][key]
 end
 
 
@@ -195,13 +195,13 @@ end
 
 function M.get_char_point_by_job(key)
     local player = windower.ffxi.get_player()
-    if M.charTable[player.id] == nil then
+    if M.char_table[player.id] == nil then
 	return -1
     end
-    if M.charTable[player.id][player.main_job] == nil then
+    if M.char_table[player.id][player.main_job] == nil then
 	return -1
     end
-    return M.charTable[player.id][player.main_job][key]
+    return M.char_table[player.id][player.main_job][key]
 end
 
 function M.current_merit_point()
@@ -238,8 +238,8 @@ end
 
 function M.print()
     io_chat.set_next_color(5)
-    io_chat.print("### ac/char print #"..#M.charTable)
-    for id, char in pairs(M.charTable) do
+    io_chat.print("### ac/char print #"..#M.char_table)
+    for id, char in pairs(M.char_table) do
 	local mob = windower.ffxi.get_mob_by_id(id)
 	io_chat.set_next_color(6)
 	io_chat.print(id, mob.name, char)

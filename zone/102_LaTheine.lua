@@ -55,7 +55,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     book = {x=774,y=-19,z=29}, -- 本ワープ
     ring = {x=420,y=-150,z=19.6}, -- 指輪ワープ
 }

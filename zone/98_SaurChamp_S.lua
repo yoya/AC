@@ -25,7 +25,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     book = {x=476,y=-438,z=-8},
 }
 

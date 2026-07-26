@@ -20,7 +20,7 @@ M.routes = {
     }
 }
 
-M.essentialPoints = {
+M.essential_points = {
     from_boyahda = {x=-59.5,y=-39.5,z=-1.1},
 }
 

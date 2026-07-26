@@ -5,7 +5,7 @@ local M = {}
 local role_Melee = require 'role/Melee'
 local role_Sorcerer = require 'role/Sorcerer'
 
-M.mainJobProbTable = {
+M.main_job_prob_table = {
     { 100, 180-30, 'input /ma エンダークII <me>', 3 },
     { 100, 180, 'input /ma ドレッドスパイク <me>', 3 },
     { 60, 120, 'input /ma ドレインIII <t>', 3 },
@@ -22,7 +22,7 @@ M.mainJobProbTable = {
     -- { 100, 3000/2, 'input /ja ディアボリクアイ <me>', 0 },
 }
 
-M.subJobProbTable = {
+M.sub_job_prob_table = {
     { 100, 3000, 'input /ja ラストリゾート <me>', 0 },
     { 100, 3000, 'input /ja 暗黒 <me>', 0 },
 }

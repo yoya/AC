@@ -20,7 +20,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     from_win = {x=0,y=-22.4,z=0},
 }
 

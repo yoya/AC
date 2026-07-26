@@ -34,9 +34,9 @@ local ac_focus = require 'ac/focus'
 
 ac_focus.init(settings.AccountList)
 
-local useSilt = false
-local useBeads = false
-local useFaith = false
+local use_silt = false
+local use_beads = false
+local use_faith = false
 
 local item_data = require 'item/data'
 
@@ -47,7 +47,7 @@ local bayld_swap_ids = item_data.bayld_swap_ids --  ベヤルド交換品
 local gob_dial_key_ids = item_data.gob_dial_key_ids -- 不思議箱ダイヤルキー
 
 -- 優先して釣る敵
-local preferredEnemyList = {
+local preferred_enemy_list = {
     -- カオス戦
     "Chaos",
     -- コロナイズ
@@ -131,12 +131,12 @@ local JunkItemIdSet = acitem.junk.JunkItemIdSet  -- 売却+廃棄 (かばんに�
 local SellItemIdSet = acitem.junk.SellItemIdSet
 local DropItemIdSet = acitem.junk.DropItemIdSet
 
-local isFar = false
-local fightingMobName = nil
+local is_far = false
+local fighting_mob_name = nil
 
 --- リーダー待機用
-local prevDx = 0
-local prevDy = 0
+local prev_dx = 0
+local prev_dy = 0
 local leader_function = function()
     -- print("I am a leader")
     local me_pos = {}
@@ -148,16 +148,16 @@ local leader_function = function()
     -- リンクしてる敵
     local condition = {
 	range = control.enemy_range,
-	linkedOnly = true,
-	-- nameMatch = control.enemy_filter,
+	linked_only = true,
+	-- name_match = control.enemy_filter,
     }
     local mob = acmob.search_nearest_mob(me_pos, condition)
     -- 優先する敵
     if mob == nil then
 	local condition = {
 	    range = control.enemy_range,
-	    preferMobs = utils.table.merge_lists(acmob.moreAttractiveEnemyList, preferredEnemyList),
-	    nameMatch = control.enemy_filter,
+	    prefer_mobs = utils.table.merge_lists(acmob.more_attractive_enemy_list, preferred_enemy_list),
+	    name_match = control.enemy_filter,
 	}
 	mob = acmob.search_nearest_mob(pull.base_pos, condition)
 	---    print("nearest preferred mob", mob)
@@ -170,7 +170,7 @@ local leader_function = function()
         --- 優先度の高い敵がいない場合は、誰でも良い
 	local condition = {
 	    range = control.enemy_range,
-	    nameMatch = control.enemy_filter,
+	    name_match = control.enemy_filter,
 	}
 	mob = acmob.search_nearest_mob(pull.base_pos, condition)
     end
@@ -186,25 +186,25 @@ local leader_function = function()
         local dy = pull.base_pos.y - me_pos.y
         local dist = math.sqrt(dx*dx + dy*dy)
         if dist > 4 then
-            isFar = true
+            is_far = true
         end
-        if isFar then
+        if is_far then
             windower.ffxi.run(dx, dy)
             if dist < 2 then
                 windower.ffxi.run(false)
-                isFar = false
+                is_far = false
             end
         end
 	-- near の範囲を通り過ぎると永久に往復するのでその対処
 	local vec1 = { x=dx, y=dy }
-	local vec2 = { x=prevDx, y=prevDy }
+	local vec2 = { x=prev_dx, y=prev_dy }
 	local similarity = utils.vector.CosineSimilarity(vec1, vec2)
-	prevDx = dx
-	prevDy = dy
+	prev_dx = dx
+	prev_dy = dy
 	if similarity < -0.8 then
 	    -- 逆向きに動いたら近くになったと判断して停止かつ
 	    -- print("DEBUG: similarity=", similarity)
-	    isFar = false
+	    is_far = false
 	    coroutine.sleep(0.2)
 	    windower.ffxi.run(false)
 	end
@@ -387,22 +387,22 @@ end
 local idle_function = function()
     -- print("idle_function")
     local ret
-    if  useSilt then
+    if  use_silt then
         windower.ffxi.run(false)
-        useSilt = acitem.use_item_include_bags(6391)
+        use_silt = acitem.use_item_include_bags(6391)
         return
     end
-    if  useBeads then
+    if  use_beads then
         windower.ffxi.run(false)
-        useBeads = acitem.use_item_include_bags(6392, 4)
+        use_beads = acitem.use_item_include_bags(6392, 4)
         return 
     end
-    if  useFaith then -- フェイス手引書
+    if  use_faith then -- フェイス手引書
         windower.ffxi.run(false)
-        useFaith = acitem.use_item_include_bags(6716, 4)
+        use_faith = acitem.use_item_include_bags(6716, 4)
         return
     end
-    if useSilt or useBeads or useFaith then
+    if use_silt or use_beads or use_faith then
         return
     end
     local zone = windower.ffxi.get_info().zone
@@ -434,15 +434,15 @@ local idle_function = function()
     contents.npc_action_handler(zone, mob)
 end
 
-local tickRunning = false
+local tick_running = false
 function tick()
-    if tickRunning then -- 二重に動かないガード。(ちゃんと働いているか不明)
-	print("tick tickRunning:", tickRunning)
+    if tick_running then -- 二重に動かないガード。(ちゃんと働いているか不明)
+	print("tick tick_running:", tick_running)
         return
     end
-    tickRunning = true
+    tick_running = true
     tick_serial()
-    tickRunning = false
+    tick_running = false
 end
 
 function tick_serial()
@@ -564,13 +564,13 @@ local change_ws = function(wskey)
         return
      end
     print('wskey', wskey)
-    if ws.weaponskillTable[wskey] == nil then
+    if ws.weaponskill_table[wskey] == nil then
         print("unknown ws", wskey)
         return
     end
     ws.weaponskill = wskey
-    local wsName = ws.weaponskillTable[ws.weaponskill]
-    io_chat.print('set any', wskey, '=>', wsName)
+    local ws_name = ws.weaponskill_table[ws.weaponskill]
+    io_chat.print('set any', wskey, '=>', ws_name)
 end
 
 local show_mob = function()
@@ -717,20 +717,20 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	elseif arg1 == 'nearest' then
 	    local prefer_condition = {
 		range = control.enemy_range,
-		preferMobs = utils.table.merge_lists(acmob.moreAttractiveEnemyList,
-						     preferredEnemyList),
-		nameMatch = control.enemy_filter,
+		prefer_mobs = utils.table.merge_lists(acmob.more_attractive_enemy_list,
+						     preferred_enemy_list),
+		name_match = control.enemy_filter,
 	    }
-	    local preferMob = acmob.search_nearest_mob(pull.base_pos, prefer_condition)
+	    local prefer_mob = acmob.search_nearest_mob(pull.base_pos, prefer_condition)
 	    local condition = {
 		range = control.enemy_range,
-		nameMatch = control.enemy_filter,
+		name_match = control.enemy_filter,
 	    }
 	    local mob = acmob.search_nearest_mob(pull.base_pos, condition)
-	    io_chat.print("nearest preferMob=====================")
-	    io_chat.print(preferMob)
+	    io_chat.print("nearest prefer_mob=====================")
+	    io_chat.print(prefer_mob)
 	    io_chat.print("nearest mob =====================")
-	    if mob == nil or preferMob == nil or preferMob.name ~= mob.name then
+	    if mob == nil or prefer_mob == nil or prefer_mob.name ~= mob.name then
 		io_chat.print(mob)
 	    else
 		io_chat.print("same name monster")
@@ -826,7 +826,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	if control.debug then
 	    print("ac focus", arg1)
 	end
-	if ac_focus.focusMyIndex ~= arg1 then
+	if ac_focus.focus_my_index ~= arg1 then
 	    -- index が自分以外なら他にフォーカスを譲る
 	    io_ipc.send_all("focus", arg1)
 	end
@@ -927,13 +927,13 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
     elseif subcommand == 'magic' or subcommand == 'magick' then
 	role_Sorcerer.set_magic(arg1)
     elseif subcommand == 'move' then
-	local routeTable = aczone.get_route_table(zone)
+	local route_table = aczone.get_route_table(zone)
 	pull.base_pos = nil
-        ac_move.auto_move_to(zone, {arg1, arg2}, routeTable)
+        ac_move.auto_move_to(zone, {arg1, arg2}, route_table)
     elseif subcommand == 'moverev' then
-	local routeTable = aczone.get_route_table(zone)
+	local route_table = aczone.get_route_table(zone)
 	pull.base_pos = nil
-        ac_move.auto_move_to(zone, {"-"..arg1}, routeTable)
+        ac_move.auto_move_to(zone, {"-"..arg1}, route_table)
     elseif subcommand == 'party' then
 	if arg1 == 'start' then
 	    start_party()
@@ -1165,14 +1165,14 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	end
     elseif subcommand == 'use' then
 	if arg1 == 'silt' then
-	    useSilt = not useSilt
-	    io_chat.info("item silt using start", useSilt)
+	    use_silt = not use_silt
+	    io_chat.info("item silt using start", use_silt)
 	elseif arg1 == 'beads' then
-	    useBeads = not useBeads
-	    io_chat.info("item beads using start", useBeads)
+	    use_beads = not use_beads
+	    io_chat.info("item beads using start", use_beads)
 	elseif arg1 == 'faith' then
-	    useFaith = not useFaith
-	    io_chat.info("item faith using start", useFaith)
+	    use_faith = not use_faith
+	    io_chat.info("item faith using start", use_faith)
 	elseif arg1 == 'moolah' then
 	    -- モグのおひねり
 	    local slot_ammo = 3
@@ -1190,7 +1190,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	elseif arg1 == 'dec' then
 	    io_chat.print("【包】使用開始")
 	    coroutine.sleep(0.5)
-	    for i,id in ipairs(item_data.decItems) do
+	    for i,id in ipairs(item_data.dec_items) do
 		local c = acitem.inventory_count_by_item_id(id)
 		for i = 1, c do
 		    acitem.use_item_include_bags(id)
@@ -1225,7 +1225,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	elseif arg1 == 'scroll' then
 	    io_chat.print("スクロール学習開始")
 	    coroutine.sleep(0.5)
-	    for i,id in ipairs(item_data.magicScrolls) do
+	    for i,id in ipairs(item_data.magic_scrolls) do
 		acitem.use_item_include_bags(id)
 	    end
 	    io_chat.print("スクロール学習終わり")
@@ -1233,8 +1233,8 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    io_chat.notice("石の袋開き開始")
 	    control.auto = true
 	    while control.auto and
-		acitem.inventory_has_item_in_set(item_data.soulStoneSackIdSet) do
-		for i,id in ipairs(item_data.soulStoneSacks) do
+		acitem.inventory_has_item_in_set(item_data.soul_stone_sack_id_set) do
+		for i,id in ipairs(item_data.soul_stone_sacks) do
 		    if not acitem.check_bags_freespace() then
 			io_chat.info("アイテム満杯")
 			break
@@ -1368,7 +1368,7 @@ windower.register_event('status change', function(new, old)
 end)
 
 --- ゾーンが変わったらリーダーだけ停止する
-windower.register_event('zone change', function(zone, prevZone)
+windower.register_event('zone change', function(zone, prev_zone)
     ac_record.record_char()
     ac_record.record_spells()
     ac_stat.init()
@@ -1377,14 +1377,14 @@ windower.register_event('zone change', function(zone, prevZone)
 	control.auto = false
     end
     ac_move.auto = false
-    useSilt = false
-    useBeads = false
+    use_silt = false
+    use_beads = false
     control.point_cheer = false
-    if zone == prevZone then
-	-- ログイン直後は zone ==  prevZone なので細工する
-	prevZone = nil
+    if zone == prev_zone then
+	-- ログイン直後は zone ==  prev_zone なので細工する
+	prev_zone = nil
     end
-    zone_change.zone_change_handler(zone, prevZone)
+    zone_change.zone_change_handler(zone, prev_zone)
     ws.init()
     -- command, delay, duration
     task.set_task_simple("ac inject currinfo1", 2, 1)

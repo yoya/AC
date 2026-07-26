@@ -32,9 +32,9 @@ function pos_str(pos)
     return str
 end
 
-function M.search_and_invoke_automatic_routes(zone, prevZone, automatic_routes,
+function M.search_and_invoke_automatic_routes(zone, prev_zone, automatic_routes,
 					      contents_match)
-    -- if prevZone == nil then print(debug.traceback()) end
+    -- if prev_zone == nil then print(debug.traceback()) end
     print("zone/change.search_and_invoke_automatic_routes")
     if type(automatic_routes) ~= "table" then
 	return false
@@ -46,11 +46,11 @@ function M.search_and_invoke_automatic_routes(zone, prevZone, automatic_routes,
 	local routes = (rr[1] == nil) and { rr } or rr
 	for _, route in ipairs(routes) do
 	    if route ~= nil then
-		if route.zone_from ~= nil and prevZone ~= nil and
-		    ((route.zone_from > 0 and route.zone_from ~= prevZone) or
-		     (route.zone_from < 0 and -route.zone_from == prevZone)) then
+		if route.zone_from ~= nil and prev_zone ~= nil and
+		    ((route.zone_from > 0 and route.zone_from ~= prev_zone) or
+		     (route.zone_from < 0 and -route.zone_from == prev_zone)) then
 		    -- route を skip
-		    -- io_chat.error("route を skip", route.zone_from, prevZone)
+		    -- io_chat.error("route を skip", route.zone_from, prev_zone)
 		elseif contents_match then
 		    if route.contents ~= nil and
 			contents.match_contents_name(route.contents) then
@@ -67,28 +67,28 @@ function M.search_and_invoke_automatic_routes(zone, prevZone, automatic_routes,
     end
     automatic_routes = new_routes
     -- io_chat.notice("new_routes", new_routes)
-    local zone_object = aczone.zoneTable[zone]
+    local zone_object = aczone.zone_table[zone]
     for f, t in pairs(automatic_routes) do
-	local fp = zone_object.essentialPoints[f]
+	local fp = zone_object.essential_points[f]
 	if fp == nil then
-	    print("maybe essentialPoints not found: "..f)
+	    print("maybe essential_points not found: "..f)
 	end
 	if fp.x == nil then
-	    print("maybe essentialPoints illegal format: "..f)
+	    print("maybe essential_points illegal format: "..f)
 	    return false;
 	end
 	local route = t.route
-	local nearDist = nil
-	local nearDistX = nil
-	local nearDistY = nil
+	local near_dist = nil
+	local near_dist_x = nil
+	local near_dist_y = nil
 	if fp.d == nil and fp.dx == nil and fp.dy == nil then
-	    nearDist = 2
+	    near_dist = 2
 	end
-	if fp.d ~= nil then nearDist = fp.d end
-	if fp.dx ~= nil then nearDistX = fp.dx end
-	if fp.dy ~= nil then nearDistY = fp.dy end
-	local exec_auto_route = ac_pos.is_near(fp, nearDist,
-					      nearDistX, nearDistY)
+	if fp.d ~= nil then near_dist = fp.d end
+	if fp.dx ~= nil then near_dist_x = fp.dx end
+	if fp.dy ~= nil then near_dist_y = fp.dy end
+	local exec_auto_route = ac_pos.is_near(fp, near_dist,
+					      near_dist_x, near_dist_y)
 	if t.leader_only == true and not iam_leader() then
 	    io_chat.infof("移動するのはリーダーだけ: %s => %s", f, route)
 	    exec_auto_route = false
@@ -104,7 +104,7 @@ function M.search_and_invoke_automatic_routes(zone, prevZone, automatic_routes,
 	    -- print("level, t.need_level",level, t.need_level)
 	end
 	if control.debug then
-	    io_chat.print(f, "fp:", fp, "nearDist:", nearDist, "nexrDistX,Y:", nearDistX, nearDistY)
+	    io_chat.print(f, "fp:", fp, "near_dist:", near_dist, "nexrDistX,Y:", near_dist_x, near_dist_y)
 	end
 	if exec_auto_route then
 	    io_chat.printf("移動 %s => %s", f, route)
@@ -116,18 +116,18 @@ function M.search_and_invoke_automatic_routes(zone, prevZone, automatic_routes,
     return false
 end
 
-function M.automatic_routes_handler(zone, prevZone, automatic_routes)
+function M.automatic_routes_handler(zone, prev_zone, automatic_routes)
     print("zone/change.automatic_routes_handler", zone)
     if not control.automove then
 	print("control.automove is false")
 	return
     end
     local pos = ac_pos.current_pos()
-    if prevZone == nil and aczone.in_moghouse(zone, pos) then
+    if prev_zone == nil and aczone.in_moghouse(zone, pos) then
 	io_chat.print("ログインしてすぐのモグハウスは自動移動オフ")
 	return
     end
-    local zone_object = aczone.zoneTable[zone]
+    local zone_object = aczone.zone_table[zone]
     if zone_object == nil then
 	return
     end
@@ -145,20 +145,20 @@ function M.automatic_routes_handler(zone, prevZone, automatic_routes)
     pos = ac_pos.current_pos()
     coroutine.sleep(5)
     if ac_pos.is_near(pos, 0.5) then
-	local ret = M.search_and_invoke_automatic_routes(zone, prevZone,
+	local ret = M.search_and_invoke_automatic_routes(zone, prev_zone,
 							 automatic_routes,
 							 true)
 	if not ret then
-	    M.search_and_invoke_automatic_routes(zone, prevZone,
+	    M.search_and_invoke_automatic_routes(zone, prev_zone,
 						 automatic_routes,
 						 false)
 	end
     end
 end
 
-function M.automatic_trust_handler(zone, prevZone, automatic_trust)
+function M.automatic_trust_handler(zone, prev_zone, automatic_trust)
     io_chat.print("automatic_trust")
-    local zone_object = aczone.zoneTable[zone]
+    local zone_object = aczone.zone_table[zone]
     if zone_object == nil then
 	return
     end
@@ -171,9 +171,9 @@ function M.automatic_trust_handler(zone, prevZone, automatic_trust)
     end
 end
 
-function M.zone_in_handler(zone, prevZone)
+function M.zone_in_handler(zone, prev_zone)
     -- zone in の処理
-    local zone_object = aczone.zoneTable[zone]
+    local zone_object = aczone.zone_table[zone]
     if zone_object ~= nil then
 	local zone_in = zone_object.zone_in
 	local incoming_text_listener = zone_object.incoming_text_listener
@@ -186,34 +186,34 @@ function M.zone_in_handler(zone, prevZone)
 	end
 	local automatic_routes = zone_object.automatic_routes
 	if automatic_routes ~= nil then
-	    M.automatic_routes_handler(zone, prevZone, automatic_routes)
+	    M.automatic_routes_handler(zone, prev_zone, automatic_routes)
 	end
 	if iam_leader() then
 	    local automatic_trust = zone_object.automatic_trust
 	    if automatic_trust ~= nil then
 		io_chat.set_next_color(6)
 		io_chat.print("automatic_trust", automatic_trust);
-		M.automatic_trust_handler(zone, prevZone, automatic_trust)
+		M.automatic_trust_handler(zone, prev_zone, automatic_trust)
 	    end
 	end
     end
 end
 
-function M.zone_change_handler(zone, prevZone)
+function M.zone_change_handler(zone, prev_zone)
     -- zone 毎の処理
-    print("zone/change zone_change_handler: "..zone.." <= "..tostring(prevZone))
+    print("zone/change zone_change_handler: "..zone.." <= "..tostring(prev_zone))
     ac_stat.init()
     task.all_clear()
     aczone.AC.start_pos = nil
     -- zone out の処理
-    if prevZone == nil then
-	print("ERROR: prevZone == nil")  -- 普通はありえない
+    if prev_zone == nil then
+	print("ERROR: prev_zone == nil")  -- 普通はありえない
     else
-	local zone_out_object = aczone.zoneTable[prevZone]
+	local zone_out_object = aczone.zone_table[prev_zone]
 	if zone_out_object ~= nil then
 	    local zone_out = zone_out_object.zone_out
 	    if zone_out ~= nil then
-		print("zone_out:", prevZone)
+		print("zone_out:", prev_zone)
 		zone_out()
 	    end
 	    if M.incoming_text_listener_id ~= nil then
@@ -224,13 +224,13 @@ function M.zone_change_handler(zone, prevZone)
 	contents.zone_out()
     end
     -- zone in の処理
-    local zone_object = aczone.zoneTable[zone]
+    local zone_object = aczone.zone_table[zone]
     if zone_object ~= nil then
-	M.zone_in_handler(zone, prevZone)
+	M.zone_in_handler(zone, prev_zone)
 	local change_handler = zone_object.zone_change_handler
 	if change_handler ~= nil then
 	    print("zone_change_handler found")
-	    change_handler(zone, prevZone)
+	    change_handler(zone, prev_zone)
 	end
     end
 end
@@ -242,38 +242,38 @@ function M.warp_handler_tick()
     if zone == nil or pos == nil then
 	return
     end
-    -- print("M.warp_handler_tick", zone,  ac_pos.distance(pos, M.prevPos))
-    if M.prevZone == zone and M.prevPos ~= nil then
-	local dist = ac_pos.distance(pos, M.prevPos)
+    -- print("M.warp_handler_tick", zone,  ac_pos.distance(pos, M.prev_pos))
+    if M.prev_zone == zone and M.prev_pos ~= nil then
+	local dist = ac_pos.distance(pos, M.prev_pos)
 	-- print("dist:", dist)
 	-- 東アドゥリンWP、レンタル<=>競売が 36.8
 	if  dist > 32 then
-	    M.warp_handler(zone, pos, M.prevZone, M.prevPos, dist)
+	    M.warp_handler(zone, pos, M.prev_zone, M.prev_pos, dist)
 	end
     end
-    M.prevZone = zone
-    M.prevPos = pos
+    M.prev_zone = zone
+    M.prev_pos = pos
 end
 
 -- 同じ zone でワープした時。WP や AMANトローブ
-function M.warp_handler(zone, pos, prevZone, prevPos, dist)
-    print("zone/change:warp " .. zone .. ":" .. pos_str(pos) .. " << " .. prevZone .. ":" ..  pos_str(prevPos) .. " dist:" ..  math.round(dist, 2))
+function M.warp_handler(zone, pos, prev_zone, prev_pos, dist)
+    print("zone/change:warp " .. zone .. ":" .. pos_str(pos) .. " << " .. prev_zone .. ":" ..  pos_str(prev_pos) .. " dist:" ..  math.round(dist, 2))
     task.all_clear()
     -- warp out の処理
-    if prevZone == nil then
-	print("ERROR: prevZone == nil")  -- 普通はありえない
+    if prev_zone == nil then
+	print("ERROR: prev_zone == nil")  -- 普通はありえない
     else
-	local zone_out_object = aczone.zoneTable[prevZone]
+	local zone_out_object = aczone.zone_table[prev_zone]
 	if zone_out_object ~= nil then
 	    local warp_out = zone_out_object.warp_out
 	    if warp_out ~= nil then
-		print("warp_out:", prevZone)
+		print("warp_out:", prev_zone)
 		warp_out()
 	    end
 	end
     end
     -- warp in の処理
-    local zone_object = aczone.zoneTable[zone]
+    local zone_object = aczone.zone_table[zone]
     if zone_object == nil then
 	return
     end
@@ -283,7 +283,7 @@ function M.warp_handler(zone, pos, prevZone, prevPos, dist)
     end
     local automatic_routes = zone_object.automatic_routes
     if automatic_routes ~= nil then
-	M.automatic_routes_handler(zone, prevZone, automatic_routes)
+	M.automatic_routes_handler(zone, prev_zone, automatic_routes)
     end
 end
 

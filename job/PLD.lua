@@ -6,7 +6,7 @@ local command = require 'command'
 local io_chat = require 'io/chat'
 local role_Healer = require 'role/Healer'
 
-M.mainJobProbTable = {
+M.main_job_prob_table = {
     { 200, 45, 'input /ma フラッシュ <t>', 1 },
     -- { 100, 60, 'input /ma ホーリーII <t>', 2 },
     { 100, 180, 'input /ma リアクト <me>', 4 },
@@ -20,7 +20,7 @@ M.mainJobProbTable = {
     { 100, 180, 'input /ja かばう <p1>', 0 },
 }
 
-M.subJobProbTable = {
+M.sub_job_prob_table = {
     { 200, 45, 'input /ma フラッシュ <t>', 1 },
     { 100, 300, 'input /ja センチネル <me>', 0 },
     { 100, 180, 'input /ja かばう <p1>', 0 },

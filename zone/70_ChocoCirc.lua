@@ -50,7 +50,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     wand_warp_point = {x=-320,y=-475,z=-0.3},
     from_aht = {x=-149.9,y=-386.4,z=0},
     from_aht_warp = {x=-280,y=-463,z=-4},

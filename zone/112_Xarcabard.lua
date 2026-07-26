@@ -42,7 +42,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     from_jueno = {x=270.1,y=-73.3,z=-7.9}, -- 別のzoneと間違えてない？
     book = {x=204,y=-204,z=-24.2},
 }

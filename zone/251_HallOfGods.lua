@@ -21,7 +21,7 @@ M.routes = {
     }
 }
 
-M.essentialPoints = {
+M.essential_points = {
     -- x={-1-1,1.5},
     entrance = {x=-0,y=-176.1,z=-0.1,dx=2},
     from_grate = {x=0,y=51.9,z=-12.3},

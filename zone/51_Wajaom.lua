@@ -52,7 +52,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     unity_warp = {x=100,y=-163,z=-12},
     book_warp = {x=-839,y=99,z=-20},
     from_whitegate = {x=690.2,y=220,z=-18.5},

@@ -21,7 +21,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     entrance = {x=340.4,y=-157.4,z=-11.9}, -- バフラウから入る
     bc_in = {x=219.1,y=274.2,z=-31},
     bc_out = {x=260,y=-236,z=8.5},

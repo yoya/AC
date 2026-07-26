@@ -24,7 +24,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     entrance = {x=-345.4,y=-178.9,z=1.1},
     domain_in = {x=-2,y=59.5,z=1},
     wp2 = {x=-303,y=308,z=0.1,"Dragon"},

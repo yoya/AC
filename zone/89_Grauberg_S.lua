@@ -22,7 +22,7 @@ M.routes = {
     },
 }
 
-M.essentialItems = {
+M.essential_items = {
     19210, -- 火車の灰
 }
 

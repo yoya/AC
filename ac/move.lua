@@ -74,11 +74,11 @@ function nearest_idx(pos, posTable)
     return near_idx
 end
 
-function relay_idx(pos, dest, routeTable)
+function relay_idx(pos, dest, route_table)
     local delay_dest = nil
     local near_idx = nil
     local near_dis = 99999
-    for d, route in pairs(routeTable) do
+    for d, route in pairs(route_table) do
 	if d ~= dest then
 	    for i, p in ipairs(route) do
 		local idx = nearest_idx(p, route)
@@ -139,21 +139,21 @@ function move_to_action_faith(f)
     if not ac_party.iam_leader() then
 	return -- リーダーじゃないとフェイスを呼べないので
     end
-    local faithList = f
+    local faith_list = f
     if type(f) == "string" then
 	if f == "ambus" then
-	    faithList = { "ヴァレンラール", "モンブロー",
+	    faith_list = { "ヴァレンラール", "モンブロー",
 			  "テルセウス", "コルモル", "シルヴィ(UC)" }
 	elseif f == "balance" then
-	    faithList = { "ヴァレンラール", "モンブロー",
+	    faith_list = { "ヴァレンラール", "モンブロー",
 			  "ヨアヒム", "コルモル", "シルヴィ(UC)" }
 	elseif f == "raise" then
-	    faithList = { "モンブロー", "フェリアスコフィン",
+	    faith_list = { "モンブロー", "フェリアスコフィン",
 			  "ブリジッド", "クピピ", "コルモル" }
 	elseif f == "guard" then
-	    faithList = { "ブリジッド", "サクラ", "モーグリ", }
+	    faith_list = { "ブリジッド", "サクラ", "モーグリ", }
 	else
-	    faithList = { "ヨアヒム", "クピピ",
+	    faith_list = { "ヨアヒム", "クピピ",
 			  "ブリジッド", "モーグリ", "サクラ" }
 	end
     end
@@ -161,12 +161,12 @@ function move_to_action_faith(f)
     coroutine.sleep(1)
     local party_count = ac_party.count_member()
     for i = 1, (6 - party_count) do
-	f = faithList[i]
+	f = faith_list[i]
 	command.send('input /ma '..f..' <me>')
 	coroutine.sleep(7.0)
     end
     --[[
-    for _, f in ipairs(faithList) do
+    for _, f in ipairs(faith_list) do
 	command.send('input /ma '..f..' <me>')
 	coroutine.sleep(7.0)
 	end
@@ -184,7 +184,7 @@ function move_to_action(p, reverse)
 	control.enemy_filter = p.enemy_filter
     end
     if p.a == "faith" then
-	move_to_action_faith(p.faithList)
+	move_to_action_faith(p.faith_list)
     end
     if p.a == "insne" then
 	print("insne")
@@ -274,12 +274,12 @@ function move_to_action(p, reverse)
     return true
 end
 
-function move_to(route, routeTable, nextRoute, reverse)
+function move_to(route, route_table, next_route, reverse)
     local pos = current_pos()
-    local r1List = {}  -- 各routeの一個目をリスト化
-    local r1ListName = {}
-    if routeTable == nil then
-	print("routeTable == nil")
+    local r1_list = {}  -- 各routeの一個目をリスト化
+    local r1_list_name = {}
+    if route_table == nil then
+	print("route_table == nil")
 	return
     end
     -- io_chat.print(route)
@@ -289,26 +289,26 @@ function move_to(route, routeTable, nextRoute, reverse)
 	end
         if p.route ~= nil then
             print("p.r="..(p.route))
-	    -- move_to(p.r, routeTable)
+	    -- move_to(p.r, route_table)
 	    --[[
-            local r = routeTable[p.r]
+            local r = route_table[p.r]
             table[p.r] = r[1]
-            table.insert(r1List, r[1])
-            table.insert(r1ListName, p.r)
+            table.insert(r1_list, r[1])
+            table.insert(r1_list_name, p.r)
 	    ]]
         end
     end
-    if #r1List > 0 then
-        local idx = nearest_idx(pos, r1List)
-        local name = r1ListName[idx]
-        local r = routeTable[name]
+    if #r1_list > 0 then
+        local idx = nearest_idx(pos, r1_list)
+        local name = r1_list_name[idx]
+        local r = route_table[name]
 	if r == nil then
 	    io_chat.set_next_color(3)
 	    io_chat.printf("route name:%s is not found", name)
 	    return
 	end
         print(idx, name, r)
-        move_to(r, routeTable)
+        move_to(r, route_table)
     end
     print("moveFrom", math.round(pos.x, 2), math.round(pos.y, 2))
     local start_idx = nearest_idx(pos, route)
@@ -318,7 +318,7 @@ function move_to(route, routeTable, nextRoute, reverse)
         -- M.stop()
         return false
     end
-    local prevPos= nil
+    local prev_pos= nil
     for i, p in ipairs(route) do
 	if not M.auto then
 	    break
@@ -329,8 +329,8 @@ function move_to(route, routeTable, nextRoute, reverse)
             print("skip route["..i.."] pos:("..tostring(p.x)..", "..tostring(p.y)..")")
         else
 	    if p.route ~= nil then
-		local r = routeTable[p.route]
-		move_to(r, routeTable)
+		local r = route_table[p.route]
+		move_to(r, route_table)
 	    end
 	    if utils.table.count_keys(p) == 0 then
                 -- {} の時はオートラン
@@ -366,24 +366,24 @@ function move_to(route, routeTable, nextRoute, reverse)
 		x = x + math.random(-d*100,d*100)/100
 		y = y + math.random(-d*100,d*100)/100
 		local dpos = {x=x,y=y,z=p.z}
-		local currPos = current_pos()
-		M.AC.start_pos = currPos  -- 開始位置を更新
-		if prevPos ~= nil then
-		    local d = distance(prevPos, currPos)
+		local curr_pos = current_pos()
+		M.AC.start_pos = curr_pos  -- 開始位置を更新
+		if prev_pos ~= nil then
+		    local d = distance(prev_pos, curr_pos)
 		    if d > 128 then
 			io_chat.warn("too far next move point")
-			io_chat.printf("prevPos(%d,%d) currPos(%d,%d) distance(%d) > 128",
-				       prevPos.x, prevPos.y,
-				       currPos.x, currPos.y, d)
+			io_chat.printf("prev_pos(%d,%d) curr_pos(%d,%d) distance(%d) > 128",
+				       prev_pos.x, prev_pos.y,
+				       curr_pos.x, curr_pos.y, d)
 			local zone_id = windower.ffxi.get_info().zone
 			io_chat.printf("add midpoint (x=%d,y=%d) zone(%d) file",
-				       (prevPos.x + currPos.x)/2,
-				       (prevPos.y + currPos.y)/2, zone_id)
+				       (prev_pos.x + curr_pos.x)/2,
+				       (prev_pos.y + curr_pos.y)/2, zone_id)
 			-- M.stop()
 			return false
 		    end
-		    local vec1 = {x=currPos.x-prevPos.x,y=currPos.y-prevPos.y}
-		    local vec2 = {x=dpos.x-currPos.x,y=dpos.y-currPos.y}
+		    local vec1 = {x=curr_pos.x-prev_pos.x,y=curr_pos.y-prev_pos.y}
+		    local vec2 = {x=dpos.x-curr_pos.x,y=dpos.y-curr_pos.y}
 		    local similality = utils.vector.CosineSimilarity(vec1, vec2)
 		    if similality < 0.5 then
 			windower.ffxi.run(false)
@@ -392,7 +392,7 @@ function move_to(route, routeTable, nextRoute, reverse)
 			coroutine.sleep(t)
 		    end
 		end
-		prevPos = {x=currPos.x, y=currPos.y}
+		prev_pos = {x=curr_pos.x, y=curr_pos.y}
                 while (distance(current_pos(), dpos) > 0.5 and M.auto) do
                     if distance(current_pos(), dpos) > 6468 and false then
                         io_chat.warn("not near position")
@@ -410,7 +410,7 @@ function move_to(route, routeTable, nextRoute, reverse)
 		    end
                 end
 		windower.ffxi.run(false)
-		if nextRoute ~= nil and contain_pos(nextRoute, p) then
+		if next_route ~= nil and contain_pos(next_route, p) then
 		    return  -- 次のルートに重なるのでこのルートは終了
 		end
             end
@@ -467,16 +467,16 @@ function move_to(route, routeTable, nextRoute, reverse)
     return true
 end
 
-function auto_move_to(zone_id, destTable, routeTable)
+function auto_move_to(zone_id, destTable, route_table)
     if destTable[1] == nil then
-        if routeTable == nil then
+        if route_table == nil then
 	    io_chat.set_next_color(3) -- 赤
             print("not defined zone route", zone_id)
         else
 	    io_chat.set_next_color(5) -- 水色
-	    io_chat.printf("### routa table: (num:%d)", utils.table.count_keys(routeTable))
+	    io_chat.printf("### routa table: (num:%d)", utils.table.count_keys(route_table))
 	    local NGlist = {}
-            for dest, route in pairs(routeTable) do
+            for dest, route in pairs(route_table) do
 		local pos = current_pos()
 		local idx = nearest_idx(pos, route)
 		local desc = ""
@@ -506,17 +506,17 @@ function auto_move_to(zone_id, destTable, routeTable)
 	    else
 		reverse = false
 	    end
-	    local nextDest = destTable[i+1]
-	    _auto_move_to(zone_id, dest, routeTable, reverse, nextDest)
+	    local next_dest = destTable[i+1]
+	    _auto_move_to(zone_id, dest, route_table, reverse, next_dest)
 	end
     end
     -- M.stop()
 end
 M.auto_move_to = auto_move_to
 
-function _auto_move_to(zone_id, dest, routeTable, reverse, nextDest)
-    local route = routeTable[dest]
-    local nextRoute = routeTable[nextDest]
+function _auto_move_to(zone_id, dest, route_table, reverse, next_dest)
+    local route = route_table[dest]
+    local next_route = route_table[next_dest]
     if route == nil then
 	io_chat.set_next_color(3) -- 赤
 	io_chat.printf("route dest:%s is not found", dest)
@@ -530,7 +530,7 @@ function _auto_move_to(zone_id, dest, routeTable, reverse, nextDest)
 	return
     end
     M.auto = true
-    move_to(route, routeTable, nextRoute, reverse)
+    move_to(route, route_table, next_route, reverse)
     M.stop() -- M.auto = false
 end
 

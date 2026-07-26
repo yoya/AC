@@ -36,7 +36,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     from_huxzoi = {x=-420,y=248.5,z=0},
     hp1 = {x=-427,y=367,z=0},
 }

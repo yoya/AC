@@ -5,7 +5,7 @@ local task = require 'task'
 
 local M = {}
 
-M.mainJobProbTable = {
+M.main_job_prob_table = {
     -- { 100, 120, 'input /ma ディア <t>', 3, true },
     { 100, 120, 'input /ma ディアII <t>', 3, true  },
     { 100, 120, 'input /ma スロウ <t>', 3, true },
@@ -37,7 +37,7 @@ M.mainJobProbTable = {
     { 200, 600/2, 'input /ja デヴォーション <p2>', 0 },
 }
 
-M.subJobProbTable = {
+M.sub_job_prob_table = {
     { 5, 600-60, 'input /ma アクアベール <me>', 7},
     { 5, 300-30, 'input /ma ブリンク <me>', 7},
     { 5, 300-30, 'input /ma ストンスキン <me>', 8},

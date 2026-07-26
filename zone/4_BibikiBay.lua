@@ -31,7 +31,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     vw_warp = {x=-398,y=-417,z=-3}
 }
 

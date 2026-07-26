@@ -20,7 +20,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     unity_warp = {x=68.2,y=148,z=-6.2},
 }
 

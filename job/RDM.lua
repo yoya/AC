@@ -11,7 +11,7 @@ local io_chat = require 'io/chat'
 
 local M = {}
 
-M.mainJobProbTable = {
+M.main_job_prob_table = {
     { 500, 300*2, 'input /ja コンポージャー <me>', 2 },
     -- { 100, 30, 'input /ma ディスペル <t>', 3 },
     --{ 500, 180, 'input /ma ディアIII <t>', 3, true },
@@ -35,7 +35,7 @@ M.mainJobProbTable = {
     { 10, 600/4, 'input /ja コンバート <me>', 1 },
 }
 
-M.subJobProbTable = {
+M.sub_job_prob_table = {
 --[[
     { 10, 60, 'input /ma ケアル <p1>', 3},
     -- { 5, 600-60, 'input /ma アクアベール <me>', 5},

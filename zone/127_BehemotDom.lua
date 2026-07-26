@@ -19,7 +19,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     unity_warp = {x=-183.1,y=57.9,z=-19.9},
     wanted = {x=-269.2,y=74.2,z=-19.8},
 }
@@ -29,10 +29,10 @@ M.automatic_routes = {
 }
 
 function M.tick(player)
-    local mobArr = windower.ffxi.get_mob_array()
+    local mob_arr = windower.ffxi.get_mob_array()
     -- ウォンテッド???の近くにいる時、??? が現れたらターゲットする
     if M.parent.is_near(127, "wanted", 20) then
-	for i, m in pairs(mobArr) do
+	for i, m in pairs(mob_arr) do
 	    if m.name == "???" and m.status == 0 then
 		io_net.target_by_mob_id(m.id)
 	    end

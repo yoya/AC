@@ -38,7 +38,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     hp1_E = {x=-84.5,y=-65.5,z=1},
     hp2_A = {x=45,y=-34,z=2},
     hp3_M = {x=140,y=124,z=-2},

@@ -3,14 +3,14 @@
 
 local M = { id = 275 }
 
-M.origContentType = nil
+M.orig_content_type = nil
 
 function M.zone_in()
     local contents =  __AC.contents
     print("Vagary in")
     -- 場所によってはソーティもあるので、一旦なくす
     --[[
-    M.origContentType = contents.type
+    M.orig_content_type = contents.type
 	contents.set_type(contents.Vagary)
     ]]
 end
@@ -19,16 +19,16 @@ function M.zone_out()
     local contents =  __AC.contents
     print("Vagary out")
     --[[
-    if M.origContentType ~= nil then
-	contents.set_type(M.origContentType)
-	M.origContentType = nil
+    if M.orig_content_type ~= nil then
+	contents.set_type(M.orig_content_type)
+	M.orig_content_type = nil
 	end
     ]]
 end
 
 M.routes = { }
 
-M.essentialPoints = {
+M.essential_points = {
     -- アシュラック入り口
     asyu = {x=864,y=300,z=69.8},
     -- バラモア入り口 z=110 の時ある？

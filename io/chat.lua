@@ -8,19 +8,19 @@ local utils_table = require "utils/table"
 -- 5: 水色, 6: エメラルド
 -- 7: 紫, 8: 明赤紫, 9: 白
 -- 10: 肌色
-local textColor = nil
-local textColorOnce = false
+local text_color = nil
+local text_color_once = false
 
 function M.set_color(col)
-    textColor = col
-    textColorOnce = false
+    text_color = col
+    text_color_once = false
 end
 function M.clear_color()
-    textColor = nil
+    text_color = nil
 end
 function M.set_next_color(col)
-    textColor = col
-    textColorOnce = true
+    text_color = col
+    text_color_once = true
 end
 
 function M.print(...)
@@ -33,12 +33,12 @@ function M.print(...)
 	    text = text .. " " .. t
 	end
     end
-    if textColor ~= nil then
-	text = text:color(textColor)
+    if text_color ~= nil then
+	text = text:color(text_color)
     end
-    if textColorOnce == true then
-	textColor = nil
-	textColorOnce = false
+    if text_color_once == true then
+	text_color = nil
+	text_color_once = false
     end
     windower.add_to_chat(17, windower.to_shift_jis(text))
 end

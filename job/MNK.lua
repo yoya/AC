@@ -6,7 +6,7 @@ local role_Melee = require 'role/Melee'
 local command = require 'command'
 local task = require 'task'
 
-M.mainJobProbTable = {
+M.main_job_prob_table = {
     { 100, 120, 'input /ja 集中 <me>', 0 },
     { 100, 120, 'input /ja 回避 <me>', 0 },
     { 60, 600, 'input /ja マントラ <me>', 0 },
@@ -17,7 +17,7 @@ M.mainJobProbTable = {
     -- { 60, 600, 'input /ja 無想無念 <me>', 0 },
 }
 
-M.subJobProbTable = {
+M.sub_job_prob_table = {
     { 100, 120, 'input /ja 集中 <me>', 0 },
     { 100, 120, 'input /ja 回避 <me>', 0 },
 }
@@ -56,9 +56,9 @@ end
 
 function M.dothebest_main(player)
     local level = task.PRIORITY_HIGH
-    local jaList = { "猫足立ち", "回避", "かまえる", "集中",
+    local ja_list = { "猫足立ち", "回避", "かまえる", "集中",
 		     "インナーストレングス", "百烈拳"}
-    for i, ja_name in ipairs(jaList) do
+    for i, ja_name in ipairs(ja_list) do
 	local c = "input /ja "..ja_name.." <me>"
 	-- command, delay, duration, period, eachfight
 	local t = task.new_task(c, (i-1)*2, 2, 10, false)
@@ -68,8 +68,8 @@ end
 
 function M.dothebest_sub(player)
     local level = task.PRIORITY_HIGH
-    local jaList = { "回避", "かまえる", "集中"}
-    for i, ja_name in ipairs(jaList) do
+    local ja_list = { "回避", "かまえる", "集中"}
+    for i, ja_name in ipairs(ja_list) do
 	local c = "input /ja "..ja_name.." <me>"
 	-- command, delay, duration, period, eachfight
 	local t = task.new_task(c, (i-1)*2, 2, 10, false)

@@ -24,7 +24,7 @@ local NW = math.pi * (7/4)
 -- 0:喜ぶ 1:泣く 2:驚く 3:悔しむ
 -- 4:励ます 5:慌てる 6:照れる 7:気合
 
-local stationWorkerBoostTable = {
+local station_worker_boost_table = {
     [263] = { -- ヨルシア森林
 	[0] = {S,SW, 6}, [3] = {SW,W, 7},
 	[6] = {W,NW, 0}, [9] = {NW,N, 1},
@@ -46,9 +46,9 @@ local stationWorkerBoostTable = {
 }
 
 local get_station_worker_boost_info = function(zone)
-    local timeTable = stationWorkerBoostTable[zone]
+    local time_table = station_worker_boost_table[zone]
     local time = windower.ffxi.get_info().time
-    for t, i in pairs(timeTable) do
+    for t, i in pairs(time_table) do
         if t*60 <= time and time < (t+3)*60 then
             return i
         end

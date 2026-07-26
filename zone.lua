@@ -49,7 +49,7 @@ function M.in_moghouse(zone_id, pos)
     return false
 end
 
-M.zoneTable = {
+M.zone_table = {
     [2] = require('zone/2_CpntLanding'),    -- ギルド桟橋
     [4] = require('zone/4_BibikiBay'),      -- ビビキー湾
     [6] = require('zone/6_BearclawPn'),     -- 熊爪嶽
@@ -223,11 +223,11 @@ M.zoneTable = {
     [295] = require('zone/295_DynamisBas'), -- デュナミス-バストゥーク
 }
 
-for z, m in pairs(M.zoneTable) do
+for z, m in pairs(M.zone_table) do
     if z ~= m.id then
 	print("illegal zone:"..z.." module id:"..m.id)
     end
-    -- 各々の zone handler から routeTable を参照できるようにする
+    -- 各々の zone handler から route_table を参照できるようにする
     m.parent = M
     if m.init ~= nil then
 	m.init(M)
@@ -235,7 +235,7 @@ for z, m in pairs(M.zoneTable) do
 end
 
 function M.get_route_table(zone)
-    local t = M.zoneTable[zone]
+    local t = M.zone_table[zone]
     if t ~= nil and t.routes ~= nil then
 	return t.routes
     end
@@ -244,7 +244,7 @@ end
 
 function M.tick(player)
     local zone = windower.ffxi.get_info().zone
-    local z = M.zoneTable[zone]
+    local z = M.zone_table[zone]
     if z ~= nil then
 	local tick = z.tick
 	if tick ~= nil then
@@ -257,9 +257,9 @@ function M.is_near(zone, name, distance)
     if zone ~= windower.ffxi.get_info().zone then
 	return false
     end
-    local z = M.zoneTable[zone]
+    local z = M.zone_table[zone]
     if z ~= nil then
-	local points = z.essentialPoints
+	local points = z.essential_points
 	local me = windower.ffxi.get_mob_by_target("me")
 	if points ~= nil and me ~= nil then
 	    for name2, pos in pairs(points) do
@@ -275,7 +275,7 @@ end
 function M.event_handler(event_type)
     -- print("zone.event_handler:", event_type)
     local zone = windower.ffxi.get_info().zone
-    local z = M.zoneTable[zone]
+    local z = M.zone_table[zone]
     if z ~= nil then
 	local handlers = z.event_handlers
 	if handlers ~= nil then
@@ -285,8 +285,8 @@ function M.event_handler(event_type)
 		end
 	    end
 	end
-	local items = z.essentialItems
-	local key_items = z.essentialKeyItems
+	local items = z.essential_items
+	local key_items = z.essential_key_items
 	if items ~= nil then
 	    acitem.show_own_items(items)
 	end

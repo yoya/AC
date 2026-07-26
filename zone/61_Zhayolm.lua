@@ -55,7 +55,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     cruor = {x=825,y=179,z=-17.5},
     unity = {x=-613,y=230,z=-21.3},
     ['g-6'] = {x=-58.7,y=289,z=-17},

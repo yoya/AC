@@ -2,7 +2,7 @@
 
 local M = { id = 292 }
 
-M.essentialPoints = {
+M.essential_points = {
     zhuu = {x=-761,y=-764,z=-440}, -- ズー・ブシュ戦
     reiku = {x=-761,y=-764,z=-440}, -- レイクウ戦
 }

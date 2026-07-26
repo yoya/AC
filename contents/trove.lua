@@ -91,7 +91,7 @@ end
 
 --- 切り替え
 
-M.npcActionHandlers = {
+M.npc_action_handlers = {
     ["Greyson"] = GreysonFunction,
     ["Burning Circle"] = BurningCircleFunction,
 }

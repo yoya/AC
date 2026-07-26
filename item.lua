@@ -42,39 +42,39 @@ local bag_name_ja_list = {
 local inventory_total_num = function()
     local items = windower.ffxi.get_items()
     local item = items.inventory
-    local totalNum = 0
+    local total_num = 0
     for i, e in ipairs(item) do
-        totalNum = totalNum + e.count
+        total_num = total_num + e.count
     end
-    return totalNum
+    return total_num
 end
 M.inventory_total_num = inventory_total_num
 
 function M.inventory_count_by_item_id(item_id)
     local items = windower.ffxi.get_items()
     local item = items.inventory
-    local totalNum = 0
+    local total_num = 0
     for i, e in ipairs(item) do
 	if e.id == item_id then
-	    totalNum = totalNum + e.count
+	    total_num = total_num + e.count
 	end
     end
-    return totalNum
+    return total_num
 end
 
 function M.inventory_count_by_item_ids(item_ids)
-    local totalNum = 0
+    local total_num = 0
     for _, item_id in ipairs(item_ids) do
-	totalNum = totalNum + M.inventory_count_by_item_id(item_id)
+	total_num = total_num + M.inventory_count_by_item_id(item_id)
     end
-    return totalNum
+    return total_num
 end
 
-local prevInventoryTotalNum = inventory_total_num()
+local prev_inventory_total_num = inventory_total_num()
 local diff_inventory_total_num = function()
     local next = inventory_total_num()
-    local diff = next - prevInventoryTotalNum
-    prevInventoryTotalNum = next
+    local diff = next - prev_inventory_total_num
+    prev_inventory_total_num = next
     return diff
 end
 M.diff_inventory_total_num = diff_inventory_total_num

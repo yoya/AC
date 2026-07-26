@@ -16,7 +16,7 @@ local contents = require 'contents'
 local split_multi = utils.string.split_multi
 local phantom_roll_table = ac_data.phantom_roll_table
 
-M.mainJobProbTable = {
+M.main_job_prob_table = {
     { 100, 60*10/2, 'input /ja クルケッドカード <me>', 3 }, -- 駄目元で
     { 100, 20*60/2, 'input /ja ランダムディール <me>', 3 },
     -- { 200, 60, 'input /ja コルセアズロール <me>; wait 2; input /ja ダブルアップ <me>', 0 },
@@ -32,7 +32,7 @@ M.mainJobProbTable = {
     ]]
 }
 
-M.subJobProbTable = {
+M.sub_job_prob_table = {
     -- { 100, 300, 'input /ja コルセアズロール <me>;'' wait 2; /ja ダブルアップ <me>', 3 },
     { 100, 60, 'input /ja コルセアズロール <me>', 3 },
     -- { 100, 300, 'input /ja サムライロール  <me>', 3 },

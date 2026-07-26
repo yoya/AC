@@ -45,7 +45,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     bc_in = {x=-179,y=125.1,z=32.1},
     bc_out = {x=-15.1,y=55.4,y=-7.6},
     caeda = {x=-40,y=-260.2,z=-7.6},

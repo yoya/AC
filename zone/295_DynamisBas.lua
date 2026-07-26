@@ -5,7 +5,7 @@ local M = { id = 295 }
 M.routes = {
 }
 
-M.essentialPoints = {
+M.essential_points = {
     entrance = {x=-15,y=-122,z=-1},
 }
 

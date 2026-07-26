@@ -32,7 +32,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     homepoint_1 = {x=434,y=170,z=-40.1},
     from_horl = {x=437.5,y=68.1,z=-40.1}
 }

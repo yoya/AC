@@ -5,7 +5,7 @@ local M = {}
 local actask = require 'task'
 local ac_equip = require 'ac/equip'
 
-M.mainJobProbTable = {
+M.main_job_prob_table = {
     { 10, 60*20, 'input /ja コールワイバーン <me>', 2 },
     { 10, 60*1, 'input /ja ジャンプ <t>', 2 },
     { 10, 60*1.5, 'input /ja スピリットリンク <me>', 2 },
@@ -17,7 +17,7 @@ M.mainJobProbTable = {
     { 10, 60*2, 'input /ja ソウルジャンプ <t>', 2 },
 }
 
-M.subJobProbTable = {
+M.sub_job_prob_table = {
     { 10, 60*1, 'input /ja ジャンプ <t>', 2 },
     { 10, 60*2, 'input /ja ハイジャンプ <t>', 2 },
 }

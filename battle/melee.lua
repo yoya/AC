@@ -14,7 +14,7 @@ local acmob = require 'mob'
 local get_mob_position = acmob.get_mob_position
 
 -- 敵から離れているか。M.tick 内の return で true のまま次の tick へ持ち越す
-local isFar = false
+local is_far = false
 
 local acprob = require 'prob'
 local send_command_prob = acprob.send_command_prob
@@ -53,21 +53,21 @@ function M.tick(player, me, mob)
     end
     M.so_long_to_get_fight_count = 0
     local player = windower.ffxi.get_player()
-    local mainJob = player.main_job
-    local subJob = player.sub_job
----    print("XXX", preferredEnemyList)
+    local main_job = player.main_job
+    local sub_job = player.sub_job
+---    print("XXX", preferred_enemy_list)
     -- 中断してでも優先する敵
     local condition = {
 	range = control.enemy_range,
-	preferMobs = acmob.moreAttractiveEnemyList,
-	nameMatch = control.enemy_filter,
+	prefer_mobs = acmob.more_attractive_enemy_list,
+	name_match = control.enemy_filter,
     }
-    local preferMob = acmob.search_nearest_mob(pull.base_pos, condition)
-    ---    print("prefereMob", preferMob)
-    if not utils.table.contains(acmob.moreAttractiveEnemyList, mob.name) and preferMob ~= nil and mob.name ~= preferMob.name then
-	--        print("preferMob:", mob.name)
+    local prefer_mob = acmob.search_nearest_mob(pull.base_pos, condition)
+    ---    print("prefereMob", prefer_mob)
+    if not utils.table.contains(acmob.more_attractive_enemy_list, mob.name) and prefer_mob ~= nil and mob.name ~= prefer_mob.name then
+	--        print("prefer_mob:", mob.name)
         if iam_leader() then
-            io_net.target_by_mob(preferMob)
+            io_net.target_by_mob(prefer_mob)
             coroutine.sleep(1)
             command.send('input /attack <t>')
         else
@@ -79,8 +79,8 @@ function M.tick(player, me, mob)
  ---       return
  ---   end
     --- サポ白はPLなので、ずっとインビジ
-    local subJob = player.sub_job
-    if false and subJob == "WHM" then
+    local sub_job = player.sub_job
+    if false and sub_job == "WHM" then
         if math.random(1, 100) <= 1 then
 ---            command.send('input /ma インビジ <me>')
 ---            coroutine.sleep(2)
@@ -109,10 +109,10 @@ function M.tick(player, me, mob)
     end
     if iam_leader() then
 	if dist > enemy_space then
-	    isFar = true
+	    is_far = true
 	end
     end
-    if isFar then
+    if is_far then
         --　戦闘中でないときは、WSやMAを自粛。フェイスが動かないので。
         if dist / mob.model_size > enemy_space or player.status == 0 then
             windower.ffxi.run(dx, dy)
@@ -132,14 +132,14 @@ function M.tick(player, me, mob)
                 { 300, 0, 'setkey a down; wait 0.25; setkey a up', 0 },
                 { 300, 0, 'setkey d down; wait 0.25; setkey d up', 0 },
                 { 500, 0, 'setkey s down; wait 0.01; setkey s up', 0 }, -- 後ろ
-         }, 1.0, acprob.probRecastTime)
+         }, 1.0, acprob.prob_recast_time)
 	    --- 一回だけなので 1 を入れる。
 	else
 	    windower.ffxi.run(false)
         end
     end
     --- 止まって戦闘開始
-    isFar = false
+    is_far = false
     windower.ffxi.run(false)
     --- atan2 のままだと右を向くので、90度の補正
 --    local dir = math.atan2(dx, dy) - 3.14/2
@@ -147,20 +147,20 @@ function M.tick(player, me, mob)
     turn_to_target("t")
 ---    if player.vitals.tp >= math.random(1100, 1200) then
     --- PLD はタゲ取り.RNG はエヴィ用。"BLM", "SMN", "SCH"はミルキル
-    -- local tp100Jobs = {-"RNG", "BLM", "SMN", "SCH"}
-    local tp100Jobs = {}
+    -- local tp100_jobs = {-"RNG", "BLM", "SMN", "SCH"}
+    local tp100_jobs = {}
     --- WAR はスチサイ用。DNC はダンス用？
-    local tpJobs = {"DNC"}
---    local tpMin = 1200
---    local tpMax = 1500
-    local tpMin = 2000
-    local tpMax = 2500
-    if utils.table.contains(tp100Jobs, player.main_job) then
-        tpMin = 1050
-        tpMax = 1150
-    elseif utils.table.contains(tpJobs, player.main_job) then
-        tpMin = 2000
-        tpMax = 2300
+    local tp_jobs = {"DNC"}
+--    local tp_min = 1200
+--    local tp_max = 1500
+    local tp_min = 2000
+    local tp_max = 2500
+    if utils.table.contains(tp100_jobs, player.main_job) then
+        tp_min = 1050
+        tp_max = 1150
+    elseif utils.table.contains(tp_jobs, player.main_job) then
+        tp_min = 2000
+        tp_max = 2300
     end
     local ws_request = false
     local now = os.time()
@@ -191,10 +191,10 @@ function M.tick(player, me, mob)
 	return
     else
         if player.item_level > 99 then
-            local commprob = get_send_command_prob_table(mainJob, subJob, 1)
+            local commprob = get_send_command_prob_table(main_job, sub_job, 1)
 --            io_chat.print(commprob)
-            --send_command_prob(commprob, settings.Period, acprob.probRecastTime)
-	    send_command_prob(commprob, control.period, acprob.probRecastTime)
+            --send_command_prob(commprob, settings.Period, acprob.prob_recast_time)
+	    send_command_prob(commprob, control.period, acprob.prob_recast_time)
         end
     end
 ---    if math.random(1, 100) <= 1 then
@@ -211,7 +211,7 @@ function M.tick(player, me, mob)
 		{ 10, 10, 'setkey d down; wait 0.1; setkey d up', 0 }, -- right
 		{ 20, 10, 'setkey w down; wait 0.1; setkey w up', 0 }, -- forward
 		{ 20, 10, 'setkey s down; wait 0.1; setkey s up', 0 }, -- back
-			}, control.period, acprob.probRecastTime)
+			}, control.period, acprob.prob_recast_time)
     end
     if control.point_cheer then  --- アンバス：マンドラ
         send_command_prob({
@@ -220,7 +220,7 @@ function M.tick(player, me, mob)
             { 100, 1, 'input /cheer <p2>', 1 },
             { 100, 1, 'input /clap <p1>', 1 },
             { 100, 1, 'input /clap <p2>', 1 },
-        }, control.period, acprob.probRecastTime)
+        }, control.period, acprob.prob_recast_time)
     end  
 end
 

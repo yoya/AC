@@ -59,7 +59,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     -- x={179.5-181.5}, y=40.4}
     from_mariami = {x=180.5,y=40.5,z=30, dx=3},
 }

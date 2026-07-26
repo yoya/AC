@@ -17,7 +17,7 @@ M.PRIORITY_HIGH   = 2  -- 優先度高。サイレス。MB, WS
 M.PRIORITY_MIDDLE = 3  -- 優先度中。デバフ。通常ケアル
 M.PRIORITY_LOW    = 4  -- 優先度低。バフ。通常の魔法、遠隔武器
 local PRIORITY_LAST  = 4
-local taskTable = {
+local task_table = {
     [M.PRIORITY_TOP]    = {},
     [M.PRIORITY_HIGH]   = {},
     [M.PRIORITY_MIDDLE] = {},
@@ -25,7 +25,7 @@ local taskTable = {
 }
 --ex) [M.PRIORITY_HIGH]   = { task1, task2, ... },
 
-local taskPeriodTable = {}
+local task_period_table = {}
 -- ex) command => time
 
 -- new_task
@@ -55,24 +55,24 @@ end
 
 M.all_clear = function()
     for level = PRIORITY_FIRST, PRIORITY_LAST do
-	taskTable[level] = {}
+	task_table[level] = {}
     end
 end
 
 M.all_reset = function()  -- 再使用タイマーのリセット
-    taskPeriodTable = {}
+    task_period_table = {}
 end
 
 M.reset_by_fight = function()
     -- eachfight が true のタスクをキューから外し、再使用タイマーをリセットする
     -- (prob.lua が新しい戦闘用に積み直す)
     for level = PRIORITY_FIRST, PRIORITY_LAST do
-	local tasks = taskTable[level]
+	local tasks = task_table[level]
 	-- table.remove するので後ろから回す
 	for i = #tasks, 1, -1 do
 	    local task = tasks[i]
 	    if task.eachfight == true then
-		taskPeriodTable[task.command] = os.time() - 1
+		task_period_table[task.command] = os.time() - 1
 		table.remove(tasks, i)
 	    end
 	end
@@ -84,7 +84,7 @@ function task_equal(task1, task2)
 end
 
 function task_index(level, task)
-    for i, t in ipairs(taskTable[level]) do
+    for i, t in ipairs(task_table[level]) do
 	if task_equal(t, task) then
 	    return i
 	end
@@ -106,12 +106,12 @@ function M.set_task(level, task)
     if task_contain(level, task) == true then  -- 重複避け
 	return false
     end
-    table.insert(taskTable[level], task)
+    table.insert(task_table[level], task)
     local c = task.command
     local t = os.time() + task.delay
-    --if taskPeriodTable[c] == nil or taskPeriodTable[c] < t then
-    if taskPeriodTable[c] == nil then
-	taskPeriodTable[c] = t
+    --if task_period_table[c] == nil or task_period_table[c] < t then
+    if task_period_table[c] == nil then
+	task_period_table[c] = t
     end
     return true
 end
@@ -122,7 +122,7 @@ function M.remove_task(level, task)
     assert_task(task)
     local i = task_index(level, task)
     if i > 0 then
-	table.remove(taskTable[level], i)
+	table.remove(task_table[level], i)
     end
     return i
 end
@@ -130,8 +130,8 @@ end
 function M.reset_task(level, task)
     local i = task_index(level, task)
     if i > 0 then
-	table.remove(taskTable[level], i)
-	taskPeriodTable[task.command] = nil  -- 再使用タイマーをリセット
+	table.remove(task_table[level], i)
+	task_period_table[task.command] = nil  -- 再使用タイマーをリセット
     end
     return i
 end
@@ -170,7 +170,7 @@ function M.remove_task_ex(c)
 end
 
 M.init = function()
-    taskTable = {
+    task_table = {
 	[M.PRIORITY_TOP]    = {},
 	[M.PRIORITY_HIGH]   = {},
 	[M.PRIORITY_MIDDLE] = {},
@@ -182,12 +182,12 @@ end
 function M.get_task()
     local now = os.time()
     for level = PRIORITY_FIRST, PRIORITY_LAST do
-	for i, task in ipairs(taskTable[level]) do
+	for i, task in ipairs(task_table[level]) do
 	    local c = task.command
-	    local t = taskPeriodTable[c]
+	    local t = task_period_table[c]
 	    if t == nil or t <= now then
-		taskPeriodTable[c] = now + task.period
-		table.remove(taskTable[level], i)
+		task_period_table[c] = now + task.period
+		table.remove(task_table[level], i)
 		return level, task
 	    end
 	end
@@ -195,10 +195,10 @@ function M.get_task()
     return 0, nil
 end
 
-local tickNextTime = os.time()
+local tick_next_time = os.time()
 M.tick = function()
     local now = os.time()
-    if now < tickNextTime then
+    if now < tick_next_time then
 	return
     end
     local level, task = M.get_task()
@@ -230,20 +230,20 @@ M.tick = function()
 	    ws.exec()
 	end
     end
-    tickNextTime = now + task.duration
-    -- print("tickNextTime", tickNextTime, task.duration, c)
+    tick_next_time = now + task.duration
+    -- print("tick_next_time", tick_next_time, task.duration, c)
 end
 
 function M.print()
     local io_chat = require('io/chat')
     io_chat.set_next_color(5)
     io_chat.print("=== task print")
-    for l, taskArr in pairs(taskTable) do
+    for l, taskArr in pairs(task_table) do
 	io_chat.set_next_color(6)
 	io_chat.print("level:"..l)
 	for i, task in ipairs(taskArr) do
 	    local c = task.command
-	    local t = taskPeriodTable[c]
+	    local t = task_period_table[c]
 	    io_chat.print(task, t <= os.time())
 	end
     end

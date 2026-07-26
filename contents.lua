@@ -25,7 +25,7 @@ M.GobMys      = 16  -- ゴブの不思議箱 (Gobbie Mystery Box)
 M.UnityWanted = 17  -- ユニティ・ウォンテッド
 M.Sortie      = 18  -- ソーティ
 
-M.allContents = { M.Idle, M.Leveling, M.Ambus, M.Works, M.Trove,  M.Mission, M.Abyssea, M.Garden, M.Trial, M.Raives, M.WKR, M.LoginPoint, M.Vagary, M.Synergy, M.Redeem, M.GobMys, M.UnityWanted, M.Sortie }
+M.all_contents = { M.Idle, M.Leveling, M.Ambus, M.Works, M.Trove,  M.Mission, M.Abyssea, M.Garden, M.Trial, M.Raives, M.WKR, M.LoginPoint, M.Vagary, M.Synergy, M.Redeem, M.GobMys, M.UnityWanted, M.Sortie }
 
 M.ambus   = require 'contents/ambus'
 M.trial   = require 'contents/trial'
@@ -39,7 +39,7 @@ M.abyssea = require 'contents/abyssea'
 M.redeem  = require 'contents/redeem'
 M.wanted  = require 'contents/wanted'
 M.sortie  = require 'contents/sortie'
-M.contentsTable = {
+M.contents_table = {
     -- モードが必要なだけで特別な処理のないcontentsは、ここに追加しない
     [M.Ambus]       = M.ambus,
     [M.Trial]       = M.trial,
@@ -54,14 +54,14 @@ M.contentsTable = {
     [M.UnityWanted] = M.wanted,
     [M.Sortie]      = M.sortie,
 }
-for c, m in pairs(M.contentsTable) do
+for c, m in pairs(M.contents_table) do
     m.parent = M
 end
 
 M.type = M.Idle
 
 
-M.nameTable = {
+M.name_table = {
     [M.Idle]        = {'Idle', nil, ''},
     [M.Leveling]    = {'Leveling', 'level'},
     [M.Ambus]       = {"Ambus"},
@@ -85,23 +85,23 @@ M.nameTable = {
 M.incoming_text_listener_id = nil
 
 function M.set_type(c)
-    local prevContents = M.type
-    if prevContents ~= c then
-	local prevC = M.contentsTable[prevContents]
-	if prevC ~= nil and prevC.contents_out ~= nil then
-	    prevC.contents_out()
+    local prev_contents = M.type
+    if prev_contents ~= c then
+	local prev_c = M.contents_table[prev_contents]
+	if prev_c ~= nil and prev_c.contents_out ~= nil then
+	    prev_c.contents_out()
 	end
 	if M.incoming_text_listener_id ~= nil then
 	    incoming_text.remove_listener(M.incoming_text_listener_id)
 	    M.incoming_text_listener_id = nil
 	end
 	M.type = c
-	local nextC = M.contentsTable[c]
-	if nextC ~= nil then
-	    if nextC.contents_in ~= nil then
-		nextC.contents_in()
+	local next_c = M.contents_table[c]
+	if next_c ~= nil then
+	    if next_c.contents_in ~= nil then
+		next_c.contents_in()
 	    end
-	    local incoming_text_handler = nextC.incoming_text_handler
+	    local incoming_text_handler = next_c.incoming_text_handler
 	    if incoming_text_handler ~= nil then
 		M.incoming_text_listener_id = incoming_text.add_listener("", incoming_text_handler)
 	    end
@@ -110,7 +110,7 @@ function M.set_type(c)
 end
 
 function M.set_contents(name)
-    for c, names in pairs(M.nameTable) do
+    for c, names in pairs(M.name_table) do
 	for _, n in ipairs(names) do
 	    if name:lower() == n:lower() then
 		M.set_type(c)
@@ -125,19 +125,19 @@ function M.tick(player)
     if M.type == M.Idle then
 	return
     end
-    if M.contentsTable[M.type] == nil then
+    if M.contents_table[M.type] == nil then
 	return  -- 未対応
     end
-    local tick = M.contentsTable[M.type].tick
+    local tick = M.contents_table[M.type].tick
     if tick ~= nil then
 	tick(player)
     end
 end
 
 function M.npc_action_handler(zone, mob)
-    for _, c in pairs(M.contentsTable) do
-	if c.npcActionHandlers ~= nil then
-	    for name, handler in pairs(c.npcActionHandlers) do
+    for _, c in pairs(M.contents_table) do
+	if c.npc_action_handlers ~= nil then
+	    for name, handler in pairs(c.npc_action_handlers) do
 		if mob.name == name then
 		    handler(zone, mob)
 		end
@@ -147,7 +147,7 @@ function M.npc_action_handler(zone, mob)
 end
 
 function M.zone_out()
-    for _, c in pairs(M.contentsTable) do
+    for _, c in pairs(M.contents_table) do
 	if c.zone_out ~= nil then
 	    c.zone_out()
 	end
@@ -156,11 +156,11 @@ end
 
 function M.get_contents_by_name(name)
     -- print("contents.get_contents_by_name(name)", name)
-    local names = M.nameTable[M.type]
+    local names = M.name_table[M.type]
     if names == nil then return false end
     for i, n in ipairs(names) do
 	if name:lower() == n:lower() then
-	    return M.type, M.contentsTable[M.type]
+	    return M.type, M.contents_table[M.type]
 	end
     end
     return 0, nil
@@ -176,7 +176,7 @@ function M.match_contents_name(name)
 end
 
 function M.show_contents()
-    local name = M.nameTable[M.type]
+    local name = M.name_table[M.type]
     if name == nil then
 	name = "<nil>"
     else
@@ -187,7 +187,7 @@ end
 
 function M.list_contents()
     local str = ''
-    for c, names in pairs(M.nameTable) do
+    for c, names in pairs(M.name_table) do
 	str = str .. names[1] .. " "
     end
     io_chat.infof("list_contents: %s", str)

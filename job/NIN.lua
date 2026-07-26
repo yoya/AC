@@ -6,7 +6,7 @@ local role_Melee = require 'role/Melee'
 local acitem = require 'item'
 local task = require 'task'
 
-M.mainJobProbTable = {
+M.main_job_prob_table = {
     { 100, 60*10, 'input /ja 陰忍 <me>', 2 },
     { 100, 60*5/2, 'input /nin 活火の術:壱 <me>', 3 + 4 },  -- 自分のSTP+10
     { 100, 60*5/2, 'input /nin 妙手の術:壱 <me>', 3 + 4 },  -- 自分の与TP-
@@ -20,7 +20,7 @@ M.mainJobProbTable = {
     { 100, 60, 'input /nin 水遁の術:参 <t>', 2.75 + 4, true },  -- 雷耐性down
 }
 
-M.subJobProbTable = { }
+M.sub_job_prob_table = { }
 
 function invoke_ninjutsu(level, ninjutsu_command, duration, period, onoff)
     assert(type(level) == "number")

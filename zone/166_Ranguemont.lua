@@ -23,7 +23,7 @@ M.routes = {
     }
 }
 
-M.essentialPoints = {
+M.essential_points = {
     from_ronfaure = {x=-140,y=-321.5,z=4},  -- 東ロンフォールから入ったとこ
     book = {x=-145,y=-299,z=4.4},  -- 本ワープ
 }

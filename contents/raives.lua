@@ -1,6 +1,6 @@
 local M = {}
 
-M.preferredEnemyList = {
+M.preferred_enemy_list = {
     -- コロナイズ・レイヴ 
     "Knotted Root", "Bedrock Crag", "Broadleaf Palm", "Monolithic Boulder",
     "Gnarled Rampart", "Icy Palisade",
@@ -12,7 +12,7 @@ M.preferredEnemyList = {
 
 -- 発生中か否か。該当の敵が近くにいるかで判断
 function M.arise()
-    for i, name in ipairs(M.preferredEnemyList) do
+    for i, name in ipairs(M.preferred_enemy_list) do
 	local mob = windower.ffxi.get_mob_by_name(name)
 	-- status:3 は隠れてる
 	if mob ~= nil and mob.status <= 1 and mob.distance < 1000 then

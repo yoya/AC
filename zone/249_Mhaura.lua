@@ -19,7 +19,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     hp1 = {x=-12.7,y=86.3,z=-15.7},
     from_legion = {-34.2,y=58.1,y=-16},
 }

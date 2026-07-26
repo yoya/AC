@@ -14,7 +14,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     from_odyssey = {x=-33.1,y=120.2,z=8},
     hp2 = {x=-21,y=111,z=8.1},
 }

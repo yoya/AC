@@ -14,7 +14,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     from_umijishi = {x=-27.5,y=-613.2,z=0},  -- H-12
     from_dem = {x=-531,y=447,z=0}, -- E-6
 }

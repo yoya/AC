@@ -2,7 +2,7 @@
 
 local M = { id = 174 }
 
-M.essentialItems = {
+M.essential_items = {
     1844,  -- 黄霊布 (エンブリオ・ミッション)
 }
 

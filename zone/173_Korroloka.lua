@@ -17,7 +17,7 @@ M.routes = {
     
 }
 
-M.essentialPoints = {
+M.essential_points = {
     from_Zeruhn = {x=461.1,y=160.6,z=-40.1}
 }
 

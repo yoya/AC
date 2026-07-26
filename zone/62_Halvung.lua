@@ -15,7 +15,7 @@ M.routes = {
     }
 }
 
-M.essentialPoints = {
+M.essential_points = {
     northwest = {x=-540,y=400.5,z=-40},
     northeast = {x=-412,y=386.7,z=-35.4},
 }

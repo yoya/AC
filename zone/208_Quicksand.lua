@@ -49,7 +49,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     -- たまに反応しない ので、次 pos する
     ent_west_d12 = {x=-738.9,y=-521.8,z=-16},
     ent_east_h10 = {x=700,y=-688.2,z=-24},

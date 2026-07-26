@@ -17,10 +17,10 @@ function M.set_battle_type(battle_type)
     M.battle_type = battle_type
 end
 
-M.battleTable = {
+M.battle_table = {
     [M.BATTLE_MELEE]   = require 'battle/melee',   -- 近接
 }
-for _, obj in pairs(M.battleTable) do obj.parent = M end
+for _, obj in pairs(M.battle_table) do obj.parent = M end
 
 M.orig_equip_right_ring_item_id = nil
 
@@ -61,7 +61,7 @@ function M.tick(player, me)
 	-- 敵と距離がありすぎる時も何かおかしいので戦闘終了
 	command.send('input /attack off')
     end
-    local battle_object = M.battleTable[M.battle_type]
+    local battle_object = M.battle_table[M.battle_type]
     if battle_object ~= nil then
         if battle_object.tick ~= nil then
             battle_object.tick(player, me, mob)

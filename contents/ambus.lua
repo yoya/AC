@@ -13,7 +13,7 @@ local push_keys = keyboard.push_keys
 -- これらの敵と戦っていて、それ以外の敵が現れた時は、
 -- それ以外の方にターゲットを移す
 
-local postponeEnemies = { -- ボス。後回し
+local postpone_enemies = { -- ボス。後回し
     ["Bozzetto Enceladus"] = true, -- 巨人族
     ["Dastardly Banneret"] = true, -- アルカナ類 イヴィルウェポン
     ["Bozzetto Necronura"] = true, -- ボロッゴ族(かえる)
@@ -23,7 +23,7 @@ local postponeEnemies = { -- ボス。後回し
     ["Splendid Sakura"] = true, -- プラントイド
 }
 
-local preferEnemyTable = { -- 先に倒すべき敵
+local prefer_enemy_table = { -- 先に倒すべき敵
     -- 巨人族
     "Bozzetto Marshal",      -- 戦士   (マイティストライク)
     "Bozzetto Swiftshooter", -- 狩人   (イーグルアイ)
@@ -60,7 +60,7 @@ local preferEnemyTable = { -- 先に倒すべき敵
 
 function search_prefer_enemy()
     local arr = {}
-    for i, name in ipairs(preferEnemyTable) do
+    for i, name in ipairs(prefer_enemy_table) do
 	local mob = windower.ffxi.get_mob_by_name(name)
 	if mob ~= nil then
 	    -- io_chat.print("search_prefer_enemy", mob.name, mob.status)
@@ -75,10 +75,10 @@ end
 function search_enemy(range, excludeEmemy)
     -- print("search_enemy", range, excludeEmemy)
     -- 何故かアンバスでは常に空っぽが返る
-    -- local mobArr = windower.ffxi.get_mob_array()
-    local mobArr = search_prefer_enemy()
-    -- io_chat.print("search_enemy: #mobArr", #mobArr)
-    for i, mob in ipairs(mobArr) do
+    -- local mob_arr = windower.ffxi.get_mob_array()
+    local mob_arr = search_prefer_enemy()
+    -- io_chat.print("search_enemy: #mob_arr", #mob_arr)
+    for i, mob in ipairs(mob_arr) do
 	io_chat.set_next_color(8) -- 明るい赤紫
 	io_chat.print("search_enemy name", excludeEmemy, mob.name)
 	if (mob.status == 0 or mob.status == 1) and mob.spawn_type == 16 and
@@ -106,14 +106,14 @@ function M.tick(player)
 	    end
 	    end
 	]]
-	if postponeEnemies[mob.name] == true then
-	    -- print("postponeEnemies")
-	    local nextMob = search_enemy(30, mob.name)
-	    if nextMob ~= nil then
+	if postpone_enemies[mob.name] == true then
+	    -- print("postpone_enemies")
+	    local next_mob = search_enemy(30, mob.name)
+	    if next_mob ~= nil then
 		io_chat.set_next_color(8) -- 明るい赤紫
 		io_chat.print("より優先度の高い敵を発見")
 		command.send('input /attackoff <me>')
-		io_net.target_by_mob(nextMob)
+		io_net.target_by_mob(next_mob)
 		command.send('wait 1; input /attack <t>')
 	    end
 	end

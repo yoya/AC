@@ -15,7 +15,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     entrance = {x=-552,y=-760,z=32.4},
     ['j-5'] = {x=481,y=680,z=56}, -- Raja (千切れた鉄巨人の鎖, 歪んだチャリオットの装甲)
 }

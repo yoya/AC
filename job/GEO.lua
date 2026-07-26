@@ -10,7 +10,7 @@ local ac_pos = require 'ac/pos'
 local io_chat = require 'io/chat'
 local task = require 'task'
 
-M.mainJobProbTable = {
+M.main_job_prob_table = {
     { 10, 120, 'input /ma ケアル <p1>', 4, true },
     { 10, 120, 'input /ma ヘイスト <p2>', 6 },
     { 10,5*60/2, 'input /ja コリメイトファーバー <me>', 6 },
@@ -20,16 +20,16 @@ local function is_defensive()
     return M.parent.need_safety()
 end
 
-function inde_setup(jobRank)
+function inde_setup(job_rank)
     local GEO_inde = "インデヘイスト"
     local GEO_entrust = "インデデック"
-    if jobRank == 2 then
+    if job_rank == 2 then
 	GEO_inde = "インデフューリー"
 	GEO_entrust = "インデスト"
     end
     if is_defensive() then
 	GEO_inde = "インデバリア"  -- 防御up
-	if jobRank == 2 then
+	if job_rank == 2 then
 	    GEO_inde = "インデアトゥーン"  -- 魔回避up
 	end
     end
@@ -59,15 +59,15 @@ function inde_setup(jobRank)
     end
 end
 
-function geo_setup(jobRank)
-    -- print("geo_setup jobRank:"..jobRank)
+function geo_setup(job_rank)
+    -- print("geo_setup job_rank:"..job_rank)
     local GEO_geo = "ジオフレイル"  -- 敵の防御down
-    if jobRank == 2 then
+    if job_rank == 2 then
 	GEO_geo = "ジオトーパー" -- 敵の回避率down
     end
     if is_defensive() then
 	GEO_geo = "ジオウィルト"  -- 敵の攻撃力down
-	if jobRank == 2 then
+	if job_rank == 2 then
 	    GEO_geo = "ジオフェイド" -- 敵の魔法攻撃力down
 	end
     end
@@ -117,7 +117,7 @@ function geo_release_with_contexte(player, pet, mob)
 end
 
 function M.main_tick(player)
-    local jobRank = 1  -- あとで party 情報を元に設定
+    local job_rank = 1  -- あとで party 情報を元に設定
     local pet = windower.ffxi.get_mob_by_target("pet")
     local mob = windower.ffxi.get_mob_by_target("t")
     if player.status == 0 then -- 待機中
@@ -129,9 +129,9 @@ function M.main_tick(player)
 	    end
 	end
     elseif player.status == 1 then -- 戦闘中
-	inde_setup(jobRank)
+	inde_setup(job_rank)
 	if pet == nil then  -- 羅盤が無い場合
-	    geo_setup(jobRank)
+	    geo_setup(job_rank)
 	else -- 羅盤がある場合
 	    if pet ~= nil and mob ~= nil then
 		-- 状況に応じて羅盤解除
@@ -148,9 +148,9 @@ end
 
 function M.dothebest_main(player)
     local level = task.PRIORITY_HIGH
-    local jaList = { "ボルスター", "フルサークル" }
+    local ja_list = { "ボルスター", "フルサークル" }
     local ti = 1
-    for i, ja_name in ipairs(jaList) do
+    for i, ja_name in ipairs(ja_list) do
 	local c = "input /ja "..ja_name.." <me>"
 	-- command, delay, duration, period, eachfight
 	local ta = task.new_task(c, ti, 2, 10, false)

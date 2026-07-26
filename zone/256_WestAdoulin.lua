@@ -7,12 +7,12 @@ local utils = require 'utils'
 local io_net = require 'io/net'
 local control = require 'control'
 
-M.origContents = nil
+M.orig_contents = nil
 
 M.orig_body_item_id = 0
 function M.zone_in()
     local contents = require 'contents'
-    M.origContents = contents.type
+    M.orig_contents = contents.type
     contents.set_type(contents.Idle)    -- contents_in を読ませる為
     contents.set_type(contents.Redeem)  -- エミネンス、ユニティポイント交換
     local orig_item_id = M.equip_item_by_slot_name("body")
@@ -24,9 +24,9 @@ end
 
 function M.zone_out()
     local contents = require 'contents'
-    if M.origContents ~= nil then
-	contents.set_type(M.origContents)
-	M.origContents = nil
+    if M.orig_contents ~= nil then
+	contents.set_type(M.orig_contents)
+	M.orig_contents = nil
     end
     if  M.orig_body_item_id > 0 then
 	M.equip_item("body", M.orig_body_item_id) -- 前のに戻す
@@ -127,7 +127,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     moogle = {x=0, y=0, z=0}, -- モグハウス内のモーグル
     wp_pio = {x=-110.5,y=-13.5,z=4},
     wp_mum = {x=-21,y=-79.9,z=-0.2},

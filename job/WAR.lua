@@ -8,7 +8,7 @@ local task = require 'task'
 local ac_party = require 'ac/party'
 local io_chat = require('io/chat')
 
-M.mainJobProbTable = {
+M.main_job_prob_table = {
     { 100, 300/2, 'input /ja ウォークライ <me>', 0 },
     -- { 60, 10, 'input /ja バーサク <me>', 0 },
     -- { 60, 300, 'input /ja アグレッサー <me>', 0 },
@@ -18,7 +18,7 @@ M.mainJobProbTable = {
     { 100, 180/2, 'input /ja リタリエーション <me>', 0},
 }
 
-M.subJobProbTable = {
+M.sub_job_prob_table = {
     { 100, 300, 'input /ja ウォークライ <me>', 1 },
     -- { 100, 60, 'input /ja 挑発 <t>', 1 },
     -- { 100, 300, 'input /ja バーサク <me>', 0 },
@@ -108,9 +108,9 @@ end
 
 function M.dothebest_main(player)
     local level = task.PRIORITY_HIGH
-    local jaList = { "アグレッサー", "バーサク", "ウォークライ",
+    local ja_list = { "アグレッサー", "バーサク", "ウォークライ",
 		     "マイティストライク", "ブラーゼンラッシュ"}
-    for i, ja_name in ipairs(jaList) do
+    for i, ja_name in ipairs(ja_list) do
 	local c = "input /ja "..ja_name.." <me>"
 	-- command, delay, duration, period, eachfight
 	local t = task.new_task(c, (i-1)*2, 2, 10, false)
@@ -120,8 +120,8 @@ end
 
 function M.dothebest_sub(player)
     local level = task.PRIORITY_HIGH
-    local jaList = { "アグレッサー", "バーサク", "ウォークライ"}
-    for i, ja_name in ipairs(jaList) do
+    local ja_list = { "アグレッサー", "バーサク", "ウォークライ"}
+    for i, ja_name in ipairs(ja_list) do
 	local c = "input /ja "..ja_name.." <me>"
 	-- command, delay, duration, period, eachfight
 	local t = task.new_task(c, (i-1)*2, 2, 10, false)

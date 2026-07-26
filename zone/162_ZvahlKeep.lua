@@ -23,7 +23,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     from_bails = { x=62,y=-20.4,z=0 },
 }
 

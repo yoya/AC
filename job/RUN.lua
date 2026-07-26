@@ -2,7 +2,7 @@
 
 local M = {}
 
-M.mainJobProbTable = {
+M.main_job_prob_table = {
     { 50, 60, 'input /ja ビベイシャス <me>', 0 },
     { 100, 30, 'input /ja スルポール <me>', 0 },
     { 100, 60, 'input /ja ヴァリエンス <me>', 0 },
@@ -16,7 +16,7 @@ M.mainJobProbTable = {
     { 100, 30, 'input /ma フラッシュ <t>', 1},
 }
 
-M.subJobProbTable = {
+M.sub_job_prob_table = {
     { 50, 300, 'input /ja ソードプレイ <me>', 0 },
 }
 

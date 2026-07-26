@@ -7,7 +7,7 @@ local io_net = require 'io/net'
 local keyboard = require 'keyboard'
 local push_keys = keyboard.push_keys
 
-M.wantedMobs = {
+M.wanted_mobs = {
     "Vedrfolnir" -- テリガン
 }
 

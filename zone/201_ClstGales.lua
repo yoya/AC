@@ -5,7 +5,7 @@ local M = { id = 201 }
 function M.init()
     local contents = __AC.contents
     M.routes.bc = contents.trial.bc_route
-    M.essentialPoints.bc_in = contents.trial.bc_point
+    M.essential_points.bc_in = contents.trial.bc_point
 end
 
 M.routes = {
@@ -16,7 +16,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     entrance = {x=-399.5,y=-421.5,z=0},
 }
 

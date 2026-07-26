@@ -11,7 +11,7 @@ M.routes = {
     }
 }
 
-M.essentialPoints = {
+M.essential_points = {
     from_yahse1 = {x=300,y=-359,z=50},
     from_yahse2 = {x=100.5,y=-479.5,z=50},
 }

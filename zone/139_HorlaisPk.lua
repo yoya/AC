@@ -40,7 +40,7 @@ function M.warp_in()
     end
 end
 
-M.essentialPoints = {
+M.essential_points = {
     entrance = {x=-536,y=-211.6,z=160.5},  -- ホルレーに入ったところ
     -- トローブ
     bc_in = {x=-316.3, y=-102.6,z=113.1,wait=10},

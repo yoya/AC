@@ -7,7 +7,7 @@ local M = {}
 local SMN_summon_head = ""
 local SMN_summon_tail = "; wait 3; input /pet 神獣の攻撃 <t>"
 
-M.mainJobProbTable = {
+M.main_job_prob_table = {
     { 200, 180, 'input /pet 神獣の加護 <me>;', 0 },
     { 200, 30, 'input /pet 神獣の攻撃 <t>;', 0 },
     { 500, 15, 'input /pet 神獣の帰還 <me>;', 0 },
@@ -22,6 +22,6 @@ M.mainJobProbTable = {
     { 10, 300 / 2,  SMN_summon_head .. 'input /ma 光精霊召喚 <me>; wait 7; input /ja エレメントサイフォン <me>' .. SMN_summon_tail, 15 },
 }
 
--- M.subJobProbTable = { }
+-- M.sub_job_prob_table = { }
 
 return M

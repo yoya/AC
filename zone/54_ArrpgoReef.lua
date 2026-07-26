@@ -49,7 +49,7 @@ M.routes = {
 	{x=-456,y=-411,z=-3}, {x=-456.5,y=-406.7,z=-3},
     },
 }
-M.essentialPoints = {
+M.essential_points = {
     book = {x=476,y=-20,z=-15.6},
     h6_entrance = {x=-419.6,y=-280,z=-7.7},
     from_Caedarva = {x=-560,y=380,z=-7.6},
@@ -60,10 +60,10 @@ M.automatic_routes = {
     from_Caedarva = { route="guide" },
 }
 
-M.essentialItems = {
+M.essential_items = {
     2219,  -- ラミアの牙のカギ
 }
 
-M.essentialKeyItems = { }
+M.essential_key_items = { }
 
 return M

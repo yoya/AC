@@ -4,7 +4,7 @@ local M = {}
 
 local role_Melee = require 'role/Melee'
 
-M.mainJobProbTable = {
+M.main_job_prob_table = {
     { 100, 180, 'input /ja 黙想 <me>', 3 },
     { 200, 60, 'input /ja 八双 <me>', 3 }, -- 攻撃
     -- { 100, 60, 'input /ja 星眼 <me>', 3 }, -- 防御
@@ -13,7 +13,7 @@ M.mainJobProbTable = {
     { 100, 180, 'input /ja 石火之機 <me>', 3 },
 }
 
-M.subJobProbTable = {
+M.sub_job_prob_table = {
     { 60, 180, 'input /ja 黙想 <me>', 3 },
     { 200, 60, 'input /ja 八双 <me>', 3 }, -- 攻撃
     -- { 60, 60, 'input /ja 星眼 <me>', 1 }, -- 防御

@@ -172,7 +172,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     pck = {x=-101.3,y=-10.7,z=-0.1},
     -- x=(-59.4,-51.5),y=-128.5
     from_moghouse = {x=-56,y=-128.5,z=-0.1, dx=5,dy=1},

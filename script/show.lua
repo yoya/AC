@@ -58,7 +58,7 @@ end
 
 -- print("method:"..method.." num:"..num.." files:"..files[1].."...(num:"..#files..")")
 
-local charTable = {}
+local char_table = {}
 
 for i, file in ipairs(files) do
     -- print("file:"..file)
@@ -144,7 +144,7 @@ for i, file in ipairs(files) do
 	--
 	time = time,
     }
-    charTable[i] = char
+    char_table[i] = char
 end
 
 function comp_point(a, b)
@@ -175,29 +175,29 @@ function comp_domain(a, b)
 end
 
 if method == 'l' then
-    table.sort(charTable, function(a,b) return a.time > b.time end)
+    table.sort(char_table, function(a,b) return a.time > b.time end)
 elseif method == 'e' then
-    table.sort(charTable, function(a,b) return a.name > b.name end)
+    table.sort(char_table, function(a,b) return a.name > b.name end)
 elseif method == 'p' then
-    table.sort(charTable, comp_point)
+    table.sort(char_table, comp_point)
 elseif method == 'a' then
-    table.sort(charTable, comp_ambus)
+    table.sort(char_table, comp_ambus)
 elseif method == 'd' then
-    table.sort(charTable, comp_domain)
+    table.sort(char_table, comp_domain)
 else
     print("Unknown method:"..method)
     os.exit(1)
 end
 
-charTable = array_slice(charTable, 1, num)
+char_table = array_slice(char_table, 1, num)
 
 if method == 'l' or method == 'e' then
-    table.sort(charTable, function(a,b) return a.name < b.name end)
+    table.sort(char_table, function(a,b) return a.name < b.name end)
 end
 
 total_gil = 0
 
-for i, char in pairs(charTable) do
+for i, char in pairs(char_table) do
     if method == 'l' and num <= 4 then
 	if char.modtime < now - 3*60 then
 	    local oldtime = os.date("%x %X", char.modtime)

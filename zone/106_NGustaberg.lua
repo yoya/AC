@@ -10,7 +10,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     from_jueno = {x=-72.9,y=600.1,z=-0.1},
 }
 

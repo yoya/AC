@@ -34,7 +34,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     wpF = {x=365,y=190,z=0.4},
     wp1 = {x=-6.9,y=-117.5,z=0},
     wp2 = {x=-42,y=155,z=0},

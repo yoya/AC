@@ -35,7 +35,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     entrance = {x=-236,y=-520,z=-40},
     h8center = {x=-71,y=26,z=-175.3},
 }
@@ -45,7 +45,7 @@ M.automatic_routes = {
 }
 
 function M.statprint_handler()
-    -- M.essentialItems, M.essentialKeyItems で同じ事出来るよ。
+    -- M.essential_items, M.essential_key_items で同じ事出来るよ。
     print("zone/253 statprint_handler")
     local items = {
 	-- 鋼鉄の鎧板

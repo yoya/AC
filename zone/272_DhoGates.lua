@@ -52,7 +52,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     from_hennetiel = {x=59.3,y=80,z=-10},
     from_marjami = {x=-320.5,y=340.4,z=-40},
 }

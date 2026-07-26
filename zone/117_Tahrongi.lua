@@ -11,7 +11,7 @@ M.routes = {
     },
 }
 
-M.essentialPoints = {
+M.essential_points = {
     ring = {x=270,y=340,z=35.7},
 }
 

@@ -11,15 +11,15 @@ function M.set_pull_type(pull_type)
     M.pull_type = pull_type
 end
 
-M.pullTable = {
+M.pull_table = {
     [M.PULL_MELEE]   = require 'pull/melee',   -- 漢釣り
     [M.PULL_DISTANT] = require 'pull/distant',   -- 遠隔釣り
 }
-for _, obj in pairs(M.pullTable) do obj.parent = M end
+for _, obj in pairs(M.pull_table) do obj.parent = M end
 
 function M.tick(player)
     -- print("pull.tick")
-    local pull_object = M.pullTable[M.pull_type]
+    local pull_object = M.pull_table[M.pull_type]
     if pull_object ~= nil then
 	if pull_object.tick ~= nil then
 	    pull_object.tick(player)

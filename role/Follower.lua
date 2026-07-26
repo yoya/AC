@@ -19,7 +19,7 @@ local turn_to_target = ac_move.turn_to_target
 local turn_to_front = ac_move.turn_to_front
 
 -- リーダーから離れているか。tick をまたいで保持する
-local isFar = false
+local is_far = false
 
 -- p1 が乗り物系のワープギミックを触った時、追随する対象
 local warp_gimmick_names = {
@@ -84,12 +84,12 @@ function M.tick_idle(player, me)
     if p1.hpp > 0 then
 	if math.random(1, 3) <= 2 and dist > math.random(3, 5) and
 	    dist < 24 then
-	    isFar = true
+	    is_far = true
 	elseif dist > math.random(6, 7) then -- 離れすぎたらすぐ気付く
-	    isFar = true
+	    is_far = true
 	end
     end
-    if isFar == true then
+    if is_far == true then
         turn_to_target(target_leader)
         turn_to_front()
         windower.ffxi.run(dx, dy)
@@ -97,7 +97,7 @@ function M.tick_idle(player, me)
             return
         end
     end
-    isFar = false
+    is_far = false
     windower.ffxi.run(false)
     -- 100以下は 戦闘しない
     if item_level < 100 then
@@ -128,8 +128,8 @@ function M.tick_idle(player, me)
 	else
 	    local condition = {
 		range = control.enemy_range,
-		linkedOnly = true,
-		-- nameMatch = control.enemy_filter,
+		linked_only = true,
+		-- name_match = control.enemy_filter,
 	    }
 	    mob = acmob.search_nearest_mob(me_pos, condition)
 	end

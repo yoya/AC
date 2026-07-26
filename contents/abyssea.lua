@@ -11,8 +11,8 @@ function M.sisyphus_check(player)
 	-- (x=-157,y=406,z=-184)  (x=-216,y=398,z=-185)
 	-- 中心 (x=-210,y=-352,z=-180),
 	-- 実際のよさそうな場所。(x=-221,y=318,z=-175)
-	local mobArr = windower.ffxi.get_mob_array()
-	for i, m in pairs(mobArr) do
+	local mob_arr = windower.ffxi.get_mob_array()
+	for i, m in pairs(mob_arr) do
 	    if m.name == "Sisyphus" then
 		if m.status == 0 then
 		    io_chat.info("Sisyphus ポップ中")

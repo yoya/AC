@@ -8,8 +8,8 @@ local M = {}
 function get_lower_hp_target(hpp_needed)
     local party = windower.ffxi.get_party()
     local target = nil
-    local minHP = 99999
-    local minTarget = nil
+    local min_hp = 99999
+    local min_target = nil
     local count = 0
     for i=0,5 do
         local t = "p"..i
@@ -19,9 +19,9 @@ function get_lower_hp_target(hpp_needed)
             local hp = member.hp
             if hp > 0 and hpp < hpp_needed then
 		count = count + 1
-		if hp < minHP then
-		    minHP = hp
-		    minTarget = t
+		if hp < min_hp then
+		    min_hp = hp
+		    min_target = t
 		end
             end
         end
