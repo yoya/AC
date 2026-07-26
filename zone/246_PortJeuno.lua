@@ -10,6 +10,15 @@ M.routes = {
 	{x=-54.5,y=3.5}, {x=-57,y=8.5}, {x=-55.5,y=10.5},
 	{a="esc"}, {target="Shemo"}, {auto=true}
     },
+    abys = { {x=36,y=8.8,z=0, desc="アビセア"},
+	{x=-45,y=-4}, {x=-53,y=-8,d=1},
+	{target="Joachim"}, {wait=4},
+	{keys={"enter"}}, {wait=2}, -- どうする？
+	{keys={"enter"}}, {wait=3}, -- トラバーサ石がほしい
+	{target="Horst"}, {wait=2},
+	{keys={"enter"}}, {wait=2}, -- 何をお願いしますか？
+	{keys={"down", "down", "enter"}}, {wait=1}, -- 禁断の口まで転送してほしい
+    },
     -- HP (M)
     oboro = {
 	{x=-155,y=-3,z=-1}, {x=-153,y=3}, {x=-151,y=6},
@@ -25,7 +34,10 @@ M.essentialPoints = {
 }
 
 M.automatic_routes = {
-    homepoint_1_E = { route="shemo" },
+    homepoint_1_E = {
+	{ route="shemo" },
+	{ route="abys", contents="Abyssea" },
+    },
     homepoint_2_M = { route="oboro" },
 }
 
