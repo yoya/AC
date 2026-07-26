@@ -144,7 +144,9 @@ function M.equip_item(slot, item_id)
     local inv_id = nil
     bag, inv_id = M.search_equip_item(item_id)
     -- print("ac/equip", slot, item_id, bag, inv_id)
-    windower.ffxi.set_equip(inv_id, slot, bag)
+    if bag ~= nil then
+	windower.ffxi.set_equip(inv_id, slot, bag)
+    end
 end
 
 function M.search_equip_item(item_id)
