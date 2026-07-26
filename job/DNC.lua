@@ -33,12 +33,12 @@ function M.main_tick(player)
     -- command, delay, duration, period, eachfight
     local t_a = actask.newTask(c_a, 2, 2, 60*3+1, false)
     local t_d = actask.newTask(c_d, 2, 2, 60*3+1, false)
-    if true then
+    if not isDefensive() then
 	actask.setTask(level, t_a)
 	actask.removeTask(level, t_d)
     else
 	actask.removeTask(level, t_a)
-	actask.setTask(level, t_a)
+	actask.setTask(level, t_d)
     end
 end
 

@@ -129,7 +129,7 @@ function M.conditionMatch(pos, condition, mob)
 	end
     end
     if condition.fightable == true and
-	not isMobAttackableTargetIndex(mob.index) then
+	not isMobAttackable(mob) then
 	return false
     end
     if condition.nameMatch ~= nil then

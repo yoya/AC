@@ -64,14 +64,16 @@ M.allReset = function()  -- 再使用タイマーのリセット
 end
 
 M.resetByFight = function()
-    -- taskPeriodTable から eachfight が true のエントリを削除する
+    -- eachfight が true のタスクをキューから外し、再使用タイマーをリセットする
+    -- (prob.lua が新しい戦闘用に積み直す)
     for level = PRIORITY_FIRST, PRIORITY_LAST do
-	for i, task in ipairs(taskTable[level]) do
+	local tasks = taskTable[level]
+	-- table.remove するので後ろから回す
+	for i = #tasks, 1, -1 do
+	    local task = tasks[i]
 	    if task.eachfight == true then
-		local task = taskTable[level][1]  -- 1 origin
-		local c = task.command
-		taskPeriodTable[c] = os.time() - 1
-		table.remove(taskTable[level], 1)
+		taskPeriodTable[task.command] = os.time() - 1
+		table.remove(tasks, i)
 	    end
 	end
     end

@@ -2,6 +2,7 @@
 -- 雑多な関数群。整理できてない
 
 local command = require 'command'
+local io_chat = require 'io/chat'
 
 local M = {}
 
@@ -37,7 +38,7 @@ M.require_child_module(M, 'utils', 'vector')
 M.distance = function(target)
     local mob = windower.ffxi.get_mob_by_target(target)
     if mob == nil then
-        print("distance: target:"..#target.." not found")
+        print("distance: target:"..tostring(target).." not found")
         return false
     end
     return mob.distance;

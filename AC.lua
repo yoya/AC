@@ -165,7 +165,7 @@ local leaderFunction = function()
     end
     if mob == nil then
         --- メンバーが戦っている敵がいれば、そちら優先
-        -- mob = ac_mob.PartyTargetMob()
+        -- mob = acmob.PartyTargetMob()
     end
     if mob == nil then
         --- 優先度の高い敵がいない場合は、誰でも良い
@@ -212,7 +212,7 @@ local leaderFunction = function()
     end
     if control.attack then
         command.send('input /attack on')
-	acprob.clearProbRecastTime(acprob.ProbRecastTime)
+	acprob.clearProbRecastTime()
 	task.resetByFight()
     end
 end 
@@ -356,7 +356,7 @@ local notLeaderFunction = function()
 		end
 	    end
         end
-        acprob.ProbRecastTime = {}
+        acprob.clearProbRecastTime()
     end
 end
 
@@ -522,7 +522,6 @@ M.idleFunctionSellJunkItems = idleFunctionSellJunkItems
 
 function dropJunkItemsInInventory()
     print("dropJunkItemsInInventory")
-    local remain_count = total_count
     for index = 1, 80 do
         local item = windower.ffxi.get_items(0, index)
 --        io_chat.print({"item:", windower.to_shift_jis(res.items[item.id].ja), item.id, item.status})
@@ -550,7 +549,7 @@ local idleFunctionWestAdoulin = function()
         end
         control.auto = false
     elseif mob.name == "Nunaarl Bthtrogg" then
-        n = acitem.inventoryFreespaceNum()
+        local n = acitem.inventoryFreespaceNum()
         io_chat.info("かばんの空きは"..n.."*99 = "..(n*99))
         control.auto = false
     end
@@ -751,7 +750,7 @@ local changeWS = function(wskey)
         return
     end
     ws.weaponskill = wskey
-    wsName = ws.weaponskillTable[ws.weaponskill]
+    local wsName = ws.weaponskillTable[ws.weaponskill]
     io_chat.print('set any', wskey, '=>', wsName)
 end
 
@@ -897,6 +896,13 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 		print("ac linked => ", isMobLinked(mob))
 	    end
 	elseif arg1 == 'nearest' then
+	    local prefer_condition = {
+		range = control.enemy_range,
+		preferMobs = utils.table.merge_lists(acmob.moreAttractiveEnemyList,
+						     preferedEnemyList),
+		nameMatch = control.enemy_filter,
+	    }
+	    local preferMob = acmob.searchNearestMob(pull.base_pos, prefer_condition)
 	    local condition = {
 		range = control.enemy_range,
 		nameMatch = control.enemy_filter,
@@ -905,7 +911,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    io_chat.print("nearest preferMob=====================")
 	    io_chat.print(preferMob)
 	    io_chat.print("nearest mob =====================")
-	    if preferMob == nil or preferMob.name ~= mob.name then
+	    if mob == nil or preferMob == nil or preferMob.name ~= mob.name then
 		io_chat.print(mob)
 	    else
 		io_chat.print("same name monster")
@@ -1267,7 +1273,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	task.setTaskSimple("input /shutdown", 1, 1)
     elseif subcommand == 'test' then
         print("test command")
-        ac_mob.PartyTargetMob()
+        acmob.PartyTargetMob()
     elseif subcommand == 'tick' then
 	local period = tonumber(arg1, 10)
 	if period ~= nil and 0.1 < period and period < 10 then
