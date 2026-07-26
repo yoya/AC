@@ -1291,7 +1291,21 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
     end
 end
 
+-- 乱数の初期化。
+-- Lua 5.1 は seed 未設定だと毎回同じ乱数列になる。複垢で同時に起動すると
+-- 全員が同じ間隔・同じ判断で動いてしまうので、キャラ固有の値を混ぜる。
+local seed_random = function()
+    local seed = os.time()
+    local player = windower.ffxi.get_player()
+    if player ~= nil and player.id ~= nil then
+	seed = seed + player.id
+    end
+    math.randomseed(seed)
+    math.random(); math.random()  -- 初回の偏りを捨てる
+end
+
 windower.register_event('load', function()
+    seed_random()
     local player = windower.ffxi.get_player()
     if player ~= nil then
 	ac_focus.load(player)
@@ -1343,6 +1357,7 @@ end)
 
 windower.register_event('login', function()
     -- ws.init()  -- このタイミングだと前のキャラのジョブが反映される
+    seed_random()  -- load 時に player が nil だった場合の取り直し
     ac_stat.init()
     ac_focus.login()
 end)
