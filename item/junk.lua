@@ -1000,10 +1000,10 @@ function M.char_update_handler(char)
 	local p = char[name]
 	if p ~= nil and p > 4500 then  -- モグ預けが溢れそうなら店売り
 	    table.insert(M.JunkItems, id)
-	    M.JunkItemSet[id] = true
+	    M.JunkItemIdSet[id] = true
 	end
     end
-    -- M.JunkItemSet = utils.table.convert_array_to_set(M.JunkItems)
+    -- M.JunkItemIdSet = utils.table.convert_array_to_set(M.JunkItems)
 end
 acevent.add_listener("char update", M.char_update_handler)
 
@@ -1036,6 +1036,6 @@ for i=-3559,-3583,-1 do table.insert(M.JunkItems, i) end
 -- 8787-8791, -- 深海の免罪符 -- アポジ装備 召(Ilv119)
 -- 9105-9129, -- *星の免罪符 -- (Ilv119)
 
-M.JunkItemSet = utils.table.convert_array_to_set(M.JunkItems)
+M.JunkItemIdSet = utils.table.convert_array_to_set(M.JunkItems)
 
 return M

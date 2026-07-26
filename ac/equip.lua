@@ -95,7 +95,7 @@ function M.equip_restore(arg)
 	io_chat.noticef("equip_restore:%s", arg)
     end
     local main_weapon_item_id = M.equip_item_by_slot_name("main")
-    if acitem_data.trialWeaponSet[main_weapon_item_id] == true then
+    if acitem_data.trialWeaponIdSet[main_weapon_item_id] == true then
 	return -- トライアル武器はそのまま維持
     end
     if control.debug then

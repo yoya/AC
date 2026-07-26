@@ -129,7 +129,7 @@ local role_Follower = require('role/Follower')
 local ac_defeated = require 'ac/defeated'
 local ac_equip = require 'ac/equip'
 
-local JunkItemSet = acitem.junk.JunkItemSet
+local JunkItemIdSet = acitem.junk.JunkItemIdSet
 
 local isFar = false
 local fightingMobName = nil
@@ -403,10 +403,10 @@ end
 local aggregate_junk_items_to_inventory = function(mob)
     local count = 0
     if mob.name == "Green Thumb Moogle" then
-	count = count + acitem.safes_to_inventory_by_set(JunkItemSet)
+	count = count + acitem.safes_to_inventory_by_set(JunkItemIdSet)
 	print("aggregate_junk_items_to_inventory(safes): "..count)
     end
-    count = count + acitem.bags_to_inventory_by_set(JunkItemSet)
+    count = count + acitem.bags_to_inventory_by_set(JunkItemIdSet)
     print("aggregate_junk_items_to_inventory(bags): "..count)
     return count
 end
@@ -419,7 +419,7 @@ local count_junk_items_in_inventory = function ()
 	if item and item.id ~= 0 then
 	    -- io_chat.print({"item:", item.status, item.id,
 	    -- res.items[item.id].ja })
-	    if JunkItemSet[item.id] == true then
+	    if JunkItemIdSet[item.id] == true then
 		count = count + 1
 	    end
 	end
@@ -434,7 +434,7 @@ local sell_junk_items_in_inventory = function()
     for index = 1, 80 do
         local item = windower.ffxi.get_items(0, index)
 	-- io_chat.print({ "item:", item.status, item.id, res.items[item.id].ja })
-        if item and JunkItemSet[item.id] == true then
+        if item and JunkItemIdSet[item.id] == true then
             windower.packets.inject_outgoing(0x084,string.char(0x084,0x06,0,0,item.count,0,0,0,
                                         item.id%256,math.floor(item.id/256)%256,index,0))
             windower.packets.inject_outgoing(0x085,string.char(0x085,0x04,0,0,1,0,0,0))
@@ -485,7 +485,7 @@ function drop_junk_items_in_inventory()
     for index = 1, 80 do
         local item = windower.ffxi.get_items(0, index)
 --        io_chat.print({"item:", windower.to_shift_jis(res.items[item.id].ja), item.id, item.status})
-        if item and JunkItemSet[-item.id] == true then
+        if item and JunkItemIdSet[-item.id] == true then
             -- print("drop???:"..item.id.."("..index..") x "..item.count)
             windower.ffxi.drop_item(index, item.count)
             coroutine.sleep(math.random(6,8)/5)
@@ -1374,7 +1374,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    io_chat.notice("石の袋開き開始")
 	    control.auto = true
 	    while control.auto and
-		acitem.inventory_has_item_in_set(item_data.soulStoneSackSet) do
+		acitem.inventory_has_item_in_set(item_data.soulStoneSackIdSet) do
 		for i,id in ipairs(item_data.soulStoneSacks) do
 		    if not acitem.check_bags_freespace() then
 			io_chat.info("アイテム満杯")
