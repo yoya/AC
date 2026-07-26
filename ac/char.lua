@@ -151,7 +151,9 @@ function M.get_char_point(key)
     if M.char_table[player.id] == nil then
 	return -1
     end
-    return M.char_table[player.id][key]
+    -- キー単位で未取得のことがあるので nil を返さない
+    local v = M.char_table[player.id][key]
+    return v ~= nil and v or -1
 end
 
 
@@ -195,13 +197,19 @@ end
 
 function M.get_char_point_by_job(key)
     local player = windower.ffxi.get_player()
+    if player == nil then
+	print("ac/char.get_char_point_by_job: player == nil")
+	return -1
+    end
     if M.char_table[player.id] == nil then
 	return -1
     end
     if M.char_table[player.id][player.main_job] == nil then
 	return -1
     end
-    return M.char_table[player.id][player.main_job][key]
+    -- キー単位で未取得のことがあるので nil を返さない
+    local v = M.char_table[player.id][player.main_job][key]
+    return v ~= nil and v or -1
 end
 
 function M.current_merit_point()

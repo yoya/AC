@@ -36,6 +36,8 @@ function M.record_char()
 	print("io.open failed")
 	return
     end
+    -- 途中で例外が出てもハンドルを閉じるため pcall で包む
+    local ok, err = pcall(function()
     f:write(player.name)
     local namelen = string.len(player.name)
     if namelen < 7 then
@@ -92,7 +94,11 @@ function M.record_char()
     f:write("Eminence:"..ac_char.eminence_point().."  Unity:"..ac_char.unity_point().."  Gil:"..utils.string.gil_string(items.gil).."\n")
     f:write(string.format("Hallmark:%d  Total:%d  Gallantry:%d\n", ac_char.hallmark(), ac_char.total_hallmark(), ac_char.gallantry()))
     f:write(string.format("DomainP:%d  MogSeg:%d  Gallimau:%d Login:%d\n", ac_char.domain_point(), ac_char.mog_segments(), ac_char.gallimaufry(), ac_char.login_point()))
+    end)
     f:close()
+    if not ok then
+	print("ac/record: write failed: "..tostring(err))
+    end
 end
 
 function M.eminence(pt)
@@ -211,6 +217,8 @@ function M.record_spells()
 	print("io.open failed")
 	return
     end
+    -- 途中で例外が出てもハンドルを閉じるため pcall で包む
+    local ok, err = pcall(function()
     -- f:write(player.name)
     f:write("{\n")
     local first1 = true
@@ -234,7 +242,11 @@ function M.record_spells()
 	first1 = false
     end
     f:write("}\n")
+    end)
     f:close()
+    if not ok then
+	print("ac/record: write failed: "..tostring(err))
+    end
 end
 
 return M
