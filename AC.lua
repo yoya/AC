@@ -441,19 +441,28 @@ local idle_function = function()
     contents.npc_action_handler(zone, mob)
 end
 
+-- tick_serial が例外で中断すると tick_running が true のまま残り、以降の
+-- tick が全て弾かれて addon が沈黙する。pcall では包めない。Windower の
+-- Lua は 5.1 で、pcall (C 関数) の内側から coroutine.sleep の yield が
+-- できず "attempt to yield across metamethod/C-call boundary" になるため。
+-- 代わりに開始時刻を持ち、一定時間を超えたら中断したとみなして再開する。
 local tick_running = false
+local tick_started = 0
+-- 売却などで数分かかることがあるので余裕を持たせる
+local TICK_STUCK_SEC = 300
+
 function tick()
     if tick_running then -- 二重に動かないガード
-        return
+        if os.time() - tick_started < TICK_STUCK_SEC then
+            return
+        end
+        io_chat.warnf("tick: 前回の tick が %d 秒以上終わっていないので再開します",
+                      TICK_STUCK_SEC)
     end
     tick_running = true
-    -- pcall で包まないと、tick_serial が落ちた時に tick_running が true の
-    -- まま残り、以降の tick が全て先頭の return で弾かれて addon が沈黙する
-    local ok, err = pcall(tick_serial)
+    tick_started = os.time()
+    tick_serial()
     tick_running = false
-    if not ok then
-        io_chat.errorf("tick_serial: %s", tostring(err))
-    end
 end
 
 function tick_serial()
