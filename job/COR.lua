@@ -247,10 +247,10 @@ M.battle_equip = {
 M.roll_equip = {
     main = {
 	21581, -- ロスタム
-    }
+    },
     head = {
 	26657, -- ＬＡトリコルヌ+1 ロール性能+50
-    }
+    },
 }
 
 M.listener_id = incoming_text.addListener("ロール", M.incoming_text_handler)
