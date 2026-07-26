@@ -436,13 +436,17 @@ end
 
 local tick_running = false
 function tick()
-    if tick_running then -- 二重に動かないガード。(ちゃんと働いているか不明)
-	print("tick tick_running:", tick_running)
+    if tick_running then -- 二重に動かないガード
         return
     end
     tick_running = true
-    tick_serial()
+    -- pcall で包まないと、tick_serial が落ちた時に tick_running が true の
+    -- まま残り、以降の tick が全て先頭の return で弾かれて addon が沈黙する
+    local ok, err = pcall(tick_serial)
     tick_running = false
+    if not ok then
+        io_chat.errorf("tick_serial: %s", tostring(err))
+    end
 end
 
 function tick_serial()
