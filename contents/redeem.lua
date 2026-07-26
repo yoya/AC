@@ -7,7 +7,10 @@ local utils = require 'utils'
 local command = require 'command'
 local keyboard = require 'keyboard'
 local push_keys = keyboard.push_keys
+local io_chat = require 'io/chat'
+
 local ac_char = require("ac/char")
+local acitem = require 'item'
 
 function M.tick(player)
 end
@@ -18,7 +21,7 @@ M.unity_point_redeem_enable = true
 function M.contents_in(player)
     print("contents/redeem.contents_in")
     M.eminence_point_redeem_enable = true
-    M.unity_point_redeem_enable = true
+    M.unity_point_redeem_enable = false -- エミネンス交換するまで off
 end
 
 function M.incoming_text_handler(text)
@@ -31,6 +34,7 @@ function M.incoming_text_handler(text)
     if string.contains(text, "sparks to purchase:") then
 	--push_keys({1, "escape", "escape"})
 	push_keys({1, "numpad*"}) -- lock を外す
+	M.unity_point_redeem_enable = true
     elseif string.contains(text, "Sparks Buying Finished.") or
 	string.contains(text, "アイテムを整理した後") then
 	windower.ffxi.run(24 - me.x, -120 - me.y)
@@ -60,6 +64,33 @@ function M.incoming_text_handler(text)
 	command.send("ac move -def2nuna")
     elseif string.contains(text, "次週までアイテムおよび特殊素材の交換が制限されます。") then
 	M.unity_point_redeem_enable = false
+    elseif string.contains(text, "はにゃあ？") then
+	local unity_point = ac_char.unity_point()
+	if not M.unity_point_redeem_enable then
+	    io_chat.warn("ユニティ交換はもう終わってます")
+	end
+	if unity_point < 10 then
+	    io_chat.warn("ユニティポイントが足りません", unity_point)
+	    M.unity_point_redeem_enable = false
+	    return
+	end
+	local n = acitem.inventory_freespace_num()
+	local exchange_point = n * 99
+	if unity_point < exchange_point then
+	    exchange_point  = unity_point
+	end
+	if 5000 < exchange_point then
+	    exchange_point = 5000
+	end
+	push_keys({1, "right", "down", "enter"}) -- どうする？
+	push_keys({1, "right", "right", "right", "enter"}) -- 次へ進む
+	push_keys({1, "right", "right", "enter"}) -- プライズパウダー
+	io_chat.info("ユニティポイント交換額", exchange_point)
+	coroutine.sleep(3)
+	for c in tostring(exchange_point):gmatch(".") do
+	    -- io_chat.print(c)
+	    -- push_keys(c}) -- これで数字入力できない。
+	end
     end
 end
 
