@@ -4,6 +4,7 @@ local M = { id = 70 }
 
 local command = require 'command'
 local incoming_text = require 'incoming/text'
+local task = require 'task'
 
 function M.incoming_text_handler(text)
     -- レースが終わったらデジョンする

@@ -27,8 +27,13 @@ function M.is_city_zone(zone_id)
 end
 
 function M.in_moghouse(zone_id, pos)
+    if pos == nil then
+	-- ac_pos.current_pos() はエリアチェンジ中に nil を返す
+	return false
+    end
     local x = pos.x
     local y = pos.y
+    local z = pos.z
     if zone_id == 256 then
 	-- x={-6.4, 4.3} y= {-6.2, 9.3}, z=-0.2
 	if -7 < x and x < 5 and -7 < y and y < 10 and -1 < z and z < 1 then

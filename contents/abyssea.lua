@@ -1,5 +1,7 @@
 local M = {}
 
+local io_chat = require 'io/chat'
+
 function M.sisyphus_check(player)
     local me = windower.ffxi.get_mob_by_target("me")
     if -297 < me.x and me.x < -157 and
