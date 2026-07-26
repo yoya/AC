@@ -24,8 +24,8 @@ function inde_setup(jobRank)
     local GEO_inde = "インデヘイスト"
     local GEO_entrust = "インデデック"
     if jobRank == 2 then
-	local GEO_inde = "インデフューリー"
-	local GEO_entrust = "インデスト"
+	GEO_inde = "インデフューリー"
+	GEO_entrust = "インデスト"
     end
     if is_defensive() then
 	GEO_inde = "インデバリア"  -- 防御up
