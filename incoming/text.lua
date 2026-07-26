@@ -6,7 +6,16 @@ local M = {}
 local listener_table = {}
 local listener_table_last_idx = 0
 
+-- 配信しないチャットモード。
+-- 同じ文面が複数のモードで届き、listener が重複して呼ばれるのを防ぐ。
+local ignore_mode_set = {
+    [152] = true,
+}
+
 function M.incoming_handler(data, modified, original_mode, modified_mode, blocked)
+    if ignore_mode_set[original_mode] then
+	return
+    end
     local text = windower.from_shift_jis(data)
     for i, listener in pairs(listener_table) do
 	if listener ~= nil and string.contains(text, listener.keyword) then
