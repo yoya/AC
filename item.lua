@@ -373,7 +373,7 @@ M.tradeByItemId = function(mob, id)
 --        local item = inventory[index]
 --    end
     if #ind > 0 then
-        local menu_item = 'C4I11C10HI':pack(0x36,0x20,0x00,0x00,mob.id,
+        local menu_item = ('C4I11C10HI'):pack(0x36,0x20,0x00,0x00,mob.id,
                cnt[1],cnt[2],cnt[3],cnt[4],cnt[5],cnt[6],cnt[7],cnt[8],0,0x00,
                ind[1],ind[2],ind[3],ind[4],ind[5],ind[6],ind[7],ind[8],0,0x00,
                mob.index,num)
@@ -420,7 +420,7 @@ M.tradeByItemTable = function(mob, item_table)
 --        local item = inventory[index]
 --    end
     if #ind > 0 then
-        local menu_item = 'C4I11C10HI':pack(0x36,0x20,0x00,0x00,mob.id,
+        local menu_item = ('C4I11C10HI'):pack(0x36,0x20,0x00,0x00,mob.id,
                cnt[1],cnt[2],cnt[3],cnt[4],cnt[5],cnt[6],cnt[7],cnt[8],0,0x00,
                ind[1],ind[2],ind[3],ind[4],ind[5],ind[6],ind[7],ind[8],0,0x00,
                mob.index,num)

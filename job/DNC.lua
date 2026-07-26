@@ -19,7 +19,7 @@ M.mainJobProbTable = {
 
 M.subJobProbTable = { }
 
-function isDefensive()
+local function isDefensive()
     return M.parent.needSafety()
 end
 
