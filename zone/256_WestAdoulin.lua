@@ -170,13 +170,13 @@ local sell_items = {
     17296, -- 石つぶて
 }
 
-local sell_itemsT = utils.table.convertArrayToTrueTable(sell_items)
+local sell_item_set = utils.table.convertArrayToSet(sell_items)
 
 local selljunk_running = false
 
 function M.tick(player)
     local ac_move = require 'ac/move'
-    if acitem.inventoryHasItemT(sell_itemsT) then
+    if acitem.inventoryHasItemInSet(sell_item_set) then
 	local mob = windower.ffxi.get_mob_by_name("Defliaa")
 	local me = windower.ffxi.get_mob_by_target("me")
 	if mob ~= nil and me ~= nil and me.x > 25.5 then

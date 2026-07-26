@@ -130,8 +130,8 @@ local safesToInventory = function(id)
 end
 M.safesToInventory = safesToInventory
 
-function M.safesToInventoryT(idsT)
-    -- print("safesToInventoryT")
+function M.safesToInventoryBySet(id_set)
+    -- print("safesToInventoryBySet")
     local count = 0
     for bname, bagid in pairs(SafesList) do
         local items = windower.ffxi.get_items()
@@ -139,7 +139,7 @@ function M.safesToInventoryT(idsT)
         if inventory.count < inventory.max then
             local bag = items[bname]
             for i, item in ipairs(bag) do
-                if idsT[item.id] == true and item.count > 0 then
+                if id_set[item.id] == true and item.count > 0 then
 		    if M.checkInventoryFreespace() then
 			windower.ffxi.get_item(bagid, item.slot, item.count)
 			count = count + 1
@@ -202,8 +202,8 @@ local bagsToInventory = function(id)
 end
 M.bagsToInventory = bagsToInventory
 
-function M.bagsToInventoryT(idsT)
-    -- print("bagsToInventoryT")
+function M.bagsToInventoryBySet(id_set)
+    -- print("bagsToInventoryBySet")
     local count = 0
     for bname, bagid in pairs(BagsList) do
         local items = windower.ffxi.get_items()
@@ -211,7 +211,7 @@ function M.bagsToInventoryT(idsT)
         if inventory.count < inventory.max then
             local bag = items[bname]
             for i, item in ipairs(bag) do
-                if idsT[item.id] == true and item.count > 0 then
+                if id_set[item.id] == true and item.count > 0 then
 		    if M.checkInventoryFreespace() then
 			windower.ffxi.get_item(bagid, item.slot, item.count)
 			count = count + 1
@@ -254,11 +254,11 @@ local inventoryHasItem = function(id)
 end
 M.inventoryHasItem = inventoryHasItem
 
-function M.inventoryHasItemT(idT)
+function M.inventoryHasItemInSet(id_set)
     local items = windower.ffxi.get_items()
     local inventory = items.inventory
     for i, item in ipairs(inventory) do
-        if idT[item.id] == true then
+        if id_set[item.id] == true then
             return true
         end
     end
@@ -278,12 +278,12 @@ M.safesHasItem = function(id)
     return false
 end
 
-M.safesHasItemsT = function(idsT)
+M.safesHasItemInSet = function(id_set)
     local items = windower.ffxi.get_items()
     for bname, bagid in pairs(SafesList) do
         local bag = items[bname]
         for i, item in ipairs(bag) do
-            if idsT[item.id] == true then
+            if id_set[item.id] == true then
                 return true
             end
         end
@@ -304,12 +304,12 @@ M.bagsHasItem = function(id)
     return false
 end
 
-M.bagsHasItemsT = function(idsT)
+M.bagsHasItemInSet = function(id_set)
     local items = windower.ffxi.get_items()
     for bname, bagid in pairs(BagsList) do
         local bag = items[bname]
         for i, item in ipairs(bag) do
-            if idsT[item.id] == true then
+            if id_set[item.id] == true then
                 return true
             end
         end
@@ -331,12 +331,12 @@ M.wardrobeHasItem = function(id)
     return false
 end
 
-M.wardrobeHasItemsT = function(idsT)
+M.wardrobeHasItemInSet = function(id_set)
     local items = windower.ffxi.get_items()
     for bname, bagid in pairs(WardrobeList) do
         local bag = items[bname]
         for i, item in ipairs(bag) do
-            if idsT[item.id] == true then
+            if id_set[item.id] == true then
                 return true
             end
         end
