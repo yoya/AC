@@ -253,6 +253,7 @@ M.roll_equip = {
     },
 }
 
-M.listener_id = incoming_text.addListener("ロール", M.incoming_text_handler)
+print(incoming_text, incoming_text.addListener)
+M.listener_id = incoming_text.add_listener("ロール", M.incoming_text_handler)
 
 return M
