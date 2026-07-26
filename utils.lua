@@ -2,7 +2,6 @@
 -- 雑多な関数群。整理できてない
 
 local command = require 'command'
-local io_chat = require 'io/chat'
 
 local M = {}
 
@@ -50,7 +49,7 @@ M.rank_in_job = function()
     for i = 0, 5 do
         local member = party["p"..i]
         if i == 1 then
-            io_chat.print(member)
+            print("utils.rank_in_job:", member)
         end
     end
 end
