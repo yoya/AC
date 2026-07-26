@@ -37,7 +37,6 @@ ac_focus.init(settings.AccountList)
 local useSilt = false
 local useBeads = false
 local useFaith = false
-local doPointCheer = false
 
 local item_data = require 'item/data'
 
@@ -1174,8 +1173,8 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    end
 	end
     elseif subcommand == 'point' then
-        doPointCheer = not doPointCheer
-        io_chat.print({"do point&cheer for ambus", doPointCheer})
+        control.point_cheer = not control.point_cheer
+        io_chat.print({"do point&cheer for ambus", control.point_cheer})
     elseif subcommand == 'pos' then  -- よく使うので ac 直下のまま
         io_chat.print("zone id:"..zone)
         local x = math.round(me.x, 1)
@@ -1534,7 +1533,7 @@ windower.register_event('zone change', function(zone, prevZone)
     ac_move.auto = false
     useSilt = false
     useBeads = false
-    doPointCheer = false
+    control.point_cheer = false
     if zone == prevZone then
 	-- ログイン直後は zone ==  prevZone なので細工する
 	prevZone = nil

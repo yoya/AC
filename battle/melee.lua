@@ -210,7 +210,7 @@ function M.tick(player, me, mob)
 		{ 20, 10, 'setkey s down; wait 0.1; setkey s up', 0 }, -- back
 			}, control.period, acprob.probRecastTime)
     end
-    if doPointCheer then  --- アンバス：マンドラ
+    if control.point_cheer then  --- アンバス：マンドラ
         send_command_prob({
             { 200, 1, 'input /point <t>', 1 },
             { 100, 1, 'input /cheer <p1>', 1 },

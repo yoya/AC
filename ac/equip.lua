@@ -175,7 +175,7 @@ function M.equip_item_by_priority_tree(item_tree)
 		    bag, inv_id = M.search_equip_item(id)
 		    -- print("slot, id, bag, inv_id", slot, id, bag, inv_id)
 		    windower.ffxi.set_equip(inv_id, slot, bag)
-		    if bag_name == "left_ring" or bag_name == "right_ring" then
+		    if slot_name == "left_ring" or slot_name == "right_ring" then
 			equiped_ring_item_id = id
 		    end
 		end
