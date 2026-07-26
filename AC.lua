@@ -271,8 +271,11 @@ end
 -- かばん内のジャンクアイテムを数える
 local count_junk_items_in_inventory = function ()
     local count = 0
+    -- 数えるだけで中身を変えないので、1 回のスナップショットで済ませる
+    -- (スロット毎に get_items を呼ぶと 80 回の API 呼び出しになる)
+    local inventory = windower.ffxi.get_items().inventory
     for index = 1, 80 do
-	local item = windower.ffxi.get_items(0, index)
+	local item = inventory[index]
 	if item and item.id ~= 0 then
 	    -- io_chat.print({"item:", item.status, item.id,
 	    -- res.items[item.id].ja })

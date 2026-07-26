@@ -125,10 +125,10 @@ function M.equip_show(arg)
 	end
 	_equip_set = equip_set_bank[arg]
     end
+    local items = windower.ffxi.get_items()  -- 表示するだけなのでループ外で 1 回
     for name, e in pairs(_equip_set) do
 	local slot_name = equip_slots_keys[e.slot]
 	local bag_name = equip_bags_keys[e.bag]
-	local items = windower.ffxi.get_items()
 	local bag_items = items[bag_name]
 	local item = bag_items[e.inv_id]
 	local item_ja = res_name.item_ja(item.id)
