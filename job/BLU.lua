@@ -13,7 +13,7 @@ M.subJobProbTable = {
     { 100, 60, 'input /ma コクーン <me>', 5 },
     { 100, 60, 'input /ma ガイストウォール <me>', 5 },
     { 100, 60, 'input /ma いやしの風 <me>', 5 },
-    { 100, 60, 'input /ma シープソ\ング <me>', 5 },
+    { 100, 60, 'input /ma シープソング <me>', 5 },
 }
 
 return M

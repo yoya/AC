@@ -73,7 +73,7 @@ end
 local prevInventoryTotalNum = inventoryTotalNum()
 local diffInventoryTotalNum = function()
     local next = inventoryTotalNum()
-    diff = next - prevInventoryTotalNum 
+    local diff = next - prevInventoryTotalNum
     prevInventoryTotalNum = next
     return diff
 end
@@ -145,8 +145,8 @@ function M.safesToInventoryT(idsT)
 			count = count + 1
 			if control.debug then
 			    local item_name = "unknown item"
-			    if res.items[item_id] ~= nil then
-				item_name = res.items[item_id].name
+			    if res.items[item.id] ~= nil then
+				item_name = res.items[item.id].name
 			    end
 			    io_chat.printf("safesToInventory:%s %s(%d)", bname, item_name, item.id)
 			end
@@ -187,8 +187,8 @@ local bagsToInventory = function(id)
 		    count = count + 1
 		    if control.debug then
 			local item_name = "unknown item"
-			if res.items[item_id] ~= nil then
-			    item_name = res.items[item_id].name
+			if res.items[item.id] ~= nil then
+			    item_name = res.items[item.id].name
 			end
 			io_chat.printf("bagsToInventory:%s %s(%d)", bname, item_name, item.id)
 		    end
@@ -336,7 +336,7 @@ M.wardrobeHasItemsT = function(idsT)
     for bname, bagid in pairs(WardrobeList) do
         local bag = items[bname]
         for i, item in ipairs(bag) do
-            if isdT[item.id] == true then
+            if idsT[item.id] == true then
                 return true
             end
         end
@@ -345,9 +345,9 @@ M.wardrobeHasItemsT = function(idsT)
 end
 
 M.tradeByItemId = function(mob, id)
----    print("tradeByItemId", target, id)
+---    print("tradeByItemId", mob, id)
     if mob == nil then
-        print("tradeByItemId: target:"..#target.." not found")
+        print("tradeByItemId: mob not found. id:"..tostring(id))
         return false
     end
     local items = windower.ffxi.get_items()
@@ -360,7 +360,7 @@ M.tradeByItemId = function(mob, id)
             cnt[#cnt+1] = item.count
         end
     end
-    num = #ind
+    local num = #ind
     if num == 0 then
 	io_chat.warnf("you have not item id:%d", id)
 	return
@@ -373,7 +373,7 @@ M.tradeByItemId = function(mob, id)
 --        local item = inventory[index]
 --    end
     if #ind > 0 then
-        local menu_item = 'C4I11C10HI':pack(0x36,0x20,0x00,0x00,mob.id,
+        local menu_item = ('C4I11C10HI'):pack(0x36,0x20,0x00,0x00,mob.id,
                cnt[1],cnt[2],cnt[3],cnt[4],cnt[5],cnt[6],cnt[7],cnt[8],0,0x00,
                ind[1],ind[2],ind[3],ind[4],ind[5],ind[6],ind[7],ind[8],0,0x00,
                mob.index,num)
@@ -384,9 +384,9 @@ end
 
 -- item_table = { { item_id = count }, ... }
 M.tradeByItemTable = function(mob, item_table)
----    print("tradeByItemId", target, id)
+---    print("tradeByItemTable", mob, item_table)
     if mob == nil then
-        print("tradeByItemId: target:"..#target.." not found")
+        print("tradeByItemTable: mob not found")
         return false
     end
     item_table = utils.table.deepclone(item_table)  -- 非破壊的にする
@@ -407,7 +407,7 @@ M.tradeByItemTable = function(mob, item_table)
 	    end
         end
     end
-    num = #ind
+    local num = #ind
     if num == 0 then
 	io_chat.warn("you have not item", item_table)
 	return
@@ -420,7 +420,7 @@ M.tradeByItemTable = function(mob, item_table)
 --        local item = inventory[index]
 --    end
     if #ind > 0 then
-        local menu_item = 'C4I11C10HI':pack(0x36,0x20,0x00,0x00,mob.id,
+        local menu_item = ('C4I11C10HI'):pack(0x36,0x20,0x00,0x00,mob.id,
                cnt[1],cnt[2],cnt[3],cnt[4],cnt[5],cnt[6],cnt[7],cnt[8],0,0x00,
                ind[1],ind[2],ind[3],ind[4],ind[5],ind[6],ind[7],ind[8],0,0x00,
                mob.index,num)

@@ -34,14 +34,15 @@ function M.send(target, method, arg1, arg2, arg3)
     if player ~= nil and player.name ~= nil then
 	name = player.name
     end
+    local command
     if arg1 == nil then
-	command = "%s.%s.%s.%s":format(SIGNATURE, target, name, method)
+	command = ("%s.%s.%s.%s"):format(SIGNATURE, target, name, method)
     elseif arg2 == nil then
-	command = "%s.%s.%s.%s.%s":format(SIGNATURE, target, name, method, arg1)
+	command = ("%s.%s.%s.%s.%s"):format(SIGNATURE, target, name, method, arg1)
     elseif arg3 == nil then
-	command = "%s.%s.%s.%s.%s.%s":format(SIGNATURE, target, name, method, arg1, arg2)
+	command = ("%s.%s.%s.%s.%s.%s"):format(SIGNATURE, target, name, method, arg1, arg2)
     else
-	command = "%s.%s.%s.%s.%s.%s.%s":format(SIGNATURE, target, name, method, arg1, arg2, arg3)
+	command = ("%s.%s.%s.%s.%s.%s.%s"):format(SIGNATURE, target, name, method, arg1, arg2, arg3)
     end
     windower.send_ipc_message(command)
 end

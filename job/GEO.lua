@@ -16,7 +16,7 @@ M.mainJobProbTable = {
     { 10,5*60/2, 'input /ja コリメイトファーバー <me>', 6 },
 }
 
-function isDefensive()
+local function isDefensive()
     return M.parent.needSafety()
 end
 

@@ -40,7 +40,7 @@ M.subJobProbTable = {
     -- { 100, 300, 'input /ja ファイターズロール  <me>', 3 },
 }
 
-function isDefensive()
+local function isDefensive()
     return M.parent.needSafety()
 end
 
