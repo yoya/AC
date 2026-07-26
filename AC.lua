@@ -491,34 +491,18 @@ local item_name_ja = function(item_id)
     return r.ja
 end
 
--- 廃棄は取り消せないので、control.drop_dryrun が真の間は
--- 対象を表示するだけで実際には捨てない。
 function drop_junk_items_in_inventory()
-    local dryrun = control.drop_dryrun
-    if dryrun then
-        io_chat.warn("【ドライラン】廃棄対象を表示するだけで実際には捨てません")
-        io_chat.warn("実行するには ac control dropdryrun off")
-    end
     local count = 0
     for index = 1, 80 do
         local item = windower.ffxi.get_items(0, index)
         if item and DropItemIdSet[item.id] == true then
             count = count + 1
-            if dryrun then
-                io_chat.printf("[dryrun] 廃棄対象: %s (id:%d) x%d",
-                               item_name_ja(item.id), item.id, item.count)
-            else
-                io_chat.printf("廃棄: %s (id:%d) x%d",
-                               item_name_ja(item.id), item.id, item.count)
-                windower.ffxi.drop_item(index, item.count)
-                coroutine.sleep(math.random(6,8)/5)
-            end
+	    windower.ffxi.drop_item(index, item.count)
+	    coroutine.sleep(math.random(6,8)/5)
         end
     end
-    if dryrun then
-        io_chat.noticef("廃棄対象 %d 件 (ドライランのため未実行)", count)
-    else
-        io_chat.noticef("廃棄 %d 件 完了", count)
+    if count > 0 then
+	io_chat.noticef("廃棄 %d 件 完了", count)
     end
     return count
 end
@@ -862,14 +846,6 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    else
 		io_chat.error("ac control debug {on|off}")
 	    end
-	elseif arg1 == 'dropdryrun' then
-	    local onoff = argument_means_on(arg2)
-	    if onoff ~= nil then
-		control.drop_dryrun = onoff
-		io_chat.info("ac control dropdryrun "..tostring(control.drop_dryrun))
-	    else
-		io_chat.error("ac control dropdryrun {on|off}")
-	    end
 	elseif arg1 == 'provoke' then
 	    if arg2 ~= nil and tonumber(arg2) ~= nil then
 		control.provoke = tonumber(arg2)
@@ -880,7 +856,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	elseif arg1 == 'wstp' then
 	    control.set_wstp(arg2)
 	else
-	    io_chat.error("ac control automove | debug | dropdryrun | provoke | wstp")
+	    io_chat.error("ac control automove | debug | provoke | wstp")
 	end
     elseif subcommand == 'debug' then
 	if arg1 == 'checkbags' then
