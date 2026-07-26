@@ -6,6 +6,12 @@ local utils = require 'utils'
 local acevent = require 'event'
 local io_chat = require 'io/chat'
 
+-- id の符号で処理が変わる。
+--   正の id … 店売りする。金庫/バッグからも かばん に集めてくる
+--             (safes_to_inventory_by_set / bags_to_inventory_by_set)
+--   負の id … 売れないので捨てる。かばん内にある分だけが対象で、
+--             金庫/バッグからは集めてこない (drop_junk_items_in_inventory)
+-- 参照側は正なら JunkItemIdSet[id]、負なら JunkItemIdSet[-id] を引く。
 M.JunkItems = {
     55, -- キャビネット
     90, -- 錆びたバケツ
