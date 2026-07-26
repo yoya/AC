@@ -27,6 +27,9 @@ function M.main_tick(player)
 end
 
 M.battle_equip = {
+    body = {
+	23798, -- クレパスクラメイル
+    },
     left_ring = {
 	26229,  -- レコリング
 	26189,  -- 月明の指輪

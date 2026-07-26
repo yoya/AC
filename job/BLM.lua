@@ -103,4 +103,14 @@ function M.sub_tick(player)
     end
 end
 
+M.battle_equip = {
+    body = {
+	23445, -- ＳＰコート+3
+	23110, -- ＳＰコート+2
+	27831, -- ＳＰコート+1
+	25787, -- シャマシュローブ
+	25719, -- マーリンジュバ
+    },
+}
+
 return M
