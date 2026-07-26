@@ -18,7 +18,6 @@ M.INIT_VALUES = {
     provoke = 2000, -- HPがこれ以下だと挑発しない
     wstp = 1000,  -- 無条件で WS をうつ TP 量。-1 は MB 狙いでタイミングを取る
     magic = true, -- 魔法を使っても良いか
-    drop_dryrun = true, -- アイテム廃棄を実行せず対象の表示だけ行う
     point_cheer = false, -- アンバス:マンドラ用。指差し/応援をする
     enemy_range = 19.0 -- 索敵範囲
 }
@@ -77,8 +76,7 @@ function M.show()
     io_chat.infof("debug:%s equip_lock:%s do_my_best:%s",
 		  tostring(M.debug), tostring(M.equip_lock),
 		  tostring(M.do_my_best))
-    io_chat.infof("drop_dryrun:%s point_cheer:%s",
-		  tostring(M.drop_dryrun), tostring(M.point_cheer))
+    io_chat.infof("point_cheer:%s", tostring(M.point_cheer))
     end
 
 return M

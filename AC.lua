@@ -337,15 +337,6 @@ local idle_function_sell_junk_items = function(mob)
 end
 M.idle_function_sell_junk_items = idle_function_sell_junk_items
 
--- アイテム名。res に無い id でも落ちないように
-local item_name_ja = function(item_id)
-    local r = res.items[item_id]
-    if r == nil then
-        return "unknown item"
-    end
-    return r.ja
-end
-
 function drop_junk_items_in_inventory()
     local count = 0
     for index = 1, 80 do
