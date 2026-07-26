@@ -338,6 +338,21 @@ M.wardrobe_has_item_in_set = function(id_set)
     return false
 end
 
+-- 0x036 Menu Item (トレード)。Item Count / Item Index は 9 個の配列で、
+-- packets ライブラリでは 'Item Count 1'..'Item Count 9' に展開される。
+local inject_trade_packet = function(mob, ind, cnt, num)
+    local values = {
+        ['Target'] = mob.id,
+        ['Target Index'] = mob.index,
+        ['Number of Items'] = num,
+    }
+    for i = 1, 9 do
+        values['Item Count '..i] = cnt[i] or 0
+        values['Item Index '..i] = ind[i] or 0
+    end
+    packets.inject(packets.new('outgoing', 0x036, values))
+end
+
 M.trade_by_item_id = function(mob, id)
 ---    print("trade_by_item_id", mob, id)
     if mob == nil then
@@ -367,11 +382,7 @@ M.trade_by_item_id = function(mob, id)
 --        local item = inventory[index]
 --    end
     if #ind > 0 then
-        local menu_item = ('C4I11C10HI'):pack(0x36,0x20,0x00,0x00,mob.id,
-               cnt[1],cnt[2],cnt[3],cnt[4],cnt[5],cnt[6],cnt[7],cnt[8],0,0x00,
-               ind[1],ind[2],ind[3],ind[4],ind[5],ind[6],ind[7],ind[8],0,0x00,
-               mob.index,num)
-        windower.packets.inject_outgoing(0x36, menu_item)
+        inject_trade_packet(mob, ind, cnt, num)
     end
     return true
 end
@@ -414,11 +425,7 @@ M.trade_by_item_table = function(mob, item_table)
 --        local item = inventory[index]
 --    end
     if #ind > 0 then
-        local menu_item = ('C4I11C10HI'):pack(0x36,0x20,0x00,0x00,mob.id,
-               cnt[1],cnt[2],cnt[3],cnt[4],cnt[5],cnt[6],cnt[7],cnt[8],0,0x00,
-               ind[1],ind[2],ind[3],ind[4],ind[5],ind[6],ind[7],ind[8],0,0x00,
-               mob.index,num)
-        windower.packets.inject_outgoing(0x36, menu_item)
+        inject_trade_packet(mob, ind, cnt, num)
     end
     return true
 end

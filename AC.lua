@@ -295,9 +295,13 @@ local sell_junk_items_in_inventory = function()
         local item = windower.ffxi.get_items(0, index)
 	-- io_chat.print({ "item:", item.status, item.id, res.items[item.id].ja })
         if item and SellItemIdSet[item.id] == true then
-            windower.packets.inject_outgoing(0x084,string.char(0x084,0x06,0,0,item.count,0,0,0,
-                                        item.id%256,math.floor(item.id/256)%256,index,0))
-            windower.packets.inject_outgoing(0x085,string.char(0x085,0x04,0,0,1,0,0,0))
+            -- 0x084 売却価格の問い合わせ, 0x085 売却確定
+            packets.inject(packets.new('outgoing', 0x084, {
+                ['Count'] = item.count,
+                ['Item'] = item.id,
+                ['Inventory Index'] = index,
+            }))
+            packets.inject(packets.new('outgoing', 0x085, {}))
 	    if control.debug then
 		io_chat.print({"item:", res_name.item_ja(item.id), item.id, item.status})
 	    end
