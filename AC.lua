@@ -89,7 +89,6 @@ local ac_record = require 'ac/record'
 local ac_char = require 'ac/char'
 
 local turn_to_pos = ac_move.turn_to_pos
-local turn_to_target = ac_move.turn_to_target
 local turn_to_front = ac_move.turn_to_front
 
 local ac_party = require 'ac/party'
@@ -216,149 +215,6 @@ local leader_function = function()
 	task.reset_by_fight()
     end
 end 
-
---- メンバー待機用
-local not_leader_function = function()
----    print("I am not a leader")
-    local player = windower.ffxi.get_player()
----    if not player or not player.target_index then
-    if not player then
-        return
-    end
-    if acitem.check_bags_freespace() then
-        for i, id in pairs(crystal_ids) do
-            if acitem.inventory_has_item(id) then
-                acitem.move_to_bags(id)
-            end
-        end
-    end
----    local level = player.main_job_level
-    local item_level = player.item_level
-    local me_pos = {}
-    local leader_pos = {}
-    get_mob_position(me_pos, "me")
-    --- p1 がリーダーだと仮定。(リーダーというよりフォローする対象が p1)
-    local target_leader = "p1"
-    local p1 = windower.ffxi.get_mob_by_target("p1")
-    if p1 == nil then
-	return  -- リーダーがいない
-    end
-    -- リーダーがマウントしてたら、自分もマウント
-    if p1.status == 85 and player.status ~= 85 then
-	command.send('input /mount ラプトル')
-    end
-    if p1.status ~= 85 and player.status == 85 then
-	command.send('input /dismount')
-    end
-    get_mob_position(leader_pos, target_leader)
-    if leader_pos.x == nil then
-        return 
-    end
-    local dx = leader_pos.x - me_pos.x
-    local dy = leader_pos.y - me_pos.y
-    local dist =  math.sqrt(dx*dx + dy*dy)
-    -- リーダーと離れたのを確率的に気づくように
-    -- あと離れすぎたり、エリアが違う時や、やめる。
-    if p1.hpp > 0 then
-	if math.random(1, 3) <= 2 and dist > math.random(3, 5) and
-	    dist < 24 then
-	    isFar = true
-	elseif dist > math.random(6, 7) then -- 離れすぎたらすぐ気付く
-	    isFar = true
-	end
-    end
-    if isFar == true then
-        turn_to_target(target_leader)
-        turn_to_front()
-        windower.ffxi.run(dx, dy)
-        if dist > math.random(2, 4) then
-            return
-        end
-    end
-    isFar = false
-    windower.ffxi.run(false)
-    -- 100以下は 戦闘しない
-    if item_level < 100 then
-	return
-    end
-    -- 119未満は無理しない, 109 は頑張る。潜在外し
-    if item_level < 109 then
-        local mob = windower.ffxi.get_mob_by_target("bt")
-        if mob == nil or mob.hpp > 90 then
-            -- 戦闘直後は危ないので、戦いに参加しない
-            return
-        end
-    end
-    -- ワープギミックは target まで追随する。
-    local p1 = windower.ffxi.get_mob_by_target("p1")
-    if p1 ~= nil and p1.target_index ~= 0 then
-	local target = windower.ffxi.get_mob_by_index(p1.target_index)
-	if target ~= nil then
-	    local target_name = target.name
-	    if string.find(target_name, "Home Point") or
-		string.find(target_name, "Survival Guide") or
-		string.find(target_name, "Shimmering Circle") or
-		string.find(target_name, "Waypoint") or
-		string.find(target_name, "Nunaarl Bthtrogg") or
-		string.find(target_name, "Undulating Confluence") or
-		string.find(target_name, "Echo Disseminator") or  -- WoE
-		string.find(target_name, "Veridical Conflux") or  -- WoE
-		string.find(target_name, "Ethereal") or
-		string.find(target_name, "Affi") or
-		string.find(target_name, "Dremi") or
-		string.find(target_name, "Shiftrix") or
-		string.find(target_name, "Dimmian") or
-		string.find(target_name, "Diaphanous") or  -- ソーティ
-		string.find(target_name, "Swirling Vortex") or  -- アポリオン
-		string.find(target_name, "???") then
-		-- print("p1 target Found", p1.target_index, target.index)
-		io_net.target_by_mob_index(p1.target_index)
-		windower.ffxi.run(true)
-	    end
-	end
-    end
-    if control.attack then
-        windower.ffxi.run(false)
-	local mob = windower.ffxi.get_mob_by_target("bt")
-	if mob ~= nil then
-	    command.send('input /target <bt>')
-	else
-	    local condition = {
-		range = control.enemy_range,
-		linkedOnly = true,
-		-- nameMatch = control.enemy_filter,
-	    }
-	    mob = acmob.search_nearest_mob(me_pos, condition)
-	end
-	if mob == nil then
-	    --- p1 がターゲットしてる敵に合わせる
-	    if p1 == nil or p1.status ~= 1 or p1.target_index == 0 then
-		return
-	    end
-	    local target = windower.ffxi.get_mob_by_index(p1.target_index)
-	    if target == nil or target.status ~= 1 then
-		-- 敵と戦闘開始してなければ様子見
-		return
-	    end
-	    -- p1 が戦闘している敵にターゲット
-	    io_net.target_by_mob_index(p1.target_index)
-	    mob = windower.ffxi.get_mob_by_target("t")
-	end
-	--if mob ~= nil and mob.hpp < 100 then
-	if mob ~= nil then
-	    io_net.target_by_mob(mob)
-	    if item_level >= 119 or mob.hpp < 100 then
-		-- 5 が近接攻撃できるギリギリの距離
-		if ac_pos.distance(p1, mob) <= 5 then  -- 敵が近づくまで待つ
-		    coroutine.sleep(math.random(0,2)/4)
-		    command.send('input /attack <t>')
-		    task.reset_by_fight()
-		end
-	    end
-        end
-        acprob.clear_prob_recast_time()
-    end
-end
 
 local idle_function_trade_items = function(tname, items, wait, enterWaits)
 ---    command.send('input /targetnpc')
@@ -640,7 +496,6 @@ function tick_serial()
 		leader_function()
 		role_Leader.tick_idle(player, me)
 	    elseif iam_leader() == false then
-		not_leader_function()
 		role_Follower.tick_idle(player, me)
 	    end
 	end
