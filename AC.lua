@@ -1406,7 +1406,9 @@ windower.register_event('outgoing chunk', function(id, data, modified, injected,
 end)
 
 windower.register_event('incoming text', function(data, modified, original_mode, modified_mode, blocked)
-    incoming_text.incoming_handler(data, modified, original_mode, modified_mode, blocked)
+   -- 重複メッセージ見るとこれなので一旦はじく
+   if original_mode == 152 then return end
+   incoming_text.incoming_handler(data, modified, original_mode, modified_mode, blocked)
 end)
 
 windower.register_event('gain experience', function(amount, chain_number, limit)
