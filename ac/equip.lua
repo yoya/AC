@@ -184,6 +184,8 @@ function M.equip_item_by_priority_tree(item_tree)
 	end
     end
     equiped_ring_item_id = 0
+    coroutine.sleep(1)
+    utils.target_lockon(true)
 end
     
 function M.tick(player)
