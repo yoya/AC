@@ -40,8 +40,8 @@ M.subJobProbTable = {
     -- { 100, 300, 'input /ja ファイターズロール  <me>', 3 },
 }
 
-local function isDefensive()
-    return M.parent.needSafety()
+local function is_defensive()
+    return M.parent.need_safety()
 end
 
 function phantom_roll(roll_name, on, delay)
@@ -53,13 +53,13 @@ function phantom_roll(roll_name, on, delay)
 	period = 20
     end
     -- command, delay, duration, period, eachfight
-    local t = task.newTask(c, delay, 4, period, true)
+    local t = task.new_task(c, delay, 4, period, true)
     if on then
-	--io_chat.setNextColor(6)
+	--io_chat.set_next_color(6)
 	--io_chat.print("phantom_roll", roll_name)
-	task.setTask(level, t)
+	task.set_task(level, t)
     else
-	task.removeTask(level, t)
+	task.remove_task(level, t)
     end
 end
 
@@ -67,7 +67,7 @@ function roll_tick(player)
     local zone = windower.ffxi.get_info().zone
     local me = windower.ffxi.get_mob_by_target("me")
     local mob = windower.ffxi.get_mob_by_target("t")
-    if isDefensive() then
+    if is_defensive() then
 	phantom_roll("ダンサーロール", true, 0)  -- リジェネ
 	phantom_roll("ガランツロール", true, 61)  -- 防御
 	phantom_roll("ニンジャロール", true, 61*3)  -- 回避
@@ -98,7 +98,7 @@ function roll_tick(player)
 	phantom_roll("カオスロール", drk_roll, 61)
 	phantom_roll("ファイターズロール", war_roll, 61*2)
 	-- ソーティでは使わない
-	if not contents.matchContentsName("sortie") then
+	if not contents.match_contents_name("sortie") then
 	    phantom_roll("コルセアズロール", cor_roll, 0)
 	end
 	phantom_roll("ブリッツァロール", blitzer_roll, 61)
@@ -122,13 +122,13 @@ function phantom_roll_double_up(on)
     local c = "input /ja ダブルアップ <me>"
     local level = task.PRIORITY_MIDDLE
     -- command, delay, duration, period, eachfight
-    local t = task.newTask(c, 2, 4, 5, false)  -- dalay:1 だとたまに失敗する
+    local t = task.new_task(c, 2, 4, 5, false)  -- dalay:1 だとたまに失敗する
     if on == true then
-	-- io_chat.setNextColor(6)
+	-- io_chat.set_next_color(6)
 	-- io_chat.print("phantom_roll_double_up")
-	task.setTask(level, t)
+	task.set_task(level, t)
     else
-	task.removeTask(level, t)
+	task.remove_task(level, t)
     end
 end
 
@@ -136,16 +136,16 @@ end
 function COR_phantom_roll_up(roll_name, roll_number)
     assert(type(roll_name) == "string")
     assert(type(roll_number) == "number")
-    -- io_chat.setNextColor(6)
+    -- io_chat.set_next_color(6)
     -- io_chat.print("COR_phantom_roll_up", roll_name, roll_number)
     local roll_info = phantom_roll_table[roll_name.."ロール"]
     if roll_info == nil then
-	io_chat.setNextColor(3)
+	io_chat.set_next_color(3)
 	io_chat.print("Unknown phantom roll:"..roll_name)
 	return
     end
     if roll_number == roll_info.lucky then
-	io_chat.setNextColor(6)
+	io_chat.set_next_color(6)
 	io_chat.print(roll_name.."("..roll_number..") ラッキーロール！")
 	return
     end
@@ -153,24 +153,24 @@ function COR_phantom_roll_up(roll_name, roll_number)
 	-- TODO: フォールド使える場合は return しない
 	if roll_number == roll_info.unlucky then
 	    if control.debug then
-		io_chat.setNextColor(6)
+		io_chat.set_next_color(6)
 		io_chat.print("アンラッキーロール("..roll_number..")！ > スネークアイ&ダブルアップ")
 	    end
 	    local c = "input /ja スネークアイ <me>; wait 2; input /ja ダブルアップ <me>"
-	    task.setTask(task.PRIORITY_MIDDLE,
+	    task.set_task(task.PRIORITY_MIDDLE,
 			 -- command, delay, duration, period, eachfight
-			 task.newTask(c, 1, 1, 5, false))
+			 task.new_task(c, 1, 1, 5, false))
 	    return
 	end
 	if control.debug then
-	     io_chat.setNextColor(6)
+	     io_chat.set_next_color(6)
 	     io_chat.print(roll_name.." "..roll_number.." で打ち止め ("..roll_info.lucky.."/"..roll_info.unlucky..")")
 	end
 	phantom_roll_double_up(false) -- たまに暴発するのを防ぎたい
 	return
     end
     if control.debug then
-	io_chat.setNextColor(6)
+	io_chat.set_next_color(6)
 	io_chat.print("出目:"..roll_number.." => ダブルアップ！")
     end
     phantom_roll_double_up(true)
@@ -200,13 +200,13 @@ function M.incoming_text_handler(text)
     end
     if string.contains(text,"ロールがBust") then
 	if control.debug then
-	     io_chat.setNextColor(3)
+	     io_chat.set_next_color(3)
 	     io_chat.print("Bust => フォールド！")
 	end
 	local c = "input /ja フォールド <me>"
-	task.setTask(task.PRIORITY_MIDDLE,
+	task.set_task(task.PRIORITY_MIDDLE,
 		     -- command, delay, duration, period, eachfight
-		     task.newTask(c, 1, 1, 5, false))
+		     task.new_task(c, 1, 1, 5, false))
 	return
     end
 end

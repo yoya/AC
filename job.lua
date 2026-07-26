@@ -118,8 +118,8 @@ function M.tick(player)
 		local c = "input /item "..f.." <me>"
 		local level = task.PRIORITY_LOW
 		-- command, delay, duration, period, eachfight
-		local t = task.newTask(c, i*3, 3, 30*60/10, false)
-		task.setTask(level, t)
+		local t = task.new_task(c, i*3, 3, 30*60/10, false)
+		task.set_task(level, t)
 	    end
 	end
     end
@@ -150,10 +150,10 @@ function M.dothebest(player)
 end
 
 -- 戦闘を安全側に倒す状況
-function M.needSafety()
-    -- print("needSafety")
+function M.need_safety()
+    -- print("need_safety")
     -- 醴泉島のかえる
-    if aczone.isNear(291, "toad_pond", 120) then
+    if aczone.is_near(291, "toad_pond", 120) then
 	return true
     end
     -- WKR ボス相手
@@ -162,7 +162,7 @@ function M.needSafety()
     local zone = windower.ffxi.get_info().zone
     local mob = windower.ffxi.get_mob_by_target("t")
     if mob == nil then
-	-- print("job.needSafety: target t mob == nil")
+	-- print("job.need_safety: target t mob == nil")
 	return false -- 分からないので安全側に倒す
     end
     if utils.table.contains(WKR_Zones, zone) then

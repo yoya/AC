@@ -5,10 +5,10 @@ local io_net = require 'io/net'
 local io_chat = require 'io/chat'
 
 local ac_party = require 'ac/party'
-local iamLeader = ac_party.iamLeader
+local iam_leader = ac_party.iam_leader
 
 local keyboard = require 'keyboard'
-local pushKeys = keyboard.pushKeys
+local push_keys = keyboard.push_keys
 
 -- これらの敵と戦っていて、それ以外の敵が現れた時は、
 -- それ以外の方にターゲットを移す
@@ -58,12 +58,12 @@ local preferEnemyTable = { -- 先に倒すべき敵
     "Languishing Larch",
 }
 
-function searchPreferEnemy()
+function search_prefer_enemy()
     local arr = {}
     for i, name in ipairs(preferEnemyTable) do
 	local mob = windower.ffxi.get_mob_by_name(name)
 	if mob ~= nil then
-	    -- io_chat.print("searchPreferEnemy", mob.name, mob.status)
+	    -- io_chat.print("search_prefer_enemy", mob.name, mob.status)
 	    if  mob.status == 0 or mob.status == 1 then
 		table.insert(arr, mob)
 	    end
@@ -72,15 +72,15 @@ function searchPreferEnemy()
     return arr
 end
 
-function searchEnemy(range, excludeEmemy)
-    -- print("searchEnemy", range, excludeEmemy)
+function search_enemy(range, excludeEmemy)
+    -- print("search_enemy", range, excludeEmemy)
     -- 何故かアンバスでは常に空っぽが返る
     -- local mobArr = windower.ffxi.get_mob_array()
-    local mobArr = searchPreferEnemy()
-    -- io_chat.print("searchEnemy: #mobArr", #mobArr)
+    local mobArr = search_prefer_enemy()
+    -- io_chat.print("search_enemy: #mobArr", #mobArr)
     for i, mob in ipairs(mobArr) do
-	io_chat.setNextColor(8) -- 明るい赤紫
-	io_chat.print("searchEnemy name", excludeEmemy, mob.name)
+	io_chat.set_next_color(8) -- 明るい赤紫
+	io_chat.print("search_enemy name", excludeEmemy, mob.name)
 	if (mob.status == 0 or mob.status == 1) and mob.spawn_type == 16 and
 	    mob.distance < range then
 	    if mob.name ~= excludeEmemy then
@@ -97,10 +97,10 @@ function M.tick(player)
 	    return
 	end
 	--[[
-	if iamLeader() == false then
+	if iam_leader() == false then
 	    local p1 = windower.ffxi.get_mob_by_target("p1")
 	    if p1.target_index ~= mob.index then
-		io_chat.setNextColor(8) -- 明るい赤紫
+		io_chat.set_next_color(8) -- 明るい赤紫
 		io_chat.print("敵が違うので戦闘中断")
 		command.send('input /attackoff <me>')
 	    end
@@ -108,18 +108,18 @@ function M.tick(player)
 	]]
 	if postponeEnemies[mob.name] == true then
 	    -- print("postponeEnemies")
-	    local nextMob = searchEnemy(30, mob.name)
+	    local nextMob = search_enemy(30, mob.name)
 	    if nextMob ~= nil then
-		io_chat.setNextColor(8) -- 明るい赤紫
+		io_chat.set_next_color(8) -- 明るい赤紫
 		io_chat.print("より優先度の高い敵を発見")
 		command.send('input /attackoff <me>')
-		io_net.targetByMob(nextMob)
+		io_net.target_by_mob(nextMob)
 		command.send('wait 1; input /attack <t>')
 	    end
 	end
 	-- 敵から距離があると近づく処理。飛ばされた後用
 	if 5 < mob.distance then
-            pushKeys({"w", "w", "w"})
+            push_keys({"w", "w", "w"})
 	end
     end
 end

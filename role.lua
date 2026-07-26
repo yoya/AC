@@ -10,19 +10,19 @@ local magicBurstJobs = { "BLM", "SCH", "GEO" }
 local rangeJobs = { "RNG", "COR" }
 local healerJobs = { "WHM", "RDM", "SCH", "PLD" }
     
-function M.iamTankJob()
+function M.iam_tank_job()
     local player = windower.ffxi.get_player()
     return utils.table.contains(tankJobs, player.main_job)
 end
-function M.iamSkillChainJob()
+function M.iam_skill_chain_job()
     local player = windower.ffxi.get_player()
     return utils.table.contains(skillChainJobs, player.main_job)
 end
-function M.iamMagicBurstJob()
+function M.iam_magic_burst_job()
     local player = windower.ffxi.get_player()
     return utils.table.contains(magicBurstJobs, player.main_job) 
 end
-function M.iamHealerJob()
+function M.iam_healer_job()
     local player = windower.ffxi.get_player()
     return utils.table.contains(healerJobs, player.main_job) or
 	utils.table.contains(healerJobs, player.sub_job)

@@ -9,18 +9,18 @@ local control = require 'control'
 
 M.auto = false
     
-function M.ergonLocusFunction()
-    keyboard.pushKeys({"numpad5"})
+function M.ergon_locus_function()
+    keyboard.push_keys({"numpad5"})
     M.auto = true
     while(M.auto)
     do
-	keyboard.pushKeys({"f8", "numpad*", "numpad2", "enter"})
+	keyboard.push_keys({"f8", "numpad*", "numpad2", "enter"})
 	coroutine.sleep(3)
-	keyboard.pushKeys({"up", "enter"})
+	keyboard.push_keys({"up", "enter"})
 	coroutine.sleep(3)
     end
     M.auto = false
-    keyboard.pushKeys({"escape"})
+    keyboard.push_keys({"escape"})
 end
 
 function M.incoming_text_handler(text)
@@ -28,13 +28,13 @@ function M.incoming_text_handler(text)
     if string.contains(text, "ワークスコールを達成した") or
 	string.contains(text, "すでに調査を終えています") then
 	M.auto = false
-	keyboard.pushKeys({"escape"})
+	keyboard.push_keys({"escape"})
     elseif string.contains(text, "ターゲットが範囲外です") then
 	M.auto = false
-	keyboard.pushKeys({"escape"})
+	keyboard.push_keys({"escape"})
     end
 end
 
-M.listener_id = incoming_text.addListener("", M.incoming_text_handler)
+M.listener_id = incoming_text.add_listener("", M.incoming_text_handler)
 
 return M

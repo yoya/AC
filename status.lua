@@ -9,9 +9,9 @@ M.status_handlers = { }
 -- Idle
 M.status_handlers[0] = function(new, old)
     -- io_chat.print("status change: Idle")
-    actask.setTaskSimple("ac inject currinfo1", 2, 1)
-    actask.setTaskSimple("ac inject currinfo2", 3, 1)
-    actask.setTaskSimple("//record char", 6, 1)
+    actask.set_task_simple("ac inject currinfo1", 2, 1)
+    actask.set_task_simple("ac inject currinfo2", 3, 1)
+    actask.set_task_simple("//record char", 6, 1)
     if old == 1 then
 	--  敵が近くにいない場合、移動用装備に着替える。
 	--  -移動用の歌やロールをかける

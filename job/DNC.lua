@@ -19,8 +19,8 @@ M.mainJobProbTable = {
 
 M.subJobProbTable = { }
 
-local function isDefensive()
-    return M.parent.needSafety()
+local function is_defensive()
+    return M.parent.need_safety()
 end
 
 function M.main_tick(player)
@@ -31,14 +31,14 @@ function M.main_tick(player)
     local c_a = 'input /ja 剣の舞い <me>'
     local c_d = 'input /ja 扇の舞い <me>'
     -- command, delay, duration, period, eachfight
-    local t_a = actask.newTask(c_a, 2, 2, 60*3+1, false)
-    local t_d = actask.newTask(c_d, 2, 2, 60*3+1, false)
-    if not isDefensive() then
-	actask.setTask(level, t_a)
-	actask.removeTask(level, t_d)
+    local t_a = actask.new_task(c_a, 2, 2, 60*3+1, false)
+    local t_d = actask.new_task(c_d, 2, 2, 60*3+1, false)
+    if not is_defensive() then
+	actask.set_task(level, t_a)
+	actask.remove_task(level, t_d)
     else
-	actask.removeTask(level, t_a)
-	actask.setTask(level, t_d)
+	actask.remove_task(level, t_a)
+	actask.set_task(level, t_d)
     end
 end
 

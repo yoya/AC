@@ -5,7 +5,7 @@ local io_chat = require 'io/chat'
 
 local M = {}
 
-function getLowerHPTarget(hpp_needed)
+function get_lower_hp_target(hpp_needed)
     local party = windower.ffxi.get_party()
     local target = nil
     local minHP = 99999
@@ -29,7 +29,7 @@ function getLowerHPTarget(hpp_needed)
     return count, target
 end
 
-M.cureIfPartyHPisLow = function(player, hp_need_cure)
+M.cure_if_party_h_pis_low = function(player, hp_need_cure)
     if player.status ~= 1 then
 	return  -- 戦闘してなければ、何もしない
     end
@@ -75,9 +75,9 @@ function M.main_tick(player)
         end
     else
 	if player.main_job == "WHM" then
-	    M.cureIfPartyHPisLow(player, 75)
+	    M.cure_if_party_h_pis_low(player, 75)
 	else
-	    M.cureIfPartyHPisLow(player, 60)
+	    M.cure_if_party_h_pis_low(player, 60)
 	end
     end
 end
@@ -89,7 +89,7 @@ function M.sub_tick(player)
             -- command.send('input /ma インビジ <me>')
         end
     else
-	M.cureIfPartyHPisLow(player, 50)
+	M.cure_if_party_h_pis_low(player, 50)
     end
 end
 

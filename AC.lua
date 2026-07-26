@@ -48,7 +48,7 @@ local bayld_swap_ids = item_data.bayld_swap_ids --  ベヤルド交換品
 local gob_dial_key_ids = item_data.gob_dial_key_ids -- 不思議箱ダイヤルキー
 
 -- 優先して釣る敵
-local preferedEnemyList = {
+local preferredEnemyList = {
     -- カオス戦
     "Chaos",
     -- コロナイズ
@@ -81,7 +81,7 @@ command.send('bind @d ac stop')        -- win-d
 command.send('bind ^f ac show mob')
 
 local keyboard = require 'keyboard'
-local pushKeys = keyboard.pushKeys
+local push_keys = keyboard.push_keys
 
 local ac_pos = require 'ac/pos'
 local ac_move = require 'ac/move'
@@ -89,17 +89,17 @@ ac_move.AC = M
 local ac_record = require 'ac/record'
 local ac_char = require 'ac/char'
 
-local turnToPos = ac_move.turnToPos
-local turnToTarget = ac_move.turnToTarget
-local turnToFront = ac_move.turnToFront
+local turn_to_pos = ac_move.turn_to_pos
+local turn_to_target = ac_move.turn_to_target
+local turn_to_front = ac_move.turn_to_front
 
 local ac_party = require 'ac/party'
-local iamLeader = ac_party.iamLeader
+local iam_leader = ac_party.iam_leader
 
 local io_net = require 'io/net'
 
 local io_ipc = require 'io/ipc'
-io_ipc.AC = M  -- for calback
+io_ipc.AC = M  -- for callback
 
 local ac_stat = require 'ac/stat'
 local acinspect = require 'inspect'
@@ -108,8 +108,8 @@ local acitem = require 'item'
 
 local ws = require 'ws'
 local acprob = require 'prob'
-local sendCommandProb = acprob.sendCommandProb
-local getSendCommandProbTable = acprob.getSendCommandProbTable
+local send_command_prob = acprob.send_command_prob
+local get_send_command_prob_table = acprob.get_send_command_prob_table
 local aczone = require 'zone'
 aczone.AC = M  -- for callback
 local zone_change = require 'zone/change'
@@ -118,7 +118,7 @@ local incoming_chunk = require 'incoming/chunk'
 local incoming_text = require 'incoming/text'
 
 local acmob = require 'mob'
-local getMobPosition = acmob.getMobPosition
+local get_mob_position = acmob.get_mob_position
 
 local acjob = require 'job'
 
@@ -129,7 +129,7 @@ local role_Follower = require('role/Follower')
 local ac_defeated = require 'ac/defeated'
 local ac_equip = require 'ac/equip'
 
-local JunkItemsT = acitem.junk.JunkItemsT
+local JunkItemIdSet = acitem.junk.JunkItemIdSet
 
 local isFar = false
 local fightingMobName = nil
@@ -137,12 +137,12 @@ local fightingMobName = nil
 --- リーダー待機用
 local prevDx = 0
 local prevDy = 0
-local leaderFunction = function()
+local leader_function = function()
     -- print("I am a leader")
     local me_pos = {}
-    if getMobPosition(me_pos, "me") ~= true then
+    if get_mob_position(me_pos, "me") ~= true then
 	-- zone チェンジでよくある
-        -- print("getMobPosition failed ???")
+        -- print("get_mob_position failed ???")
         return
     end
     -- リンクしてる敵
@@ -151,16 +151,16 @@ local leaderFunction = function()
 	linkedOnly = true,
 	-- nameMatch = control.enemy_filter,
     }
-    local mob = acmob.searchNearestMob(me_pos, condition)
+    local mob = acmob.search_nearest_mob(me_pos, condition)
     -- 優先する敵
     if mob == nil then
 	local condition = {
 	    range = control.enemy_range,
-	    preferMobs = utils.table.merge_lists(acmob.moreAttractiveEnemyList, preferedEnemyList),
+	    preferMobs = utils.table.merge_lists(acmob.moreAttractiveEnemyList, preferredEnemyList),
 	    nameMatch = control.enemy_filter,
 	}
-	local mob = acmob.searchNearestMob(pull.base_pos, condition)
-	---    print("nearest prefered mob", mob)
+	local mob = acmob.search_nearest_mob(pull.base_pos, condition)
+	---    print("nearest preferred mob", mob)
     end
     if mob == nil then
         --- メンバーが戦っている敵がいれば、そちら優先
@@ -172,11 +172,11 @@ local leaderFunction = function()
 	    range = control.enemy_range,
 	    nameMatch = control.enemy_filter,
 	}
-	mob = acmob.searchNearestMob(pull.base_pos, condition)
+	mob = acmob.search_nearest_mob(pull.base_pos, condition)
     end
     if mob ~= nil and control.attack then
         windower.ffxi.run(false)
-	io_net.targetByMob(mob)
+	io_net.target_by_mob(mob)
 	coroutine.sleep(0.2)
 	command.send('input /target <t>')
 	coroutine.sleep(0.2)
@@ -211,23 +211,23 @@ local leaderFunction = function()
     end
     if control.attack then
         command.send('input /attack on')
-	acprob.clearProbRecastTime()
-	task.resetByFight()
+	acprob.clear_prob_recast_time()
+	task.reset_by_fight()
     end
 end 
 
 --- メンバー待機用
-local notLeaderFunction = function()
+local not_leader_function = function()
 ---    print("I am not a leader")
     local player = windower.ffxi.get_player()
 ---    if not player or not player.target_index then
     if not player then
         return
     end
-    if acitem.checkBagsFreespace() then
+    if acitem.check_bags_freespace() then
         for i, id in pairs(crystal_ids) do
-            if acitem.inventoryHasItem(id) then
-                acitem.moveToBags(id)
+            if acitem.inventory_has_item(id) then
+                acitem.move_to_bags(id)
             end
         end
     end
@@ -235,7 +235,7 @@ local notLeaderFunction = function()
     local item_level = player.item_level
     local me_pos = {}
     local leader_pos = {}
-    getMobPosition(me_pos, "me")
+    get_mob_position(me_pos, "me")
     --- p1 がリーダーだと仮定。(リーダーというよりフォローする対象が p1)
     local target_leader = "p1"
     local p1 = windower.ffxi.get_mob_by_target("p1")
@@ -249,7 +249,7 @@ local notLeaderFunction = function()
     if p1.status ~= 85 and player.status == 85 then
 	command.send('input /dismount')
     end
-    getMobPosition(leader_pos, target_leader)
+    get_mob_position(leader_pos, target_leader)
     if leader_pos.x == nil then
         return 
     end
@@ -267,8 +267,8 @@ local notLeaderFunction = function()
 	end
     end
     if isFar == true then
-        turnToTarget(target_leader)
-        turnToFront()
+        turn_to_target(target_leader)
+        turn_to_front()
         windower.ffxi.run(dx, dy)
         if dist > math.random(2, 4) then
             return
@@ -311,7 +311,7 @@ local notLeaderFunction = function()
 		string.find(target_name, "Swirling Vortex") or  -- アポリオン
 		string.find(target_name, "???") then
 		-- print("p1 target Found", p1.target_index, target.index)
-		io_net.targetByMobIndex(p1.target_index)
+		io_net.target_by_mob_index(p1.target_index)
 		windower.ffxi.run(true)
 	    end
 	end
@@ -327,7 +327,7 @@ local notLeaderFunction = function()
 		linkedOnly = true,
 		-- nameMatch = control.enemy_filter,
 	    }
-	    mob = acmob.searchNearestMob(me_pos, condition)
+	    mob = acmob.search_nearest_mob(me_pos, condition)
 	end
 	if mob == nil then
 	    --- p1 がターゲットしてる敵に合わせる
@@ -340,55 +340,55 @@ local notLeaderFunction = function()
 		return
 	    end
 	    -- p1 が戦闘している敵にターゲット
-	    io_net.targetByMobIndex(p1.target_index)
+	    io_net.target_by_mob_index(p1.target_index)
 	    mob = windower.ffxi.get_mob_by_target("t")
 	end
 	--if mob ~= nil and mob.hpp < 100 then
 	if mob ~= nil then
-	    io_net.targetByMob(mob)
+	    io_net.target_by_mob(mob)
 	    if item_level >= 119 or mob.hpp < 100 then
 		-- 5 が近接攻撃できるギリギリの距離
 		if ac_pos.distance(p1, mob) <= 5 then  -- 敵が近づくまで待つ
 		    coroutine.sleep(math.random(0,2)/4)
 		    command.send('input /attack <t>')
-		    task.resetByFight()
+		    task.reset_by_fight()
 		end
 	    end
         end
-        acprob.clearProbRecastTime()
+        acprob.clear_prob_recast_time()
     end
 end
 
-local idleFunctionTradeItems = function(tname, items, wait, enterWaits)
+local idle_function_trade_items = function(tname, items, wait, enterWaits)
 ---    command.send('input /targetnpc')
     local mob = windower.ffxi.get_mob_by_name(tname)
     if mob == nil then
-        -- print("idleFunctionTradeItems: mob not found")
+        -- print("idle_function_trade_items: mob not found")
         return 
     end
     if mob.name == tname then
         for i, id in pairs(items) do
-            if acitem.checkInventoryFreespace() == false then
+            if acitem.check_inventory_freespace() == false then
                 break
             end
-            if acitem.bagsHasItem(id) then
-                acitem.bagsToInventory(id)
+            if acitem.bags_has_item(id) then
+                acitem.bags_to_inventory(id)
                 coroutine.sleep(1)
             end
         end
 	io_chat.print("↓ トレード開始 ↓")
         for i, id in pairs(items) do
-            if acitem.inventoryHasItem(id) then
-                acitem.tradeByItemId(mob, id)
+            if acitem.inventory_has_item(id) then
+                acitem.trade_by_item_id(mob, id)
 		print("trade item:"..id)
                 coroutine.sleep(1)
-                io_net.targetByMob(mob)
+                io_net.target_by_mob(mob)
                 coroutine.sleep(wait-1)
                 for i, w in ipairs(enterWaits) do
-                    pushKeys({"enter"})
+                    push_keys({"enter"})
 		    print("push enter > coroutine.sleep:"..w)
                     coroutine.sleep(1)
-                    io_net.targetByMob(mob)
+                    io_net.target_by_mob(mob)
                     coroutine.sleep(w-1)
                 end
             end
@@ -400,26 +400,26 @@ local idleFunctionTradeItems = function(tname, items, wait, enterWaits)
 end
 
 -- ジャンクアイテムをかばんに集める
-local aggregateJunkItemsToInventory = function(mob)
+local aggregate_junk_items_to_inventory = function(mob)
     local count = 0
     if mob.name == "Green Thumb Moogle" then
-	count = count + acitem.safesToInventoryT(JunkItemsT)
-	print("aggregateJunkItemsToInventoryT(sefas): "..count)
+	count = count + acitem.safes_to_inventory_by_set(JunkItemIdSet)
+	print("aggregate_junk_items_to_inventory(safes): "..count)
     end
-    count = count + acitem.bagsToInventoryT(JunkItemsT)
-    print("aggregateJunkItemsToInventoryT(bags): "..count)
+    count = count + acitem.bags_to_inventory_by_set(JunkItemIdSet)
+    print("aggregate_junk_items_to_inventory(bags): "..count)
     return count
 end
 
 -- かばん内のジャンクアイテムを数える
-local countJunkItemsInInventory = function ()
+local count_junk_items_in_inventory = function ()
     local count = 0
     for index = 1, 80 do
 	local item = windower.ffxi.get_items(0, index)
 	if item and item.id ~= 0 then
 	    -- io_chat.print({"item:", item.status, item.id,
 	    -- res.items[item.id].ja })
-	    if JunkItemsT[item.id] == true then
+	    if JunkItemIdSet[item.id] == true then
 		count = count + 1
 	    end
 	end
@@ -427,14 +427,14 @@ local countJunkItemsInInventory = function ()
     return count
 end
 
-local sellJunkItemsInInventory = function()
-    local total_count = countJunkItemsInInventory()
+local sell_junk_items_in_inventory = function()
+    local total_count = count_junk_items_in_inventory()
     io_chat.info(total_count.."回売却 start")
     local remain_count = total_count
     for index = 1, 80 do
         local item = windower.ffxi.get_items(0, index)
 	-- io_chat.print({ "item:", item.status, item.id, res.items[item.id].ja })
-        if item and JunkItemsT[item.id] == true then
+        if item and JunkItemIdSet[item.id] == true then
             windower.packets.inject_outgoing(0x084,string.char(0x084,0x06,0,0,item.count,0,0,0,
                                         item.id%256,math.floor(item.id/256)%256,index,0))
             windower.packets.inject_outgoing(0x085,string.char(0x085,0x04,0,0,1,0,0,0))
@@ -458,14 +458,14 @@ local sellJunkItemsInInventory = function()
     return total_count
 end
 
-local idleFunctionSellJunkItems = function(mob)
+local idle_function_sell_junk_items = function(mob)
     -- 可搬ストレージのジャンクアイテムをかばんに集める
     print("Aggregate Bag Junk Items to Inventory")
-    aggregateJunkItemsToInventory(mob)
+    aggregate_junk_items_to_inventory(mob)
     while control.auto do
         -- 売却処理
-        local sell_count = sellJunkItemsInInventory()
-        local move_count = aggregateJunkItemsToInventory(mob)
+        local sell_count = sell_junk_items_in_inventory()
+        local move_count = aggregate_junk_items_to_inventory(mob)
         if sell_count == 0 and move_count == 0 then
             -- 移動するアイテムも売れたアイテムもなければ終了
 	    control.auto = false
@@ -475,17 +475,17 @@ local idleFunctionSellJunkItems = function(mob)
 	coroutine.sleep(2)  -- sleep しないと落ちる事がある
     end
     -- ついでに売れないゴミも捨てる
-    dropJunkItemsInInventory()
+    drop_junk_items_in_inventory()
     io_chat.notice("all売却 end")
 end
-M.idleFunctionSellJunkItems = idleFunctionSellJunkItems
+M.idle_function_sell_junk_items = idle_function_sell_junk_items
 
-function dropJunkItemsInInventory()
-    print("dropJunkItemsInInventory")
+function drop_junk_items_in_inventory()
+    print("drop_junk_items_in_inventory")
     for index = 1, 80 do
         local item = windower.ffxi.get_items(0, index)
 --        io_chat.print({"item:", windower.to_shift_jis(res.items[item.id].ja), item.id, item.status})
-        if item and JunkItemsT[-item.id] == true then
+        if item and JunkItemIdSet[-item.id] == true then
             -- print("drop???:"..item.id.."("..index..") x "..item.count)
             windower.ffxi.drop_item(index, item.count)
             coroutine.sleep(math.random(6,8)/5)
@@ -495,51 +495,51 @@ end
 
 
 
-local idleFunctionWestAdoulin = function()
+local idle_function_west_adoulin = function()
     local mob = windower.ffxi.get_mob_by_target("t")
     if mob == nil then
         return
     end
     if mob.name == "Defliaa" then
-        idleFunctionSellJunkItems(mob)
+        idle_function_sell_junk_items(mob)
     elseif mob.name == "Eternal Flame" then
-        if acitem.inventoryFreespaceNum() > 0 then
+        if acitem.inventory_freespace_num() > 0 then
             command.send('sparks buyall Acheron Shield')
             control.auto = false
         end
         control.auto = false
     elseif mob.name == "Nunaarl Bthtrogg" then
-        local n = acitem.inventoryFreespaceNum()
+        local n = acitem.inventory_freespace_num()
         io_chat.info("かばんの空きは"..n.."*99 = "..(n*99))
         control.auto = false
     end
 end
 
-local idleFunctionEastAdoulin = function(mob) -- 東アドゥリン
+local idle_function_east_adoulin = function(mob) -- 東アドゥリン
     if mob == nil then return end
     if mob.name == "Malgrom" then
-	idleFunctionSellJunkItems(mob)
+	idle_function_sell_junk_items(mob)
     end
-    idleFunctionTradeItems("Runje Desaali", bayld_swap_ids, 5, {})
---  idleFunctionTradeItems("Winrix", gob_dial_key_ids, 5, {})
+    idle_function_trade_items("Runje Desaali", bayld_swap_ids, 5, {})
+--  idle_function_trade_items("Winrix", gob_dial_key_ids, 5, {})
 end
 
-local idleFunction = function()
-    -- print("idleFunction")
+local idle_function = function()
+    -- print("idle_function")
     local ret
     if  useSilt then
         windower.ffxi.run(false)
-        useSilt = acitem.useItemIncludeBags(6391)
+        useSilt = acitem.use_item_include_bags(6391)
         return
     end
     if  useBeads then
         windower.ffxi.run(false)
-        useBeads = acitem.useItemIncludeBags(6392, 4)
+        useBeads = acitem.use_item_include_bags(6392, 4)
         return 
     end
     if  useFaith then -- フェイス手引書
         windower.ffxi.run(false)
-        useFaith = acitem.useItemIncludeBags(6716, 4)
+        useFaith = acitem.use_item_include_bags(6716, 4)
         return
     end
     if useSilt or useBeads or useFaith then
@@ -551,27 +551,27 @@ local idleFunction = function()
         return
     end
     if zone == 246 then --- ジュノ港
-	idleFunctionTradeItems("Shemo", seal_ids, 3, {2,4})  --- or Shami
+	idle_function_trade_items("Shemo", seal_ids, 3, {2,4})  --- or Shami
     elseif zone == 230 then -- 南サンドリア
-	idleFunctionTradeItems("Gondebaud", cipher_ids, 4, {15,2})
+	idle_function_trade_items("Gondebaud", cipher_ids, 4, {15,2})
 	-- 盟-マルグレートで失敗するので、以下の調整をしてみたがダメだった
-	-- idleFunctionTradeItems("Gondebaud", cipher_ids, 7, {14,14})
+	-- idle_function_trade_items("Gondebaud", cipher_ids, 7, {14,14})
     elseif zone == 232 then -- サンドリア港
-	idleFunctionTradeItems("Joulet", {4401,5789}, 5, {}) -- 堀ブナ
+	idle_function_trade_items("Joulet", {4401,5789}, 5, {}) -- 堀ブナ
     elseif zone == 256 then -- 西アドゥリン
-        idleFunctionWestAdoulin()
+        idle_function_west_adoulin()
     elseif zone == 257 then -- 東アドゥリン
-	idleFunctionEastAdoulin(mob)
+	idle_function_east_adoulin(mob)
     end
     -- ワークス応援
     if mob.name == "Station Worker" then
-        works.boost.stationWorkerFunction(zone, mob)
+        works.boost.station_worker_function(zone, mob)
 	control.auto = false
     end
     if mob.name == "Ergon Locus" then
-	works.survey.ergonLocusFunction()
+	works.survey.ergon_locus_function()
     end
-    contents.npcActionHandler(zone, mob)
+    contents.npc_action_handler(zone, mob)
 end
 
 local tickRunning = false
@@ -607,10 +607,10 @@ function tick_serial()
     ac_equip.tick(player)
     acjob.tick(player)
     -- クリスタルはカバンに仕舞う
-    if acitem.checkBagsFreespace() then
+    if acitem.check_bags_freespace() then
         for i, id in pairs(crystal_ids) do
-            if acitem.inventoryHasItem(id) then
-                acitem.moveToBags(id)
+            if acitem.inventory_has_item(id) then
+                acitem.move_to_bags(id)
             end
         end
     end
@@ -618,16 +618,16 @@ function tick_serial()
     -- https://github.com/Windower/Resources/blob/master/resources_data/statuses.lua
     if player.status == 0 or player.status == 85 then
 	--- 待機中
-	idleFunction()
+	idle_function()
 	if ac_move.auto then  -- automove 中
 	    pull.base_pos = {x=0, y=0, z=0}
-	    getMobPosition(pull.base_pos, "me")  -- start pos を更新
+	    get_mob_position(pull.base_pos, "me")  -- start pos を更新
 	else -- automove 中は敵を探索して戦ったり、所定の位置に戻ったりしない
-	    if iamLeader() == true or control.puller then
-		leaderFunction()
+	    if iam_leader() == true or control.puller then
+		leader_function()
 		role_Leader.tick_idle(player, me)
-	    elseif iamLeader() == false then
-		notLeaderFunction()
+	    elseif iam_leader() == false then
+		not_leader_function()
 		role_Follower.tick_idle(player, me)
 	    end
 	end
@@ -645,7 +645,7 @@ local start = function()
     settings = config.load(defaults)
     control.attack = true
     pull.base_pos = {x=0,y=0,z=0}
-    getMobPosition(pull.base_pos, "me")
+    get_mob_position(pull.base_pos, "me")
     control.auto = true
     io_chat.noticef('<<<<<<< AC START >>>>>>> {x=%d y=%d z=%d}',
 		    math.round(pull.base_pos.x,2), math.round(pull.base_pos.y,2),
@@ -661,7 +661,7 @@ local stop = function()
     control.auto = false
     ac_move.stop()
     works.stop()
-    task.allClear()
+    task.all_clear()
     coroutine.sleep(1)
     windower.ffxi.run(false)
     -- command.send('sparks fail')  -- exit_sparks
@@ -669,7 +669,7 @@ end
 M.stop = stop
 
 local start_party = function()
-    if iamLeader() then
+    if iam_leader() then
 	io_chat.notice('<<<<<<< AC START Party >>>>>>>')
 	io_ipc.send_party("start")
     end
@@ -677,7 +677,7 @@ local start_party = function()
 end
 
 local stop_party = function()
-    if iamLeader() then
+    if iam_leader() then
 	io_chat.notice('>>>>>>> AC STOP Party <<<<<<<')
 	io_ipc.send_party("stop")
     end
@@ -688,17 +688,17 @@ windower.register_event('ipc message', function(message)
     if control.debug then
 	print("AC: ipc message:", message)
     end
-    io_ipc.recieve(message)
+    io_ipc.receive(message)
 end)
 
 
-local changeWS = function(wskey)
+local change_ws = function(wskey)
     if wskey == nil then
-        io_chat.print(ws.getWeaponSkillUsage())
+        io_chat.print(ws.get_weapon_skill_usage())
         return
     end
     if wskey == 'any' then
-        wskey = ws.getAnyWeaponSkill()
+        wskey = ws.get_any_weapon_skill()
     elseif wskey == 'stop' or wskey == 'no' then
         ws.weaponskill = nil
         io_chat.print("ws stop")
@@ -714,8 +714,8 @@ local changeWS = function(wskey)
     io_chat.print('set any', wskey, '=>', wsName)
 end
 
-local showMob = function()
-    print("showMob")
+local show_mob = function()
+    print("show_mob")
     local mob = windower.ffxi.get_mob_by_target("t")
     if mob == nil then
 ---        print("not found mob by target:" ..target)
@@ -723,7 +723,7 @@ local showMob = function()
         io_chat.print(mob)
     end
     local me_pos = {}
-    if getMobPosition(me_pos, "me") == true then
+    if get_mob_position(me_pos, "me") == true then
 	io_chat.print("utils.distance: ", ac_pos.distance(me_pos, mob))
     end
 end
@@ -754,10 +754,10 @@ function M.warp_with_equip(arg, delay)
 	    item_name = "Ｄ．メアリング"
 	    item_id = 26178
 	end
-	task.allClear()
+	task.all_clear()
 	io_chat.info(item_name..delay.."秒前")
 	local slot_right_ring = 14
-	acitem.useEquipItem(slot_right_ring, item_id, item_name, delay)
+	acitem.use_equip_item(slot_right_ring, item_id, item_name, delay)
     else
 	print("Unknown arg:", arg)
     end
@@ -814,11 +814,11 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	end
     elseif subcommand == 'contents' or subcommand == 'cont' then
 	if arg1 ~= nil then
-	    if not contents.setContents(arg1) then
-		contents.listContents()
+	    if not contents.set_contents(arg1) then
+		contents.list_contents()
 	    end
 	end
-	contents.showContents()
+	contents.show_contents()
     elseif subcommand == 'control' or subcommand == 'cnt' then
 	if arg1 == 'automove' then
 	    local onoff = argument_means_on(arg2)
@@ -830,7 +830,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 		control.debug = onoff
 		io_chat.info("ac control debug "..tostring(control.debug))
 	    else
-		io_chat.error("ac congtrol debug {on|off}")
+		io_chat.error("ac control debug {on|off}")
 	    end
 	elseif arg1 == 'provoke' then
 	    if arg2 ~= nil and tonumber(arg2) ~= nil then
@@ -840,34 +840,34 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    end
 	    io_chat.info("ac control provoke", control.provoke)
 	elseif arg1 == 'wstp' then
-	    control.setWSTP(arg2)
+	    control.set_wstp(arg2)
 	else
 	    io_chat.error("ac control automove | debug | provoke | wstp")
 	end
     elseif subcommand == 'debug' then
 	if arg1 == 'checkbags' then
-	    io_chat.print(acitem.checkInventoryFreespace())
-	    io_chat.print(acitem.checkBagsFreespace())
+	    io_chat.print(acitem.check_inventory_freespace())
+	    io_chat.print(acitem.check_bags_freespace())
 	elseif arg1 == 'linked' then
 	    local mob = windower.ffxi.get_mob_by_target("t")
 	    if mob == nil then
 		print("no target")
 	    else
-		print("ac linked => ", isMobLinked(mob))
+		print("ac linked => ", is_mob_linked(mob))
 	    end
 	elseif arg1 == 'nearest' then
 	    local prefer_condition = {
 		range = control.enemy_range,
 		preferMobs = utils.table.merge_lists(acmob.moreAttractiveEnemyList,
-						     preferedEnemyList),
+						     preferredEnemyList),
 		nameMatch = control.enemy_filter,
 	    }
-	    local preferMob = acmob.searchNearestMob(pull.base_pos, prefer_condition)
+	    local preferMob = acmob.search_nearest_mob(pull.base_pos, prefer_condition)
 	    local condition = {
 		range = control.enemy_range,
 		nameMatch = control.enemy_filter,
 	    }
-	    local mob = acmob.searchNearestMob(pull.base_pos, condition)
+	    local mob = acmob.search_nearest_mob(pull.base_pos, condition)
 	    io_chat.print("nearest preferMob=====================")
 	    io_chat.print(preferMob)
 	    io_chat.print("nearest mob =====================")
@@ -877,7 +877,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 		io_chat.print("same name monster")
 	    end
 	else
-	    print("ac debug checkbags|linked|neaest")
+	    print("ac debug checkbags|linked|nearest")
 	end
     elseif subcommand == 'defeated' then
 	-- 戦闘終了時の処理
@@ -887,7 +887,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	acjob.dothebest(player)
     elseif subcommand == 'dropjunk' then
 	io_chat.info("アイテム廃棄開始")
-	dropJunkItemsInInventory()
+	drop_junk_items_in_inventory()
 	io_chat.info("アイテム廃棄終わり")
     elseif subcommand == 'echo' then
 	io_chat.info(arg1)
@@ -930,9 +930,9 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
         while control.auto do
             print("enter #"..i)
             i = i + 1
-            pushKeys({"enter"})
+            push_keys({"enter"})
             coroutine.sleep(2)
-	    io_net.targetByMob(mob)
+	    io_net.target_by_mob(mob)
 	    local m = windower.ffxi.get_mob_by_target("t")
 	    if m.id ~= mob.id then
 		control.auto = false
@@ -943,7 +943,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
         control.auto = true
         while control.auto do
             print("down & enter")
-            pushKeys({"down", "enter"})
+            push_keys({"down", "enter"})
             coroutine.sleep(3)
         end
     elseif subcommand == 'equip' then
@@ -980,35 +980,35 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    arg1 == 'west' or arg1 == 'w' or  -- 西アドゥリン
 	    arg1 == 'east' or arg1 == 'e' then  -- 東アドゥリン
 	    local moogle = windower.ffxi.get_mob_by_name("Green Thumb Moogle")
-	    ac_move.runToMob(moogle)
+	    ac_move.run_to_mob(moogle)
 	    coroutine.sleep(1)
-	    io_net.targetByMob(moogle)
+	    io_net.target_by_mob(moogle)
 	    coroutine.sleep(1)
 	    utils.target_lockon(true)
 	    coroutine.sleep(3)
-	    pushKeys({"enter"})
+	    push_keys({"enter"})
 	    coroutine.sleep(1)
 	    -- 別の場所に移動したい
-	    pushKeys({"right", "right", "up", "enter"})
+	    push_keys({"right", "right", "up", "enter"})
 	    coroutine.sleep(1)
 	    if arg1 == 'return' or arg1 == 'ret' or arg1 == 'r' then
-		pushKeys({"down", "enter"})          -- 元に戻る
+		push_keys({"down", "enter"})          -- 元に戻る
 	    elseif arg1 == 'west' or arg1 == 'w' then
-		pushKeys({"down", "down", "enter"})  -- 西アドゥリン
+		push_keys({"down", "down", "enter"})  -- 西アドゥリン
 	    elseif arg1 == 'east' or arg1 == 'e' then
-		pushKeys({"right", "enter"})         -- 東アドゥリン
+		push_keys({"right", "enter"})         -- 東アドゥリン
 	    end
 	elseif arg1 == 'flot' or arg1 == 'f' then
 	    local flotsam = windower.ffxi.get_mob_by_name("Flotsam")
-	    ac_move.runToMob(flotsam)
+	    ac_move.run_to_mob(flotsam)
 	    coroutine.sleep(1)
-	    io_net.targetByMob(flotsam)
+	    io_net.target_by_mob(flotsam)
 	    coroutine.sleep(2)
 	    utils.target_lockon(true)
 	    coroutine.sleep(1)
-	    pushKeys({"enter"})
+	    push_keys({"enter"})
 	    coroutine.sleep(1)
-	    pushKeys({"enter"})
+	    push_keys({"enter"})
 	else
 	    io_chat.errorf("ac garden in|out|flot", zone)
 	end
@@ -1020,25 +1020,25 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	if arg1 == 'west' or arg1 == 'w' or  -- 西アドゥリン
 	    arg1 == 'east' or arg1 == 'e' or  -- 東アドゥリン
 	    arg1 == 'garden' or arg1 == 'g' then  -- モグガーデン
-	    pushKeys({"escape", "escape", "escape"})
+	    push_keys({"escape", "escape", "escape"})
 	    local door_pos = {x=-1, y=-7}
-	    ac_move.runToMob(door_pos)
+	    ac_move.run_to_mob(door_pos)
 	    coroutine.sleep(1)
-	    ac_move.lookForward()
+	    ac_move.look_forward()
 	    windower.ffxi.run(false)
 	    coroutine.sleep(1)
-	    pushKeys({"enter"})
+	    push_keys({"enter"})
 	    coroutine.sleep(1)
-	    pushKeys({"enter"})
+	    push_keys({"enter"})
 	    coroutine.sleep(1)
-	    pushKeys({"up", "enter"})  -- 出るエリアを選択する
+	    push_keys({"up", "enter"})  -- 出るエリアを選択する
 	    coroutine.sleep(1)
 	    if arg1 == 'west' or arg1 == 'w' then
-		pushKeys({"enter"})  -- 西アドゥリン
+		push_keys({"enter"})  -- 西アドゥリン
 	    elseif arg1 == 'east' or arg1 == 'e' then
-		pushKeys({"down", "enter"})  -- 東アドゥリン
+		push_keys({"down", "enter"})  -- 東アドゥリン
 	    elseif arg1 == 'garden' or arg1 == 'g' then
-		pushKeys({"up", "enter"})  -- モグガーデン
+		push_keys({"up", "enter"})  -- モグガーデン
 	    else
 		io_chat.error("ac house ???")
 	    end
@@ -1059,22 +1059,22 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    print("ac inject currinfo1 | currinfo2")
 	end
     elseif subcommand == 'login' then
-	pushKeys({"enter"})
+	push_keys({"enter"})
 	coroutine.sleep(1)
-	pushKeys({"enter"})
+	push_keys({"enter"})
     elseif subcommand == 'logout' then
 	io_chat.notice("#### Logout!!!")
-	task.setTaskSimple("input /logout", 1, 1)
+	task.set_task_simple("input /logout", 1, 1)
     elseif subcommand == 'magic' or subcommand == 'magick' then
-	role_Sorcerer.setMagic(arg1)
+	role_Sorcerer.set_magic(arg1)
     elseif subcommand == 'move' then
-	local routeTable = aczone.getRouteTable(zone)
+	local routeTable = aczone.get_route_table(zone)
 	pull.base_pos = nil
-        ac_move.autoMoveTo(zone, {arg1, arg2}, routeTable)
+        ac_move.auto_move_to(zone, {arg1, arg2}, routeTable)
     elseif subcommand == 'moverev' then
-	local routeTable = aczone.getRouteTable(zone)
+	local routeTable = aczone.get_route_table(zone)
 	pull.base_pos = nil
-        ac_move.autoMoveTo(zone, {"-"..arg1}, routeTable)
+        ac_move.auto_move_to(zone, {"-"..arg1}, routeTable)
     elseif subcommand == 'party' then
 	if arg1 == 'start' then
 	    start_party()
@@ -1093,70 +1093,70 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	local n = tonumber(arg1, 10)
 	if n == nil or
 	    not utils.table.contains({"mailbox", "garden", "m", "mm", "g", "gob"}, arg2) then
-	    print("ac partrol <chara number> {all | mailbox | garden | gob} ")
+	    print("ac patrol <chara number> {all | mailbox | garden | gob} ")
 	else
 	    for i = 1, n do
 		print("Patrol #", i, "/", n)
-		pushKeys({"enter"})
+		push_keys({"enter"})
 		coroutine.sleep(1)
-		pushKeys({"enter"})
+		push_keys({"enter"})
 		coroutine.sleep(19)
 		if arg2 == "mailbox" or arg2 == "m" or arg2 == "mm" then
 		    command.send('input /mailbox')  -- 宅配ポストを開ける
 		    coroutine.sleep(4)
 		    if arg2 == "mm" then
 			for i = 1, 8 do
-			    pushKeys({"enter", "enter"})
+			    push_keys({"enter", "enter"})
 			    coroutine.sleep(0.5)
-			    pushKeys({"right"})
+			    push_keys({"right"})
 			    coroutine.sleep(0.5)
 			    if i == 4 then
-				pushKeys({"left", "left", "left", "down"})
+				push_keys({"left", "left", "left", "down"})
 				coroutine.sleep(1)
 			    end
 			end
 		    end
 		    coroutine.sleep(1)
 		    ---
-		    pushKeys({"escape"})
+		    push_keys({"escape"})
 		elseif arg2 == "garden" or arg2 == "g" then  -- 栽培
 		    command.send('input /garden')  -- 宅配ポストを開ける
 		    coroutine.sleep(5)
-		    pushKeys({"enter"})
+		    push_keys({"enter"})
 		    coroutine.sleep(3)
-		    pushKeys({"enter"})
+		    push_keys({"enter"})
 		    coroutine.sleep(2)
-		    pushKeys({"enter"})
+		    push_keys({"enter"})
 		    coroutine.sleep(1)
-		    pushKeys({"escape"})
+		    push_keys({"escape"})
 		    coroutine.sleep(1)
-		    pushKeys({"escape"})
+		    push_keys({"escape"})
 		elseif arg2 == "gob" then  -- ゴブの不思議箱
 		    windower.ffxi.turn(3.14/2)  -- ドアの方を向く
-		    turnToFront()
-		    io_net.targetByMobName("Door:Back to Town")
+		    turn_to_front()
+		    io_net.target_by_mob_name("Door:Back to Town")
 		    coroutine.sleep(1)
-		    pushKeys({"enter", "enter"})
+		    push_keys({"enter", "enter"})
 		    coroutine.sleep(1)
 		    -- 出るエリアを選択するに合わせる
-		    pushKeys({"down", "down", "down", "enter"})
+		    push_keys({"down", "down", "down", "enter"})
 		    -- coroutine.sleep(1)
-		    pushKeys({"down", "enter"})  -- 東アドゥリンを選択
+		    push_keys({"down", "enter"})  -- 東アドゥリンを選択
 		    coroutine.sleep(8)
 		    command.send("ac move gob")
 		    coroutine.sleep(40)
 		    print("after sleep 50")
 		else
-		    print("internal error: ac partrol <chara number> {mailbox|garden|gob} ")
+		    print("internal error: ac patrol <chara number> {mailbox|garden|gob} ")
 		    break
 		end
 		coroutine.sleep(2)
 		command.send('input /logout')
 		coroutine.sleep(5)
-		pushKeys({"down"})
+		push_keys({"down"})
 	    end
 	    for i = 1, n do
-		pushKeys({"up"})
+		push_keys({"up"})
 	    end
 	end
     elseif subcommand == 'point' then
@@ -1168,8 +1168,8 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
         local y = math.round(me.y, 1)
         local z = math.round(me.z, 1)
 ---    print は - 記号を誤認しやすいので、表示しない
----        print("me potision", " x="..x, "  y="..y, "  z="..z)
-        io_chat.print("me potision  x="..x.."  y="..y.."  z="..z)
+---        print("me position", " x="..x, "  y="..y, "  z="..z)
+        io_chat.print("me position  x="..x.."  y="..y.."  z="..z)
     elseif subcommand == 'puller' then
 	local onoff = argument_means_on(arg1)
 	if onoff ~= nil then
@@ -1188,12 +1188,12 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	end
     elseif subcommand == 'reload' then
 	io_chat.notice("ac reload (myself)")
-	task.setTaskSimple("lua u AC; wait 1; lua l AC", 0, 1)
+	task.set_task_simple("lua u AC; wait 1; lua l AC", 0, 1)
     elseif subcommand == 'roundtrip' then
 	local n = tonumber(arg1, 10)
 	control.auto = true
 	while control.auto do
-	    keyboard.longpushKey("s", 3.0)  -- 後ろに下がる
+	    keyboard.longpush_key("s", 3.0)  -- 後ろに下がる
 	    coroutine.sleep(n)
 	end
     elseif subcommand == 'show' then
@@ -1207,20 +1207,20 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    ac_char.print()
 	elseif arg1 == 'chatcolor' then
 	    for i, desc in ipairs({"白", "赤紫", "オレンジ", "ピンク","水色", "エメラルド","紫", "明赤紫", "白", "肌色"}) do
-		io_chat.setNextColor(i)
+		io_chat.set_next_color(i)
 		io_chat.printf("Color:%d => %s", i, desc)
 	    end
 	elseif arg1 == 'control' then
 	    control.show()
 	elseif arg1 == 'inventory' then
-	    acitem.showInventory()
+	    acitem.show_inventory()
 	elseif arg1 == 'listener' then
-	    incoming_text.showListener()
-	    acevent.showListener()
+	    incoming_text.show_listener()
+	    acevent.show_listener()
 	elseif arg1 == 'mob' then
-	    showMob()
+	    show_mob()
 	elseif arg1 == 'party' then
-	    ac_party.showPartyMembers()
+	    ac_party.show_party_members()
 	elseif arg1 == 'stat' then
 	    ac_stat.print()
 	elseif arg1 == 'task' then
@@ -1230,7 +1230,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	end
     elseif subcommand == 'shutdown' then
 	io_chat.notice("#### Shutdown!!!")
-	task.setTaskSimple("input /shutdown", 1, 1)
+	task.set_task_simple("input /shutdown", 1, 1)
     elseif subcommand == 'test' then
         print("test command")
         acmob.PartyTargetMob()
@@ -1300,7 +1300,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	end
 	if mob ~= nil then
 	    io_chat.noticef("found mob name:%s", mob_name)
-	    ac_move.runToMob(mob)
+	    ac_move.run_to_mob(mob)
 	else
 	    io_chat.errorf("give up found mob name:%s", mob_name)
 	end
@@ -1326,15 +1326,15 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 		{id=21370, name="ゴブのたなぼた"},
 	    }
 	    io_chat.notice("ac moolah # start")
-	    acitem.useEquipItemSequence(slot_ammo, moolah_item_list, 11)
+	    acitem.use_equip_item_sequence(slot_ammo, moolah_item_list, 11)
 	    io_chat.notice("ac moolah # end")
 	elseif arg1 == 'dec' then
 	    io_chat.print("【包】使用開始")
 	    coroutine.sleep(0.5)
 	    for i,id in ipairs(item_data.decItems) do
-		local c = acitem.inventoryCountByItemId(id)
+		local c = acitem.inventory_count_by_item_id(id)
 		for i = 1, c do
-		    acitem.useItemIncludeBags(id)
+		    acitem.use_item_include_bags(id)
 		    coroutine.sleep(3)  -- 2 だと NG
 		end
 	    end
@@ -1346,8 +1346,8 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 		[4164] = "プリズムパウダー",
 	    }
 	    for item_id, item_name in pairs(insne_items) do
-		if not acitem.inventoryHasItem(item_id) then
-		    local count = acitem.bagsToInventory(item_id)
+		if not acitem.inventory_has_item(item_id) then
+		    local count = acitem.bags_to_inventory(item_id)
 		    if count < 1 then
 			io_chat.error("アイテムがバッグに見つかりません:"..item_name)
 			return
@@ -1367,20 +1367,20 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    io_chat.print("スクロール学習開始")
 	    coroutine.sleep(0.5)
 	    for i,id in ipairs(item_data.magicScrolls) do
-		acitem.useItemIncludeBags(id)
+		acitem.use_item_include_bags(id)
 	    end
 	    io_chat.print("スクロール学習終わり")
 	elseif arg1 == 'soulstonesack' then
 	    io_chat.notice("石の袋開き開始")
 	    control.auto = true
 	    while control.auto and
-		acitem.inventoryHasItemT(item_data.soulStoneSacksT) do
+		acitem.inventory_has_item_in_set(item_data.soulStoneSackIdSet) do
 		for i,id in ipairs(item_data.soulStoneSacks) do
-		    if not acitem.checkBagsFreespace() then
+		    if not acitem.check_bags_freespace() then
 			io_chat.info("アイテム満杯")
 			break
 		    end
-		    acitem.useItemIncludeBags(id)
+		    acitem.use_item_include_bags(id)
 		end
 	    end
 	    io_chat.notice("石の袋開き終わり")
@@ -1391,9 +1391,9 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	subcommand == 'dim' or subcommand == 'holla' or subcommand == 'mea' then
 	M.warp_with_equip(subcommand, 10)
     elseif subcommand == 'ws' then
-        changeWS(arg1)
+        change_ws(arg1)
     elseif subcommand == 'wstp' then
-	control.setWSTP(arg1)
+	control.set_wstp(arg1)
     elseif subcommand == 'help' then
         io_chat.print('AC (AccountCluster)  v' .. _addon.version .. 'subcommands:')
         io_chat.print('//ac [options]')
@@ -1415,7 +1415,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	io_chat.print('    point              - Point action for ambus')
 	io_chat.print('    pos                - Show current position')
         io_chat.print('    puller on|off      - Change puller mode')
-	io_chat.print('    record char|spells - Reord Status to LogFile')
+	io_chat.print('    record char|spells - Record Status to LogFile')
 	io_chat.print('    reload             - Reload AC process')
 	io_chat.print('    roundtrip <period> - RoundTrip zone')
         io_chat.print('    show mob|...       - Show something')
@@ -1441,9 +1441,9 @@ windower.register_event('load', function()
     local zone = windower.ffxi.get_info().zone
     zone_change.zone_in_handler(zone, nil)
     -- command, delay, duration
-    task.setTaskSimple("ac inject currinfo1", 2, 1)
-    task.setTaskSimple("ac inject currinfo2", 4, 1)
-    task.setTaskSimple("//record char", 6, 1)
+    task.set_task_simple("ac inject currinfo1", 2, 1)
+    task.set_task_simple("ac inject currinfo2", 4, 1)
+    task.set_task_simple("//record char", 6, 1)
     local incoming_text_handler = function(text)
 	if not control.auto then
 	    return
@@ -1455,13 +1455,13 @@ windower.register_event('load', function()
 		if control.debug then
 		    io_chat.info("前に詰める")
 		end
-		keyboard.longpushKey("w", 3.0)  -- 前に詰める
-		pushKeys({"a"})  -- 少し左にずらす
+		keyboard.longpush_key("w", 3.0)  -- 前に詰める
+		push_keys({"a"})  -- 少し左にずらす
 	    elseif string.contains(text, "姿が見えないためコマンドが") then
 		if control.debug then
 		    io_chat.info("左>後>前に移動")
 		end
-		pushKeys({"a", "s", "w"})  -- 左>後>前に移動
+		push_keys({"a", "s", "w"})  -- 左>後>前に移動
 	    end
 	elseif string.contains(text, "の詠唱は中断された") then
 	    if control.debug then
@@ -1474,10 +1474,10 @@ windower.register_event('load', function()
 	elseif string.contains(text, "の命のカウントダウン") then
 	    command.send('input /item 聖水 <me> ; wait 1 ; input /item 聖水 <me>')
 	elseif string.contains(text, "ターゲット選択中は使用できません。") then
-	    pushKeys({"escape"})  -- ターゲットを外す
+	    push_keys({"escape"})  -- ターゲットを外す
 	end
     end
-    incoming_text.addListener("", incoming_text_handler)
+    incoming_text.add_listener("", incoming_text_handler)
     -- 全ての準備が整ってから tick 起動
     tick:loop(control.period)
 end)
@@ -1490,16 +1490,16 @@ end)
 
 windower.register_event('logout', function()
     -- command, delay, duration
-    task.setTaskSimple("//record char", 0, 1)
+    task.set_task_simple("//record char", 0, 1)
 end)
 
 windower.register_event('job change', function()
     ws.init()
     ac_stat.init()
     -- command, delay, duration
-    task.setTaskSimple("ac inject currinfo1", 2, 1)
-    task.setTaskSimple("ac inject currinfo2", 3, 1)
-    task.setTaskSimple("//record char", 6, 1)
+    task.set_task_simple("ac inject currinfo1", 2, 1)
+    task.set_task_simple("ac inject currinfo2", 3, 1)
+    task.set_task_simple("//record char", 6, 1)
 end)
 
 windower.register_event('status change', function(new, old)
@@ -1514,7 +1514,7 @@ windower.register_event('zone change', function(zone, prevZone)
     ac_record.record_spells()
     ac_stat.init()
     task.init()
-    if iamLeader() then
+    if iam_leader() then
 	control.auto = false
     end
     ac_move.auto = false
@@ -1528,9 +1528,9 @@ windower.register_event('zone change', function(zone, prevZone)
     zone_change.zone_change_handler(zone, prevZone)
     ws.init()
     -- command, delay, duration
-    task.setTaskSimple("ac inject currinfo1", 2, 1)
-    task.setTaskSimple("ac inject currinfo2", 4, 1)
-    task.setTaskSimple("//record char", 6, 1)
+    task.set_task_simple("ac inject currinfo1", 2, 1)
+    task.set_task_simple("ac inject currinfo2", 4, 1)
+    task.set_task_simple("//record char", 6, 1)
     control.enemy_filter = control.INIT_VALUES.enemy_filter
     control.enemy_range = control.INIT_VALUES.enemy_range
     control.puller = control.INIT_VALUES.puller

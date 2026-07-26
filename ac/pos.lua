@@ -6,28 +6,28 @@ local M = {}
 local utils = require 'utils'
 local array_reverse = utils.table.array_reverse
 
-function targetPos(t)
+function target_pos(t)
     local mob = windower.ffxi.get_mob_by_target(t)
     if mob == nil then
         return nil
     end
     return {x=mob.x, y=mob.y, z=mob.z}
 end
-M.targetPos = targetPos
+M.target_pos = target_pos
 
-function targetDistance(t)
+function target_distance(t)
     local mob = windower.ffxi.get_mob_by_target(t)
     if mob == nil then
         return nil
     end
     return mob.distance
 end
-M.targetDistance = targetDistance
+M.target_distance = target_distance
 
-function currentPos()
-    return targetPos("me")
+function current_pos()
+    return target_pos("me")
 end
-M.currentPos = currentPos
+M.current_pos = current_pos
 
 function distance2(pos1, pos2)
     local dx = pos2.x - pos1.x
@@ -49,28 +49,28 @@ function distance(pos1, pos2)
 end
 M.distance = distance
 
-function distanceX(pos1, pos2)
+function distance_x(pos1, pos2)
     if pos1 == nil or pos2 == nil then
         return 99999
     end
     return math.abs(pos1.x - pos2.x)
 end
 
-function distanceY(pos1, pos2)
+function distance_y(pos1, pos2)
     if pos1 == nil or pos2 == nil then
         return 99999
     end
     return math.abs(pos1.y - pos2.y)
 end
 
-function isNear(pos, dist, distX, distY)
-    local me_pos = currentPos()
+function is_near(pos, dist, distX, distY)
+    local me_pos = current_pos()
     if me_pos == nil then
 	return false
     end
     local d = distance(me_pos, pos)
-    local dx = distanceX(me_pos, pos)
-    local dy = distanceY(me_pos, pos)
+    local dx = distance_x(me_pos, pos)
+    local dy = distance_y(me_pos, pos)
     if dist == nil and distX == nil and distY == nil then
 	dist = 1.0
     end
@@ -85,6 +85,6 @@ function isNear(pos, dist, distX, distY)
     end
     return true
 end
-M.isNear = isNear
+M.is_near = is_near
 
 return M

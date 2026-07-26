@@ -8,7 +8,7 @@ local keyboard = require 'keyboard'
 local utils = require 'utils'
 
 -- https://github.com/DiscipleOfEris/Assist/blob/master/assist.lua
-M.targetByMob = function(mob)
+M.target_by_mob = function(mob)
     if mob == nil then
 	print(debug.traceback())
 	return
@@ -26,8 +26,8 @@ M.targetByMob = function(mob)
     return true
 end
 
-M.targetByMobEx = function(mob)
-    M.targetByMob(mob)
+M.target_by_mob_ex = function(mob)
+    M.target_by_mob(mob)
     while control.auto do
 	coroutine.sleep(0.3)
 	local m = windower.ffxi.get_mob_by_target("t")
@@ -38,8 +38,8 @@ M.targetByMobEx = function(mob)
 	    -- print("tab")
 	    utils.target_lockon(false)
 	    coroutine.sleep(0.2)
-	    keyboard.pushKeys({"tab"})
-	    M.targetByMob(mob)
+	    keyboard.push_keys({"tab"})
+	    M.target_by_mob(mob)
 	    coroutine.sleep(0.2)
 	else
 	    -- print("mob match")
@@ -48,16 +48,16 @@ M.targetByMobEx = function(mob)
     end
 end
 
-M.targetByMobName = function(name)
+M.target_by_mob_name = function(name)
     local mob = windower.ffxi.get_mob_by_name(name)
     if mob == nil then
-	print("io/net.targetByMobName mob == nil name:"..name)
+	print("io/net.target_by_mob_name mob == nil name:"..name)
 	return false
     end
-    return M.targetByMob(mob)
+    return M.target_by_mob(mob)
 end
 
-M.targetByMobId = function(mobId)
+M.target_by_mob_id = function(mobId)
 ---    print("tagetByMobId", mobId)
     local player = windower.ffxi.get_player()
     packets.inject(packets.new('incoming', 0x58, {
@@ -67,20 +67,20 @@ M.targetByMobId = function(mobId)
     }))
 end
 
-M.targetByMobIndex = function(mobIndex)  -- 動かない？
+M.target_by_mob_index = function(mobIndex)  -- 動かない？
     if control.debug then
-	print("WARNING: io/net.targetByMobIndex:", mobIndex)
+	print("WARNING: io/net.target_by_mob_index:", mobIndex)
     end
     if mobIndex == 0 then
-        print("ERROR: io/net.targetByMobIndex mobIndex:", mobIndex)
+        print("ERROR: io/net.target_by_mob_index mobIndex:", mobIndex)
         return
     end
     local mob = windower.ffxi.get_mob_by_index(mobIndex)
     if mob == nil then
-	print("io/net.targetByMobIndex mob not found by index:", mobIndex)
+	print("io/net.target_by_mob_index mob not found by index:", mobIndex)
         return
     end
-    M.targetByMob(mob)
+    M.target_by_mob(mob)
 end
 
 return M

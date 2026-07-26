@@ -4,7 +4,7 @@
 
 local M = {}
 
-function M.pushKeys(keys)
+function M.push_keys(keys)
     local command = ""
     local wait = 0
     for i, k in ipairs(keys) do
@@ -21,7 +21,7 @@ function M.pushKeys(keys)
     coroutine.sleep(wait)
 end
 
-function M.longpushKey(key, wait)
+function M.longpush_key(key, wait)
     assert(type(key) == "string")
     assert(type(wait) == "number")
     command = "setkey "..key.." down; wait "..wait.."; setkey "..key.." up"

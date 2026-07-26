@@ -11,7 +11,7 @@ function M.zone_in()
     -- 場所によってはソーティもあるので、一旦なくす
     --[[
     M.origContentType = contents.type
-	contents.setType(contents.Vagary)
+	contents.set_type(contents.Vagary)
     ]]
 end
 
@@ -20,7 +20,7 @@ function M.zone_out()
     print("Vagary out")
     --[[
     if M.origContentType ~= nil then
-	contents.setType(M.origContentType)
+	contents.set_type(M.origContentType)
 	M.origContentType = nil
 	end
     ]]

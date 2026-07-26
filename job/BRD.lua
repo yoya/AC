@@ -30,23 +30,23 @@ function song(song_name, onoff, period, delay, target)
     local c = "input /song "..song_name.." <"..target..">"
     local level = task.PRIORITY_MIDDLE
     -- command, delay, duration, period, eachfight
-    local t = task.newTask(c, delay, 10, period, true)
+    local t = task.new_task(c, delay, 10, period, true)
     if onoff then
-	task.setTask(level, t)
+	task.set_task(level, t)
     else
-	task.removeTask(level, t)
+	task.remove_task(level, t)
     end
 end
 
-local function isDefensive()
-    return M.parent.needSafety()
+local function is_defensive()
+    return M.parent.need_safety()
 end
 
 function song_tick(player)
     local zone = windower.ffxi.get_info().zone
     local onoff = player.status > 0
     local me = windower.ffxi.get_mob_by_target("me")
-    if isDefensive() then
+    if is_defensive() then
 	song("重装騎兵のミンネV", onoff, 15*60 / 3, 2, "me")
 	song("闘龍士のマンボ", onoff, 15*60 / 2, 12, "me")
 	-- song("活力のエチュード", onoff, 15*60 / 3, 12*2, "me")
@@ -75,8 +75,8 @@ function song_tick(player)
 	range = control.enemy_range,
     }
     local lullaby = false
-    if contents.matchContentsName("sortie") and player.status == 1 then
---    local linkedMobs = acmob.searchMobs(me, condition)
+    if contents.match_contents_name("sortie") and player.status == 1 then
+--    local linkedMobs = acmob.search_mobs(me, condition)
 	--  io_chat.print(linkedMobs)
 	lullaby = true
     end
@@ -97,7 +97,7 @@ function M.dothebest_main(player)
     for i, ja_name in ipairs(jaList) do
 	local c = "input /ja "..ja_name.." <me>"
 	-- command, delay, duration, period, eachfight
-	task.setTask(level, task.newTask(c, (i-1)*2, 2, 10, false))
+	task.set_task(level, task.new_task(c, (i-1)*2, 2, 10, false))
     end
     windower.ffxi.run(false)
     level = task.PRIORITY_HIGH
@@ -108,8 +108,8 @@ function M.dothebest_main(player)
     for i, song_name in ipairs(songList) do
 	local c = "input /song "..song_name.." <me>"
 	-- command, delay, duration, period, eachfight
-	local taskObj = task.newTask(c, 6+(i-1)*2, 5, 180/2, false)
-	task.setTask(level, taskObj)
+	local taskObj = task.new_task(c, 6+(i-1)*2, 5, 180/2, false)
+	task.set_task(level, taskObj)
     end
 
 end

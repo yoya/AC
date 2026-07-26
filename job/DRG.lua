@@ -28,10 +28,10 @@ function M.main_tick(player)
 	-- アンゴンを装備している時に使用する
 	local item_id = ac_equip.equip_item_by_slot_name("ammo")
 	if item_id == 18259 then  -- アンゴン
-	    actask.setTaskSimple(c_angon, 1, 60*3)
+	    actask.set_task_simple(c_angon, 1, 60*3)
 	end
     else
-	actask.removeTaskSimple(c_angon)
+	actask.remove_task_simple(c_angon)
     end
 end
 

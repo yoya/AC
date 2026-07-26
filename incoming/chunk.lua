@@ -23,7 +23,7 @@ packet_handler[0x00D] = function(packet)
 	index = packet["Index"],
 	name = packet["Character Name"],
     }
-    ac_party.updatePartyMemberInfo(id, info)
+    ac_party.update_party_member_info(id, info)
 ]]
 end
 
@@ -87,7 +87,7 @@ packet_handler[0x029] = function(packet)
 	local actor_index = packet["Actor Index"]
 	local target_index = packet["Target Index"]
 	-- io_chat.print("defeated enemy: actor:"..actor_index .. " target:"..target_index)
-	if not ac_party.isMemberIndex(actor_index) then
+	if not ac_party.is_member_index(actor_index) then
 	    return  -- 恐らく他パーティが倒してるのでスルー
 	end
 	local mob = windower.ffxi.get_mob_by_index(target_index)
@@ -95,13 +95,13 @@ packet_handler[0x029] = function(packet)
 	    ac_stat.defeat(mob.name)
 	elseif mesg == 20 then  -- falling enemy (イリュージョン)
 	    ac_stat.falling(mob.name)
-	    io_chat.setNextColor(3)
+	    io_chat.set_next_color(3)
 	    io_chat.print("XXX: action message: Fall???")
 	end
-	-- ac_defeated.done() -- setTask で表示しない時に戻せるよう残す
+	-- ac_defeated.done() -- set_task で表示しない時に戻せるよう残す
 	-- command, delay, duration, period, eachfight)
-	task.setTask(task.PRIORITY_LOW,
-		     task.newTask("ac defeated", 3, 3, 1, true))
+	task.set_task(task.PRIORITY_LOW,
+		     task.new_task("ac defeated", 3, 3, 1, true))
     elseif mesg == 206 then
 	do end -- (味方の？)強化切れ
     else
@@ -168,7 +168,7 @@ packet_handler[0x076] = function(packet)
     --[[ packets/fields.lua を見ると以下の構造っぽいけど駄目
     for i, member in ipairs(packet["Party Buffs"]) do
 	local index = member["Index"]
-	ac_party.updatePartyMemberInfo({
+	ac_party.update_party_member_info({
 	    id = packet["ID"],
 	    index = member["Index"],
 	    buffs = member["Buffs"],
@@ -202,7 +202,7 @@ packet_handler[0x0DD] = function(packet)
 	master_level = packet["Master Level"],
 	name = packet["Name"],
     }
-    ac_party.updatePartyMemberInfo(id, info)
+    ac_party.update_party_member_info(id, info)
 end
 
 -- Char Update

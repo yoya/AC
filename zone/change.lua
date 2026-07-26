@@ -5,7 +5,7 @@ local ac_stat = require 'ac/stat'
 local io_chat = require 'io/chat'
 local command = require 'command'
 local ac_party = require 'ac/party'
-local iamLeader = ac_party.iamLeader
+local iam_leader = ac_party.iam_leader
 local task = require 'task'
 local control = require 'control'
 local contents = require 'contents'
@@ -15,7 +15,7 @@ local M = {}
 
 M.incoming_text_listener_id = null
 
-function posStr(pos)
+function pos_str(pos)
     if pos == nil then
 	return "(nil)"
     end
@@ -53,7 +53,7 @@ function M.search_and_invoke_automatic_routes(zone, prevZone, automatic_routes,
 		    -- io_chat.error("route を skip", route.zone_from, prevZone)
 		elseif contents_match then
 		    if route.contents ~= nil and
-			contents.matchContentsName(route.contents) then
+			contents.match_contents_name(route.contents) then
 			new_routes[f] = route
 		    end
 		else
@@ -87,9 +87,9 @@ function M.search_and_invoke_automatic_routes(zone, prevZone, automatic_routes,
 	if fp.d ~= nil then nearDist = fp.d end
 	if fp.dx ~= nil then nearDistX = fp.dx end
 	if fp.dy ~= nil then nearDistY = fp.dy end
-	local exec_auto_route = ac_pos.isNear(fp, nearDist,
+	local exec_auto_route = ac_pos.is_near(fp, nearDist,
 					      nearDistX, nearDistY)
-	if t.leader_only == true and not iamLeader() then
+	if t.leader_only == true and not iam_leader() then
 	    io_chat.infof("移動するのはリーダーだけ: %s => %s", f, route)
 	    exec_auto_route = false
 	end
@@ -109,7 +109,7 @@ function M.search_and_invoke_automatic_routes(zone, prevZone, automatic_routes,
 	if exec_auto_route then
 	    io_chat.printf("移動 %s => %s", f, route)
 	    aczone.AC.start_pos = nil
-	    autoMoveTo(zone, {route}, zone_object.routes)
+	    auto_move_to(zone, {route}, zone_object.routes)
 	    return true
 	end
     end
@@ -122,7 +122,7 @@ function M.automatic_routes_handler(zone, prevZone, automatic_routes)
 	print("control.automove is false")
 	return
     end
-    local pos = ac_pos.currentPos()
+    local pos = ac_pos.current_pos()
     if prevZone == nil and aczone.in_moghouse(zone, pos) then
 	io_chat.print("ログインしてすぐのモグハウスは自動移動オフ")
 	return
@@ -142,9 +142,9 @@ function M.automatic_routes_handler(zone, prevZone, automatic_routes)
 	end
     end
     coroutine.sleep(3)
-    pos = ac_pos.currentPos()
+    pos = ac_pos.current_pos()
     coroutine.sleep(5)
-    if ac_pos.isNear(pos, 0.5) then
+    if ac_pos.is_near(pos, 0.5) then
 	local ret = M.search_and_invoke_automatic_routes(zone, prevZone,
 							 automatic_routes,
 							 true)
@@ -182,16 +182,16 @@ function M.zone_in_handler(zone, prevZone)
 	    zone_in()
 	end
 	if incoming_text_listener ~= nil then
-	    M.incoming_text_listener_id = incoming_text.addListener("", incoming_text_listener)
+	    M.incoming_text_listener_id = incoming_text.add_listener("", incoming_text_listener)
 	end
 	local automatic_routes = zone_object.automatic_routes
 	if automatic_routes ~= nil then
 	    M.automatic_routes_handler(zone, prevZone, automatic_routes)
 	end
-	if iamLeader() then
+	if iam_leader() then
 	    local automatic_trust = zone_object.automatic_trust
 	    if automatic_trust ~= nil then
-		io_chat.setNextColor(6)
+		io_chat.set_next_color(6)
 		io_chat.print("automatic_trust", automatic_trust);
 		M.automatic_trust_handler(zone, prevZone, automatic_trust)
 	    end
@@ -203,7 +203,7 @@ function M.zone_change_handler(zone, prevZone)
     -- zone 毎の処理
     print("zone/change zone_change_handler: "..zone.." <= "..tostring(prevZone))
     ac_stat.init()
-    task.allClear()
+    task.all_clear()
     aczone.AC.start_pos = nil
     -- zone out の処理
     if prevZone == nil then
@@ -217,7 +217,7 @@ function M.zone_change_handler(zone, prevZone)
 		zone_out()
 	    end
 	    if M.incoming_text_listener_id ~= nil then
-		incoming_text.removeListener(M.incoming_text_listener_id)
+		incoming_text.remove_listener(M.incoming_text_listener_id)
 		M.incoming_text_listener_id = nil
 	    end
 	end
@@ -238,7 +238,7 @@ end
 function M.warp_handler_tick()
     -- print("M.warp_handler_tick()")
     local zone = windower.ffxi.get_info().zone
-    local pos = ac_pos.currentPos()
+    local pos = ac_pos.current_pos()
     if zone == nil or pos == nil then
 	return
     end
@@ -263,8 +263,8 @@ end
 
 -- 同じ zone でワープした時。WP や AMANトローブ
 function M.warp_handler(zone, pos, prevZone, prevPos, dist)
-    print("zone/change:warp " .. zone .. ":" .. posStr(pos) .. " << " .. prevZone .. ":" ..  posStr(prevPos) .. " dist:" ..  math.round(dist, 2))
-    task.allClear()
+    print("zone/change:warp " .. zone .. ":" .. pos_str(pos) .. " << " .. prevZone .. ":" ..  pos_str(prevPos) .. " dist:" ..  math.round(dist, 2))
+    task.all_clear()
     -- warp out の処理
     if prevZone == nil then
 	print("ERROR: prevZone == nil")  -- 普通はありえない

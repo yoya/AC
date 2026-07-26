@@ -11,15 +11,15 @@ M.leader_id = nil
 
 M.member_table = { }
 
-function M.iamLeader()
+function M.iam_leader()
     local player = windower.ffxi.get_player()
     if player == nil then
-	print("ac/party.iamLeader player == nul")
+	print("ac/party.iam_leader player == nul")
 	return nil
     end
     local party = windower.ffxi.get_party()
     local party1_leader = party.party1_leader
-    -- print("ac_party.iamLeader", party.party1_leader, player.id)
+    -- print("ac_party.iam_leader", party.party1_leader, player.id)
     if party1_leader == nil then
 	party1_leader = M.leader_id
     else
@@ -31,7 +31,7 @@ function M.iamLeader()
     return false
 end
 
-function M.isMemberId(id)
+function M.is_member_id(id)
     local party = windower.ffxi.get_party()
     for _, x in pairs({"p", "a1", "a2"}) do -- アライアンス全員
         for i = 0, 5 do -- 自分含めて全員
@@ -47,7 +47,7 @@ function M.isMemberId(id)
     return false
 end
 
-function M.isMemberIndex(index)
+function M.is_member_index(index)
     local party = windower.ffxi.get_party()
     for _, x in pairs({"p", "a1", "a2"}) do -- アライアンス全員
         for i = 0, 5 do -- 自分含めて全員
@@ -63,7 +63,7 @@ function M.isMemberIndex(index)
     return false
 end
 
-function M.hasJobMemberInParty(jobName)
+function M.has_job_member_in_party(jobName)
     local stat = M.parent.stat
     local party = windower.ffxi.get_party()
     for i = 0, 5 do -- 自分含めて全員
@@ -74,14 +74,14 @@ function M.hasJobMemberInParty(jobName)
 	if info ~= nil and info.index > 0 and
 	    info.main_job == jobName then -- 間違ってそう。要調査
 	    info.target = target
-	    print("ac/party.hasJobMemberInParty", info.main_job, jobName)
+	    print("ac/party.has_job_member_in_party", info.main_job, jobName)
 	    return true
 	end
     end
     return false
 end
 
-function M.hasTankJobMemberInParty()
+function M.has_tank_job_member_in_party()
     if M.count_member( { main_job="PLD" } ) +
 	M.count_member( { main_job="RUN" } ) +
 	M.count_member( { main_job="WAR" } ) >= 1 then
@@ -91,7 +91,7 @@ function M.hasTankJobMemberInParty()
 end
 
 
-function createMemberInfo()
+function create_member_info()
     return { buffs = {} }
 end
 
@@ -102,9 +102,9 @@ function  object_assign(obj1, obj2)
 end
 
 -- incoming/chunk から呼ばれる
-function M.updatePartyMemberInfo(id, info)
+function M.update_party_member_info(id, info)
     if M.member_table[id] == nil then
-	M.member_table[id] = createMemberInfo()
+	M.member_table[id] = create_member_info()
     end
     if info.main_job ~= nil then
 	info.main_job = jobs[info.main_job].ens
@@ -140,12 +140,12 @@ function M.count_member(cond)
     return count
 end
 
-function M.showPartyMembers()
-    io_chat.setNextColor(5)
-    io_chat.print("=== showPartyMembers")
+function M.show_party_members()
+    io_chat.set_next_color(5)
+    io_chat.print("=== show_party_members")
     for id, info in pairs(M.member_table) do
 	if info.index > 0 then
-	    io_chat.setNextColor(6)
+	    io_chat.set_next_color(6)
 	    io_chat.print(id, info.name, info.main_job, info.sub_job)
 	    io_chat.print(info)
 	end

@@ -29,13 +29,13 @@ function M.main_tick(player)
     if player.status == 1 then
 	if player.vitals.hp < 300 then  -- 緊急回復
 	    local params = { level = task.PRIORITY_TOP, period = 1*60*60 }
-	    task.setTaskEx(inner_strength_command, params)
+	    task.set_task_ex(inner_strength_command, params)
 	elseif 200 < (player.vitals.max_hp - player.vitals.hp) then
 	    local params = { level = task.PRIORITY_TOP, period = 3*60 }
-	    task.setTaskEx(chakra_command, params)
+	    task.set_task_ex(chakra_command, params)
 	else
-	    task.removeTaskEx(inner_strength_command)
-	    task.removeTaskEx(chakra_command)
+	    task.remove_task_ex(inner_strength_command)
+	    task.remove_task_ex(chakra_command)
 	end
     end
     if role_Melee.main_tick ~= nil then
@@ -47,9 +47,9 @@ function M.sub_tick(player)
     if player.status == 1 then
 	if 200 < (player.vitals.max_hp - player.vitals.hp) then
 	    local params = { level = task.PRIORITY_TOP, period = 3*60 }
-	    task.setTaskEx(chakra_command, params)
+	    task.set_task_ex(chakra_command, params)
 	else
-	    task.removeTaskEx(chakra_command)
+	    task.remove_task_ex(chakra_command)
 	end
     end
 end
@@ -61,8 +61,8 @@ function M.dothebest_main(player)
     for i, ja_name in ipairs(jaList) do
 	local c = "input /ja "..ja_name.." <me>"
 	-- command, delay, duration, period, eachfight
-	local t = task.newTask(c, (i-1)*2, 2, 10, false)
-	task.setTask(level, t)
+	local t = task.new_task(c, (i-1)*2, 2, 10, false)
+	task.set_task(level, t)
     end
 end
 
@@ -72,8 +72,8 @@ function M.dothebest_sub(player)
     for i, ja_name in ipairs(jaList) do
 	local c = "input /ja "..ja_name.." <me>"
 	-- command, delay, duration, period, eachfight
-	local t = task.newTask(c, (i-1)*2, 2, 10, false)
-	task.setTask(level, t)
+	local t = task.new_task(c, (i-1)*2, 2, 10, false)
+	task.set_task(level, t)
     end
 end
 

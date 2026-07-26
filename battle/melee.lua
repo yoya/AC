@@ -11,17 +11,17 @@ local acinspect = require 'inspect'
 local actask = require 'task'
 
 local acmob = require 'mob'
-local getMobPosition = acmob.getMobPosition
+local get_mob_position = acmob.get_mob_position
 
 local acprob = require 'prob'
-local sendCommandProb = acprob.sendCommandProb
-local getSendCommandProbTable = acprob.getSendCommandProbTable
+local send_command_prob = acprob.send_command_prob
+local get_send_command_prob_table = acprob.get_send_command_prob_table
 
 local ac_move = require 'ac/move'
-local turnToTarget = ac_move.turnToTarget
+local turn_to_target = ac_move.turn_to_target
 
 local ac_party = require 'ac/party'
-local iamLeader = ac_party.iamLeader
+local iam_leader = ac_party.iam_leader
 
 local pull = require 'pull'
 local ws = require 'ws'
@@ -52,19 +52,19 @@ function M.tick(player, me, mob)
     local player = windower.ffxi.get_player()
     local mainJob = player.main_job
     local subJob = player.sub_job
----    print("XXX", preferedEnemyList)
+---    print("XXX", preferredEnemyList)
     -- 中断してでも優先する敵
     local condition = {
 	range = control.enemy_range,
 	preferMobs = acmob.moreAttractiveEnemyList,
 	nameMatch = control.enemy_filter,
     }
-    local preferMob = acmob.searchNearestMob(pull.base_pos, condition)
+    local preferMob = acmob.search_nearest_mob(pull.base_pos, condition)
     ---    print("prefereMob", preferMob)
     if not utils.table.contains(acmob.moreAttractiveEnemyList, mob.name) and preferMob ~= nil and mob.name ~= preferMob.name then
 	--        print("preferMob:", mob.name)
-        if iamLeader() then
-            io_net.targetByMob(preferMob)
+        if iam_leader() then
+            io_net.target_by_mob(preferMob)
             coroutine.sleep(1)
             command.send('input /attack <t>')
         else
@@ -86,8 +86,8 @@ function M.tick(player, me, mob)
     end
     local enemy_pos = {}
     local me_pos = {}
-    getMobPosition(enemy_pos, "t")
-    getMobPosition(me_pos, "me")
+    get_mob_position(enemy_pos, "t")
+    get_mob_position(me_pos, "me")
     --- 戦闘してない？
     if enemy_pos.x == nil then
         print("if enemy_pos.x == nil")
@@ -104,7 +104,7 @@ function M.tick(player, me, mob)
     elseif control.enemy_space ==  control.ENEMY_SPACE_MANUAL then
 	enemy_space = 99999
     end
-    if iamLeader() then
+    if iam_leader() then
 	if dist > enemy_space then
 	    isFar = true
 	end
@@ -117,7 +117,7 @@ function M.tick(player, me, mob)
             -- command.send('setkey numpad5 down; wait 0.05; setkey numpad5 up')
             return
         elseif not control.calm then
-	    sendCommandProb({
+	    send_command_prob({
                 { 150, 0, 'setkey a down; wait 0.05; setkey a up', 0 }, -- 左
                 { 150, 0, 'setkey d down; wait 0.05; setkey d up', 0 }, -- 右
                 { 150, 0, 'setkey a down; wait 0.1; setkey a up', 0 }, 
@@ -141,7 +141,7 @@ function M.tick(player, me, mob)
     --- atan2 のままだと右を向くので、90度の補正
 --    local dir = math.atan2(dx, dy) - 3.14/2
 --    windower.ffxi.turn(dir)
-    turnToTarget("t")
+    turn_to_target("t")
 ---    if player.vitals.tp >= math.random(1100, 1200) then
     --- PLD はタゲ取り.RNG はエヴィ用。"BLM", "SMN", "SCH"はミルキル
     -- local tp100Jobs = {-"RNG", "BLM", "SMN", "SCH"}
@@ -184,26 +184,26 @@ function M.tick(player, me, mob)
     end
     if ws_request == true then
 	local params = { level = actask.PRIORITY_HIGH}
-	actask.setTaskEx("//ws exec", params)
+	actask.set_task_ex("//ws exec", params)
 	return
     else
         if player.item_level > 99 then
-            local commprob = getSendCommandProbTable(mainJob, subJob, 1)
+            local commprob = get_send_command_prob_table(mainJob, subJob, 1)
 --            io_chat.print(commprob)
-            --sendCommandProb(commprob, settings.Period, acprob.probRecastTime)
-	    sendCommandProb(commprob, control.period, acprob.probRecastTime)
+            --send_command_prob(commprob, settings.Period, acprob.probRecastTime)
+	    send_command_prob(commprob, control.period, acprob.probRecastTime)
         end
     end
 ---    if math.random(1, 100) <= 1 then
     --- 戦闘ターゲットがたまに外れる対策。とりあえずの方法。
-    if iamLeader() or control.puller then
+    if iam_leader() or control.puller then
         if math.random(1, 10) <= 1 then
             command.send('input /attack <t>')
         end
     end
     --- たまに左や右にずれる。前や後にも。
     if not control.calm then
-	sendCommandProb({
+	send_command_prob({
 		{ 10, 10, 'setkey a down; wait 0.1; setkey a up', 0 }, -- left
 		{ 10, 10, 'setkey d down; wait 0.1; setkey d up', 0 }, -- right
 		{ 20, 10, 'setkey w down; wait 0.1; setkey w up', 0 }, -- forward
@@ -211,7 +211,7 @@ function M.tick(player, me, mob)
 			}, control.period, acprob.probRecastTime)
     end
     if doPointCheer then  --- アンバス：マンドラ
-        sendCommandProb({
+        send_command_prob({
             { 200, 1, 'input /point <t>', 1 },
             { 100, 1, 'input /cheer <p1>', 1 },
             { 100, 1, 'input /cheer <p2>', 1 },

@@ -237,11 +237,11 @@ function M.next_exemplar_point()
 end
 
 function M.print()
-    io_chat.setNextColor(5)
+    io_chat.set_next_color(5)
     io_chat.print("### ac/char print #"..#M.charTable)
     for id, char in pairs(M.charTable) do
 	local mob = windower.ffxi.get_mob_by_id(id)
-	io_chat.setNextColor(6)
+	io_chat.set_next_color(6)
 	io_chat.print(id, mob.name, char)
     end
 end

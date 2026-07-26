@@ -13,7 +13,7 @@ function M.fire(event_type, ...)
     end
 end
 
-function M.addListener(event_type, callback)
+function M.add_listener(event_type, callback)
     assert(type(event_type) == "string")
     assert(type(callback) == "function")
     local caller_info = debug.getinfo(2)
@@ -24,13 +24,13 @@ function M.addListener(event_type, callback)
     return idx
 end
 
-function M.removeListener(idx)
+function M.remove_listener(idx)
     M.listener_table[idx] = nil
 end
 
-function M.showListener()
+function M.show_listener()
     local io_chat = require 'io/chat'
-    io_chat.infof("=== event.showListener: %d", M.listener_table_last_idx)
+    io_chat.infof("=== event.show_listener: %d", M.listener_table_last_idx)
     for i, listener in pairs(M.listener_table) do
 	local caller_info = listener.caller_info
 	local caller_name = caller_info.name and caller_info.name or "(nil)"

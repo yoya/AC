@@ -6,6 +6,12 @@ local utils = require 'utils'
 local acevent = require 'event'
 local io_chat = require 'io/chat'
 
+-- id の符号で処理が変わる。
+--   正の id … 店売りする。金庫/バッグからも かばん に集めてくる
+--             (safes_to_inventory_by_set / bags_to_inventory_by_set)
+--   負の id … 売れないので捨てる。かばん内にある分だけが対象で、
+--             金庫/バッグからは集めてこない (drop_junk_items_in_inventory)
+-- 参照側は正なら JunkItemIdSet[id]、負なら JunkItemIdSet[-id] を引く。
 M.JunkItems = {
     55, -- キャビネット
     90, -- 錆びたバケツ
@@ -1000,12 +1006,12 @@ function M.char_update_handler(char)
 	local p = char[name]
 	if p ~= nil and p > 4500 then  -- モグ預けが溢れそうなら店売り
 	    table.insert(M.JunkItems, id)
-	    M.JunkItemsT[id] = true
+	    M.JunkItemIdSet[id] = true
 	end
     end
-    -- M.JunkItemsT = utils.table.convertArrayToTrueTable(M.JunkItems)
+    -- M.JunkItemIdSet = utils.table.convert_array_to_set(M.JunkItems)
 end
-acevent.addListener("char update", M.char_update_handler)
+acevent.add_listener("char update", M.char_update_handler)
 
 -- 1314-1318, -- 神木の免罪符 -- 修羅装束 Lv73～ モ侍忍
 -- 1319-1323, -- 地霊の免罪符 -- アダマンチェーンメイル Lv73～ 戦暗獣
@@ -1036,6 +1042,6 @@ for i=-3559,-3583,-1 do table.insert(M.JunkItems, i) end
 -- 8787-8791, -- 深海の免罪符 -- アポジ装備 召(Ilv119)
 -- 9105-9129, -- *星の免罪符 -- (Ilv119)
 
-M.JunkItemsT = utils.table.convertArrayToTrueTable(M.JunkItems)
+M.JunkItemIdSet = utils.table.convert_array_to_set(M.JunkItems)
 
 return M

@@ -6,7 +6,7 @@ local control = require 'control'
 local io_chat = require 'io/chat'
 local task = require 'task'
 local ac_party = require 'ac/party'
-local iamLeader = ac_party.iamLeader
+local iam_leader = ac_party.iam_leader
 
 local M = {
     ws_time = 0,
@@ -39,7 +39,7 @@ M.skillchain_table = {
 function M.ws(id)
     local now = os.time()
     M.ws_time = now
-    if not ac_party.isMemberId(id) then
+    if not ac_party.is_member_id(id) then
 	return
     end
     local mob = windower.ffxi.get_mob_by_id(id)
@@ -47,7 +47,7 @@ function M.ws(id)
 	return
     end
     local datetime = os.date("%X", now)
-    -- io_chat.setNextColor(6)
+    -- io_chat.set_next_color(6)
     --io_chat.printf("[%s] ws(%s) ", datetime, mob.name)
 end
 
@@ -88,15 +88,15 @@ function is_alliance_joined(alliance_table)
 end
 
 function M.party_update(alliance_table)
-    if is_alliance_joined(alliance_table) and iamLeader() then
+    if is_alliance_joined(alliance_table) and iam_leader() then
 	io_chat.print("パーティorアライアンスのメンバー追加")
 	local remain_list = { 90, 60, 30, 10, 3 }
 	for i, remain in ipairs(remain_list) do
 	    local c = "//echo フェイス呼び出し可能@"..remain.."秒"
 	    local delay = 120-remain
 	    -- io_chat.print(c)
-	    task.removeTaskSimple(c)
-	    task.setTaskSimple(c, delay, 1)
+	    task.remove_task_simple(c)
+	    task.set_task_simple(c, delay, 1)
 	end
     end
     M.alliance_table = alliance_table

@@ -36,7 +36,7 @@ function M.ws()
     M.WSCount = M.WSCount + 1
 end
 
-function tableHasData(t)
+function table_has_data(t)
     for k, v in pairs(t) do
 	return true
     end
@@ -47,20 +47,20 @@ function M.print()
     local total = 0
     local datetime = os.date("%X", os.time())
     -- if #M.DefeatedEnemyTable == 0 then -- 駄目
-    if tableHasData(M.DefeatedEnemyTable) == false then
+    if table_has_data(M.DefeatedEnemyTable) == false then
 	io_chat.print("=== Defeated Enemy Zero === "..datetime);
     else
-	io_chat.setNextColor(5)
+	io_chat.set_next_color(5)
 	io_chat.print("=== Defeated Enemy Table === " .. datetime);
 	for name, count in pairs(M.DefeatedEnemyTable) do
-	    io_chat.setNextColor(6)
+	    io_chat.set_next_color(6)
 	    io_chat.print(name .. ": "..count);
 	    total = total + count
 	end
-	io_chat.setNextColor(5)
+	io_chat.set_next_color(5)
 	io_chat.print("=> Total: "..total);
 	for name, count in pairs(M.FallingEnemyTable) do
-	    io_chat.setNextColor(3)
+	    io_chat.set_next_color(3)
 	    io_chat.print("### Falling "..name .. ": "..count);
 	    total = total + count
 	end

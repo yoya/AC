@@ -9,7 +9,7 @@ function M.statprint_handler()
     local items = {
 	1137, -- 僧のカギ
     }
-    acitem.showOwnItems(items)
+    acitem.show_own_items(items)
 end
 
 M.event_handlers = {

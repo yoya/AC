@@ -9,8 +9,8 @@ function M.main_tick(player)
 	local c = "input /item カルボナーラ <me>"
 	local level = task.PRIORITY_LOW
 	-- command, delay, duration, period, eachfight
-	local t = task.newTask(c, 1, 3, 30*60/10, false)
-	task.setTask(level, t)
+	local t = task.new_task(c, 1, 3, 30*60/10, false)
+	task.set_task(level, t)
     end
 end
 

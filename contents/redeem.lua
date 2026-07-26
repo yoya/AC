@@ -6,7 +6,7 @@ local M = {}
 local utils = require 'utils'
 local command = require 'command'
 local keyboard = require 'keyboard'
-local pushKeys = keyboard.pushKeys
+local push_keys = keyboard.push_keys
 local ac_char = require("ac/char")
 
 function M.tick(player)
@@ -29,8 +29,8 @@ function M.incoming_text_handler(text)
     local t = windower.ffxi.get_mob_by_target("t")
     -- エミネンス交換後
     if string.contains(text, "sparks to purchase:") then
-	--pushKeys({1, "escape", "escape"})
-	pushKeys({1, "numpad*"}) -- lock を外す
+	--push_keys({1, "escape", "escape"})
+	push_keys({1, "numpad*"}) -- lock を外す
     elseif string.contains(text, "Sparks Buying Finished.") or
 	string.contains(text, "アイテムを整理した後") then
 	windower.ffxi.run(24 - me.x, -120 - me.y)
@@ -56,7 +56,7 @@ function M.incoming_text_handler(text)
 	end
     --elseif string.contains(text, "まいどありにゃ〜") then
     elseif string.contains(text, "まいどありにゃ") then
-	pushKeys({3, "escape", "escape"})  -- 選択肢メニューを消す
+	push_keys({3, "escape", "escape"})  -- 選択肢メニューを消す
 	command.send("ac move -def2nuna")
     elseif string.contains(text, "次週までアイテムおよび特殊素材の交換が制限されます。") then
 	M.unity_point_redeem_enable = false

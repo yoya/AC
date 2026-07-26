@@ -65,11 +65,11 @@ function M.invoke_magick_debuff(player, magic, onoff, duration, need_mp)
     local level = task.PRIORITY_LOW
     local c = 'input /ma '..magic..' <t>'
     -- command, delay, duration, period, eachfight
-    local t = task.newTask(c, 2, duration, 90, true)
+    local t = task.new_task(c, 2, duration, 90, true)
     if onoff then
-	task.setTask(level, t)
+	task.set_task(level, t)
     else
-	task.removeTask(level, t)
+	task.remove_task(level, t)
     end
 end
 
@@ -102,8 +102,8 @@ function M.main_tick(player)
 	    if type(info.target) == 'string' then
 		local c = 'input /ma リフレシュIII <'..info.target..'>'
 		-- command, delay, duration, period, eachfight
-		local t = task.newTask(c, 1, 5, 120, false)
-		task.setTask(level, t)
+		local t = task.new_task(c, 1, 5, 120, false)
+		task.set_task(level, t)
 	    else
 		-- io_chat.error("job/RDM: info.target", info.target)
 	    end
