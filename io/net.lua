@@ -6,6 +6,7 @@ local packets = require 'packets'
 local control = require 'control'
 local keyboard = require 'keyboard'
 local utils = require 'utils'
+local io_chat = require 'io/chat'
 
 -- https://github.com/DiscipleOfEris/Assist/blob/master/assist.lua
 M.target_by_mob = function(mob)
@@ -26,9 +27,20 @@ M.target_by_mob = function(mob)
     return true
 end
 
+-- ターゲットが一致するまで tab を押し直す。
+-- 対象がターゲット不能になると無限に押し続けるので上限を設ける。
+local TARGET_RETRY_MAX = 20  -- 約 0.7 秒 x 20 = 14 秒
+
 M.target_by_mob_ex = function(mob)
     M.target_by_mob(mob)
+    local retry = 0
     while control.auto do
+	retry = retry + 1
+	if retry > TARGET_RETRY_MAX then
+	    io_chat.warnf("target_by_mob_ex: %s を掴めないので諦める",
+			  mob and mob.name or "(nil)")
+	    return false
+	end
 	coroutine.sleep(0.3)
 	local m = windower.ffxi.get_mob_by_target("t")
 	if m ~= nil then
@@ -43,9 +55,10 @@ M.target_by_mob_ex = function(mob)
 	    coroutine.sleep(0.2)
 	else
 	    -- print("mob match")
-	    break
+	    return true
 	end
     end
+    return false
 end
 
 M.target_by_mob_name = function(name)

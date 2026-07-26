@@ -393,10 +393,13 @@ function move_to(route, route_table, next_route, reverse)
 		    end
 		end
 		prev_pos = {x=curr_pos.x, y=curr_pos.y}
+                -- 地形に引っかかって 0.5 まで近づけないと永久に回るので時間で打ち切る
+                local move_deadline = os.time() + 60
                 while (distance(current_pos(), dpos) > 0.5 and M.auto) do
-                    if distance(current_pos(), dpos) > 6468 and false then
-                        io_chat.warn("not near position")
-                        -- M.stop()
+                    if os.time() > move_deadline then
+                        io_chat.warnf("move: (%.1f,%.1f) に近づけないので打ち切る",
+                                      dpos.x, dpos.y)
+                        windower.ffxi.run(false)
                         return false
                     end
                     turn_to(dpos)

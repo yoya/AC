@@ -58,8 +58,13 @@ end
 
 function M.turn_to_direction(mob, theta)
     local done = false
-    -- 向きをあわせる
+    -- 向きをあわせる。1 ステップの回転量が許容誤差を超えると収束しないので上限を設ける
+    local turn_deadline = os.time() + 30
     while done == false and M.auto do
+	if os.time() > turn_deadline then
+	    io_chat.warn("turn_to_direction: 向きが合わないので打ち切る")
+	    return false
+	end
         utils.left_move(0.005)
         local me_pos = {}
         acmob.get_mob_position(me_pos, "me")
