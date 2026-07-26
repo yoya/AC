@@ -6,7 +6,7 @@ local M = {}
 __AC = M
 
 require('functions')
-local res = require 'resources'
+local res_name = require 'res_name'
 local socket = require 'socket'
 local config = require 'config'
 local control = require 'control'
@@ -296,7 +296,7 @@ local sell_junk_items_in_inventory = function()
                                         item.id%256,math.floor(item.id/256)%256,index,0))
             windower.packets.inject_outgoing(0x085,string.char(0x085,0x04,0,0,1,0,0,0))
 	    if control.debug then
-		io_chat.print({"item:", res.items[item.id].ja, item.id, item.status})
+		io_chat.print({"item:", res_name.item_ja(item.id), item.id, item.status})
 	    end
             remain_count = remain_count - 1
             if remain_count <= 0 then

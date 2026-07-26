@@ -1,7 +1,7 @@
 --- アイテム処理
 
 local packets = require('packets')
-local res = require('resources')
+local res_name = require('res_name')
 local command = require('command')
 local io_chat = require('io/chat')
 local task = require('task')
@@ -144,10 +144,7 @@ function M.safes_to_inventory_by_set(id_set)
 			windower.ffxi.get_item(bagid, item.slot, item.count)
 			count = count + 1
 			if control.debug then
-			    local item_name = "unknown item"
-			    if res.items[item.id] ~= nil then
-				item_name = res.items[item.id].name
-			    end
+			    local item_name = res_name.item(item.id)
 			    io_chat.printf("safes_to_inventory:%s %s(%d)", bname, item_name, item.id)
 			end
 		    end
@@ -186,10 +183,7 @@ local bags_to_inventory = function(id)
                     windower.ffxi.get_item(bagid, item.slot, item.count)
 		    count = count + 1
 		    if control.debug then
-			local item_name = "unknown item"
-			if res.items[item.id] ~= nil then
-			    item_name = res.items[item.id].name
-			end
+			local item_name = res_name.item(item.id)
 			io_chat.printf("bags_to_inventory:%s %s(%d)", bname, item_name, item.id)
 		    end
                 end
@@ -439,7 +433,7 @@ M.use_item_include_bags = function(item_id, duration)
         bags_to_inventory(item_id)
     end
     if inventory_has_item(item_id) then
-        local name = res.items[item_id].name
+        local name = res_name.item(item_id)
 	local c = 'input /item '..name..' <me>'
 	task.set_task_simple(c, 0, duration)
         ret = true
@@ -485,7 +479,7 @@ function M.show_own_items(item_list)
     io_chat.info("=== Important Items I have ===")
     local items = windower.ffxi.get_items()
     for i, item_id in ipairs(item_list) do
-	local name = res.items[item_id].name
+	local name = res_name.item(item_id)
 	local line = string.format("[%d] %s:", item_id, name)
 	for _, bag in ipairs(bag_name_ja_list) do
 	    local bag_name = bag.name
@@ -505,7 +499,7 @@ function M.show_own_key_items(key_item_list)
     io_chat.info("=== Important Key Items I have ===")
     local key_items = windower.ffxi.get_key_items()
     for i, key_item_id in ipairs(key_item_list) do
-	local name = res.key_items[key_item_id].name
+	local name = res_name.key_item(key_item_id)
 	local line = string.format("[%d] %s:", key_item_id, name)
 	for _, id in ipairs(key_items) do
 	    if key_item_id == id then

@@ -2,7 +2,7 @@
 
 local M = {}
 
-local res = require 'resources'
+local res_name = require 'res_name'
 
 local utils = require 'utils'
 local control = require 'control'
@@ -131,7 +131,7 @@ function M.equip_show(arg)
 	local items = windower.ffxi.get_items()
 	local bag_items = items[bag_name]
 	local item = bag_items[e.inv_id]
-	local item_ja = res.items[item.id].ja
+	local item_ja = res_name.item_ja(item.id)
 	io_chat.printf("%s %s %s", slot_name, bag_name, item_ja)
     end
 end

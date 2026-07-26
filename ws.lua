@@ -1,7 +1,7 @@
 -- weapon skill
 
 require('functions')
-local res = require 'resources'
+local res_name = require 'res_name'
 local utils = require 'utils'
 local get_keys = utils.table.get_keys
 local command = require 'command'
@@ -122,7 +122,7 @@ M.get_weapon_skill_usage = function()
     local weaponSkillUsage = "  "
     for key, name in pairs(M.weaponskillTable) do
         for key2, name2 in pairs(abilities.weapon_skills) do
-            local n = res.weapon_skills[name2]['ja']
+            local n = res_name.weapon_skill_ja(name2)
             if name == n then
                 entry =  key .. " = " .. name
                 weaponSkillUsage = weaponSkillUsage .. entry .. "\n"
@@ -137,7 +137,7 @@ M.get_any_weapon_skill = function()
     for k_, k in pairs(preferWeaponSkill) do
         v = M.weaponskillTable[k]
         for k2, v2 in pairs(abilities.weapon_skills) do
-            name = res.weapon_skills[v2]['ja']
+            name = res_name.weapon_skill_ja(v2)
             if name == v then
                 return k
             end

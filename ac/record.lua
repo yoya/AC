@@ -2,7 +2,7 @@
 
 local M = {}
 
-local res = require 'resources'
+local res_name = require 'res_name'
 
 local io_chat = require("io/chat")
 local ac_char = require("ac/char")
@@ -128,7 +128,7 @@ function M.record_spells()
     }
     for i, v in ipairs(spells) do
 	if v == true then
-	    local name = res.spells[i].name
+	    local name = res_name.spell(i)
 	    -- io_chat.print(i, name)
 	    if 1 <= i and i <= 143 then
 		white_spells[i] = name
