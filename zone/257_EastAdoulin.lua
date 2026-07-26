@@ -3,14 +3,15 @@
 local M = { id = 257 }
 
 local io_chat = require 'io/chat'
+local ac_equip = require 'ac/equip'
 
 M.orig_body_item_id = 0
 function M.zone_in()
-    local orig_item_id = M.equip_item_by_slot_name("body")
+    local orig_item_id = ac_equip.equip_item_by_slot_name("body")
     if orig_item_id ~= 27923 then
 	M.orig_body_item_id = orig_item_id
     end
-    M.equip_item("body", 27923)  -- カウンセラーガーブ
+    ac_equip.equip_item("body", 27923)  -- カウンセラーガーブ
 end
 
 function M.zone_out()
