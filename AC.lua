@@ -129,7 +129,6 @@ local role_Follower = require('role/Follower')
 local ac_defeated = require 'ac/defeated'
 local ac_equip = require 'ac/equip'
 
-local JunkItems = acitem.junk.JunkItems
 local JunkItemsT = acitem.junk.JunkItemsT
 
 local isFar = false
@@ -409,45 +408,6 @@ local aggregateJunkItemsToInventory = function(mob)
     end
     count = count + acitem.bagsToInventoryT(JunkItemsT)
     print("aggregateJunkItemsToInventoryT(bags): "..count)
-    return count
-end
-
--- ジャンクアイテムをかばんに集める (多分、ここが重たい)
-local aggregateJunkItemsToInventory___ = function()
-    local count = 0
-    for i, id in pairs(JunkItems) do  --XXX 重たい理由
-        if acitem.checkInventoryFreespace() == false then
-            break
-        end
-        if acitem.safesHasItem(id) then
-            print("safes "..id.." to Inventory")
-            acitem.safesToInventory(id)
-            count = count + 1
-            coroutine.sleep(0.5)
-        end
-        if acitem.bagsHasItem(id) then
-            print("bags id:"..id.." to Inventory")
-            acitem.bagsToInventory(id)
-            count = count + 1
-            coroutine.sleep(0.5)
-        end
-	--[[ -- 怖いので Safes は一旦無し
-        if acitem.safesHasItem(-id) then
-            print("safes "..id.." to Inventory")
-            acitem.safesToInventory(-id)
-            count = count + 1
-            coroutine.sleep(0.5)
-	end
-	]]
-        if acitem.bagsHasItem(-id) then
-            print("bags id:"..id.." to Inventory")
-            acitem.bagsToInventory(-id)
-            count = count + 1
-            coroutine.sleep(0.5)
-        end
-	-- drop予定アイテムも集める
-    end
-    print("aggregateJunkItemsToInventory: "..count)
     return count
 end
 

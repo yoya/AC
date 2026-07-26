@@ -104,16 +104,6 @@ function M.distance(a, b)
     return  math.sqrt(dx*dx + dy*dy + dz*dz*5)
 end
 
-function isPreferMob(mob)
-    if condition.preferMobs == nil then
-	return false
-    end
-    if utils.table.contains(condition.preferMobs, mob.name) then
-	return  true
-    end
-    return false
-end
-
 -- condition
 -- { fightable: bool, range: number,
 --   nameMatch:string, preferMobs: string[],
@@ -190,47 +180,6 @@ function M.searchNearestMob(pos, condition)
 	    end
 	end
     end
-    return mob
-end
-
-M.getNearestFightableMob__ = function(pos, dist, preferMobs, condition)
-    if condition == nil then
-	condition =  {}
-    end
-    condition.range = dist
-    condition.preferMobs = preferMobs
-    return M.searchNearestMob(pos, condition)
-end
-
-M.getNearestFightableMob__ = function(pos, dist, preferMobs)
---    print("M.getNearestFightableMob", preferMobs);
---    M.io_chat.print("getNearestFifhtableMob")
--- 距離(デフォルト20)以内だけ対象
-    local mob = nil
-    local mobArr = windower.ffxi.get_mob_array()
-    for i, m in pairs(mobArr) do
-        --- リンクすると status が 1になるので対象にする
-        if ( preferMobs == nil or utils.table.contains(preferMobs, m.name)) and
-            isMobAttackable(m) then
-            local dx = m.x - pos.x
-            local dy = m.y - pos.y
-            local dz = m.z - pos.z
-            d = math.sqrt(dx*dx + dy*dy + dz*dz*5)
-            --- 高さが８違うのは無視
-            if m.x ~= 0 and m.y ~= 0 and m.z ~= 0 and d < dist and dz*dz < 8*8 then
---             if m.name == "Water Elemental" then
---                    io_chat.print(i .. ": name:" .. m.name ..", dist:".. m.distance .. ", status:".. m.status ..", d:".. d)
---                io_chat.print(m)
---             end
-                if utils.table.contains(ignoreMobs, m.name) == false then
---                if m.name ~= "fep2" then 
-                    mob = m
-                    dist = d
-                end
-            end
-        end
-    end
----    print("mob", mob.name)
     return mob
 end
 

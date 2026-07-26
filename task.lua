@@ -145,18 +145,6 @@ function M.setTaskSimple(c, delay, duration)
     M.setTask(level, t)
 end
 
-function M.setTaskEx(c, opts)
-    local level = opts.level and opts.level or M.PRIORITY_MIDDLE
-    local delay = opts.delay and opts.delay or 0
-    local duration = opts.duration and opts.delay or 2
-    local period = opts.period and opts.period or 10
-    local eachfight = opts.eachfight and opts.eachfight or false
-    -- command, delay, duration, period, eachfight
-    local t = M.newTask(c, delay, duration, period, eachfight)
-    M.setTask(level, t)
-end
-
-
 function M.removeTaskSimple(c)
     local level = PRIORITY_SIMPLE
     -- command, delay, duration, period, eachfight
