@@ -38,7 +38,7 @@ function song(song_name, onoff, period, delay, target)
     end
 end
 
-function isDefensive()
+local function isDefensive()
     return M.parent.needSafety()
 end
 
