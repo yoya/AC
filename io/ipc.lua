@@ -71,9 +71,9 @@ function M.send_party(method, arg1, arg2, arg3)
     return false
 end
 
-function M.recieve(message)
+function M.receive(message)
     if control.debug then
-	print("io/ipc.recieve:", message)
+	print("io/ipc.receive:", message)
     end
     local sig = message:sub(1, SIGNATURE:len())
     if sig ~= SIGNATURE then
@@ -90,19 +90,19 @@ function M.recieve(message)
     if control.debug then
 	print(target, source, method, arg1)
 	if arg1 == nil then
-	    io_chat.printf("io/ipc.recieve: target:%s source:%s method:%s arg1:nil", target, source, method)
+	    io_chat.printf("io/ipc.receive: target:%s source:%s method:%s arg1:nil", target, source, method)
 	elseif arg2 == nil then
-	    io_chat.printf("io/ipc.recieve: target:%s source:%s method:%s arg1:%s", target, source, method, arg1)
+	    io_chat.printf("io/ipc.receive: target:%s source:%s method:%s arg1:%s", target, source, method, arg1)
 	elseif arg3 == nil then
-	    io_chat.printf("io/ipc.recieve: target:%s source:%s method:%s arg1:%s arg2:%s", target, source, method, arg1, arg2)
+	    io_chat.printf("io/ipc.receive: target:%s source:%s method:%s arg1:%s arg2:%s", target, source, method, arg1, arg2)
 	else
-	    io_chat.printf("io/ipc.recieve: target:%s source:%s method:%s arg1:%s arg2:%s arg3:%s", target, source, method, arg1, arg2, arg3)
+	    io_chat.printf("io/ipc.receive: target:%s source:%s method:%s arg1:%s arg2:%s arg3:%s", target, source, method, arg1, arg2, arg3)
 	end
     end
     local player = windower.ffxi.get_player()
     if target ~= '*' and (player == nil or player.name ~= target) then
 	if control.debug then
-	    print("io/ipc.recieve: not for me")
+	    print("io/ipc.receive: not for me")
 	end
 	return  -- 自分向けじゃない
     end
@@ -119,7 +119,7 @@ function M.recieve(message)
 	    print("not in Party")
 	end
     elseif method == 'all' then
-	M.recieve_all(arg1, arg2, arg3)
+	M.receive_all(arg1, arg2, arg3)
     elseif method == 'build' then
 	if arg1 == 'party' then
 	    if not M.inParty() then
@@ -131,16 +131,16 @@ function M.recieve(message)
     elseif method == 'focus' then
 	ac_focus.focus(arg1)
     elseif method == 'party' then
-	M.recieve_party(source, arg1, arg2, arg3)
+	M.receive_party(source, arg1, arg2, arg3)
     elseif method == 'submit' then
 	if arg1 == 'party' then
 	    local c = "input /pcmd add "..source
-	    -- print("io/ipc.recieve_party", c)
+	    -- print("io/ipc.receive_party", c)
 	    --  command, delay, period
 	    task.setTaskSimple(c, 1, 2)
 	end
     else
-	print("io/ipc.recieve: unknown method:"..method)
+	print("io/ipc.receive: unknown method:"..method)
     end
 end
 
@@ -169,9 +169,9 @@ function M.warp_with_ring(arg)
     acitem.useEquipItem(slot_right_ring, item_id, item_name, 10)
 end
     
-function M.recieve_all(arg1, arg2, arg3)
+function M.receive_all(arg1, arg2, arg3)
     if control.debug then
-	print("io/ipc.recieve_all", arg1, arg2, arg3)
+	print("io/ipc.receive_all", arg1, arg2, arg3)
     end
     M.AC.addon_command_handler(arg1, arg2, arg3)
 end
@@ -184,9 +184,9 @@ function M.inParty()
     return true -- パーティに入ってる
 end
 
-function M.recieve_party(source, arg1, arg2, arg3)
+function M.receive_party(source, arg1, arg2, arg3)
     if control.debug then
-	io_chat.print("io/ipc.recieve_party", arg)
+	io_chat.print("io/ipc.receive_party", arg)
     end
     if arg1 == "build" then
 	if not M.inParty() then
@@ -194,7 +194,7 @@ function M.recieve_party(source, arg1, arg2, arg3)
 	end
     elseif arg1 == "submit" then
 	local c = "input /pcmd add "..source
-	-- print("io/ipc.recieve_party", c)
+	-- print("io/ipc.receive_party", c)
 	--  command, delay, period
 	task.setTaskSimple(c, 1, 2)
     else

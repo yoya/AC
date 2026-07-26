@@ -56,7 +56,7 @@ local getStationWorkerBoostInfo = function(zone)
     return nil
 end 
 
-function M.turnToDirecton(mob, theta)
+function M.turnToDirection(mob, theta)
     local done = false
     -- 向きをあわせる
     while done == false and M.auto do
@@ -82,7 +82,7 @@ local stationWorkerFunction = function(zone, mob)
     -- N = 0, E = 3.14*0.5, S = 3.14, W = 3.14*1.5
     local theta = midangle(info[1], info[2])
     io_chat.print("theta: "..theta.." select:"..info[3])
-    M.turnToDirecton(mob, theta)
+    M.turnToDirection(mob, theta)
     -- 応援方法を選択する
     pushKeys({"enter"})
     coroutine.sleep(2.5)

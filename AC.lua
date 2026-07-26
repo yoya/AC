@@ -48,7 +48,7 @@ local bayld_swap_ids = item_data.bayld_swap_ids --  ベヤルド交換品
 local gob_dial_key_ids = item_data.gob_dial_key_ids -- 不思議箱ダイヤルキー
 
 -- 優先して釣る敵
-local preferedEnemyList = {
+local preferredEnemyList = {
     -- カオス戦
     "Chaos",
     -- コロナイズ
@@ -99,7 +99,7 @@ local iamLeader = ac_party.iamLeader
 local io_net = require 'io/net'
 
 local io_ipc = require 'io/ipc'
-io_ipc.AC = M  -- for calback
+io_ipc.AC = M  -- for callback
 
 local ac_stat = require 'ac/stat'
 local acinspect = require 'inspect'
@@ -156,11 +156,11 @@ local leaderFunction = function()
     if mob == nil then
 	local condition = {
 	    range = control.enemy_range,
-	    preferMobs = utils.table.merge_lists(acmob.moreAttractiveEnemyList, preferedEnemyList),
+	    preferMobs = utils.table.merge_lists(acmob.moreAttractiveEnemyList, preferredEnemyList),
 	    nameMatch = control.enemy_filter,
 	}
 	local mob = acmob.searchNearestMob(pull.base_pos, condition)
-	---    print("nearest prefered mob", mob)
+	---    print("nearest preferred mob", mob)
     end
     if mob == nil then
         --- メンバーが戦っている敵がいれば、そちら優先
@@ -404,7 +404,7 @@ local aggregateJunkItemsToInventory = function(mob)
     local count = 0
     if mob.name == "Green Thumb Moogle" then
 	count = count + acitem.safesToInventoryT(JunkItemsT)
-	print("aggregateJunkItemsToInventoryT(sefas): "..count)
+	print("aggregateJunkItemsToInventoryT(safes): "..count)
     end
     count = count + acitem.bagsToInventoryT(JunkItemsT)
     print("aggregateJunkItemsToInventoryT(bags): "..count)
@@ -688,7 +688,7 @@ windower.register_event('ipc message', function(message)
     if control.debug then
 	print("AC: ipc message:", message)
     end
-    io_ipc.recieve(message)
+    io_ipc.receive(message)
 end)
 
 
@@ -830,7 +830,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 		control.debug = onoff
 		io_chat.info("ac control debug "..tostring(control.debug))
 	    else
-		io_chat.error("ac congtrol debug {on|off}")
+		io_chat.error("ac control debug {on|off}")
 	    end
 	elseif arg1 == 'provoke' then
 	    if arg2 ~= nil and tonumber(arg2) ~= nil then
@@ -859,7 +859,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    local prefer_condition = {
 		range = control.enemy_range,
 		preferMobs = utils.table.merge_lists(acmob.moreAttractiveEnemyList,
-						     preferedEnemyList),
+						     preferredEnemyList),
 		nameMatch = control.enemy_filter,
 	    }
 	    local preferMob = acmob.searchNearestMob(pull.base_pos, prefer_condition)
@@ -877,7 +877,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 		io_chat.print("same name monster")
 	    end
 	else
-	    print("ac debug checkbags|linked|neaest")
+	    print("ac debug checkbags|linked|nearest")
 	end
     elseif subcommand == 'defeated' then
 	-- 戦闘終了時の処理
@@ -1093,7 +1093,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	local n = tonumber(arg1, 10)
 	if n == nil or
 	    not utils.table.contains({"mailbox", "garden", "m", "mm", "g", "gob"}, arg2) then
-	    print("ac partrol <chara number> {all | mailbox | garden | gob} ")
+	    print("ac patrol <chara number> {all | mailbox | garden | gob} ")
 	else
 	    for i = 1, n do
 		print("Patrol #", i, "/", n)
@@ -1147,7 +1147,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 		    coroutine.sleep(40)
 		    print("after sleep 50")
 		else
-		    print("internal error: ac partrol <chara number> {mailbox|garden|gob} ")
+		    print("internal error: ac patrol <chara number> {mailbox|garden|gob} ")
 		    break
 		end
 		coroutine.sleep(2)
@@ -1168,8 +1168,8 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
         local y = math.round(me.y, 1)
         local z = math.round(me.z, 1)
 ---    print は - 記号を誤認しやすいので、表示しない
----        print("me potision", " x="..x, "  y="..y, "  z="..z)
-        io_chat.print("me potision  x="..x.."  y="..y.."  z="..z)
+---        print("me position", " x="..x, "  y="..y, "  z="..z)
+        io_chat.print("me position  x="..x.."  y="..y.."  z="..z)
     elseif subcommand == 'puller' then
 	local onoff = argument_means_on(arg1)
 	if onoff ~= nil then
@@ -1415,7 +1415,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	io_chat.print('    point              - Point action for ambus')
 	io_chat.print('    pos                - Show current position')
         io_chat.print('    puller on|off      - Change puller mode')
-	io_chat.print('    record char|spells - Reord Status to LogFile')
+	io_chat.print('    record char|spells - Record Status to LogFile')
 	io_chat.print('    reload             - Reload AC process')
 	io_chat.print('    roundtrip <period> - RoundTrip zone')
         io_chat.print('    show mob|...       - Show something')

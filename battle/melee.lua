@@ -52,7 +52,7 @@ function M.tick(player, me, mob)
     local player = windower.ffxi.get_player()
     local mainJob = player.main_job
     local subJob = player.sub_job
----    print("XXX", preferedEnemyList)
+---    print("XXX", preferredEnemyList)
     -- 中断してでも優先する敵
     local condition = {
 	range = control.enemy_range,

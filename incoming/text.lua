@@ -15,7 +15,7 @@ function M.incoming_handler(data, modified, original_mode, modified_mode, blocke
     end
 end
 
-function M.duplicationChech(keyword, callback)
+function M.duplicationCheck(keyword, callback)
     for i, listener in pairs(listener_table) do
 	if listener.keyword == keyword and listener.callback == callback then
 	    return true
@@ -27,8 +27,8 @@ end
 function M.addListener(keyword, callback)
     assert(type(keyword) == "string")
     assert(type(callback) == "function")
-    if M.duplicationChech(keyword, callback) then
-	print("M.duplicationChech true")
+    if M.duplicationCheck(keyword, callback) then
+	print("M.duplicationCheck true")
 	return
     end
     local caller_info = debug.getinfo(2)
