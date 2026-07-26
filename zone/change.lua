@@ -13,7 +13,7 @@ local incoming_text = require 'incoming/text'
 
 local M = {}
 
-M.incoming_text_listener_id = null
+M.incoming_text_listener_id = nil
 
 function pos_str(pos)
     if pos == nil then
@@ -242,12 +242,6 @@ function M.warp_handler_tick()
     if zone == nil or pos == nil then
 	return
     end
-    if prevPos == nil then
-	-- print("warp tick zone:"..zone, pos.x..","..pos.y, "prevPos==nil")
-    else
-	-- print("warp tick zone:"..zone, pos.x..","..pos.y, M.prevPos.x..","..M.prevPos.y)
-    end
-
     -- print("M.warp_handler_tick", zone,  ac_pos.distance(pos, M.prevPos))
     if M.prevZone == zone and M.prevPos ~= nil then
 	local dist = ac_pos.distance(pos, M.prevPos)
