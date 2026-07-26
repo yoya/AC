@@ -129,7 +129,9 @@ local role_Follower = require('role/Follower')
 local ac_defeated = require 'ac/defeated'
 local ac_equip = require 'ac/equip'
 
-local JunkItemIdSet = acitem.junk.JunkItemIdSet
+local JunkItemIdSet = acitem.junk.JunkItemIdSet  -- 売却+廃棄 (かばんに集める用)
+local SellItemIdSet = acitem.junk.SellItemIdSet
+local DropItemIdSet = acitem.junk.DropItemIdSet
 
 local isFar = false
 local fightingMobName = nil
@@ -419,7 +421,7 @@ local count_junk_items_in_inventory = function ()
 	if item and item.id ~= 0 then
 	    -- io_chat.print({"item:", item.status, item.id,
 	    -- res.items[item.id].ja })
-	    if JunkItemIdSet[item.id] == true then
+	    if SellItemIdSet[item.id] == true then
 		count = count + 1
 	    end
 	end
@@ -434,7 +436,7 @@ local sell_junk_items_in_inventory = function()
     for index = 1, 80 do
         local item = windower.ffxi.get_items(0, index)
 	-- io_chat.print({ "item:", item.status, item.id, res.items[item.id].ja })
-        if item and JunkItemIdSet[item.id] == true then
+        if item and SellItemIdSet[item.id] == true then
             windower.packets.inject_outgoing(0x084,string.char(0x084,0x06,0,0,item.count,0,0,0,
                                         item.id%256,math.floor(item.id/256)%256,index,0))
             windower.packets.inject_outgoing(0x085,string.char(0x085,0x04,0,0,1,0,0,0))
@@ -480,17 +482,45 @@ local idle_function_sell_junk_items = function(mob)
 end
 M.idle_function_sell_junk_items = idle_function_sell_junk_items
 
+-- アイテム名。res に無い id でも落ちないように
+local item_name_ja = function(item_id)
+    local r = res.items[item_id]
+    if r == nil then
+        return "unknown item"
+    end
+    return r.ja
+end
+
+-- 廃棄は取り消せないので、control.drop_dryrun が真の間は
+-- 対象を表示するだけで実際には捨てない。
 function drop_junk_items_in_inventory()
-    print("drop_junk_items_in_inventory")
+    local dryrun = control.drop_dryrun
+    if dryrun then
+        io_chat.warn("【ドライラン】廃棄対象を表示するだけで実際には捨てません")
+        io_chat.warn("実行するには ac control dropdryrun off")
+    end
+    local count = 0
     for index = 1, 80 do
         local item = windower.ffxi.get_items(0, index)
---        io_chat.print({"item:", windower.to_shift_jis(res.items[item.id].ja), item.id, item.status})
-        if item and JunkItemIdSet[-item.id] == true then
-            -- print("drop???:"..item.id.."("..index..") x "..item.count)
-            windower.ffxi.drop_item(index, item.count)
-            coroutine.sleep(math.random(6,8)/5)
+        if item and DropItemIdSet[item.id] == true then
+            count = count + 1
+            if dryrun then
+                io_chat.printf("[dryrun] 廃棄対象: %s (id:%d) x%d",
+                               item_name_ja(item.id), item.id, item.count)
+            else
+                io_chat.printf("廃棄: %s (id:%d) x%d",
+                               item_name_ja(item.id), item.id, item.count)
+                windower.ffxi.drop_item(index, item.count)
+                coroutine.sleep(math.random(6,8)/5)
+            end
         end
     end
+    if dryrun then
+        io_chat.noticef("廃棄対象 %d 件 (ドライランのため未実行)", count)
+    else
+        io_chat.noticef("廃棄 %d 件 完了", count)
+    end
+    return count
 end
 
 
@@ -832,6 +862,14 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    else
 		io_chat.error("ac control debug {on|off}")
 	    end
+	elseif arg1 == 'dropdryrun' then
+	    local onoff = argument_means_on(arg2)
+	    if onoff ~= nil then
+		control.drop_dryrun = onoff
+		io_chat.info("ac control dropdryrun "..tostring(control.drop_dryrun))
+	    else
+		io_chat.error("ac control dropdryrun {on|off}")
+	    end
 	elseif arg1 == 'provoke' then
 	    if arg2 ~= nil and tonumber(arg2) ~= nil then
 		control.provoke = tonumber(arg2)
@@ -842,7 +880,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	elseif arg1 == 'wstp' then
 	    control.set_wstp(arg2)
 	else
-	    io_chat.error("ac control automove | debug | provoke | wstp")
+	    io_chat.error("ac control automove | debug | dropdryrun | provoke | wstp")
 	end
     elseif subcommand == 'debug' then
 	if arg1 == 'checkbags' then

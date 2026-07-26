@@ -6,12 +6,11 @@ local utils = require 'utils'
 local acevent = require 'event'
 local io_chat = require 'io/chat'
 
--- id の符号で処理が変わる。
---   正の id … 店売りする。金庫/バッグからも かばん に集めてくる
---             (safes_to_inventory_by_set / bags_to_inventory_by_set)
---   負の id … 売れないので捨てる。かばん内にある分だけが対象で、
---             金庫/バッグからは集めてこない (drop_junk_items_in_inventory)
--- 参照側は正なら JunkItemIdSet[id]、負なら JunkItemIdSet[-id] を引く。
+-- id の符号で用途を表す。
+--   正の id … 店売りする
+--   負の id … 売れないので捨てる
+-- このリストはファイル末尾で SellItemIdSet / DropItemIdSet /
+-- JunkItemIdSet (和集合) に分解される。参照側はそちらを使うこと。
 M.JunkItems = {
     55, -- キャビネット
     90, -- 錆びたバケツ
@@ -1006,6 +1005,7 @@ function M.char_update_handler(char)
 	local p = char[name]
 	if p ~= nil and p > 4500 then  -- モグ預けが溢れそうなら店売り
 	    table.insert(M.JunkItems, id)
+	    M.SellItemIdSet[id] = true
 	    M.JunkItemIdSet[id] = true
 	end
     end
@@ -1042,6 +1042,19 @@ for i=-3559,-3583,-1 do table.insert(M.JunkItems, i) end
 -- 8787-8791, -- 深海の免罪符 -- アポジ装備 召(Ilv119)
 -- 9105-9129, -- *星の免罪符 -- (Ilv119)
 
-M.JunkItemIdSet = utils.table.convert_array_to_set(M.JunkItems)
+-- JunkItems を用途別の集合に分解する。
+-- 符号の解釈をここに閉じ込め、呼び出し側から -id という技巧を無くす。
+M.SellItemIdSet = {}  -- 店売りする id
+M.DropItemIdSet = {}  -- 捨てる id
+M.JunkItemIdSet = {}  -- 上記の和集合。かばんに集める判定用
+for _, id in ipairs(M.JunkItems) do
+    if id > 0 then
+	M.SellItemIdSet[id] = true
+	M.JunkItemIdSet[id] = true
+    else
+	M.DropItemIdSet[-id] = true
+	M.JunkItemIdSet[-id] = true
+    end
+end
 
 return M
