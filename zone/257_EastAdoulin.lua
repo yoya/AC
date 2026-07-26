@@ -8,15 +8,15 @@ local ac_equip = require 'ac/equip'
 M.orig_body_item_id = 0
 function M.zone_in()
     local orig_item_id = ac_equip.equip_item_by_slot_name("body")
-    if orig_item_id ~= 27923 then
+    if orig_item_id ~= nil and orig_item_id ~= 27923 then
 	M.orig_body_item_id = orig_item_id
     end
     ac_equip.equip_item("body", 27923)  -- カウンセラーガーブ
 end
 
 function M.zone_out()
-    if  M.orig_body_item_id > 0 then
-	M.equip_item("body", M.orig_body_item_id) -- 前のに戻す
+    if M.orig_body_item_id > 0 then
+	ac_equip.equip_item("body", M.orig_body_item_id) -- 前のに戻す
 	M.orig_body_item_id = 0
     end
 end
