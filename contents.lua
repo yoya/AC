@@ -12,7 +12,7 @@ M.Ambus       =  3  -- アンバス
 M.Works       =  4  -- ワークス
 M.Trove       =  5  -- AMANトローブ
 M.Mission     =  6
-M.AbysYellow  =  7  -- アビセアの黄色発光
+M.Abyssea     =  7  -- アビセア(黄色発光含む予定)
 M.Garden      =  8  -- モグガーデン
 M.Trial       =  9  -- 試練(各属性プロトクリスタル)
 M.Raives      = 10  -- コロナイズ/レイアレイブス
@@ -25,7 +25,7 @@ M.GobMys      = 16  -- ゴブの不思議箱 (Gobbie Mystery Box)
 M.UnityWanted = 17  -- ユニティ・ウォンテッド
 M.Sortie      = 18  -- ソーティ
 
-M.allContents = { M.Idle, M.Leveling, M.Ambus, M.Works, M.Trove,  M.Mission, M.AbysYellow, M.Garden, M.Trial, M.Raives, M.WKR, M.LoginPoint, M.Vagary, M.Synergy, M.Redeem, M.GobMys, M.UnityWanted, M.Sortie }
+M.allContents = { M.Idle, M.Leveling, M.Ambus, M.Works, M.Trove,  M.Mission, M.Abyssea, M.Garden, M.Trial, M.Raives, M.WKR, M.LoginPoint, M.Vagary, M.Synergy, M.Redeem, M.GobMys, M.UnityWanted, M.Sortie }
 
 M.ambus   = require 'contents/ambus'
 M.trial   = require 'contents/trial'
@@ -66,7 +66,7 @@ M.nameTable = {
     [M.Works]       = {'Works'},
     [M.Trove]       = {'Trove'},
     [M.Mission]     = {'Mission'},
-    [M.AbysYellow]  = {'AbysYellow', 'yellow'},
+    [M.Abyssea]     = {'Abyssea', 'Abys'},
     [M.Garden]      = {'MogGarden', 'garden'},
     [M.Trial]       = {'Trial'},
     [M.Raives]      = {'Raives'},
