@@ -968,6 +968,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    io_chat.errorf("多分、ログイン画面じゃないです zone:%d", zone)
 	    return
 	end
+	contents.set_type(contents.Idle)
 	-- ログイン
 	local n = tonumber(arg1, 10)
 	if n == nil or
