@@ -132,6 +132,10 @@ function M.sub_tick(player)
 end
 
 M.battle_equip = {
+    body = {
+	23469, -- ＶＩタバード+3
+	23156, -- ＬＴサヨン+2
+    },
     left_ring = {
 	26229,  -- レコリング
 	26189,  -- 月明の指輪
