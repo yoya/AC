@@ -30,6 +30,8 @@ function M.incoming_text_handler(text)
     end
     local me = windower.ffxi.get_mob_by_target("me")
     local t = windower.ffxi.get_mob_by_target("t")
+    local eminence_point = ac_char.eminence_point()
+    local unity_point = ac_char.unity_point()
     -- エミネンス交換後
     if string.contains(text, "sparks to purchase:") then
 	--push_keys({1, "escape", "escape"})
@@ -45,8 +47,6 @@ function M.incoming_text_handler(text)
 	-- windower.ffxi.run(24 - me.x, -120 - me.y)
     elseif string.contains(text, "all売却 end") then
 	utils.target_lockon(false)  -- ロックオンしてたら外す
-	local eminence_point = ac_char.eminence_point()
-	local unity_point = ac_char.unity_point()
 	print("what???? > emi, uni:",
 	      M.eminence_point_redeem_enable,
 	      M.unity_point_redeem_enable)
@@ -65,7 +65,6 @@ function M.incoming_text_handler(text)
     elseif string.contains(text, "次週までアイテムおよび特殊素材の交換が制限されます。") then
 	M.unity_point_redeem_enable = false
     elseif string.contains(text, "はにゃあ？") then
-	local unity_point = ac_char.unity_point()
 	if not M.unity_point_redeem_enable then
 	    io_chat.warn("ユニティ交換はもう終わってます")
 	end
@@ -83,8 +82,8 @@ function M.incoming_text_handler(text)
 	    exchange_point = 5000
 	end
 	push_keys({1, "right", "down", "enter"}) -- どうする？
-	push_keys({1, "right", "right", "right", "enter"}) -- 次へ進む
-	push_keys({1, "right", "right", "enter"}) -- プライズパウダー
+	push_keys({2, "right", "right", "right", "enter"}) -- 次へ進む
+	push_keys({2, "right", "right", "enter"}) -- プライズパウダー
 	io_chat.info("ユニティポイント交換額", exchange_point)
 	coroutine.sleep(3)
 	for c in tostring(exchange_point):gmatch(".") do
