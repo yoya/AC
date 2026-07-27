@@ -48,4 +48,18 @@ function M.sub_tick(player)
     end
 end
 
+M.battle_equip = {
+    body = {
+	25787, -- シャマシュローブ
+	25719, -- マーリンジュバ
+    },
+    left_ring = {
+	26184,  -- スティキニリング+1
+    },
+    right_ring = {
+	26225,  -- メダダリング
+	26183,  -- スティキニリング
+    },
+}
+
 return M

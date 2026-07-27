@@ -181,5 +181,4 @@ M.battle_equip = {
     },
 }
 
-
 return M
