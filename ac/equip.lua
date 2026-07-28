@@ -184,8 +184,8 @@ function M.equip_item_by_priority_tree(item_tree)
 		    if slot_name == "left_ring" or slot_name == "right_ring" then
 			equiped_ring_item_id = id
 		    end
+		    break
 		end
-		break
 	    end
 	end
     end
