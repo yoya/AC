@@ -17,7 +17,7 @@ function M.zone_in()
     contents.set_type(contents.Idle)    -- contents_in を読ませる為
     contents.set_type(contents.Redeem)  -- エミネンス、ユニティポイント交換
     local orig_item_id = ac_equip.equip_item_by_slot_name("body")
-    if orig_item_id ~= 27923 then
+    if orig_item_id ~= nil and orig_item_id ~= 27923 then
 	M.orig_body_item_id = orig_item_id
     end
     ac_equip.equip_item("body", 27923)  -- カウンセラーガーブ
