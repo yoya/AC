@@ -9,7 +9,6 @@ local acitem = require 'item'
 local item_data = require 'item/data'
 local acmob = require 'mob'
 local ac_move = require 'ac/move'
-local ac_pos = require 'ac/pos'
 local io_net = require 'io/net'
 local acprob = require 'prob'
 local ac_party = require 'ac/party'
@@ -147,11 +146,21 @@ local attack_enemy = function(leader, me_pos, item_level)
     if mob ~= nil then
         io_net.target_by_mob(mob)
         if item_level >= 119 or mob.hpp < 100 then
-            -- 5 が近接攻撃できるギリギリの距離
-            if ac_pos.distance(leader, mob) <= 5 then  -- 敵が近づくまで待つ
+            -- 敵との距離は自分基準で測る (リーダー基準だと自分が範囲外でも
+            -- 攻撃を撃って失敗する)。5 が近接攻撃できるギリギリの距離。
+            local me = windower.ffxi.get_mob_by_target("me")
+            local dx = mob.x - me.x
+            local dy = mob.y - me.y
+            local dist = math.sqrt(dx*dx + dy*dy)
+            if dist <= 5 then
+                windower.ffxi.run(false)
                 coroutine.sleep(math.random(0,2)/4)
                 command.send('input /attack <t>')
                 task.reset_by_fight()
+            else
+                -- 遠ければ敵へ詰める (リーダーではなく敵に寄る)
+                turn_to_pos(me.x, me.y, mob.x, mob.y)
+                windower.ffxi.run(dx, dy)
             end
         end
     end
