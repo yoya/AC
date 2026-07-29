@@ -33,20 +33,32 @@ M.domain_enemy_list = { "Azi Dahaka","Azi Dahaka's Dragon",
 			"Quetzalcoatl", "Quetzalcoatl's Sibilus",
 			"Mireu" }
 
--- 敵のヘイトが自分のパーティ/アライアンスに向いてるか
-function is_mob_linked(mob)
+-- アライアンス全員の mob.id 集合のキャッシュ。
+-- 構成は探索の間ずっと変わらないので、search の頭で nil にして
+-- そのループ内では 1 度だけ再構築する (毎 mob の get_party を避ける)。
+local alliance_keys = {"p", "a1", "a2"}
+local ally_id_set = nil
+
+local build_ally_id_set = function()
+    local set = {}
     local party = windower.ffxi.get_party()
-    for _, x in pairs({"p", "a1", "a2"}) do -- アライアンス全員
+    for _, x in ipairs(alliance_keys) do
         for i = 0, 5 do -- 自分含めて全員
             local member = party[x..i]
             if member ~= nil and member.mob ~= nil then
-                if mob.claim_id == member.mob.id then
-                    return true
-                end
+                set[member.mob.id] = true
             end
         end
     end
-    return false
+    return set
+end
+
+-- 敵のヘイトが自分のパーティ/アライアンスに向いてるか
+function is_mob_linked(mob)
+    if ally_id_set == nil then
+        ally_id_set = build_ally_id_set()
+    end
+    return ally_id_set[mob.claim_id] == true
 end
 
 local always_attackable_mobs = {
@@ -147,6 +159,7 @@ function M.condition_match(pos, condition, mob)
 end
 
 function M.search_mobs(pos, condition)
+    ally_id_set = nil  -- この探索用に作り直す
     local mob_arr = windower.ffxi.get_mob_array()
     local mobs = {}
     for i, m in pairs(mob_arr) do
@@ -158,6 +171,7 @@ function M.search_mobs(pos, condition)
 end
 
 function M.search_nearest_mob(pos, condition)
+    ally_id_set = nil  -- この探索用に作り直す
     local mob_arr = windower.ffxi.get_mob_array()
     local mob = nil
     local dist = 99999    
