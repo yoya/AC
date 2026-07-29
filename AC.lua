@@ -46,27 +46,6 @@ local cipher_ids = item_data.cipher_ids --  盟スクロール
 local bayld_swap_ids = item_data.bayld_swap_ids --  ベヤルド交換品
 local gob_dial_key_ids = item_data.gob_dial_key_ids -- 不思議箱ダイヤルキー
 
--- 優先して釣る敵
-local preferred_enemy_list = {
-    -- カオス戦
-    "Chaos",
-    -- コロナイズ
-    "Knotted Root", "Bedrock Crag", "Icy Palisade",
-    -- 醴泉島
-    "Wretched Poroggo", "Water Elemental",
-    "Indomitable Faaz", "Devouring Mosquito",
-    -- ドメインベーション
-    "Azi Dahaka's Dragon", "Azi Dahaka",
-    "Naga Raja's Lamia", "Naga Raja",
-    "Quetzalcoatl's Sibilus", "Quetzalcoatl",
-    "Mireu",
-    -- 実験
-    "Apex Toad",  -- ウォーの門、トード。
-    "Mourioche",  -- マンドラ
-    -- アルタナM
-    "Cait Sith Ceithir",
-}
-
 
 -- https://docs.windower.net/commands/input/
 -- 邪魔なショートカットを無効化
@@ -131,91 +110,6 @@ local pstatus = require 'player_status'
 local JunkItemIdSet = acitem.junk.JunkItemIdSet  -- 売却+廃棄 (かばんに集める用)
 local SellItemIdSet = acitem.junk.SellItemIdSet
 local DropItemIdSet = acitem.junk.DropItemIdSet
-
-local is_far = false
-local fighting_mob_name = nil
-
---- リーダー待機用
-local prev_dx = 0
-local prev_dy = 0
-local leader_function = function()
-    -- print("I am a leader")
-    local me_pos = {}
-    if get_mob_position(me_pos, "me") ~= true then
-	-- zone チェンジでよくある
-        -- print("get_mob_position failed ???")
-        return
-    end
-    -- リンクしてる敵
-    local condition = {
-	range = control.enemy_range,
-	linked_only = true,
-	-- name_match = control.enemy_filter,
-    }
-    local mob = acmob.search_nearest_mob(me_pos, condition)
-    -- 優先する敵
-    if mob == nil then
-	local condition = {
-	    range = control.enemy_range,
-	    prefer_mobs = utils.table.merge_lists(acmob.more_attractive_enemy_list, preferred_enemy_list),
-	    name_match = control.enemy_filter,
-	}
-	mob = acmob.search_nearest_mob(pull.base_pos, condition)
-	---    print("nearest preferred mob", mob)
-    end
-    if mob == nil then
-        --- メンバーが戦っている敵がいれば、そちら優先
-        -- mob = acmob.PartyTargetMob()
-    end
-    if mob == nil then
-        --- 優先度の高い敵がいない場合は、誰でも良い
-	local condition = {
-	    range = control.enemy_range,
-	    name_match = control.enemy_filter,
-	}
-	mob = acmob.search_nearest_mob(pull.base_pos, condition)
-    end
-    if mob ~= nil and control.attack then
-        windower.ffxi.run(false)
-	io_net.target_by_mob(mob)
-	coroutine.sleep(0.2)
-	command.send('input /target <t>')
-	coroutine.sleep(0.2)
-        command.send('input /attack on')
-    elseif pull.base_pos ~= nil then
-        local dx = pull.base_pos.x - me_pos.x
-        local dy = pull.base_pos.y - me_pos.y
-        local dist = math.sqrt(dx*dx + dy*dy)
-        if dist > 4 then
-            is_far = true
-        end
-        if is_far then
-            windower.ffxi.run(dx, dy)
-            if dist < 2 then
-                windower.ffxi.run(false)
-                is_far = false
-            end
-        end
-	-- near の範囲を通り過ぎると永久に往復するのでその対処
-	local vec1 = { x=dx, y=dy }
-	local vec2 = { x=prev_dx, y=prev_dy }
-	local similarity = utils.vector.CosineSimilarity(vec1, vec2)
-	prev_dx = dx
-	prev_dy = dy
-	if similarity < -0.8 then
-	    -- 逆向きに動いたら近くになったと判断して停止かつ
-	    -- print("DEBUG: similarity=", similarity)
-	    is_far = false
-	    coroutine.sleep(0.2)
-	    windower.ffxi.run(false)
-	end
-    end
-    if control.attack then
-        command.send('input /attack on')
-	acprob.clear_prob_recast_time()
-	task.reset_by_fight()
-    end
-end 
 
 local idle_function_trade_items = function(tname, items, wait, enterWaits)
 ---    command.send('input /targetnpc')
@@ -505,7 +399,6 @@ function tick_serial()
 	    get_mob_position(pull.base_pos, "me")  -- start pos を更新
 	else -- automove 中は敵を探索して戦ったり、所定の位置に戻ったりしない
 	    if iam_leader() == true or control.puller then
-		leader_function()
 		role_Leader.tick_idle(player, me)
 	    elseif iam_leader() == false then
 		role_Follower.tick_idle(player, me)
@@ -739,7 +632,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    local prefer_condition = {
 		range = control.enemy_range,
 		prefer_mobs = utils.table.merge_lists(acmob.more_attractive_enemy_list,
-						     preferred_enemy_list),
+						     role_Leader.preferred_enemy_list),
 		name_match = control.enemy_filter,
 	    }
 	    local prefer_mob = acmob.search_nearest_mob(pull.base_pos, prefer_condition)
