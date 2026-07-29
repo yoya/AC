@@ -72,8 +72,11 @@ function M.tick(player, me, mob)
             coroutine.sleep(1)
             command.send('input /attack <t>')
         else
-            --- リーダー(p1)が戦闘している敵に切り替える
-            command.send('input /assist <p1>')
+            --- 実リーダーが戦闘している敵に切り替える (p1 スロットとは限らない)
+            local leader = ac_party.leader_mob()
+            if leader ~= nil then
+                command.send('input /assist '..leader.name)
+            end
         end
     end
  ---   if not player or not player.target_index then
