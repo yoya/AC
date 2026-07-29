@@ -280,7 +280,7 @@ function move_to(route, route_table, next_route, reverse)
     local r1_list = {}  -- 各routeの一個目をリスト化
     local r1_list_name = {}
     if route_table == nil then
-	print("route_table == nil")
+	io_chat.warn("route_table == nil (zone にルート定義が無い)")
 	return
     end
     -- io_chat.print(route)

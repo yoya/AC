@@ -356,7 +356,7 @@ end
 M.trade_by_item_id = function(mob, id)
 ---    print("trade_by_item_id", mob, id)
     if mob == nil then
-        print("trade_by_item_id: mob not found. id:"..tostring(id))
+        io_chat.warnf("trade_by_item_id: mob not found. id:%s", tostring(id))
         return false
     end
     local items = windower.ffxi.get_items()
@@ -391,7 +391,7 @@ end
 M.trade_by_item_table = function(mob, item_table)
 ---    print("trade_by_item_table", mob, item_table)
     if mob == nil then
-        print("trade_by_item_table: mob not found")
+        io_chat.warn("trade_by_item_table: mob not found")
         return false
     end
     item_table = utils.table.deepclone(item_table)  -- 非破壊的にする

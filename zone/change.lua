@@ -72,11 +72,12 @@ function M.search_and_invoke_automatic_routes(zone, prev_zone, automatic_routes,
     for f, t in pairs(automatic_routes) do
 	local fp = zone_object.essential_points[f]
 	if fp == nil then
-	    print("maybe essential_points not found: "..f)
+	    io_chat.errorf("essential_points not found: %s", f)
+	    return false
 	end
 	if fp.x == nil then
-	    print("maybe essential_points illegal format: "..f)
-	    return false;
+	    io_chat.errorf("essential_points illegal format: %s", f)
+	    return false
 	end
 	local route = t.route
 	local near_dist = nil
