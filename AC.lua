@@ -545,6 +545,246 @@ windower.register_event('addon command', function(...)
     M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 end)
 
+-- ac garden <行き先>: モグガーデンのモーグリ/流木を操作する
+local cmd_garden = function(zone, arg1)
+    if zone ~= 280 then
+	io_chat.warn("ガーデン以外にいます zone: "..zone)
+	return
+    end
+    if arg1 == 'return' or arg1 == 'ret' or arg1 == 'r' or -- 元に戻る
+	arg1 == 'west' or arg1 == 'w' or  -- 西アドゥリン
+	arg1 == 'east' or arg1 == 'e' then  -- 東アドゥリン
+	local moogle = windower.ffxi.get_mob_by_name("Green Thumb Moogle")
+	ac_move.run_to_mob(moogle)
+	coroutine.sleep(1)
+	io_net.target_by_mob(moogle)
+	coroutine.sleep(1)
+	utils.target_lockon(true)
+	coroutine.sleep(3)
+	push_keys({"enter"})
+	coroutine.sleep(1)
+	-- 別の場所に移動したい
+	push_keys({"right", "right", "up", "enter"})
+	coroutine.sleep(1)
+	if arg1 == 'return' or arg1 == 'ret' or arg1 == 'r' then
+	    push_keys({"down", "enter"})          -- 元に戻る
+	elseif arg1 == 'west' or arg1 == 'w' then
+	    push_keys({"down", "down", "enter"})  -- 西アドゥリン
+	elseif arg1 == 'east' or arg1 == 'e' then
+	    push_keys({"right", "enter"})         -- 東アドゥリン
+	end
+    elseif arg1 == 'flot' or arg1 == 'f' then
+	local flotsam = windower.ffxi.get_mob_by_name("Flotsam")
+	ac_move.run_to_mob(flotsam)
+	coroutine.sleep(1)
+	io_net.target_by_mob(flotsam)
+	coroutine.sleep(2)
+	utils.target_lockon(true)
+	coroutine.sleep(1)
+	push_keys({"enter"})
+	coroutine.sleep(1)
+	push_keys({"enter"})
+    else
+	io_chat.errorf("ac garden in|out|flot", zone)
+    end
+end
+
+-- ac patrol <人数> <mailbox|garden|gob>: ログイン画面から順に各キャラを
+-- 巡回し、宅配ボックス確認や栽培などを済ませてログアウトする
+local cmd_patrol = function(zone, arg1, arg2)
+	if zone ~= nil and zone ~= 0 then
+	    io_chat.errorf("多分、ログイン画面じゃないです zone:%d", zone)
+	    return
+	end
+	contents.set_type(contents.Idle)
+	-- ログイン
+	local n = tonumber(arg1, 10)
+	if n == nil or
+	    not utils.table.contains({"mailbox", "garden", "m", "mm", "g", "gob"}, arg2) then
+	    print("ac patrol <chara number> {all | mailbox | garden | gob} ")
+	else
+	    for i = 1, n do
+		print("Patrol #", i, "/", n)
+		push_keys({"enter"})
+		coroutine.sleep(1)
+		push_keys({"enter"})
+		coroutine.sleep(19)
+		if arg2 == "mailbox" or arg2 == "m" or arg2 == "mm" then
+		    command.send('input /mailbox')  -- 宅配ポストを開ける
+		    coroutine.sleep(4)
+		    if arg2 == "mm" then
+			for i = 1, 8 do
+			    push_keys({"enter", "enter"})
+			    coroutine.sleep(0.5)
+			    push_keys({"right"})
+			    coroutine.sleep(0.5)
+			    if i == 4 then
+				push_keys({"left", "left", "left", "down"})
+				coroutine.sleep(1)
+			    end
+			end
+		    end
+		    coroutine.sleep(1)
+		    ---
+		    push_keys({"escape"})
+		elseif arg2 == "garden" or arg2 == "g" then  -- 栽培
+		    command.send('input /garden')  -- 宅配ポストを開ける
+		    coroutine.sleep(5)
+		    push_keys({"enter"})
+		    coroutine.sleep(3)
+		    push_keys({"enter"})
+		    coroutine.sleep(2)
+		    push_keys({"enter"})
+		    coroutine.sleep(1)
+		    push_keys({"escape"})
+		    coroutine.sleep(1)
+		    push_keys({"escape"})
+		elseif arg2 == "gob" then  -- ゴブの不思議箱
+		    windower.ffxi.turn(3.14/2)  -- ドアの方を向く
+		    turn_to_front()
+		    io_net.target_by_mob_name("Door:Back to Town")
+		    coroutine.sleep(1)
+		    push_keys({"enter", "enter"})
+		    coroutine.sleep(1)
+		    -- 出るエリアを選択するに合わせる
+		    push_keys({"down", "down", "down", "enter"})
+		    -- coroutine.sleep(1)
+		    push_keys({"down", "enter"})  -- 東アドゥリンを選択
+		    coroutine.sleep(8)
+		    command.send("ac move gob")
+		    coroutine.sleep(40)
+		    print("after sleep 50")
+		else
+		    print("internal error: ac patrol <chara number> {mailbox|garden|gob} ")
+		    break
+		end
+		coroutine.sleep(2)
+		command.send('input /logout')
+		coroutine.sleep(5)
+		push_keys({"down"})
+	    end
+	    for i = 1, n do
+		push_keys({"up"})
+	    end
+	end
+end
+
+-- ac use <silt|beads|faith|moolah|dec|insne|scroll|soulstonesack>:
+-- アイテムの使用や学習をまとめて行う
+local cmd_use = function(arg1)
+	if arg1 == 'silt' then
+	    use_silt = not use_silt
+	    io_chat.info("item silt using start", use_silt)
+	elseif arg1 == 'beads' then
+	    use_beads = not use_beads
+	    io_chat.info("item beads using start", use_beads)
+	elseif arg1 == 'faith' then
+	    use_faith = not use_faith
+	    io_chat.info("item faith using start", use_faith)
+	elseif arg1 == 'moolah' then
+	    -- モグのおひねり
+	    local slot_ammo = 3
+	    local moolah_item_list = {
+		{id=18469, name="モグのおいわい"},
+		{id=19181, name="モグのおだちん"},
+		{id=19246, name="モグのへそくり"},
+		{id=19776, name="モグのおひねり"},
+		{id=21369, name="モグのたなぼた"},
+		{id=21370, name="ゴブのたなぼた"},
+	    }
+	    io_chat.notice("ac moolah # start")
+	    acitem.use_equip_item_sequence(slot_ammo, moolah_item_list, 11)
+	    io_chat.notice("ac moolah # end")
+	elseif arg1 == 'dec' then
+	    io_chat.print("【包】使用開始")
+	    coroutine.sleep(0.5)
+	    for i,id in ipairs(item_data.dec_items) do
+		local c = acitem.inventory_count_by_item_id(id)
+		for i = 1, c do
+		    acitem.use_item_include_bags(id)
+		    coroutine.sleep(3)  -- 2 だと NG
+		end
+	    end
+	    io_chat.print("【包】使用終わり")
+	elseif arg1 == 'insne' then
+	    io_chat.notice("アイテムでインス二開始")
+	    local insne_items = {
+		[4165] = "サイレントオイル",
+		[4164] = "プリズムパウダー",
+	    }
+	    for item_id, item_name in pairs(insne_items) do
+		if not acitem.inventory_has_item(item_id) then
+		    local count = acitem.bags_to_inventory(item_id)
+		    if count < 1 then
+			io_chat.error("アイテムがバッグに見つかりません:"..item_name)
+			return
+		    else
+			io_chat.info("アイテムをバックに移動:"..item_name)
+		    end
+		    coroutine.sleep(1)
+		end
+	    end
+	    for _, item_name in pairs(insne_items) do
+		windower.ffxi.run(false)
+		local c = 'input /item '..item_name..' <me>'
+		command.send(c)
+		coroutine.sleep(3)
+	    end
+	elseif arg1 == 'scroll' then
+	    io_chat.print("スクロール学習開始")
+	    coroutine.sleep(0.5)
+	    for i,id in ipairs(item_data.magic_scrolls) do
+		acitem.use_item_include_bags(id)
+	    end
+	    io_chat.print("スクロール学習終わり")
+	elseif arg1 == 'soulstonesack' then
+	    io_chat.notice("石の袋開き開始")
+	    control.auto = true
+	    while control.auto and
+		acitem.inventory_has_item_in_set(item_data.soul_stone_sack_id_set) do
+		for i,id in ipairs(item_data.soul_stone_sacks) do
+		    if not acitem.check_bags_freespace() then
+			io_chat.info("アイテム満杯")
+			break
+		    end
+		    acitem.use_item_include_bags(id)
+		end
+	    end
+	    io_chat.notice("石の袋開き終わり")
+	else
+	    io_chat.error("ac use { silt | beads | moolah | dec | scroll | soulstonesack}")
+	end
+end
+
+-- ac timer <秒>: 残り時間をカウントダウン表示する
+local cmd_timer = function(arg1)
+    local start = os.time()
+    local period = tonumber(arg1, 10)
+    if period == nil then
+	io_chat.error("ac timer <period>", arg1)
+	return
+    end
+    io_chat.info("<<< timer start >>>", period)
+    while (os.time() - start) <= period do
+	local remain = period - (os.time() - start)
+	local th = 0
+	if remain < 5 then -- 毎秒
+	    th = remain
+	elseif remain < 30 then -- 5秒毎
+	    th = remain - remain % 5
+	elseif remain < 60 then -- 10秒毎
+	    th = remain - remain % 10
+	else -- 30秒分ごと
+	    th = remain - remain % 30
+	end
+	if th == remain then
+	    io_chat.printf("=== Timer 残り %d/%d ===", remain, period)
+	end
+	coroutine.sleep(1)
+    end
+    io_chat.info(">>> Time End <<<", period)
+end
+
 function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
     local player = windower.ffxi.get_player()
     local me = windower.ffxi.get_mob_by_target("me")
@@ -745,46 +985,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    io_ipc.send_all("focus", arg1)
 	end
     elseif subcommand == 'garden' or subcommand == 'g' then
-	if zone ~= 280 then
-	    io_chat.warn("ガーデン以外にいます zone: "..zone)
-	    return
-	end
-	if arg1 == 'return' or arg1 == 'ret' or arg1 == 'r' or -- 元に戻る
-	    arg1 == 'west' or arg1 == 'w' or  -- 西アドゥリン
-	    arg1 == 'east' or arg1 == 'e' then  -- 東アドゥリン
-	    local moogle = windower.ffxi.get_mob_by_name("Green Thumb Moogle")
-	    ac_move.run_to_mob(moogle)
-	    coroutine.sleep(1)
-	    io_net.target_by_mob(moogle)
-	    coroutine.sleep(1)
-	    utils.target_lockon(true)
-	    coroutine.sleep(3)
-	    push_keys({"enter"})
-	    coroutine.sleep(1)
-	    -- 別の場所に移動したい
-	    push_keys({"right", "right", "up", "enter"})
-	    coroutine.sleep(1)
-	    if arg1 == 'return' or arg1 == 'ret' or arg1 == 'r' then
-		push_keys({"down", "enter"})          -- 元に戻る
-	    elseif arg1 == 'west' or arg1 == 'w' then
-		push_keys({"down", "down", "enter"})  -- 西アドゥリン
-	    elseif arg1 == 'east' or arg1 == 'e' then
-		push_keys({"right", "enter"})         -- 東アドゥリン
-	    end
-	elseif arg1 == 'flot' or arg1 == 'f' then
-	    local flotsam = windower.ffxi.get_mob_by_name("Flotsam")
-	    ac_move.run_to_mob(flotsam)
-	    coroutine.sleep(1)
-	    io_net.target_by_mob(flotsam)
-	    coroutine.sleep(2)
-	    utils.target_lockon(true)
-	    coroutine.sleep(1)
-	    push_keys({"enter"})
-	    coroutine.sleep(1)
-	    push_keys({"enter"})
-	else
-	    io_chat.errorf("ac garden in|out|flot", zone)
-	end
+	cmd_garden(zone, arg1)
     elseif subcommand == 'house' or subcommand == 'h' then
 	if not aczone.in_moghouse(zone, me) then
 	    io_chat.warn("モグハウス以外にいます zone: "..zone)
@@ -858,81 +1059,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    M.addon_command_handler(arg1, arg2, arg3, arg4)
 	end
     elseif subcommand == 'patrol' or subcommand == 'pat' then
-	if zone ~= nil and zone ~= 0 then
-	    io_chat.errorf("多分、ログイン画面じゃないです zone:%d", zone)
-	    return
-	end
-	contents.set_type(contents.Idle)
-	-- ログイン
-	local n = tonumber(arg1, 10)
-	if n == nil or
-	    not utils.table.contains({"mailbox", "garden", "m", "mm", "g", "gob"}, arg2) then
-	    print("ac patrol <chara number> {all | mailbox | garden | gob} ")
-	else
-	    for i = 1, n do
-		print("Patrol #", i, "/", n)
-		push_keys({"enter"})
-		coroutine.sleep(1)
-		push_keys({"enter"})
-		coroutine.sleep(19)
-		if arg2 == "mailbox" or arg2 == "m" or arg2 == "mm" then
-		    command.send('input /mailbox')  -- 宅配ポストを開ける
-		    coroutine.sleep(4)
-		    if arg2 == "mm" then
-			for i = 1, 8 do
-			    push_keys({"enter", "enter"})
-			    coroutine.sleep(0.5)
-			    push_keys({"right"})
-			    coroutine.sleep(0.5)
-			    if i == 4 then
-				push_keys({"left", "left", "left", "down"})
-				coroutine.sleep(1)
-			    end
-			end
-		    end
-		    coroutine.sleep(1)
-		    ---
-		    push_keys({"escape"})
-		elseif arg2 == "garden" or arg2 == "g" then  -- 栽培
-		    command.send('input /garden')  -- 宅配ポストを開ける
-		    coroutine.sleep(5)
-		    push_keys({"enter"})
-		    coroutine.sleep(3)
-		    push_keys({"enter"})
-		    coroutine.sleep(2)
-		    push_keys({"enter"})
-		    coroutine.sleep(1)
-		    push_keys({"escape"})
-		    coroutine.sleep(1)
-		    push_keys({"escape"})
-		elseif arg2 == "gob" then  -- ゴブの不思議箱
-		    windower.ffxi.turn(3.14/2)  -- ドアの方を向く
-		    turn_to_front()
-		    io_net.target_by_mob_name("Door:Back to Town")
-		    coroutine.sleep(1)
-		    push_keys({"enter", "enter"})
-		    coroutine.sleep(1)
-		    -- 出るエリアを選択するに合わせる
-		    push_keys({"down", "down", "down", "enter"})
-		    -- coroutine.sleep(1)
-		    push_keys({"down", "enter"})  -- 東アドゥリンを選択
-		    coroutine.sleep(8)
-		    command.send("ac move gob")
-		    coroutine.sleep(40)
-		    print("after sleep 50")
-		else
-		    print("internal error: ac patrol <chara number> {mailbox|garden|gob} ")
-		    break
-		end
-		coroutine.sleep(2)
-		command.send('input /logout')
-		coroutine.sleep(5)
-		push_keys({"down"})
-	    end
-	    for i = 1, n do
-		push_keys({"up"})
-	    end
-	end
+	cmd_patrol(zone, arg1, arg2)
     elseif subcommand == 'point' then
         control.point_cheer = not control.point_cheer
         io_chat.print({"do point&cheer for ambus", control.point_cheer})
@@ -1016,34 +1143,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    print("ac tick <period> illegal:", arg1)
 	end
     elseif subcommand == 'timer' then
-	local start = os.time()
-	local period = tonumber(arg1, 10)
-	if period == nil then
-	    io_chat.error("ac timer <period>", arg1)
-	else
-	    io_chat.info("<<< timer start >>>", period)
-	    local prev = period + 1
-	    while (os.time() - start) <=  period do
-		local elapse = os.time() - start -- 経過時間
-		local remain = period - elapse
-		local th = 0
-		if remain < 5 then -- 毎秒
-		    th = remain
-		elseif remain < 30 then -- 5秒毎
-		    th = remain - remain % 5
-		elseif remain < 60 then -- 10秒毎
-		    th = remain - remain % 10
-		else -- 30秒分ごと
-		    th = remain - remain % 30
-		end
-		-- print("th remain", th, remain)
-		if th == remain then
-		    io_chat.printf("=== Timer 残り %d/%d ===", remain, period)
-		end
-		coroutine.sleep(1)
-	    end
-	    io_chat.info(">>> Time End <<<", period)
-	end
+	cmd_timer(arg1)
     elseif subcommand == 'toward' or subcommand == 'to' then
 	local name_abbreviation_map = { -- 省略形
 	    geo = "Geomantic Reservoir",
@@ -1079,88 +1179,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    io_chat.errorf("give up found mob name:%s", mob_name)
 	end
     elseif subcommand == 'use' then
-	if arg1 == 'silt' then
-	    use_silt = not use_silt
-	    io_chat.info("item silt using start", use_silt)
-	elseif arg1 == 'beads' then
-	    use_beads = not use_beads
-	    io_chat.info("item beads using start", use_beads)
-	elseif arg1 == 'faith' then
-	    use_faith = not use_faith
-	    io_chat.info("item faith using start", use_faith)
-	elseif arg1 == 'moolah' then
-	    -- モグのおひねり
-	    local slot_ammo = 3
-	    local moolah_item_list = {
-		{id=18469, name="モグのおいわい"},
-		{id=19181, name="モグのおだちん"},
-		{id=19246, name="モグのへそくり"},
-		{id=19776, name="モグのおひねり"},
-		{id=21369, name="モグのたなぼた"},
-		{id=21370, name="ゴブのたなぼた"},
-	    }
-	    io_chat.notice("ac moolah # start")
-	    acitem.use_equip_item_sequence(slot_ammo, moolah_item_list, 11)
-	    io_chat.notice("ac moolah # end")
-	elseif arg1 == 'dec' then
-	    io_chat.print("【包】使用開始")
-	    coroutine.sleep(0.5)
-	    for i,id in ipairs(item_data.dec_items) do
-		local c = acitem.inventory_count_by_item_id(id)
-		for i = 1, c do
-		    acitem.use_item_include_bags(id)
-		    coroutine.sleep(3)  -- 2 だと NG
-		end
-	    end
-	    io_chat.print("【包】使用終わり")
-	elseif arg1 == 'insne' then
-	    io_chat.notice("アイテムでインス二開始")
-	    local insne_items = {
-		[4165] = "サイレントオイル",
-		[4164] = "プリズムパウダー",
-	    }
-	    for item_id, item_name in pairs(insne_items) do
-		if not acitem.inventory_has_item(item_id) then
-		    local count = acitem.bags_to_inventory(item_id)
-		    if count < 1 then
-			io_chat.error("アイテムがバッグに見つかりません:"..item_name)
-			return
-		    else
-			io_chat.info("アイテムをバックに移動:"..item_name)
-		    end
-		    coroutine.sleep(1)
-		end
-	    end
-	    for _, item_name in pairs(insne_items) do
-		windower.ffxi.run(false)
-		local c = 'input /item '..item_name..' <me>'
-		command.send(c)
-		coroutine.sleep(3)
-	    end
-	elseif arg1 == 'scroll' then
-	    io_chat.print("スクロール学習開始")
-	    coroutine.sleep(0.5)
-	    for i,id in ipairs(item_data.magic_scrolls) do
-		acitem.use_item_include_bags(id)
-	    end
-	    io_chat.print("スクロール学習終わり")
-	elseif arg1 == 'soulstonesack' then
-	    io_chat.notice("石の袋開き開始")
-	    control.auto = true
-	    while control.auto and
-		acitem.inventory_has_item_in_set(item_data.soul_stone_sack_id_set) do
-		for i,id in ipairs(item_data.soul_stone_sacks) do
-		    if not acitem.check_bags_freespace() then
-			io_chat.info("アイテム満杯")
-			break
-		    end
-		    acitem.use_item_include_bags(id)
-		end
-	    end
-	    io_chat.notice("石の袋開き終わり")
-	else
-	    io_chat.error("ac use { silt | beads | moolah | dec | scroll | soulstonesack}")
-	end
+	cmd_use(arg1)
     elseif subcommand == 'warp' or
 	subcommand == 'dim' or subcommand == 'holla' or subcommand == 'mea' then
 	M.warp_with_equip(subcommand, 10)
