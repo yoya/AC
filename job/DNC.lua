@@ -19,10 +19,6 @@ M.main_job_prob_table = {
 
 M.sub_job_prob_table = { }
 
-local function is_defensive()
-    return M.parent.need_safety()
-end
-
 function M.main_tick(player)
     if role_Melee.main_tick ~= nil then
 	role_Melee.main_tick(player)
@@ -33,7 +29,7 @@ function M.main_tick(player)
     -- command, delay, duration, period, eachfight
     local t_a = actask.new_task(c_a, 2, 2, 60*3+1, false)
     local t_d = actask.new_task(c_d, 2, 2, 60*3+1, false)
-    if not is_defensive() then
+    if not M.parent.need_safety() then
 	actask.set_task(level, t_a)
 	actask.remove_task(level, t_d)
     else

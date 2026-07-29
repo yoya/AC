@@ -17,10 +17,6 @@ M.main_job_prob_table = {
     { 10,5*60/2, 'input /ja コリメイトファーバー <me>', 6 },
 }
 
-local function is_defensive()
-    return M.parent.need_safety()
-end
-
 function inde_setup(job_rank)
     local GEO_inde = "インデヘイスト"
     local GEO_entrust = "インデデック"
@@ -28,7 +24,7 @@ function inde_setup(job_rank)
 	GEO_inde = "インデフューリー"
 	GEO_entrust = "インデスト"
     end
-    if is_defensive() then
+    if M.parent.need_safety() then
 	GEO_inde = "インデバリア"  -- 防御up
 	if job_rank == 2 then
 	    GEO_inde = "インデアトゥーン"  -- 魔回避up
@@ -66,7 +62,7 @@ function geo_setup(job_rank)
     if job_rank == 2 then
 	GEO_geo = "ジオトーパー" -- 敵の回避率down
     end
-    if is_defensive() then
+    if M.parent.need_safety() then
 	GEO_geo = "ジオウィルト"  -- 敵の攻撃力down
 	if job_rank == 2 then
 	    GEO_geo = "ジオフェイド" -- 敵の魔法攻撃力down

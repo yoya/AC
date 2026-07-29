@@ -39,15 +39,11 @@ function song(song_name, onoff, period, delay, target)
     end
 end
 
-local function is_defensive()
-    return M.parent.need_safety()
-end
-
 function song_tick(player)
     local zone = windower.ffxi.get_info().zone
     local onoff = player.status > 0
     local me = windower.ffxi.get_mob_by_target("me")
-    if is_defensive() then
+    if M.parent.need_safety() then
 	song("重装騎兵のミンネV", onoff, 15*60 / 3, 2, "me")
 	song("闘龍士のマンボ", onoff, 15*60 / 2, 12, "me")
 	-- song("活力のエチュード", onoff, 15*60 / 3, 12*2, "me")

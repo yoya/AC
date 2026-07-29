@@ -41,10 +41,6 @@ M.sub_job_prob_table = {
     -- { 100, 300, 'input /ja ファイターズロール  <me>', 3 },
 }
 
-local function is_defensive()
-    return M.parent.need_safety()
-end
-
 function phantom_roll(roll_name, on, delay)
     local c = "input /ja "..roll_name.." <me>"
     local level = task.PRIORITY_MIDDLE
@@ -68,7 +64,7 @@ function roll_tick(player)
     local zone = windower.ffxi.get_info().zone
     local me = windower.ffxi.get_mob_by_target("me")
     local mob = windower.ffxi.get_mob_by_target("t")
-    if is_defensive() then
+    if M.parent.need_safety() then
 	phantom_roll("ダンサーロール", true, 0)  -- リジェネ
 	phantom_roll("ガランツロール", true, 61)  -- 防御
 	phantom_roll("ニンジャロール", true, 61*3)  -- 回避
