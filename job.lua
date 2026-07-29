@@ -7,6 +7,7 @@ local aczone = require 'zone'
 local contents = require 'contents'
 local acitem = require 'item'
 local ac_equip = require 'ac/equip'
+local pstatus = require 'player_status'
 
 M.job_table = {
     -- スタンダードジョブ
@@ -107,7 +108,7 @@ function M.tick(player)
     if sub_tick ~= nil then
 	sub_tick(player)
     end
-    if player.status == 1 then
+    if player.status == pstatus.ENGAGED then
 	local food = food_table[player.main_job]
 	local food_list = {food}
 	if type(food) == "table" then

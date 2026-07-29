@@ -9,6 +9,7 @@ local role_Melee = require 'role/Melee'
 local aczone = require('zone')
 local io_chat = require('io/chat')
 local acmob = require 'mob'
+local pstatus = require 'player_status'
 
 local piani_prefix = "input /ja ピアニッシモ <me>; wait 2; "
 
@@ -75,7 +76,7 @@ function song_tick(player)
 	range = control.enemy_range,
     }
     local lullaby = false
-    if contents.match_contents_name("sortie") and player.status == 1 then
+    if contents.match_contents_name("sortie") and player.status == pstatus.ENGAGED then
 --    local linkedMobs = acmob.search_mobs(me, condition)
 	--  io_chat.print(linkedMobs)
 	lullaby = true

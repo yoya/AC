@@ -2,6 +2,7 @@
 
 local command = require 'command'
 local io_chat = require 'io/chat'
+local pstatus = require 'player_status'
 
 local M = {}
 
@@ -30,7 +31,7 @@ function get_lower_hp_target(hpp_needed)
 end
 
 M.cure_if_party_h_pis_low = function(player, hp_need_cure)
-    if player.status ~= 1 then
+    if player.status ~= pstatus.ENGAGED then
 	return  -- 戦闘してなければ、何もしない
     end
     local main_job = player.main_job

@@ -5,6 +5,7 @@ local M = {}
 local role_Melee = require 'role/Melee'
 local command = require 'command'
 local task = require 'task'
+local pstatus = require 'player_status'
 
 M.main_job_prob_table = {
     { 100, 120, 'input /ja 集中 <me>', 0 },
@@ -26,7 +27,7 @@ M.sub_job_prob_table = {
 local inner_strength_command =  "input /ja インナーストレングス <me>"
 local chakra_command = "input /ja チャクラ <me>"
 function M.main_tick(player)
-    if player.status == 1 then
+    if player.status == pstatus.ENGAGED then
 	if player.vitals.hp < 300 then  -- 緊急回復
 	    local params = { level = task.PRIORITY_TOP, period = 1*60*60 }
 	    task.set_task_ex(inner_strength_command, params)
@@ -44,7 +45,7 @@ function M.main_tick(player)
 end
 
 function M.sub_tick(player)
-    if player.status == 1 then
+    if player.status == pstatus.ENGAGED then
 	if 200 < (player.vitals.max_hp - player.vitals.hp) then
 	    local params = { level = task.PRIORITY_TOP, period = 3*60 }
 	    task.set_task_ex(chakra_command, params)

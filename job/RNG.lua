@@ -3,6 +3,7 @@
 local M = {}
 
 local task = require 'task'
+local pstatus = require 'player_status'
 
 M.main_job_prob_table = {
     { 200, 300, 'input /ja 狙い撃ち <me>', 0 },
@@ -34,7 +35,7 @@ function invoke_shoot(onoff)
 end
 
 function M.main_tick(player)
-    if player.status == 1 then -- 戦闘中
+    if player.status == pstatus.ENGAGED then -- 戦闘中
 	local items = windower.ffxi.get_items()
 	local equipment = items.equipment
 	if equipment.range > 0 and equipment.ammo > 0 then

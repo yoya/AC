@@ -9,6 +9,7 @@ local control = require 'control'
 local acitem = require 'item'
 local acitem_data = require 'item/data'
 local io_chat = require 'io/chat'
+local pstatus = require 'player_status'
 
 -- 装束を装着する部位 (slot)
 local equip_slots = {
@@ -197,7 +198,7 @@ end
     
 function M.tick(player)
     if player == nil then return end
-    if player.status == 1 then
+    if player.status == pstatus.ENGAGED then
 	-- 118 は 妖蟲の髪飾り+1 用に許容する
 	if player.item_level >= 118 then
 	    M.equip_save()

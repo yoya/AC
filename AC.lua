@@ -126,6 +126,7 @@ local role_Leader = require('role/Leader')
 local role_Follower = require('role/Follower')
 local ac_defeated = require 'ac/defeated'
 local ac_equip = require 'ac/equip'
+local pstatus = require 'player_status'
 
 local JunkItemIdSet = acitem.junk.JunkItemIdSet  -- 売却+廃棄 (かばんに集める用)
 local SellItemIdSet = acitem.junk.SellItemIdSet
@@ -496,7 +497,7 @@ function tick_serial()
     end
     -- 待機、マウント(85)
     -- https://github.com/Windower/Resources/blob/master/resources_data/statuses.lua
-    if player.status == 0 or player.status == 85 then
+    if player.status == pstatus.IDLE or player.status == pstatus.MOUNTED then
 	--- 待機中
 	idle_function()
 	if ac_move.auto then  -- automove 中
@@ -510,11 +511,11 @@ function tick_serial()
 		role_Follower.tick_idle(player, me)
 	    end
 	end
-    elseif player.status == 1 then  -- 戦闘中
+    elseif player.status == pstatus.ENGAGED then  -- 戦闘中
 	battle.tick(player, me)
-    elseif player.status == 3 then  -- 死亡
-    elseif player.status == 4 then  -- イベント中
-    elseif player.status == 33 then  -- 休憩中
+    elseif player.status == pstatus.DEAD then  -- 死亡
+    elseif player.status == pstatus.EVENT then  -- イベント中
+    elseif player.status == pstatus.RESTING then  -- 休憩中
     else
 	print("player.status: "..player.status)
     end

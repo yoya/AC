@@ -2,6 +2,7 @@
 
 local utils = require('utils')
 local io_chat = require('io/chat')
+local pstatus = require 'player_status'
 
 local M = {}
 
@@ -62,10 +63,10 @@ local non_attackable_mobs = {
 
 function is_mob_touchable(mob)  -- 宝箱とか
     if mob.valid_target and mob.is_npc and
-	(mob.status == 0 or mob.status == 1) and
+	(mob.status == pstatus.IDLE or mob.status == pstatus.ENGAGED) and
 	not utils.table.contains(non_attackable_mobs, mob.name) then
 	-- 敵が平常、または味方にヘイトを向けている
-	if mob.status == 0 or mob.claim_id == 0 or
+	if mob.status == pstatus.IDLE or mob.claim_id == 0 or
 	    is_mob_linked(mob) or
 	    utils.table.contains(always_attackable_mobs, mob.name) then
 	    return true
@@ -75,10 +76,10 @@ end
 --- 多分、戦える敵 (レイド戦は上記の敵のみ対応)
 function is_mob_attackable(mob)
     if mob.valid_target and mob.is_npc and mob.spawn_type == 16 and
-	(mob.status == 0 or mob.status == 1) and
+	(mob.status == pstatus.IDLE or mob.status == pstatus.ENGAGED) and
 	not utils.table.contains(non_attackable_mobs, mob.name) then
 	-- 敵が平常、または味方にヘイトを向けている
-	if mob.status == 0 or mob.claim_id == 0 or
+	if mob.status == pstatus.IDLE or mob.claim_id == 0 or
 	    is_mob_linked(mob) or
 	    utils.table.contains(always_attackable_mobs, mob.name) then
 	    return true
@@ -189,7 +190,7 @@ M.PartyTargetMob = function()
     local party = windower.ffxi.get_party()
     for i = 1, 5 do -- 自分以外
         local member = party["p"..i]
-        if member.mob ~= nil and member.mob.status == 1 then
+        if member.mob ~= nil and member.mob.status == pstatus.ENGAGED then
             local index = member.mob.target_index
             if index > 0 then
                 local mob = windower.ffxi.get_mob_by_index(index)

@@ -3,9 +3,10 @@
 local M = {}
 
 local task = require 'task'
+local pstatus = require 'player_status'
 
 function M.main_tick(player)
-    if player.status == 1 then
+    if player.status == pstatus.ENGAGED then
 	local c = "input /item カルボナーラ <me>"
 	local level = task.PRIORITY_LOW
 	-- command, delay, duration, period, eachfight

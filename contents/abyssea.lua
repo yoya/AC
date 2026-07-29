@@ -1,6 +1,7 @@
 local M = {}
 
 local io_chat = require 'io/chat'
+local pstatus = require 'player_status'
 
 function M.sisyphus_check(player)
     local me = windower.ffxi.get_mob_by_target("me")
@@ -14,7 +15,7 @@ function M.sisyphus_check(player)
 	local mob_arr = windower.ffxi.get_mob_array()
 	for i, m in pairs(mob_arr) do
 	    if m.name == "Sisyphus" then
-		if m.status == 0 then
+		if m.status == pstatus.IDLE then
 		    io_chat.info("Sisyphus ポップ中")
 		    local dx = m.x - me.x
 		    local dy = m.y - me.y
@@ -23,7 +24,7 @@ function M.sisyphus_check(player)
 		    else
 			windower.ffxi.run(false)
 		    end
-		elseif m.status == 1 then
+		elseif m.status == pstatus.ENGAGED then
 		    io_chat.info("Sisyphus 戦闘中")
 		end
 	    end

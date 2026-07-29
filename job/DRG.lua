@@ -4,6 +4,7 @@ local M = {}
 
 local actask = require 'task'
 local ac_equip = require 'ac/equip'
+local pstatus = require 'player_status'
 
 M.main_job_prob_table = {
     { 10, 60*20, 'input /ja コールワイバーン <me>', 2 },
@@ -24,7 +25,7 @@ M.sub_job_prob_table = {
 
 function M.main_tick(player)
     local c_angon = 'input /ja アンゴン <t>'
-    if player.status == 1 then
+    if player.status == pstatus.ENGAGED then
 	-- アンゴンを装備している時に使用する
 	local item_id = ac_equip.equip_item_by_slot_name("ammo")
 	if item_id == 18259 then  -- アンゴン

@@ -3,6 +3,7 @@
 local M = { id = 127 }
 
 local io_net = require 'io/net'
+local pstatus = require 'player_status'
 
 M.routes = {
     -- CL135 ワープ
@@ -33,7 +34,7 @@ function M.tick(player)
     -- ウォンテッド???の近くにいる時、??? が現れたらターゲットする
     if M.parent.is_near(127, "wanted", 20) then
 	for i, m in pairs(mob_arr) do
-	    if m.name == "???" and m.status == 0 then
+	    if m.name == "???" and m.status == pstatus.IDLE then
 		io_net.target_by_mob_id(m.id)
 	    end
 	end

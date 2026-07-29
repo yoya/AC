@@ -12,6 +12,7 @@ local role_Melee = require 'role/Melee'
 local incoming_text = require 'incoming/text'
 local aczone = require 'zone'
 local contents = require 'contents'
+local pstatus = require 'player_status'
 
 local split_multi = utils.string.split_multi
 local phantom_roll_table = ac_data.phantom_roll_table
@@ -110,7 +111,7 @@ function M.main_tick(player)
 	role_Melee.main_tick(player)
     end
     local cors_roll = false
-    if player.status == 1 then -- 戦闘中
+    if player.status == pstatus.ENGAGED then -- 戦闘中
 	roll_tick(player)
     end
     -- ロールrecastを考慮してないので、駄目元のコルセアズロール。

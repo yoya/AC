@@ -5,6 +5,7 @@ local M = {}
 local role_Melee = require 'role/Melee'
 local command = require 'command'
 local task = require 'task'
+local pstatus = require 'player_status'
 
 local sneak_attack_ws = 'エヴィサレーション'
 
@@ -30,7 +31,7 @@ M.sub_job_prob_table = {
 }
 
 function M.main_tick(player)
-    if player.status == 1 then
+    if player.status == pstatus.ENGAGED then
 	if 1 < player.vitals.hp and player.vitals.hp < 300 then
 	    local c = "input /ja 絶対回避 <me>"
 	    task.set_task_simple(c, 0, 2)

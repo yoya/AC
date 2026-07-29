@@ -5,6 +5,7 @@ local M = {}
 local command = require 'command'
 local io_chat = require 'io/chat'
 local role_Healer = require 'role/Healer'
+local pstatus = require 'player_status'
 
 M.main_job_prob_table = {
     { 200, 45, 'input /ma フラッシュ <t>', 1 },
@@ -27,7 +28,7 @@ M.sub_job_prob_table = {
 }
 
 function M.main_tick(player)
-    if player.status == 1 then -- 戦闘中
+    if player.status == pstatus.ENGAGED then -- 戦闘中
 	local hp = player.vitals.hp
 	if hp < 300 then
 	    io_chat.set_next_color(3)

@@ -3,6 +3,7 @@
 local task = require 'task'
 local role_Healer = require 'role/Healer'
 local role_Sorcerer = require 'role/Sorcerer'
+local pstatus = require 'player_status'
 
 local M = {}
 
@@ -34,7 +35,7 @@ function M.main_tick(player)
     if role_Sorcerer.main_tick ~= nil then
 	role_Sorcerer.main_tick(player)
     end
-    if player.status == 1 then -- 戦闘中
+    if player.status == pstatus.ENGAGED then -- 戦闘中
 	if player.vitals.mp >= 1000 then  -- MP に余裕があれば
 	    role_Sorcerer.invoke_magic(2, true, task.PRIORITY_LOW)
 	    role_Sorcerer.invoke_magic(3, true, task.PRIORITY_LOW)

@@ -7,6 +7,7 @@ local io_chat = require'io/chat'
 local command = require 'command'
 local acinspect = require 'inspect'
 local task = require 'task'
+local pstatus = require 'player_status'
 
 M.magic = "ファイア"
 local MB_magic = "ファイア"
@@ -115,7 +116,7 @@ M.invoke_magic = invoke_magic
 function M.magic_burst(player, magick_rank)
     -- 戦闘終了側 (else 節) でも使うので関数スコープで宣言する
     local level = task.PRIORITY_HIGH
-    if player.status == 1 then -- 戦闘中
+    if player.status == pstatus.ENGAGED then -- 戦闘中
 	local sc_time = acinspect.sc_time
 	local sc_attr = acinspect.sc_attr
 	local now = os.time()

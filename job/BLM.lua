@@ -6,6 +6,7 @@ local utils = require 'utils'
 local task = require 'task'
 local role_Sorcerer = require 'role/Sorcerer'
 local ac_party = require 'ac/party'
+local pstatus = require 'player_status'
 
 M.main_job_prob_table = {
     -- スキル上げ
@@ -63,7 +64,7 @@ function M.main_tick(player)
     if role_Sorcerer.main_tick ~= nil then
 	role_Sorcerer.main_tick(player)
     end
-    if player.status == 1 then -- 戦闘中
+    if player.status == pstatus.ENGAGED then -- 戦闘中
 	M.invoke_magick_debuff(player, 'バーン', true, 25)
 	M.invoke_magick_debuff(player, 'チョーク', true, 25)
 	if player.vitals.mp >= 1200 then
@@ -94,7 +95,7 @@ function M.sub_tick(player)
 	ac_party.count_member() == 1 then -- ソロの時も無し
 	return  -- 本職に任せる
     end
-    if player.status == 1 then -- 戦闘中
+    if player.status == pstatus.ENGAGED then -- 戦闘中
 	M.invoke_magick_debuff(player, 'バーン', true, 25)
 	M.invoke_magick_debuff(player, 'チョーク', true, 25)
     else

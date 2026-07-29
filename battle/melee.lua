@@ -28,6 +28,7 @@ local iam_leader = ac_party.iam_leader
 
 local pull = require 'pull'
 local ws = require 'ws'
+local pstatus = require 'player_status'
 
 M.so_long_to_get_fight_count = 0
 --- 戦闘中。リーダー、メンバー共通。
@@ -36,7 +37,7 @@ function M.tick(player, me, mob)
     local mob = windower.ffxi.get_mob_by_target("t")
     -- 戦闘モードだけどタゲが外れる(稀に発生)
     -- もしくは殴れる距離なのに敵が赤字に変わらない
-    if mob == nil or (mob.distance < (mob.model_scale * 1.5) and mob.status == 0) then
+    if mob == nil or (mob.distance < (mob.model_scale * 1.5) and mob.status == pstatus.IDLE) then
 	if control.debug then
 	    io_chat.printf("M.so_long_to_get_fight_count:%d/7",
 			   M.so_long_to_get_fight_count)
@@ -114,7 +115,7 @@ function M.tick(player, me, mob)
     end
     if is_far then
         --　戦闘中でないときは、WSやMAを自粛。フェイスが動かないので。
-        if dist / mob.model_size > enemy_space or player.status == 0 then
+        if dist / mob.model_size > enemy_space or player.status == pstatus.IDLE then
             windower.ffxi.run(dx, dy)
             -- 向きが悪くて戦闘が開始しない問題への対策
             -- command.send('setkey numpad5 down; wait 0.05; setkey numpad5 up')

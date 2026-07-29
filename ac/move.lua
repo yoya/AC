@@ -23,6 +23,7 @@ local get_mob_position = acmob.get_mob_position
 local acitem = require 'item'
 
 local ac_party = require 'ac/party'
+local pstatus = require 'player_status'
 
 local turn_to_front = function(target)
     local push_numpad5 = 'setkey numpad5 down; wait 0.1; setkey numpad5 up'
@@ -354,7 +355,7 @@ function move_to(route, route_table, next_route, reverse)
 		local d = p.d or 0
 		while M.auto do  -- TODO: auto を見る
 		    local player = windower.ffxi.get_player()
-		    if player.status == 4 then
+		    if player.status == pstatus.EVENT then
 			coroutine.sleep(1)  -- イベント中は一休み
 		    else
 			break  -- 移動の続きに戻る

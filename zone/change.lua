@@ -10,6 +10,7 @@ local task = require 'task'
 local control = require 'control'
 local contents = require 'contents'
 local incoming_text = require 'incoming/text'
+local pstatus = require 'player_status'
 
 local M = {}
 
@@ -132,11 +133,11 @@ function M.automatic_routes_handler(zone, prev_zone, automatic_routes)
 	return
     end
     local player = windower.ffxi.get_player()
-    if player == nil or player.status == 3 then
+    if player == nil or player.status == pstatus.DEAD then
 	print("player and player.status", player and player.status)
 	coroutine.sleep(3)
 	player = windower.ffxi.get_player()
-	if player == nil or player.status == 3 then
+	if player == nil or player.status == pstatus.DEAD then
 	    io_chat.print("移動しない status: ", player and player.status)
 	    return
 	end

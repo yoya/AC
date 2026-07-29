@@ -7,6 +7,7 @@ local role_Melee = require 'role/Melee'
 local task = require 'task'
 local ac_party = require 'ac/party'
 local io_chat = require('io/chat')
+local pstatus = require 'player_status'
 
 M.main_job_prob_table = {
     { 100, 300/2, 'input /ja ウォークライ <me>', 0 },
@@ -33,7 +34,7 @@ function provoke(player) -- 挑発
     local c = "input /ja 挑発 <t>"
     -- command, delay, duration, period, eachfight
     local t = task.new_task(c, 0, 1, 30, false)
-    if player.status == 1 then
+    if player.status == pstatus.ENGAGED then
 	task.set_task(level, t)
     else
 	task.remove_task(level, t)
@@ -47,7 +48,7 @@ function attacker(player)  -- アタッカー
     -- command, delay, duration, period, eachfight
     local t1 = task.new_task(c1, 0, 1, 30, false)
     local t2 = task.new_task(c2, 0, 1, 30, false)
-    if player.status == 1 then
+    if player.status == pstatus.ENGAGED then
 	task.set_task(level, t1)
 	task.set_task(level, t2)
     else
@@ -61,7 +62,7 @@ function defender(player) -- ディフェンダー
     local c = "input /ja ディフェンダー <me>"
     -- command, delay, duration, period, eachfight
     local t = task.new_task(c, 0, 1, 30, false)
-    if player.status == 1 then
+    if player.status == pstatus.ENGAGED then
 	task.set_task(level, t)
     else
 	task.remove_task(level, t)
@@ -69,7 +70,7 @@ function defender(player) -- ディフェンダー
 end
 
 function M.main_tick(player)
-    if player.status ~= 1 then
+    if player.status ~= pstatus.ENGAGED then
 	return  -- 戦闘中でなければ、何もしない
     end
     if role_Melee.main_tick ~= nil then
@@ -81,7 +82,7 @@ function M.main_tick(player)
 end
 
 function M.sub_tick(player)
-    if player.status ~= 1 then
+    if player.status ~= pstatus.ENGAGED then
 	return  -- 戦闘中でなければ、何もしない
     end
     if 119 <= player.item_level then

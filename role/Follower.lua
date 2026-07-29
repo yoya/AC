@@ -12,6 +12,7 @@ local ac_move = require 'ac/move'
 local ac_pos = require 'ac/pos'
 local io_net = require 'io/net'
 local acprob = require 'prob'
+local pstatus = require 'player_status'
 
 local crystal_ids = item_data.crystal_ids -- クリスタル/塊
 local get_mob_position = acmob.get_mob_position
@@ -66,10 +67,10 @@ function M.tick_idle(player, me)
 	return  -- リーダーがいない
     end
     -- リーダーがマウントしてたら、自分もマウント
-    if p1.status == 85 and player.status ~= 85 then
+    if p1.status == pstatus.MOUNTED and player.status ~= pstatus.MOUNTED then
 	command.send('input /mount ラプトル')
     end
-    if p1.status ~= 85 and player.status == 85 then
+    if p1.status ~= pstatus.MOUNTED and player.status == pstatus.MOUNTED then
 	command.send('input /dismount')
     end
     get_mob_position(leader_pos, target_leader)
@@ -135,11 +136,11 @@ function M.tick_idle(player, me)
 	end
 	if mob == nil then
 	    --- p1 がターゲットしてる敵に合わせる
-	    if p1.status ~= 1 or p1.target_index == 0 then
+	    if p1.status ~= pstatus.ENGAGED or p1.target_index == 0 then
 		return
 	    end
 	    local target = windower.ffxi.get_mob_by_index(p1.target_index)
-	    if target == nil or target.status ~= 1 then
+	    if target == nil or target.status ~= pstatus.ENGAGED then
 		-- 敵と戦闘開始してなければ様子見
 		return
 	    end

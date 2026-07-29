@@ -2,6 +2,7 @@
 
 local role_Healer = require 'role/Healer'
 local task = require 'task'
+local pstatus = require 'player_status'
 
 local M = {}
 
@@ -45,7 +46,7 @@ M.sub_job_prob_table = {
 }
 
 function M.main_tick(player)
-    if player.status == 1 and player.vitals.hp < 300 then  -- 女神の祝福
+    if player.status == pstatus.ENGAGED and player.vitals.hp < 300 then  -- 女神の祝福
 	local c = "input /ja 女神の祝福 <me>"
 	task.set_task_simple(c, 0, 2)
     end

@@ -8,6 +8,7 @@ local role_Sorcerer = require 'role/Sorcerer'
 local ac_party = require 'ac/party'
 
 local io_chat = require 'io/chat'
+local pstatus = require 'player_status'
 
 local M = {}
 
@@ -83,7 +84,7 @@ function M.main_tick(player)
     if role_Healer.main_tick ~= nil then
 	role_Healer.main_tick(player)
     end
-    if player.status == 1 then -- 戦闘中
+    if player.status == pstatus.ENGAGED then -- 戦闘中
 	M.invoke_magick_debuff(player, 'ディアIII', true, 5, 45)
 	-- M.invoke_magick_debuff(player, 'ディストラII', true, 5, 58)
 	-- M.invoke_magick_debuff(player, 'フラズルII', true, 5, 64)
@@ -120,7 +121,7 @@ function M.sub_tick(player)
 	ac_party.count_member() == 1 then -- ソロの時も無し
 	return  -- 本職に任せる
     end
-    if player.status == 1 then -- 戦闘中
+    if player.status == pstatus.ENGAGED then -- 戦闘中
 	M.invoke_magick_debuff(player, 'ディアII', true, 5, 30)
 	M.invoke_magick_debuff(player, 'ディストラ', true, 7, 32)
 	M.invoke_magick_debuff(player, 'フラズル', true, 7, 38)

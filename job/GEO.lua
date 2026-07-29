@@ -9,6 +9,7 @@ local aczone = require 'zone'
 local ac_pos = require 'ac/pos'
 local io_chat = require 'io/chat'
 local task = require 'task'
+local pstatus = require 'player_status'
 
 M.main_job_prob_table = {
     { 10, 120, 'input /ma ケアル <p1>', 4, true },
@@ -120,7 +121,7 @@ function M.main_tick(player)
     local job_rank = 1  -- あとで party 情報を元に設定
     local pet = windower.ffxi.get_mob_by_target("pet")
     local mob = windower.ffxi.get_mob_by_target("t")
-    if player.status == 0 then -- 待機中
+    if player.status == pstatus.IDLE then -- 待機中
 	if pet ~= nil and mob ~= nil then
 	    -- 遠く離れたラバンは解除する
 	    local mobpetdist = ac_pos.distance(pet, mob)
@@ -128,7 +129,7 @@ function M.main_tick(player)
 		geo_release("フルサークル")
 	    end
 	end
-    elseif player.status == 1 then -- 戦闘中
+    elseif player.status == pstatus.ENGAGED then -- 戦闘中
 	inde_setup(job_rank)
 	if pet == nil then  -- 羅盤が無い場合
 	    geo_setup(job_rank)
