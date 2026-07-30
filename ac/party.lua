@@ -31,6 +31,20 @@ function M.iam_leader()
     return false
 end
 
+-- パーティリーダーの mob を返す。フォローすべき相手はスロット "p1" とは
+-- 限らない (p0 は必ず自分で、p1 は自分以外の先頭にすぎない)。実リーダーは
+-- party1_leader の id で引く。M.leader_id は iam_leader がキャッシュする。
+function M.leader_mob()
+    local party = windower.ffxi.get_party()
+    if party.party1_leader ~= nil then
+	M.leader_id = party.party1_leader
+    end
+    if M.leader_id == nil then
+	return nil
+    end
+    return windower.ffxi.get_mob_by_id(M.leader_id)
+end
+
 function M.is_member_id(id)
     local party = windower.ffxi.get_party()
     for _, x in pairs({"p", "a1", "a2"}) do -- アライアンス全員

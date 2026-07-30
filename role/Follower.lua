@@ -9,14 +9,14 @@ local acitem = require 'item'
 local item_data = require 'item/data'
 local acmob = require 'mob'
 local ac_move = require 'ac/move'
-local ac_pos = require 'ac/pos'
 local io_net = require 'io/net'
 local acprob = require 'prob'
+local ac_party = require 'ac/party'
 local pstatus = require 'player_status'
 
 local crystal_ids = item_data.crystal_ids -- クリスタル/塊
 local get_mob_position = acmob.get_mob_position
-local turn_to_target = ac_move.turn_to_target
+local turn_to_pos = ac_move.turn_to_pos
 local turn_to_front = ac_move.turn_to_front
 
 -- リーダーから離れているか。tick をまたいで保持する
@@ -56,29 +56,32 @@ local stow_crystals = function()
 end
 
 -- マウント状態をリーダーに合わせる
-local sync_mount = function(player, p1)
-    if p1.status == pstatus.MOUNTED and player.status ~= pstatus.MOUNTED then
+local sync_mount = function(player, leader)
+    if leader.status == pstatus.MOUNTED and player.status ~= pstatus.MOUNTED then
         command.send('input /mount ラプトル')
-    elseif p1.status ~= pstatus.MOUNTED and player.status == pstatus.MOUNTED then
+    elseif leader.status ~= pstatus.MOUNTED and player.status == pstatus.MOUNTED then
         command.send('input /dismount')
     end
 end
 
--- リーダー(p1)を追う。まだ追従中で戦闘に移れないなら true を返す。
--- 離れたことに確率的に気づかせているのは、人間らしい遅延を出すため。
-local follow_leader = function(me_pos, leader_pos, p1)
-    local dx = leader_pos.x - me_pos.x
-    local dy = leader_pos.y - me_pos.y
+-- リーダーを追う。まだ追従中で戦闘に移れないなら true を返す。
+-- engaged が真 (リーダーが戦闘中) のときは交戦を優先し、ゆるい追従は
+-- 抑える。離れすぎたときだけ追いつく。
+-- 確率的に気づかせているのは、非戦闘時に人間らしい遅延を出すため。
+local follow_leader = function(me_pos, leader, engaged)
+    local dx = leader.x - me_pos.x
+    local dy = leader.y - me_pos.y
     local dist = math.sqrt(dx*dx + dy*dy)
-    if p1.hpp > 0 then
-        if math.random(1, 3) <= 2 and dist > math.random(3, 5) and dist < 24 then
-            is_far = true
-        elseif dist > math.random(6, 7) then -- 離れすぎたらすぐ気付く
+    if leader.hpp > 0 then
+        if not engaged and math.random(1, 3) <= 2 and
+            dist > math.random(3, 5) and dist < 24 then
+            is_far = true  -- 非戦闘時のゆるい追従
+        elseif dist > math.random(6, 7) then -- 離れすぎたらすぐ気付く (戦闘中でも)
             is_far = true
         end
     end
     if is_far then
-        turn_to_target("p1")
+        turn_to_pos(me_pos.x, me_pos.y, leader.x, leader.y)
         turn_to_front()
         windower.ffxi.run(dx, dy)
         if dist > math.random(2, 4) then
@@ -107,19 +110,19 @@ local can_join_battle = function(item_level)
 end
 
 -- p1 がワープギミックを触ったら、その target まで追随する
-local follow_warp_gimmick = function(p1)
-    if p1.target_index == 0 then
+local follow_warp_gimmick = function(leader)
+    if leader.target_index == 0 then
         return
     end
-    local target = windower.ffxi.get_mob_by_index(p1.target_index)
+    local target = windower.ffxi.get_mob_by_index(leader.target_index)
     if target ~= nil and is_warp_gimmick(target.name) then
-        io_net.target_by_mob_index(p1.target_index)
+        io_net.target_by_mob_index(leader.target_index)
         windower.ffxi.run(true)
     end
 end
 
 -- 敵にターゲットして近接攻撃する
-local attack_enemy = function(p1, me_pos, item_level)
+local attack_enemy = function(leader, me_pos, item_level)
     windower.ffxi.run(false)
     local mob = windower.ffxi.get_mob_by_target("bt")
     if mob ~= nil then
@@ -131,26 +134,36 @@ local attack_enemy = function(p1, me_pos, item_level)
         })
     end
     if mob == nil then
-        --- p1 がターゲットしてる敵に合わせる
-        if p1.status ~= pstatus.ENGAGED or p1.target_index == 0 then
+        --- リーダーがターゲットしてる敵に合わせる
+        if leader.status ~= pstatus.ENGAGED or leader.target_index == 0 then
             return
         end
-        local target = windower.ffxi.get_mob_by_index(p1.target_index)
+        local target = windower.ffxi.get_mob_by_index(leader.target_index)
         if target == nil or target.status ~= pstatus.ENGAGED then
             return  -- 敵と戦闘開始してなければ様子見
         end
-        -- p1 が戦闘している敵にターゲット
-        io_net.target_by_mob_index(p1.target_index)
+        -- リーダーが戦闘している敵にターゲット
+        io_net.target_by_mob_index(leader.target_index)
         mob = windower.ffxi.get_mob_by_target("t")
     end
     if mob ~= nil then
         io_net.target_by_mob(mob)
         if item_level >= 119 or mob.hpp < 100 then
-            -- 5 が近接攻撃できるギリギリの距離
-            if ac_pos.distance(p1, mob) <= 5 then  -- 敵が近づくまで待つ
+            -- 敵との距離は自分基準で測る (リーダー基準だと自分が範囲外でも
+            -- 攻撃を撃って失敗する)。5 が近接攻撃できるギリギリの距離。
+            local me = windower.ffxi.get_mob_by_target("me")
+            local dx = mob.x - me.x
+            local dy = mob.y - me.y
+            local dist = math.sqrt(dx*dx + dy*dy)
+            if dist <= 5 then
+                windower.ffxi.run(false)
                 coroutine.sleep(math.random(0,2)/4)
                 command.send('input /attack <t>')
                 task.reset_by_fight()
+            else
+                -- 遠ければ敵へ詰める (リーダーではなく敵に寄る)
+                turn_to_pos(me.x, me.y, mob.x, mob.y)
+                windower.ffxi.run(dx, dy)
             end
         end
     end
@@ -162,29 +175,26 @@ function M.tick_idle(player, me)
         return
     end
     stow_crystals()
-    --- p1 がリーダーだと仮定。(リーダーというよりフォローする対象が p1)
-    local p1 = windower.ffxi.get_mob_by_target("p1")
-    if p1 == nil then
-        return  -- リーダーがいない
+    -- フォローする対象は party スロット p1 ではなく実リーダー
+    local leader = ac_party.leader_mob()
+    if leader == nil or leader.x == nil then
+        return  -- リーダーがいない / エリア外
     end
-    sync_mount(player, p1)
+    sync_mount(player, leader)
     local me_pos = {}
-    local leader_pos = {}
     get_mob_position(me_pos, "me")
-    get_mob_position(leader_pos, "p1")
-    if leader_pos.x == nil then
-        return
-    end
-    if follow_leader(me_pos, leader_pos, p1) then
+    -- リーダーが戦闘中なら追従より交戦を優先する
+    local leader_engaged = (leader.status == pstatus.ENGAGED)
+    if follow_leader(me_pos, leader, leader_engaged) then
         return  -- まだリーダーに追従中
     end
     if not can_join_battle(player.item_level) then
         return
     end
     -- ワープギミックは attack が off でも追随する
-    follow_warp_gimmick(p1)
+    follow_warp_gimmick(leader)
     if control.attack then
-        attack_enemy(p1, me_pos, player.item_level)
+        attack_enemy(leader, me_pos, player.item_level)
     end
 end
 
