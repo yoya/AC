@@ -1,0 +1,15 @@
+# エディタのバックアップ・自動保存
+*~
+\#*\#
+.\#*
+
+# ローカル設定 (data/settings.xml.sample を追跡する)
+data/settings.xml
+
+# 環境依存の symlink (絶対パスで他の環境では壊れる)
+/findAll
+/res
+
+# 作業用メモ・一時ファイル
+tmp.txt
+/q

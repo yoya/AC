@@ -1,3 +1,0 @@
-＃注意
-
-Windower Lua APIのページには上記の通り書かれている。Lua ver.5.1を改造したものを使っているとのこと。したがって、一般的なLua実行環境でWindower4\Addons\libs\Tables.luaとかWindower固有の機能を使わない基本的なスクリプトのテストをしようとしてもエラーがでてしまいテスト出来ない。
