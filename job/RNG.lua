@@ -46,4 +46,22 @@ function M.main_tick(player)
     end
 end
 
+M.battle_equip = {
+    main = {
+	21722, -- ドリケナス
+    },
+    sub = {
+	21565, -- トーレット
+    },
+    body = {
+	25791, -- メガナダクウィリ+2
+    },
+    left_ring = {
+	26229, -- レコリング
+    },
+    right_ring = {
+	26212, -- ムンムリング
+    }
+}
+
 return M
