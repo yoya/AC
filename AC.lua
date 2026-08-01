@@ -151,10 +151,15 @@ local idle_function_trade_items = function(tname, items, wait, enterWaits)
     coroutine.sleep(1)
 end
 
+-- 金庫まで扱えるモーグリか (モグガーデン)
+local can_use_safes = function(mob)
+    return mob.name == "Green Thumb Moogle"
+end
+
 -- ジャンクアイテムをかばんに集める
 local aggregate_junk_items_to_inventory = function(mob)
     local count = 0
-    if mob.name == "Green Thumb Moogle" then
+    if can_use_safes(mob) then
 	count = count + acitem.safes_to_inventory_by_set(JunkItemIdSet)
 	print("aggregate_junk_items_to_inventory(safes): "..count)
     end
@@ -163,27 +168,19 @@ local aggregate_junk_items_to_inventory = function(mob)
     return count
 end
 
--- かばん内のジャンクアイテムを数える
-local count_junk_items_in_inventory = function ()
-    local count = 0
-    -- 数えるだけで中身を変えないので、1 回のスナップショットで済ませる
-    -- (スロット毎に get_items を呼ぶと 80 回の API 呼び出しになる)
-    local inventory = windower.ffxi.get_items().inventory
-    for index = 1, 80 do
-	local item = inventory[index]
-	if item and item.id ~= 0 then
-	    -- io_chat.print({"item:", item.status, item.id,
-	    -- res.items[item.id].ja })
-	    if SellItemIdSet[item.id] == true then
-		count = count + 1
-	    end
-	end
+-- 処理すべきジャンクアイテムがどこにいくつ残っているか。
+-- 売却/廃棄/移動のどれも成否を確認できない (パケット注入と非同期要求) ので、
+-- 進捗はこの残数が減ったかどうかで判断する。
+local count_junk_items_remaining = function(mob)
+    local places = { "inventory", "bags" }
+    if can_use_safes(mob) then
+	table.insert(places, "safes")
     end
-    return count
+    return acitem.count_items_by_set(JunkItemIdSet, places)
 end
 
 local sell_junk_items_in_inventory = function()
-    local total_count = count_junk_items_in_inventory()
+    local total_count = acitem.count_items_by_set(SellItemIdSet, {"inventory"})
     io_chat.info(total_count.."回売却 start")
     local remain_count = total_count
     for index = 1, 80 do
@@ -217,24 +214,41 @@ local sell_junk_items_in_inventory = function()
     return total_count
 end
 
+-- かばんの空きより多いジャンクを捌くには何周も要る。多めに取る。
+local SELL_MAX_ROUND = 80
+
 local idle_function_sell_junk_items = function(mob)
-    -- 可搬ストレージのジャンクアイテムをかばんに集める
     print("Aggregate Bag Junk Items to Inventory")
-    aggregate_junk_items_to_inventory(mob)
+    local prev_remain = math.huge
+    local round = 0
     while control.auto do
-        -- 売却処理
-        local sell_count = sell_junk_items_in_inventory()
-        local move_count = aggregate_junk_items_to_inventory(mob)
-        if sell_count == 0 and move_count == 0 then
-            -- 移動するアイテムも売れたアイテムもなければ終了
-	    control.auto = false
-	    coroutine.sleep(1)
+	round = round + 1
+	-- 「集める → 売る → 捨てる」の順。集めた分をその周で処理しないと
+	-- 残数が減らず、進捗なしと誤判定する。
+	aggregate_junk_items_to_inventory(mob)
+	sell_junk_items_in_inventory()
+	drop_junk_items_in_inventory()
+	-- sleep しないと落ちる事がある。最後に売った分がかばんから消えるのを
+	-- 待つ意味もあるので、残数を数える前に入れる。
+	coroutine.sleep(2)
+	local remain = count_junk_items_remaining(mob)
+	if remain == 0 then
 	    break
-        end
-	coroutine.sleep(2)  -- sleep しないと落ちる事がある
+	end
+	if remain >= prev_remain then
+	    -- 売却も廃棄も移動も通っていない。回り続けても無駄。
+	    io_chat.warnf("売却が進まないので中断します (残 %d 件)", remain)
+	    break
+	end
+	if round >= SELL_MAX_ROUND then
+	    io_chat.warnf("売却を %d 周しても終わりません (残 %d 件)",
+			  SELL_MAX_ROUND, remain)
+	    break
+	end
+	prev_remain = remain
     end
-    -- ついでに売れないゴミも捨てる
-    drop_junk_items_in_inventory()
+    control.auto = false
+    coroutine.sleep(1)
     io_chat.notice("all売却 end")
 end
 M.idle_function_sell_junk_items = idle_function_sell_junk_items

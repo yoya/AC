@@ -39,6 +39,32 @@ local bag_name_ja_list = {
 
 -- アイテムの量
 
+-- count_items_by_set の places に指定できる場所
+local PlaceLists = {
+    inventory = { inventory = 0 },
+    bags = BagsList,
+    safes = SafesList,
+}
+
+-- 指定した集合のアイテムが何スロット分あるかを数える。
+-- places は "inventory" / "bags" / "safes" の配列。
+-- 数えるだけで中身を変えないので、1 回のスナップショットで済ませる
+-- (スロット毎に get_items を呼ぶと 80 回の API 呼び出しになる)
+function M.count_items_by_set(id_set, places)
+    local items = windower.ffxi.get_items()
+    local count = 0
+    for _, place in ipairs(places) do
+	for bname in pairs(PlaceLists[place]) do
+	    for i, item in ipairs(items[bname]) do
+		if id_set[item.id] == true and item.count > 0 then
+		    count = count + 1
+		end
+	    end
+	end
+    end
+    return count
+end
+
 local inventory_total_num = function()
     local items = windower.ffxi.get_items()
     local item = items.inventory
@@ -147,6 +173,10 @@ function M.safes_to_inventory_by_set(id_set)
 			    local item_name = res_name.item(item.id)
 			    io_chat.printf("safes_to_inventory:%s %s(%d)", bname, item_name, item.id)
 			end
+			-- 移動は 1 件ずつしか処理されない。連射すると大半が
+			-- 落ちる上に、次の check_inventory_freespace も古い
+			-- 空き数を見てしまうので、1 件毎に待つ。
+			coroutine.sleep(1)
 		    end
                 end
             end
@@ -209,6 +239,8 @@ function M.bags_to_inventory_by_set(id_set)
 		    if M.check_inventory_freespace() then
 			windower.ffxi.get_item(bagid, item.slot, item.count)
 			count = count + 1
+			-- 移動は 1 件ずつしか処理されない (safes 側と同じ理由)
+			coroutine.sleep(1)
 		    end
                 end
             end
