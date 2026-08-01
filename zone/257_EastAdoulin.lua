@@ -33,8 +33,7 @@ M.routes = {
     ['mog2hp-spm'] = {
 	{x=-53.7,y=-128.5,z=-0.1,desc="HPからモグハウス>サンド港(M)"},
 	-- {x=-54,y=-100,z=0,d=2},
-	{x=-54,y=-99,d=1},
-	-- -- {x=-54,y=-91,d=1}, -- {x=-48,y=-90,d=1}, {x=-50,y=-92,d=1},
+	{x=-54,y=-99,d=1}, {wait=2},  -- 表示されるまで待つ
 	{a="f8"}, {target="Home Point #2"}, {a="touch"}, {wait=2},
 	{keys={"enter"}}, -- どのロージョンにする
 	{keys={"right"}}, -- サンドリア王国
@@ -46,8 +45,7 @@ M.routes = {
     ['mog2hp-abys'] = {
 	{x=-53.7,y=-128.5,z=-0.1,desc="HPからモグハウス>ジュノ港(E)"},
 	-- {x=-54,y=-100,z=0,d=2},
-	{x=-54,y=-99,d=1},
-	-- -- {x=-54,y=-91,d=1}, -- {x=-48,y=-90,d=1}, {x=-50,y=-92,d=1},
+	{x=-54,y=-99,d=1}, {wait=2},  -- 表示されるまで待つ
 	{a="f8"}, {target="Home Point #2"}, {a="touch"}, {wait=2},
 	{keys={"enter"}}, -- どのロージョンにする
 	{keys={"right", "right", "enter"}}, -- ジュノ
@@ -73,7 +71,7 @@ M.routes = {
     },
     works = {
 	{x=-56,y=-128.5,z=-0.1,desc="ワークス消化"},
-	{x=-61,y=-123,z=0,d=1},
+	{x=-61,y=-123,z=0,d=1}, {wait=2},  -- 表示されるまで待つ,
 	{target="Waypoint"}, {a="touch"}, {wait=1},
 	{keys={"right", "right", "right", "down", "enter"}}, -- カミール山麓
 	{wait=0.5}, {keys={"right", "enter"}}, -- #2
@@ -85,6 +83,7 @@ M.routes = {
     },
     -- HP#2(M)
     moghouse = {
+	{auto=false},  -- auto だとリーダーの後を追いかけるので
 	{x=-50.5,y=-95,z=-0.1,desc="HPからモグハウス"}, {x=-55,y=-101},
 	{x=-56,y=-109}, {}
     },
@@ -119,6 +118,7 @@ M.routes = {
     },
     -- ヤッセの船着場
     ['ionis-wp'] = {
+	{auto=false},  -- auto だとリーダーの後を追いかけるので
 	-- Waypoint
 	{x=-57.8,y=85.2,z=-0.1},{x=-54.3,y=85,d=1},
 	{target="Quiri-Aliri"},
@@ -129,6 +129,7 @@ M.routes = {
 	{keys={"right", "right", "enter"}}, -- #4 を選択
     },
     ['ionis-wp-sortie'] = {
+	{auto=false},  -- auto だとリーダーの後を追いかけるので
 	-- Waypoint
 	{x=-57.8,y=85.2,z=-0.1},{x=-54.3,y=85,d=1},
 	{target="Quiri-Aliri"},
@@ -139,6 +140,7 @@ M.routes = {
 	{keys={"right", "right", "enter"}}, -- #4 を選択
     },
     ['ionis-hp'] = {
+	{auto=false},  -- auto だとリーダーの後を追いかけるので
 	-- HP#1
 	{x=-52.9,y=58.9,z=-0.1}, {x=-54,y=78,d=1},
 	{x=-53.5,y=82,d=1},

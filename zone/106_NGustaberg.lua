@@ -4,9 +4,9 @@ local M = { id = 106 }
 
 M.routes = {
     maw = {  --  アビセア扉
-	{wait=3},
-        {x=-72.9,y=600.1,z=-0.1}, {target="Cavernous Maw"},
-	{a="touch"}, {a="up"}, {a="touch"}
+	{x=-72.9,y=600.1,z=-0.1,desc=""}, {wait=2},
+        {target="Cavernous Maw"},
+	{a="touch"}, {wait=1}, {a="up"}, {a="touch"}
     },
 }
 

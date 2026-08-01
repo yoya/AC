@@ -11,10 +11,12 @@ M.routes = {
 	{a="esc"}, {target="Shemo"}, {auto=true}
     },
     abys = { {x=36,y=8.8,z=0, desc="アビセア"},
-	{x=-45,y=-4}, {x=-53,y=-8,d=1},
+	{x=-45,y=-4}, {x=-50,y=-7,d=1}, -- {x=-53,y=-8,d=1},
 	{target="Joachim"}, {wait=4},
 	{keys={"enter"}}, {wait=2}, -- どうする？
 	{keys={"enter"}}, {wait=3}, -- トラバーサ石がほしい
+	{keys={"enter"}}, {wait=3}, -- うまくいかないので、もう一度実行
+	{x=-53,y=-10},
 	{target="Horst"}, {wait=2},
 	{keys={"enter"}}, {wait=2}, -- 何をお願いしますか？
 	{keys={"down", "down", "enter"}}, {wait=1}, -- 禁断の口まで転送してほしい
