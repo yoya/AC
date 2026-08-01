@@ -108,6 +108,7 @@ M.zone_table = {
     [113] = require('zone/113_Teriggan'),   -- テリガン岬
     [114] = require('zone/114_EastAltepa'), -- 東アルテパ砂漠
     [117] = require('zone/117_Tahrongi'),   -- タロンギ大峡谷
+    [118] = require('zone/118_Buburimu'),   -- ブブリム半島
     [121] = require('zone/121_ZiTah'),      -- 聖地ジ・タ
     [122] = require('zone/122_RoMaeve'),    -- ロ・メーヴ
     [124] = require('zone/124_YhoatorJng'), -- ヨアトル大森林
