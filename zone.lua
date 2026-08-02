@@ -154,6 +154,7 @@ M.zone_table = {
     [182] = require('zone/182_WalkEchoes'), -- ウォークオブエコーズ
     [183] = require('zone/183_Legion'),     -- アブダルスの模型-レギオン
     [184] = require('zone/184_LowDelkfut'), -- デルクフの塔下層
+    [189] = require('zone/189_OutRaKaz_U3'), -- ラ・カザナル宮外郭〔Ｕ３〕
     [190] = require('zone/190_RanpsTomb'),  -- 龍王ランペールの墓
     [193] = require('zone/193_Ordelles'),   -- オルデール鍾乳洞
     [192] = require('zone/192_InHorutoto'), -- 内ホルトト遺跡
