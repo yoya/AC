@@ -21,7 +21,7 @@ local prefer_weapon_skill = {
     'dai', 'penta',  -- 両手槍
     'demi', 'spin', 'frost', -- 両手剣
     'kuu', 'jin', 'ten', 'shun', 'rin', -- 片手刀
-    'gekko', 'kasha', 'shoha', 'hocho', 'kagero', 'yuki', 'enpi',-- 両手刀
+    'fudo', 'gekko', 'kasha', 'shoha', 'hocho', 'kagero', 'yuki', 'enpi',-- 両手刀
     'moon', 'realm', 'hexa', 'shine', -- 片手棍
     'myrkr', 'spirit', 'full', 'heavy', -- 両手棍
     'spiral', 'cross', 'ent', -- 両手鎌
@@ -85,6 +85,7 @@ M.weaponskill_table = {
     ten = '天',
     shun = '瞬',
     -- 両手刀
+    fudo = '祖之太刀・不動',
     enpi = '壱之太刀・燕飛',
     kagero = '四之太刀・陽炎', -- 溶解
     yuki = '七之太刀・雪風', -- 硬化、炸裂
