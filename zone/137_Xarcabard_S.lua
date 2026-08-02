@@ -7,7 +7,7 @@ local io_net = require 'io/net'
 M.routes = {
     -- HP#1
     conf = {
-	{x=224.3,y=-253.2,z=-13.2,desc="Veridical Conflux"},
+	{x=224.3,y=-253.2,z=-13.2,desc="Veridical Conflux (WoE)"},
 	{x=235,y=-249,z=-8.8}, {target="Veridical Conflux"}, {a="touch"}
     },
     animal = {  -- Animal Spoor
@@ -64,7 +64,7 @@ M.routes = {
 }
 
 M.essential_points = {
-    hp_1 = {x=224.3,y=253.2,z=-13.2}
+    hp_1 = {x=224.3,y=-253.2,z=-13.2}
 }
 
 M.automatic_routes = {
