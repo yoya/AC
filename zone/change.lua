@@ -38,89 +38,114 @@ function pos_str(pos)
     return str
 end
 
-function M.search_and_invoke_automatic_routes(zone, prev_zone, automatic_routes,
-					      contents_match)
-    -- if prev_zone == nil then print(debug.traceback()) end
-    print("zone/change.search_and_invoke_automatic_routes")
-    if type(automatic_routes) ~= "table" then
+-- automatic_routes のエントリは route 単体か、その配列。配列に揃える
+local function route_list(entry)
+    if entry.route ~= nil then
+	return { entry }
+    end
+    return entry
+end
+
+-- essential_points の判定距離。d / dx / dy がひとつも無ければ 2
+local function near_args(fp)
+    if fp.d == nil and fp.dx == nil and fp.dy == nil then
+	return 2, nil, nil
+    end
+    return fp.d, fp.dx, fp.dy
+end
+
+-- zone_from: 正ならその zone から来た時だけ有効、負ならその zone から来た時は無効
+local function skip_by_zone_from(t, prev_zone)
+    if t.zone_from == nil or prev_zone == nil then
 	return false
     end
-    -- コンテンツに応じて有効な宛先を切り替える
-    local new_routes = {}
-    -- io_chat.notice("automatic_routes", automatic_routes)
-    for f, rr in pairs(automatic_routes) do
-	local routes = (rr[1] == nil) and { rr } or rr
-	for _, route in ipairs(routes) do
-	    if route ~= nil then
-		if route.zone_from ~= nil and prev_zone ~= nil and
-		    ((route.zone_from > 0 and route.zone_from ~= prev_zone) or
-		     (route.zone_from < 0 and -route.zone_from == prev_zone)) then
-		    -- route を skip
-		    -- io_chat.error("route を skip", route.zone_from, prev_zone)
-		elseif contents_match then
-		    if route.contents ~= nil and
-			contents.match_contents_name(route.contents) then
-			new_routes[f] = route
-		    end
-		else
-		    -- コンテンツ制限ありの方を優先
-		    if new_routes[f] == nil and route.contents == nil then
-			new_routes[f] = route
-		    end
+    if t.zone_from > 0 then
+	return t.zone_from ~= prev_zone
+    end
+    return -t.zone_from == prev_zone
+end
+
+local function can_exec(f, t)
+    if t.leader_only == true and not iam_leader() then
+	io_chat.infof("移動するのはリーダーだけ: %s => %s", f, t.route)
+	return false
+    end
+    if t.need_level ~= nil then
+	local player = windower.ffxi.get_player()
+	local level = player and player.main_job_level
+	if level == nil or level < t.need_level then
+	    io_chat.infof("移動するのに level %d 必要: %s => %s",
+			  t.need_level, f, t.route)
+	    return false
+	end
+    end
+    return true
+end
+
+-- ひとつの essential_point の route 群から実行するものを1つ選ぶ。
+-- contents 一致を contents 指定なしより優先する。
+-- contents 一致があるならそれだけを見る。leader_only や need_level で
+-- 実行できない時に contents 指定なしの既定ルートへ落とさない為
+local function pick_route(f, entry, prev_zone)
+    local matched = nil    -- contents 一致
+    local fallback = nil   -- contents 指定なし
+    for _, t in ipairs(route_list(entry)) do
+	if t ~= nil and not skip_by_zone_from(t, prev_zone) then
+	    if t.contents ~= nil then
+		if matched == nil and contents.match_contents_name(t.contents) then
+		    matched = t
+		end
+	    elseif fallback == nil then
+		fallback = t
+	    end
+	end
+    end
+    local t = matched or fallback
+    if t == nil or not can_exec(f, t) then
+	return nil
+    end
+    return t
+end
+
+-- 現在地から実行できる automatic_route を選ぶ。無ければ nil
+function M.select_automatic_route(zone, prev_zone, automatic_routes)
+    print("zone/change.select_automatic_route")
+    if type(automatic_routes) ~= "table" then
+	return nil
+    end
+    local zone_object = aczone.zone_table[zone]
+    if zone_object == nil then
+	return nil
+    end
+    for f, entry in pairs(automatic_routes) do
+	local fp = zone_object.essential_points[f]
+	-- データ不備は、そこだけ飛ばす。他の essential_point の判定は続ける
+	if fp == nil then
+	    io_chat.errorf("essential_points not found: %s", f)
+	elseif fp.x == nil then
+	    io_chat.errorf("essential_points illegal format: %s", f)
+	else
+	    local d, dx, dy = near_args(fp)
+	    if control.debug then
+		io_chat.print(f, "fp:", fp, "near_dist:", d,
+			      "near_dist_x,y:", dx, dy)
+	    end
+	    if ac_pos.is_near(fp, d, dx, dy) then
+		local t = pick_route(f, entry, prev_zone)
+		if t ~= nil then
+		    return { point = f, route = t.route }
 		end
 	    end
 	end
     end
-    automatic_routes = new_routes
-    -- io_chat.notice("new_routes", new_routes)
+    return nil
+end
+
+function M.invoke_automatic_route(zone, sel)
     local zone_object = aczone.zone_table[zone]
-    for f, t in pairs(automatic_routes) do
-	local fp = zone_object.essential_points[f]
-	if fp == nil then
-	    io_chat.errorf("essential_points not found: %s", f)
-	    return false
-	end
-	if fp.x == nil then
-	    io_chat.errorf("essential_points illegal format: %s", f)
-	    return false
-	end
-	local route = t.route
-	local near_dist = nil
-	local near_dist_x = nil
-	local near_dist_y = nil
-	if fp.d == nil and fp.dx == nil and fp.dy == nil then
-	    near_dist = 2
-	end
-	if fp.d ~= nil then near_dist = fp.d end
-	if fp.dx ~= nil then near_dist_x = fp.dx end
-	if fp.dy ~= nil then near_dist_y = fp.dy end
-	local exec_auto_route = ac_pos.is_near(fp, near_dist,
-					      near_dist_x, near_dist_y)
-	if t.leader_only == true and not iam_leader() then
-	    io_chat.infof("移動するのはリーダーだけ: %s => %s", f, route)
-	    exec_auto_route = false
-	end
-	local player = windower.ffxi.get_player()
-	local level = player.main_job_level
-	if t.need_level ~= nil then
-	    if level < t.need_level then
-		io_chat.infof("移動するのに level 20 必要: %s => %s", f, route)
-		exec_auto_route = false
-	    end
-	else
-	    -- print("level, t.need_level",level, t.need_level)
-	end
-	if control.debug then
-	    io_chat.print(f, "fp:", fp, "near_dist:", near_dist, "nexrDistX,Y:", near_dist_x, near_dist_y)
-	end
-	if exec_auto_route then
-	    io_chat.printf("移動 %s => %s", f, route)
-	    aczone.AC.start_pos = nil
-	    auto_move_to(zone, {route}, zone_object.routes)
-	    return true
-	end
-    end
-    return false
+    io_chat.printf("移動 %s => %s", sel.point, sel.route)
+    aczone.AC.start_pos = nil
+    ac_move.auto_move_to(zone, {sel.route}, zone_object.routes)
 end
 
 function M.automatic_routes_handler(zone, prev_zone, automatic_routes)
@@ -152,13 +177,9 @@ function M.automatic_routes_handler(zone, prev_zone, automatic_routes)
     pos = ac_pos.current_pos()
     coroutine.sleep(5)
     if ac_pos.is_near(pos, 0.5) then
-	local ret = M.search_and_invoke_automatic_routes(zone, prev_zone,
-							 automatic_routes,
-							 true)
-	if not ret then
-	    M.search_and_invoke_automatic_routes(zone, prev_zone,
-						 automatic_routes,
-						 false)
+	local sel = M.select_automatic_route(zone, prev_zone, automatic_routes)
+	if sel ~= nil then
+	    M.invoke_automatic_route(zone, sel)
 	end
     end
 end
