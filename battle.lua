@@ -56,9 +56,11 @@ function M.tick(player, me)
     -- print("battle.tick")
     local mob = windower.ffxi.get_mob_by_target("t")
     if mob == nil then return end
-    if mob.name == player.name or mob.distance > 100 then
+    if mob.name == player.name or mob.distance > 100 or
+	mob.in_party or mob.in_alliancethen then
 	-- 稀に自分をタゲる事があるので、その時は一旦戦闘終了
 	-- 敵と距離がありすぎる時も何かおかしいので戦闘終了
+	-- パーティメンバーも戦ってたらやめる
 	command.send('input /attack off')
     end
     local battle_object = M.battle_table[M.battle_type]
