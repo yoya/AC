@@ -36,7 +36,8 @@ M.routes = {
 function M.warp_in()
     local contents = __AC.contents
     if M.parent.is_near(139, "entrance", 10) then
-	M.parent.type = contents.Trove
+	-- M.parent は zone なので、ここへの代入では contents は変わらなかった
+	contents.set_type(contents.Trove)
     end
 end
 

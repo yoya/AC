@@ -3,15 +3,12 @@
 
 local M = { id = 275 }
 
-M.orig_content_type = nil
-
 function M.zone_in()
     local contents =  __AC.contents
     print("Vagary in")
     -- 場所によってはソーティもあるので、一旦なくす
     --[[
-    M.orig_content_type = contents.type
-	contents.set_type(contents.Vagary)
+    contents.set_zone_override(contents.Vagary)
     ]]
 end
 
@@ -19,10 +16,7 @@ function M.zone_out()
     local contents =  __AC.contents
     print("Vagary out")
     --[[
-    if M.orig_content_type ~= nil then
-	contents.set_type(M.orig_content_type)
-	M.orig_content_type = nil
-	end
+    contents.clear_zone_override()
     ]]
 end
 

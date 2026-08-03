@@ -58,7 +58,12 @@ for c, m in pairs(M.contents_table) do
     m.parent = M
 end
 
+-- 実効値。読むのはここ。書き換えは set_type / set_zone_override 経由で。
 M.type = M.Idle
+-- ac contents で指定した値
+M.user_type = M.Idle
+-- ゾーン由来の一時的な上書き。nil なら上書きなし
+M.zone_override = nil
 
 
 M.name_table = {
@@ -84,29 +89,59 @@ M.name_table = {
 
 M.incoming_text_listener_id = nil
 
-function M.set_type(c)
+-- 実効値を c にする。contents_out / contents_in と listener の付け外しを行う。
+-- force は実効値が変わらない時も入り直す (ゾーン再入場で contents_in を読ませる為)
+local function apply(c, force)
     local prev_contents = M.type
-    if prev_contents ~= c then
-	local prev_c = M.contents_table[prev_contents]
-	if prev_c ~= nil and prev_c.contents_out ~= nil then
-	    prev_c.contents_out()
+    if prev_contents == c and not force then
+	return
+    end
+    local prev_c = M.contents_table[prev_contents]
+    if prev_c ~= nil and prev_c.contents_out ~= nil then
+	prev_c.contents_out()
+    end
+    if M.incoming_text_listener_id ~= nil then
+	incoming_text.remove_listener(M.incoming_text_listener_id)
+	M.incoming_text_listener_id = nil
+    end
+    M.type = c
+    local next_c = M.contents_table[c]
+    if next_c ~= nil then
+	if next_c.contents_in ~= nil then
+	    next_c.contents_in()
 	end
-	if M.incoming_text_listener_id ~= nil then
-	    incoming_text.remove_listener(M.incoming_text_listener_id)
-	    M.incoming_text_listener_id = nil
-	end
-	M.type = c
-	local next_c = M.contents_table[c]
-	if next_c ~= nil then
-	    if next_c.contents_in ~= nil then
-		next_c.contents_in()
-	    end
-	    local incoming_text_handler = next_c.incoming_text_handler
-	    if incoming_text_handler ~= nil then
-		M.incoming_text_listener_id = incoming_text.add_listener("", incoming_text_handler)
-	    end
+	local incoming_text_handler = next_c.incoming_text_handler
+	if incoming_text_handler ~= nil then
+	    M.incoming_text_listener_id = incoming_text.add_listener("", incoming_text_handler)
 	end
     end
+end
+
+-- ゾーン由来の上書きがあればそれを、無ければユーザ指定を実効値にする
+local function refresh(force)
+    apply(M.zone_override or M.user_type, force)
+end
+
+-- ユーザ指定を変える (ac contents)
+function M.set_type(c)
+    M.user_type = c
+    refresh(false)
+end
+
+-- ゾーン由来の上書きをセットする。zone_in から呼ぶ。
+-- ユーザ指定は保持されるので、退避・復元は要らない
+function M.set_zone_override(c)
+    M.zone_override = c
+    refresh(true)
+end
+
+-- ゾーン由来の上書きを外す。zone_out から呼ぶ
+function M.clear_zone_override()
+    if M.zone_override == nil then
+	return
+    end
+    M.zone_override = nil
+    refresh(false)
 end
 
 function M.set_contents(name)
@@ -175,14 +210,21 @@ function M.match_contents_name(name)
     return false
 end
 
-function M.show_contents()
-    local name = M.name_table[M.type]
-    if name == nil then
-	name = "<nil>"
-    else
-	name = name[1]
+local function type_name(c)
+    local names = M.name_table[c]
+    if names == nil then
+	return "<nil>"
     end
-    io_chat.infof("Contents: %s", name)
+    return names[1]
+end
+
+function M.show_contents()
+    if M.zone_override ~= nil then
+	io_chat.infof("Contents: %s (ゾーン指定。ここを出ると %s に戻る)",
+		      type_name(M.zone_override), type_name(M.user_type))
+    else
+	io_chat.infof("Contents: %s", type_name(M.type))
+    end
 end
 
 function M.list_contents()

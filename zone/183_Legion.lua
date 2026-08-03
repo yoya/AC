@@ -6,13 +6,13 @@ local M = { id = 183 }
 function M.zone_in()
     print("Ambus in")
     local contents = __AC.contents
-    contents.set_type(contents.Ambus)
+    contents.set_zone_override(contents.Ambus)
 end
 
 function M.zone_out()
     print("Ambus out")
     local contents = __AC.contents
-    contents.set_type(contents.Idle)
+    contents.clear_zone_override()
 end
 
 M.routes = {

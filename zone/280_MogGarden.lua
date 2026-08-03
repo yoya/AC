@@ -2,21 +2,14 @@
 
 local M = { id = 280 }
 
-M.orig_contents = nil
 function M.zone_in()
     local contents = require 'contents'
-    if M.orig_contents == nil then  -- zone_in が続けて呼ばれても退避を壊さない
-	M.orig_contents = contents.type
-    end
-    contents.set_type(contents.Garden)  -- モグガーデン
+    contents.set_zone_override(contents.Garden)  -- モグガーデン
 end
 
 function M.zone_out()
     local contents = require 'contents'
-    if M.orig_contents ~= nil then
-	contents.set_type(M.orig_contents)
-	M.orig_contents = nil
-    end
+    contents.clear_zone_override()
 end
 
 M.routes = {

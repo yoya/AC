@@ -8,16 +8,10 @@ local io_net = require 'io/net'
 local control = require 'control'
 local ac_equip = require 'ac/equip'
 
-M.orig_contents = nil
-
 M.orig_body_item_id = 0
 function M.zone_in()
     local contents = require 'contents'
-    if M.orig_contents == nil then  -- zone_in が続けて呼ばれても退避を壊さない
-	M.orig_contents = contents.type
-    end
-    contents.set_type(contents.Idle)    -- contents_in を読ませる為
-    contents.set_type(contents.Redeem)  -- エミネンス、ユニティポイント交換
+    contents.set_zone_override(contents.Redeem)  -- エミネンス、ユニティポイント交換
     local orig_item_id = ac_equip.equip_item_by_slot_name("body")
     if orig_item_id ~= nil and orig_item_id ~= 27923 then
 	M.orig_body_item_id = orig_item_id
@@ -27,10 +21,7 @@ end
 
 function M.zone_out()
     local contents = require 'contents'
-    if M.orig_contents ~= nil then
-	contents.set_type(M.orig_contents)
-	M.orig_contents = nil
-    end
+    contents.clear_zone_override()
     if  M.orig_body_item_id > 0 then
 	ac_equip.equip_item("body", M.orig_body_item_id) -- 前のに戻す
 	M.orig_body_item_id = 0
