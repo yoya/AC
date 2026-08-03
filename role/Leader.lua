@@ -17,7 +17,7 @@ local get_mob_position = acmob.get_mob_position
 -- 優先して釣る敵
 M.preferred_enemy_list = {
     -- カオス戦
-    "Chaos",
+    "Profane Circle", "Chaos",
     -- コロナイズ
     "Knotted Root", "Bedrock Crag", "Icy Palisade",
     -- 醴泉島
@@ -29,7 +29,7 @@ M.preferred_enemy_list = {
     "Quetzalcoatl's Sibilus", "Quetzalcoatl",
     "Mireu",
     -- 実験
-    "Apex Toad",  -- ウォーの門、トード。
+    "Apex Jagil", "Apex Toad",  -- ウォーの門、トード。
     "Mourioche",  -- マンドラ
     -- アルタナM
     "Cait Sith Ceithir",
