@@ -13,7 +13,9 @@ M.orig_contents = nil
 M.orig_body_item_id = 0
 function M.zone_in()
     local contents = require 'contents'
-    M.orig_contents = contents.type
+    if M.orig_contents == nil then  -- zone_in が続けて呼ばれても退避を壊さない
+	M.orig_contents = contents.type
+    end
     contents.set_type(contents.Idle)    -- contents_in を読ませる為
     contents.set_type(contents.Redeem)  -- エミネンス、ユニティポイント交換
     local orig_item_id = ac_equip.equip_item_by_slot_name("body")
