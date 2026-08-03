@@ -21,6 +21,9 @@ M.incoming_text_listener_id = nil
 -- 落としているので、それを使うと zone_in だけ走って zone_out が抜ける。
 M.current_zone = nil
 
+-- 自動移動の起動世代。ゾーン移動やワープの度に進める
+M.auto_move_seq = 0
+
 function pos_str(pos)
     if pos == nil then
 	return "(nil)"
@@ -157,6 +160,18 @@ end
 
 function M.automatic_routes_handler(zone, prev_zone, is_login, automatic_routes)
     print("zone/change.automatic_routes_handler", zone)
+    -- 起動の世代を進める。判定の前に何秒も待つので、待っている間に次の
+    -- ゾーン移動やワープが来たら、古い起動は捨てる。
+    -- 同じモグハウス出入りが zone change と warp の両方から来る事もある
+    M.auto_move_seq = M.auto_move_seq + 1
+    local seq = M.auto_move_seq
+    local function is_current()
+	if seq ~= M.auto_move_seq then
+	    print("zone/change: 新しい自動移動が来たのでこの起動は捨てる")
+	    return false
+	end
+	return true
+    end
     if not control.automove then
 	print("control.automove is false")
 	return
@@ -174,20 +189,31 @@ function M.automatic_routes_handler(zone, prev_zone, is_login, automatic_routes)
     if player == nil or player.status == pstatus.DEAD then
 	print("player and player.status", player and player.status)
 	coroutine.sleep(3)
+	if not is_current() then return end
 	player = windower.ffxi.get_player()
 	if player == nil or player.status == pstatus.DEAD then
 	    io_chat.print("移動しない status: ", player and player.status)
 	    return
 	end
     end
+    -- ゾーンイン直後は座標が安定しないので、少し待ってから基準位置を取る
     coroutine.sleep(3)
+    if not is_current() then return end
     pos = ac_pos.current_pos()
+    -- さらに待って、その間に動いていない事を確かめる
     coroutine.sleep(5)
-    if ac_pos.is_near(pos, 0.5) then
-	local sel = M.select_automatic_route(zone, prev_zone, automatic_routes)
-	if sel ~= nil then
-	    M.invoke_automatic_route(zone, sel)
-	end
+    if not is_current() then return end
+    if not ac_pos.is_near(pos, 0.5) then
+	print("zone/change: 動いているので自動移動しない")
+	return
+    end
+    if ac_move.auto then
+	print("zone/change: 移動中なので自動移動を起動しない")
+	return
+    end
+    local sel = M.select_automatic_route(zone, prev_zone, automatic_routes)
+    if sel ~= nil then
+	M.invoke_automatic_route(zone, sel)
     end
 end
 

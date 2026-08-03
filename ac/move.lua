@@ -115,6 +115,8 @@ M.look_forward = look_forward
 --
 
 M.auto = false
+-- 移動の世代。誰の M.stop() かを見分ける為に _auto_move_to が進める
+M.auto_seq = 0
 
 function stop()
 ---    print("M.auto = false")
@@ -530,12 +532,18 @@ function _auto_move_to(zone_id, dest, route_table, reverse, next_dest)
 	route = array_reverse(route)
     end
     if M.auto == true then
-	print("_auto_move_to: singleton guard", destTable)
+	print("_auto_move_to: singleton guard", dest)
 	return
     end
     M.auto = true
+    -- 中断 (M.auto = false) された後に次の移動が始まっていると、こちらの
+    -- M.stop() がその移動を巻き添えで止めてしまうので、自分の番か確かめる
+    M.auto_seq = M.auto_seq + 1
+    local seq = M.auto_seq
     move_to(route, route_table, next_route, reverse)
-    M.stop() -- M.auto = false
+    if seq == M.auto_seq then
+	M.stop() -- M.auto = false
+    end
 end
 
 
