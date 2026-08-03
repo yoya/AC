@@ -87,10 +87,18 @@ function M.incoming_text_handler(text)
 	io_chat.info("ユニティポイント交換額", exchange_point)
 	coroutine.sleep(3)
 	for c in tostring(exchange_point):gmatch(".") do
-	    -- io_chat.print(c)
-	    -- push_keys(c}) -- これで数字入力できない。
+	    io_chat.print(c)
+	    -- push_keys({c}) -- これで数字入力できない。
+	    M.dialog_keyinput(c)
+	    coroutine.sleep(1)
 	end
+	M.dialog_keyinput("enter")
     end
+end
+
+function M.dialog_keyinput(c)
+    command.send("keyboard_sendstring \""..c.."\"")
+    -- command.send("keyboard_type \""..c.."\"")
 end
 
 return M
