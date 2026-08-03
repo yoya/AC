@@ -64,12 +64,13 @@ M.routes = {
 
 M.essential_points = {
     hp1 = {x=-99.6,y=-183.4,z=0},
-    hp1_mission = {x=-99.6,y=-183.4,z=0},
 }
 
 M.automatic_routes = {
-    hp1 = { route="grey" },
-    hp1_mission = { route="gob", contents="Mission" },
+    hp1 = {
+	{ route="grey" },
+	{ route="gob", contents="Mission" },
+    },
 }
 
 return M

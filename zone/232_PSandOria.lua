@@ -16,13 +16,14 @@ M.routes = {
 }
 
 M.essential_points = {
-    hp2_M_logpo = {x=49,y=-106,z=-12},
     hp2_M = {x=49,y=-106,z=-12},
 }
 
 M.automatic_routes = {
-    hp2_M_logpo = { route="greeter", contents="loginpoint" },
-    hp2_M = { route="mogshop", contents="idle" },
+    hp2_M = {
+	{ route="mogshop", contents="idle" },
+	{ route="greeter", contents="loginpoint" },
+    },
 }
 
 return M

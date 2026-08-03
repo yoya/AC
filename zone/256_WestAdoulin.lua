@@ -139,7 +139,6 @@ M.essential_points = {
     hp_2_M = {x=31,y=-163,z=0},
     -- x=(-2.3, 7.7), y=(-147.1, -141.6), z={-0.7,0.7}
     moghouse = {x=2.7,y=-145,z=-0.7,d=7},
-    -- moghouse2 = {x=2.7,y=-145,z=-0.7,d=7},  -- 動かないので一旦無効化
 }
 
 M.automatic_routes = {
@@ -149,8 +148,10 @@ M.automatic_routes = {
     wp_cou = { route="cou" },
     wp_inv = { route="inv" },
     hp_2_M = { route="unity" },
-    moghouse = { route="eminence" }, -- エミネンスのガルカ
-    moghouse2 = { route="mog2unity", contents="UnityWanted" },
+    moghouse = {
+	{ route="eminence" }, -- エミネンスのガルカ
+	{ route="mog2unity", contents="UnityWanted" }, -- 子ミスラ
+    },
 }
 
 local sell_items = {
