@@ -107,7 +107,9 @@ local function pick_route(f, entry, prev_zone)
     return t
 end
 
--- 現在地から実行できる automatic_route を選ぶ。無ければ nil
+-- 現在地から実行できる automatic_route を選ぶ。無ければ nil。
+-- 近い essential_point が複数ある時は距離が一番近いものを選ぶ
+-- (pairs の順は不定なので、選ばないと実行ごとに変わりうる)
 function M.select_automatic_route(zone, prev_zone, automatic_routes)
     print("zone/change.select_automatic_route")
     if type(automatic_routes) ~= "table" then
@@ -117,6 +119,8 @@ function M.select_automatic_route(zone, prev_zone, automatic_routes)
     if zone_object == nil then
 	return nil
     end
+    local me = ac_pos.current_pos()
+    local best = nil
     for f, entry in pairs(automatic_routes) do
 	local fp = zone_object.essential_points[f]
 	-- データ不備は、そこだけ飛ばす。他の essential_point の判定は続ける
@@ -133,12 +137,15 @@ function M.select_automatic_route(zone, prev_zone, automatic_routes)
 	    if ac_pos.is_near(fp, d, dx, dy) then
 		local t = pick_route(f, entry, prev_zone)
 		if t ~= nil then
-		    return { point = f, route = t.route }
+		    local dist = ac_pos.distance(me, fp)
+		    if best == nil or dist < best.dist then
+			best = { point = f, route = t.route, dist = dist }
+		    end
 		end
 	    end
 	end
     end
-    return nil
+    return best
 end
 
 function M.invoke_automatic_route(zone, sel)
