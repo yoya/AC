@@ -28,7 +28,7 @@ M.auto_move_seq = 0
 M.prev_zone = nil
 M.prev_pos = nil
 
-function pos_str(pos)
+local function pos_str(pos)
     if pos == nil then
 	return "(nil)"
     end
