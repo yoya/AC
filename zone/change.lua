@@ -16,9 +16,9 @@ local M = {}
 
 M.incoming_text_listener_id = nil
 
--- zone_in を実行したゾーン。zone_out はこれを基準に呼ぶ。
--- windower の prev_zone はログイン直後に zone と同じ値になり、AC.lua で nil に
--- 落としているので、それを使うと zone_in だけ走って zone_out が抜ける。
+-- zone_in を実行したゾーン。zone_out はこれを基準に呼び、zone_in とペアにする。
+-- windower の prev_zone はログイン直後に zone と同じ値になるので、これが
+-- ログインか同じゾーン内の遷移かの判断にも使う (zone_change_handler)
 M.current_zone = nil
 
 -- 自動移動の起動世代。ゾーン移動やワープの度に進める
