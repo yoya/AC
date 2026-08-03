@@ -155,14 +155,14 @@ function M.invoke_automatic_route(zone, sel)
     ac_move.auto_move_to(zone, {sel.route}, zone_object.routes)
 end
 
-function M.automatic_routes_handler(zone, prev_zone, automatic_routes)
+function M.automatic_routes_handler(zone, prev_zone, is_login, automatic_routes)
     print("zone/change.automatic_routes_handler", zone)
     if not control.automove then
 	print("control.automove is false")
 	return
     end
     local pos = ac_pos.current_pos()
-    if prev_zone == nil and aczone.in_moghouse(zone, pos) then
+    if is_login and aczone.in_moghouse(zone, pos) then
 	io_chat.print("ログインしてすぐのモグハウスは自動移動オフ")
 	return
     end
@@ -226,7 +226,7 @@ function M.zone_out_handler(zone)
     contents.zone_out()
 end
 
-function M.zone_in_handler(zone, prev_zone)
+function M.zone_in_handler(zone, prev_zone, is_login)
     -- zone in の処理
     M.current_zone = zone
     local zone_object = aczone.zone_table[zone]
@@ -242,7 +242,8 @@ function M.zone_in_handler(zone, prev_zone)
 	end
 	local automatic_routes = zone_object.automatic_routes
 	if automatic_routes ~= nil then
-	    M.automatic_routes_handler(zone, prev_zone, automatic_routes)
+	    M.automatic_routes_handler(zone, prev_zone, is_login,
+				       automatic_routes)
 	end
 	if iam_leader() then
 	    local automatic_trust = zone_object.automatic_trust
@@ -261,19 +262,23 @@ function M.zone_change_handler(zone, prev_zone)
     ac_stat.init()
     task.all_clear()
     aczone.AC.start_pos = nil
-    -- zone out の処理。zone_in を実行したゾーンとペアで呼ぶ
-    local out_zone = M.current_zone
-    if prev_zone == nil and out_zone ~= zone then
-	-- ログイン直後。前のキャラの zone_out は走らせない
-	out_zone = nil
-	M.current_zone = nil
+    -- windower はログイン直後に prev_zone == zone を返す。同じゾーン内の
+    -- 遷移 (モグハウス) でも同じ値になるので、zone_in 済みかどうかで区別する
+    local is_login = (prev_zone == nil or prev_zone == zone)
+	and M.current_zone ~= zone
+    if is_login then
+	prev_zone = nil  -- 前のゾーンは無い
     end
-    M.zone_out_handler(out_zone)
+    -- zone out の処理。zone_in を実行したゾーンとペアで呼ぶ。
+    -- ログイン直後は前のキャラのゾーンなので走らせない
+    if not is_login then
+	M.zone_out_handler(M.current_zone)
+    end
     -- zone in の処理
     M.current_zone = zone
     local zone_object = aczone.zone_table[zone]
     if zone_object ~= nil then
-	M.zone_in_handler(zone, prev_zone)
+	M.zone_in_handler(zone, prev_zone, is_login)
 	local change_handler = zone_object.zone_change_handler
 	if change_handler ~= nil then
 	    print("zone_change_handler found")
@@ -330,7 +335,7 @@ function M.warp_handler(zone, pos, prev_zone, prev_pos, dist)
     end
     local automatic_routes = zone_object.automatic_routes
     if automatic_routes ~= nil then
-	M.automatic_routes_handler(zone, prev_zone, automatic_routes)
+	M.automatic_routes_handler(zone, prev_zone, false, automatic_routes)
     end
 end
 

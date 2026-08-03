@@ -1260,7 +1260,7 @@ windower.register_event('load', function()
     end
     ws.init()
     local zone = windower.ffxi.get_info().zone
-    zone_change.zone_in_handler(zone, nil)
+    zone_change.zone_in_handler(zone, nil, true)
     -- command, delay, duration
     task.set_task_simple("ac inject currinfo1", 2, 1)
     task.set_task_simple("ac inject currinfo2", 4, 1)
@@ -1343,10 +1343,8 @@ windower.register_event('zone change', function(zone, prev_zone)
     use_silt = false
     use_beads = false
     control.point_cheer = false
-    if zone == prev_zone then
-	-- ログイン直後は zone ==  prev_zone なので細工する
-	prev_zone = nil
-    end
+    -- windower はログイン直後に zone == prev_zone を返す。ここでは潰さず、
+    -- ログインかどうかの判断は zone_change_handler に任せる
     zone_change.zone_change_handler(zone, prev_zone)
     ws.init()
     -- command, delay, duration
