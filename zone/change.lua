@@ -16,6 +16,11 @@ local M = {}
 
 M.incoming_text_listener_id = nil
 
+-- zone_in を実行したゾーン。zone_out はこれを基準に呼ぶ。
+-- windower の prev_zone はログイン直後に zone と同じ値になり、AC.lua で nil に
+-- 落としているので、それを使うと zone_in だけ走って zone_out が抜ける。
+M.current_zone = nil
+
 function pos_str(pos)
     if pos == nil then
 	return "(nil)"
@@ -173,8 +178,29 @@ function M.automatic_trust_handler(zone, prev_zone, automatic_trust)
     end
 end
 
+function M.zone_out_handler(zone)
+    -- zone out の処理
+    if zone == nil then
+	return
+    end
+    local zone_out_object = aczone.zone_table[zone]
+    if zone_out_object ~= nil then
+	local zone_out = zone_out_object.zone_out
+	if zone_out ~= nil then
+	    print("zone_out:", zone)
+	    zone_out()
+	end
+    end
+    if M.incoming_text_listener_id ~= nil then
+	incoming_text.remove_listener(M.incoming_text_listener_id)
+	M.incoming_text_listener_id = nil
+    end
+    contents.zone_out()
+end
+
 function M.zone_in_handler(zone, prev_zone)
     -- zone in の処理
+    M.current_zone = zone
     local zone_object = aczone.zone_table[zone]
     if zone_object ~= nil then
 	local zone_in = zone_object.zone_in
@@ -207,25 +233,16 @@ function M.zone_change_handler(zone, prev_zone)
     ac_stat.init()
     task.all_clear()
     aczone.AC.start_pos = nil
-    -- zone out の処理
-    if prev_zone == nil then
-	print("ERROR: prev_zone == nil")  -- 普通はありえない
-    else
-	local zone_out_object = aczone.zone_table[prev_zone]
-	if zone_out_object ~= nil then
-	    local zone_out = zone_out_object.zone_out
-	    if zone_out ~= nil then
-		print("zone_out:", prev_zone)
-		zone_out()
-	    end
-	    if M.incoming_text_listener_id ~= nil then
-		incoming_text.remove_listener(M.incoming_text_listener_id)
-		M.incoming_text_listener_id = nil
-	    end
-	end
-	contents.zone_out()
+    -- zone out の処理。zone_in を実行したゾーンとペアで呼ぶ
+    local out_zone = M.current_zone
+    if prev_zone == nil and out_zone ~= zone then
+	-- ログイン直後。前のキャラの zone_out は走らせない
+	out_zone = nil
+	M.current_zone = nil
     end
+    M.zone_out_handler(out_zone)
     -- zone in の処理
+    M.current_zone = zone
     local zone_object = aczone.zone_table[zone]
     if zone_object ~= nil then
 	M.zone_in_handler(zone, prev_zone)
