@@ -24,6 +24,10 @@ M.current_zone = nil
 -- 自動移動の起動世代。ゾーン移動やワープの度に進める
 M.auto_move_seq = 0
 
+-- 同一ゾーン内のワープ検出用。warp_handler_tick が毎 tick 更新する
+M.prev_zone = nil
+M.prev_pos = nil
+
 function pos_str(pos)
     if pos == nil then
 	return "(nil)"
@@ -326,42 +330,34 @@ function M.warp_handler_tick()
 	-- print("dist:", dist)
 	-- 東アドゥリンWP、レンタル<=>競売が 36.8
 	if  dist > 32 then
-	    M.warp_handler(zone, pos, M.prev_zone, M.prev_pos, dist)
+	    M.warp_handler(zone, pos, M.prev_pos, dist)
 	end
     end
     M.prev_zone = zone
     M.prev_pos = pos
 end
 
--- 同じ zone でワープした時。WP や AMANトローブ
-function M.warp_handler(zone, pos, prev_zone, prev_pos, dist)
-    print("zone/change:warp " .. zone .. ":" .. pos_str(pos) .. " << " .. prev_zone .. ":" ..  pos_str(prev_pos) .. " dist:" ..  math.round(dist, 2))
+-- 同じ zone でワープした時。WP や AMANトローブ。
+-- warp_handler_tick が M.prev_zone == zone の時だけ呼ぶので、
+-- warp_out と warp_in は必ず同じゾーンのものになる
+function M.warp_handler(zone, pos, prev_pos, dist)
+    print("zone/change:warp " .. zone .. ":" .. pos_str(pos) .. " << " ..
+	  pos_str(prev_pos) .. " dist:" ..  math.round(dist, 2))
     task.all_clear()
-    -- warp out の処理
-    if prev_zone == nil then
-	print("ERROR: prev_zone == nil")  -- 普通はありえない
-    else
-	local zone_out_object = aczone.zone_table[prev_zone]
-	if zone_out_object ~= nil then
-	    local warp_out = zone_out_object.warp_out
-	    if warp_out ~= nil then
-		print("warp_out:", prev_zone)
-		warp_out()
-	    end
-	end
-    end
-    -- warp in の処理
     local zone_object = aczone.zone_table[zone]
     if zone_object == nil then
 	return
     end
-    local warp_in = zone_object.warp_in
-    if warp_in ~= nil then
-	warp_in()
+    if zone_object.warp_out ~= nil then
+	print("warp_out:", zone)
+	zone_object.warp_out()
+    end
+    if zone_object.warp_in ~= nil then
+	zone_object.warp_in()
     end
     local automatic_routes = zone_object.automatic_routes
     if automatic_routes ~= nil then
-	M.automatic_routes_handler(zone, prev_zone, false, automatic_routes)
+	M.automatic_routes_handler(zone, zone, false, automatic_routes)
     end
 end
 
