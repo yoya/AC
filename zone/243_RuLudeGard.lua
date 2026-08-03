@@ -41,8 +41,7 @@ M.essential_points = {
 
 M.automatic_routes = {
     -- hp1 = { route="trust" },
-    hp1 = { route="proto" },
+    -- hp1 = { route="proto" },
 }
-
 
 return M
