@@ -2,28 +2,41 @@
 
 local M = {}
 
-local packets = require 'packets'
+require('pack')  -- 文字列の :pack
+
 local control = require 'control'
 local keyboard = require 'keyboard'
 local utils = require 'utils'
 local io_chat = require 'io/chat'
 
+-- incoming 0x058 (Assist Response) でターゲットを合わせる。
 -- https://github.com/DiscipleOfEris/Assist/blob/master/assist.lua
+--
+-- libs/packets/fields.lua の 0x058 定義には Target Index が無く、
+-- packets.new は定義に無いキーを黙って捨てるので、packets 経由では
+-- mob.index が常に 0 で注入されていた。ここだけバイト配置を直接書く。
+--   00 ヘッダ (id 9bit | size 7bit | sequence 16bit)
+--   04 Player ID     (unsigned int)
+--   08 Target ID     (unsigned int)
+--   0C Player Index  (unsigned short)
+--   0E Target Index  (unsigned short)
+local ASSIST_ID = 0x058
+-- size は dword 単位。4 dword = 16 バイト。b9b7H なので size は 9bit 左シフト
+local ASSIST_HEADER = ASSIST_ID + 4 * 0x200
+
 M.target_by_mob = function(mob)
     if mob == nil then
 	print(debug.traceback())
-	return
+	return false
     end
----    print("tagetByMobId", mobId)
     local player = windower.ffxi.get_player()
-    packets.inject(packets.new('incoming', 0x58, {
-        ['Assist Id'] = player.id,
-	['Assist Index'] = player.index,
-        ['Player'] = player.id,
-	['Player Index'] = player.index,
-	['Target'] = mob.id,
-	['Target Index'] = mob.index,
-    }))
+    if player == nil then
+	return false
+    end
+    windower.packets.inject_incoming(
+	ASSIST_ID,
+	('I3H2'):pack(ASSIST_HEADER, player.id, mob.id,
+		      player.index, mob.index))
     return true
 end
 
@@ -71,16 +84,15 @@ M.target_by_mob_name = function(name)
 end
 
 M.target_by_mob_id = function(mobId)
----    print("tagetByMobId", mobId)
-    local player = windower.ffxi.get_player()
-    packets.inject(packets.new('incoming', 0x58, {
-        ['Player'] = player.id,
-        ['Target'] = mobId,
-        ['Index'] = player.index
-    }))
+    local mob = windower.ffxi.get_mob_by_id(mobId)
+    if mob == nil then
+	print("io/net.target_by_mob_id mob not found by id:", mobId)
+	return false
+    end
+    return M.target_by_mob(mob)
 end
 
-M.target_by_mob_index = function(mobIndex)  -- 動かない？
+M.target_by_mob_index = function(mobIndex)
     if control.debug then
 	print("WARNING: io/net.target_by_mob_index:", mobIndex)
     end
