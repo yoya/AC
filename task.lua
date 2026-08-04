@@ -26,7 +26,7 @@ local task_table = {
 --ex) [M.PRIORITY_HIGH]   = { task1, task2, ... },
 
 local task_period_table = {}
--- ex) command => time
+-- ex) command => { time=次に実行できる時刻, eachfight=戦闘毎にリセットするか }
 
 -- new_task
 ---  command: コマンド。/input  挑発 <t> 等々
@@ -66,13 +66,18 @@ end
 M.reset_by_fight = function()
     -- eachfight が true のタスクをキューから外し、再使用タイマーをリセットする
     -- (prob.lua が新しい戦闘用に積み直す)
+    -- 実行済みのタスクはキューに残っていないので、再使用タイマー側を走査する
+    local now = os.time()
+    for _, p in pairs(task_period_table) do
+	if p.eachfight == true then
+	    p.time = now - 1
+	end
+    end
     for level = PRIORITY_FIRST, PRIORITY_LAST do
 	local tasks = task_table[level]
 	-- table.remove するので後ろから回す
 	for i = #tasks, 1, -1 do
-	    local task = tasks[i]
-	    if task.eachfight == true then
-		task_period_table[task.command] = os.time() - 1
+	    if tasks[i].eachfight == true then
 		table.remove(tasks, i)
 	    end
 	end
@@ -109,9 +114,15 @@ function M.set_task(level, task)
     table.insert(task_table[level], task)
     local c = task.command
     local t = os.time() + task.delay
-    --if task_period_table[c] == nil or task_period_table[c] < t then
-    if task_period_table[c] == nil then
-	task_period_table[c] = t
+    local p = task_period_table[c]
+    if p == nil then
+	task_period_table[c] = { time=t, eachfight=task.eachfight }
+    else
+	-- delay は2回目以降も効かせる。ただし再使用待ちを縮めはしない
+	if p.time < t then
+	    p.time = t
+	end
+	p.eachfight = task.eachfight
     end
     return true
 end
@@ -184,9 +195,10 @@ function M.get_task()
     for level = PRIORITY_FIRST, PRIORITY_LAST do
 	for i, task in ipairs(task_table[level]) do
 	    local c = task.command
-	    local t = task_period_table[c]
-	    if t == nil or t <= now then
-		task_period_table[c] = now + task.period
+	    local p = task_period_table[c]
+	    if p == nil or p.time <= now then
+		task_period_table[c] = { time=now + task.period,
+					 eachfight=task.eachfight }
 		table.remove(task_table[level], i)
 		return level, task
 	    end
@@ -243,8 +255,8 @@ function M.print()
 	io_chat.print("level:"..l)
 	for i, task in ipairs(taskArr) do
 	    local c = task.command
-	    local t = task_period_table[c]
-	    io_chat.print(task, t <= os.time())
+	    local p = task_period_table[c]
+	    io_chat.print(task, p == nil or p.time <= os.time())
 	end
     end
 end
