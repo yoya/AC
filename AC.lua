@@ -1354,6 +1354,7 @@ windower.register_event('zone change', function(zone, prev_zone)
     ac_move.auto = false
     use_silt = false
     use_beads = false
+    use_faith = false
     control.point_cheer = false
     -- windower はログイン直後に zone == prev_zone を返す。ここでは潰さず、
     -- ログインかどうかの判断は zone_change_handler に任せる
