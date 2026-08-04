@@ -42,19 +42,19 @@ function M.warp_in()
 end
 
 M.essential_points = {
+    --x={-536.4,-536}, y={-211.9,-211.6},z={160.5}
     entrance = {x=-536,y=-211.6,z=160.5},  -- ホルレーに入ったところ
     -- トローブ / ミッション
     bc_in = {x=-316.3, y=-102.6,z=113.1,wait=10},
+    trove_in = {x=-316.3, y=-102.6,z=113.1,wait=10},
     trove2_in = {x=-75.3,y=77.4,z=-7.1,wait=10},
-    trove3_in = {x=163.6,y=257.2,wait=10},
+    trove3_in = {x=163.6,y=257.2,z=-126.9,wait=10},
 }
 
 M.automatic_routes = {
     entrance =  { route="circle", contents="trove" },
-    bc_in = {
-	{ route="trove", contents="trove" },
-	{ route="bc",    contents="mission" },
-    },
+    bc_in = { route="bc", contents="mission" },
+    trove_in = { route="trove", contents="trove" },
     trove2_in = { route="trove2", contents="trove" },
     trove3_in = { route="trove3", contents="trove" },
 }
