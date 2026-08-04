@@ -66,12 +66,13 @@ function BurningCircleFunction(zone, mob)
 	    end
 	end
     end
-    coroutine.sleep(10)  -- 動く
+    -- coroutine.sleep(10)  -- 動く
+    coroutine.sleep(9)
     -- coroutine.sleep(8)  -- あとで試す
     -- coroutine.sleep(5)  -- 動かない
     print("----------")
     push_keys({"down"}) -- ひとつ下を選択。
-    coroutine.sleep(1)
+    coroutine.sleep(0.5)
     push_keys({"enter"}) -- BCに入る
 end
 
