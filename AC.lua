@@ -1316,6 +1316,10 @@ windower.register_event('logout', function()
     -- ゾーン由来の上書きは、そのゾーンの zone_out でしか外れない。
     -- ログイン時は zone_out が走らないので、ここで外しておく
     contents.clear_zone_override()
+    -- パーティ情報が届くまでの間、前のキャラのものを使わせない
+    ac_party.leader_id = nil
+    ac_party.member_table = {}
+    acinspect.alliance_table = {}
     -- command, delay, duration
     task.set_task_simple("//record char", 0, 1)
 end)
