@@ -150,13 +150,15 @@ function M.equip_item(slot, item_id)
     end
 end
 
-function M.search_equip_item(item_id)
+-- skip_equipped が true の時は、装備中のものを候補から外す。
+-- 装備中の 1 個を別の部位に付け替えると、元の部位が空になるため。
+function M.search_equip_item(item_id, skip_equipped)
     local items = windower.ffxi.get_items()
     for name, bag_id in pairs(equip_bags) do
 	local bag = items[name]
 	if bag ~= nil then
 	    for i, e in ipairs(bag) do
-		if e.id == item_id then
+		if e.id == item_id and not (skip_equipped and e.status ~= 0) then
 		    return equip_bags[name], e.slot
 		end
 	    end
