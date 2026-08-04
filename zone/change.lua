@@ -11,6 +11,7 @@ local control = require 'control'
 local contents = require 'contents'
 local incoming_text = require 'incoming/text'
 local pstatus = require 'player_status'
+local acitem = require 'item'
 
 local M = {}
 
@@ -81,6 +82,32 @@ local function skip_by_zone_from(t, prev_zone)
     return -t.zone_from == prev_zone
 end
 
+-- item: そのアイテムを持っている時だけ有効。配列ならどれか1つ持っていれば良い。
+-- 探すのはかばんと持ち歩きバッグだけ。金庫の中は持っている事にしない
+local function has_item(item)
+    local ids = item
+    if type(item) ~= "table" then
+	ids = { item }
+    end
+    for _, id in ipairs(ids) do
+	if acitem.inventory_has_item(id) or acitem.bags_has_item(id) then
+	    return true
+	end
+    end
+    return false
+end
+
+-- contents / item の条件を全て満たすか。指定が無い条件は満たしているとみなす
+local function match_condition(t)
+    if t.contents ~= nil and not contents.match_contents_name(t.contents) then
+	return false
+    end
+    if t.item ~= nil and not has_item(t.item) then
+	return false
+    end
+    return true
+end
+
 local function can_exec(f, t)
     if t.leader_only == true and not iam_leader() then
 	io_chat.infof("移動するのはリーダーだけ: %s => %s", f, t.route)
@@ -99,16 +126,16 @@ local function can_exec(f, t)
 end
 
 -- ひとつの essential_point の route 群から実行するものを1つ選ぶ。
--- contents 一致を contents 指定なしより優先する。
--- contents 一致があるならそれだけを見る。leader_only や need_level で
--- 実行できない時に contents 指定なしの既定ルートへ落とさない為
+-- 条件 (contents / item) 付きの一致を、条件なしより優先する。
+-- 一致があるならそれだけを見る。leader_only や need_level で
+-- 実行できない時に条件なしの既定ルートへ落とさない為
 local function pick_route(f, entry, prev_zone)
-    local matched = nil    -- contents 一致
-    local fallback = nil   -- contents 指定なし
+    local matched = nil    -- 条件付きで、条件を満たしたもの
+    local fallback = nil   -- 条件指定なし
     for _, t in ipairs(route_list(entry)) do
 	if t ~= nil and not skip_by_zone_from(t, prev_zone) then
-	    if t.contents ~= nil then
-		if matched == nil and contents.match_contents_name(t.contents) then
+	    if t.contents ~= nil or t.item ~= nil then
+		if matched == nil and match_condition(t) then
 		    matched = t
 		end
 	    elseif fallback == nil then
