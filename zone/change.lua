@@ -28,6 +28,15 @@ M.auto_move_seq = 0
 M.prev_zone = nil
 M.prev_pos = nil
 
+-- キャラを切り替えてもアドオンは動き続けるので、ログアウトで状態を捨てる。
+-- 残っていると、次のログインが前のキャラと同じゾーンだった時に、同一ゾーン
+-- 内の遷移 (モグハウスの出入り) と区別できなくなる
+function M.logout()
+    M.current_zone = nil
+    M.prev_zone = nil
+    M.prev_pos = nil
+end
+
 local function pos_str(pos)
     if pos == nil then
 	return "(nil)"

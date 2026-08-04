@@ -1311,6 +1311,7 @@ windower.register_event('login', function()
 end)
 
 windower.register_event('logout', function()
+    zone_change.logout()  -- 前のキャラのゾーンを次のログインに持ち越さない
     -- command, delay, duration
     task.set_task_simple("//record char", 0, 1)
 end)
