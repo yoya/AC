@@ -15,6 +15,10 @@ function M.zone_in()
     local orig_item_id = ac_equip.equip_item_by_slot_name("body")
     if orig_item_id ~= nil and orig_item_id ~= 27923 then
 	M.orig_body_item_id = orig_item_id
+    else
+	-- 既にガーブを着ている等で元が判らない。前の記録は当てにならないので
+	-- (キャラを切り替えると前のキャラのものが残る) 戻さない
+	M.orig_body_item_id = 0
     end
     ac_equip.equip_item("body", 27923)  -- カウンセラーガーブ
 end
