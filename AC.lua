@@ -19,7 +19,6 @@ local works = require 'works'
 local contents = require 'contents'
 contents.AC = M
 local pull = require 'pull'
-local puller = false
 local defaults = {
     AccountList = { },
     Control = { Debug = "off", },
