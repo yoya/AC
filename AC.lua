@@ -1312,6 +1312,7 @@ end)
 
 windower.register_event('logout', function()
     zone_change.logout()  -- 前のキャラのゾーンを次のログインに持ち越さない
+    ac_equip.init()
     -- command, delay, duration
     task.set_task_simple("//record char", 0, 1)
 end)
@@ -1319,6 +1320,7 @@ end)
 windower.register_event('job change', function()
     ws.init()
     ac_stat.init()
+    ac_equip.init()
     -- command, delay, duration
     task.set_task_simple("ac inject currinfo1", 2, 1)
     task.set_task_simple("ac inject currinfo2", 3, 1)

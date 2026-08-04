@@ -52,8 +52,15 @@ function M.equip_item_by_slot_name(slot_name)
     return item_id
 end
 
+-- 記録しているのは item id ではなくバッグ内の位置 (inv_id, bag) なので、
+-- キャラやジョブが変われば同じ位置は別の物を指す。持ち越さず捨てる
 local equip_set = {}
 local equip_set_bank = {}
+
+function M.init()
+    equip_set = {}
+    equip_set_bank = {}
+end
 
 -- 装備中の装束を記録する
 function M.equip_save(arg)
@@ -211,8 +218,6 @@ function M.tick(player)
 	else
 	    M.equip_restore()
 	end
-    else
-	-- equip_set = {}
     end
 end
 
