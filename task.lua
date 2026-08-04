@@ -240,6 +240,9 @@ M.tick = function()
 	    ac_record.record_char()
 	elseif string.find(c, '//ws exec') == 1 then
 	    ws.exec()
+	else
+	    local io_chat = require('io/chat')
+	    io_chat.warnf("task: unknown // command: %s", c)
 	end
     end
     tick_next_time = now + task.duration
