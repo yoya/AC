@@ -6,7 +6,6 @@ local res_name = require 'res_name'
 
 local utils = require 'utils'
 local control = require 'control'
-local acitem = require 'item'
 local acitem_data = require 'item/data'
 local io_chat = require 'io/chat'
 local pstatus = require 'player_status'
@@ -166,34 +165,39 @@ function M.search_equip_item(item_id, skip_equipped)
     end
 end
 
-local equiped_ring_item_id = 0
-local equiped_ear_item_id = 0
+-- 左右の指/耳や main/sub のように、同じアイテムが複数の部位の候補に
+-- 入っている事がある。1 個しか持っていないものを取り合うと、後から
+-- 付けた部位に移動して先の部位が空になる (装備が脱げる) ので、この
+-- 呼び出しで使った id を覚えておき、装備中のものは候補から外す。
 function M.equip_item_by_priority_tree(item_tree)
-    for slot_name, items in pairs(item_tree) do
+    local items = windower.ffxi.get_items()
+    local equiped_item_ids = {}  -- 部位 -> 今その部位に付いているアイテムの id
+    for name in pairs(equip_slots) do
+	local inv_id = items.equipment[name]
+	local bag = items[equip_bags_keys[items.equipment[name.."_bag"]]]
+	if inv_id > 0 and bag ~= nil and bag[inv_id] ~= nil then
+	    equiped_item_ids[name] = bag[inv_id].id
+	end
+    end
+    local used_item_ids = {}
+    for slot_name, ids in pairs(item_tree) do
 	local slot = equip_slots[slot_name]
-	for _, id in ipairs(items) do
-	    if acitem.inventory_has_item(id) or acitem.wardrobe_has_item(id)  then
-		if equiped_ring_item_id == id or equiped_ear_item_id == id then
-		    -- skip
-		else
-		    local bag = nil
-		    local inv_id = nil
-		    bag, inv_id = M.search_equip_item(id)
-		    -- print("slot, id, bag, inv_id", slot, id, bag, inv_id)
+	for _, id in ipairs(ids) do
+	    if id == equiped_item_ids[slot_name] then
+		used_item_ids[id] = true  -- 既にこの部位に付いている
+		break
+	    elseif used_item_ids[id] ~= true then
+		-- 他の部位が使ったものは、奪うと向こうが空になるので飛ばす
+		local bag, inv_id = M.search_equip_item(id, true)
+		-- print("slot, id, bag, inv_id", slot, id, bag, inv_id)
+		if bag ~= nil then
 		    windower.ffxi.set_equip(inv_id, slot, bag)
-		    if slot_name == "left_ear" or slot_name == "right_ear" then
-			equiped_ear_item_id = id
-		    end
-		    if slot_name == "left_ring" or slot_name == "right_ring" then
-			equiped_ring_item_id = id
-		    end
+		    used_item_ids[id] = true
 		    break
 		end
 	    end
 	end
     end
-    equiped_ear_item_id = 0
-    equiped_ring_item_id = 0
     coroutine.sleep(1)
     utils.target_lockon(true)
 end
