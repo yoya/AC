@@ -91,6 +91,13 @@ M.routes = {
 	{x=-50.5,y=-95,z=-0.1,desc="HPからモグハウス"}, {x=-55,y=-101},
 	{x=-56,y=-109}, {}
     },
+    -- HP#2(M) に立ったまま、ワープ先を選ぶところまで進めて止まる
+    hp2warp = {
+	{auto=false},  -- auto だとリーダーの後を追いかけるので
+	{x=-50.5,y=-95,z=-0.1,desc="HP#2からワープ先の選択まで"},
+	{a="f8"}, {target="Home Point #2"}, {a="touch"}, {wait=2},
+	{keys={"enter"}}, -- どのロージョンにする
+    },
     -- PCK
     pck = {
 	{x=-101.3,y=-10.7,z=-0.1}, {x=-83,y=-2}, {x=-83,y=5},
@@ -201,7 +208,14 @@ M.automatic_routes = {
 	{ route="mog2wp", contents="Leveling" },
 	{ route="mog2hp-abys", contents="Abyssea" },
     },
-    homepoint_2_M = { route="moghouse" },
+    homepoint_2_M = {
+	{ route="moghouse" },
+	-- オーブを持っている時は、モグハウスに行かずワープ先の選択まで進める
+	{ route="hp2warp", item={
+	      9275,  -- マーズオーブ
+	      9276,  -- ビーナスオーブ
+	} },
+    },
     yahse_dock = {
 	{ route="ionis-wp" },
 	{ route="ionis-wp-sortie", contents="Sortie"},
