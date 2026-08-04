@@ -1321,6 +1321,7 @@ windower.register_event('logout', function()
     ac_party.member_table = {}
     acinspect.alliance_table = {}
     battle.orig_equip_right_ring_item_id = nil  -- 前のキャラの指輪を付けない
+    acprob.prob_recast_time = {}  -- 前のキャラのリキャストで待たせない
     -- command, delay, duration
     task.set_task_simple("//record char", 0, 1)
 end)
