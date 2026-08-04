@@ -60,6 +60,17 @@ M.routes = {
 	{x=-39,y=-49,z=0}, {x=-41,y=-47,z=0},
 	{x=-42.7,y=-48.5,z=0}, {a="f8touch"}
     },
+    -- Gray から
+    trove = {
+	{keys={"esc", "esc"}}, -- NPCイベント解除
+	{x=-94,y=-167,z=0}, {x=-98,y=-172,d=1},	{x=-99.6,y=-183.4,z=0},
+	{a="f8"}, {target="Home Point #1"}, {a="touch"}, {wait=3},
+	{keys={"enter"}}, -- どうする？ > どのロージョンにする
+	{keys={"right", "right", "right", "down", "enter"}}, -- ロンフォール
+	{keys={"down", "enter"}}, -- ユグホトの岩屋
+	{keys={"down", "enter"}}, -- Home Point #1
+	{keys={"up", "enter"}}, -- はい
+    },
 }
 
 M.essential_points = {
@@ -72,5 +83,16 @@ M.automatic_routes = {
 	{ route="gob", contents="Mission" },
     },
 }
+
+function M.incoming_text_listener(text)
+    if string.contains(text, "マーズオーブを手に入れた") or
+	string.contains(text, "ビーナスオーブを手に入れた") or
+	string.contains(text, "未使用のマーズオーブと交換します") or
+	string.contains(text, "未使用のビーナスオーブと交換します") then
+	if player.status == 0 then
+	    command.send("ac move trove")
+	end
+    end
+end
 
 return M
