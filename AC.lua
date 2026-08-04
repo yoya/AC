@@ -1313,6 +1313,9 @@ end)
 windower.register_event('logout', function()
     zone_change.logout()  -- 前のキャラのゾーンを次のログインに持ち越さない
     ac_equip.init()
+    -- ゾーン由来の上書きは、そのゾーンの zone_out でしか外れない。
+    -- ログイン時は zone_out が走らないので、ここで外しておく
+    contents.clear_zone_override()
     -- command, delay, duration
     task.set_task_simple("//record char", 0, 1)
 end)
