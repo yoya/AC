@@ -95,8 +95,7 @@ M.routes = {
     hp2warp = {
 	{auto=false},  -- auto だとリーダーの後を追いかけるので
 	{x=-50.5,y=-95,z=-0.1,desc="HP#2からワープ先の選択まで"},
-	{a="f8"}, {target="Home Point #2"}, {a="touch"}, {wait=2},
-	{keys={"enter"}}, -- どのロージョンにする
+	{a="f8"}, {target="Home Point #2"}, {a="touch"}
     },
     -- PCK
     pck = {
