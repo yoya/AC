@@ -575,6 +575,7 @@ local cmd_garden = function(zone, arg1)
 	utils.target_lockon(true)
 	coroutine.sleep(3)
 	push_keys({"enter"})
+	windower.ffxi.run(false)
 	coroutine.sleep(1)
 	-- 別の場所に移動したい
 	push_keys({"right", "right", "up", "enter"})
