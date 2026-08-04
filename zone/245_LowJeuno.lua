@@ -89,8 +89,13 @@ function M.incoming_text_listener(text)
 	string.contains(text, "ビーナスオーブを手に入れた") or
 	string.contains(text, "未使用のマーズオーブと交換します") or
 	string.contains(text, "未使用のビーナスオーブと交換します") then
-	if player.status == 0 then
-	    command.send("ac move trove")
+	for i = 1, 10 do
+	    local player = windower.ffxi.get_player()
+	    if player.status == 0 then
+		command.send("ac move trove")
+		break
+	    end
+	    coroutine.sleep(1)
 	end
     end
 end
