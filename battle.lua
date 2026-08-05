@@ -3,8 +3,14 @@
 local M = {}
 
 local command = require 'command'
+local control = require 'control'
+local keyboard = require 'keyboard'
+local push_keys = keyboard.push_keys
+
 local ac_equip = require 'ac/equip'
+local incoming_text = require 'incoming/text'
 local acjob = require 'job'
+
 -- 戦闘スタイル
 
 M.BATTLE_MELEE = 1 -- 物理攻撃
@@ -23,6 +29,7 @@ M.battle_table = {
 for _, obj in pairs(M.battle_table) do obj.parent = M end
 
 M.orig_equip_right_ring_item_id = nil
+M.incoming_text_listener_id = nil
 
 function M.start()
     -- print("battle start")
@@ -35,9 +42,18 @@ function M.start()
 	ac_equip.equip_item(slot, item_id)
     end
     acjob.battle_start()
+    if M.incoming_text_listener_id ~= nil then
+	incoming_text.remove_listener(M.incoming_text_listener_id)
+	M.incoming_text_listener_id = nil
+    end
+    M.incoming_text_listener_id = incoming_text.add_listener("", M.incoming_text_handler)
 end
 
 function M.finish()
+    if M.incoming_text_listener_id ~= nil then
+	incoming_text.remove_listener(M.incoming_text_listener_id)
+	M.incoming_text_listener_id = nil
+    end
     -- print("battle finish")
     -- 次に戦う予定がない(attack off でリンクする敵もいない)場合、
     -- 移動装備に着替える
@@ -68,6 +84,40 @@ function M.tick(player, me)
         if battle_object.tick ~= nil then
             battle_object.tick(player, me, mob)
         end
+    end
+end
+
+function M.incoming_text_handler(text)
+    if not control.auto then
+	return
+    end
+    if string.contains(text, "コマンドが実行できない") and
+	control.enemy_space == control.ENEMY_SPACE_NEAR then
+	if string.contains(text, "近づかないとコマンドが") or
+	    string.contains(text, "遠くにいるため、コマンドが")then
+	    if control.debug then
+		io_chat.info("前に詰める")
+	    end
+	    keyboard.longpush_key("w", 3.0)  -- 前に詰める
+	    push_keys({"a"})  -- 少し左にずらす
+	elseif string.contains(text, "姿が見えないためコマンドが") then
+	    if control.debug then
+		io_chat.info("左>後>前に移動")
+	    end
+	    push_keys({"a", "s", "w"})  -- 左>後>前に移動
+	end
+    elseif string.contains(text, "の詠唱は中断された") then
+	if control.debug then
+	    io_chat.warn("詠唱の中断を検知")
+	end
+    elseif string.contains(text, "魔法を唱えることができない") then
+	if control.debug then
+	    io_chat.warn("魔法 詠唱の失敗を検知")
+	end
+    elseif string.contains(text, "の命のカウントダウン") then
+	command.send('input /item 聖水 <me> ; wait 1 ; input /item 聖水 <me>')
+    elseif string.contains(text, "ターゲット選択中は使用できません。") then
+	push_keys({"escape"})  -- ターゲットを外す
     end
 end
 

@@ -224,6 +224,7 @@ local idle_function_sell_junk_items = function(mob)
 	round = round + 1
 	-- 「集める → 売る → 捨てる」の順。集めた分をその周で処理しないと
 	-- 残数が減らず、進捗なしと誤判定する。
+	io_chat.print("かばんに移動を試みる")
 	aggregate_junk_items_to_inventory(mob)
 	sell_junk_items_in_inventory()
 	drop_junk_items_in_inventory()
@@ -1265,40 +1266,6 @@ windower.register_event('load', function()
     task.set_task_simple("ac inject currinfo1", 2, 1)
     task.set_task_simple("ac inject currinfo2", 4, 1)
     task.set_task_simple("//record char", 6, 1)
-    local incoming_text_handler = function(text)
-	if not control.auto then
-	    return
-	end
-	if string.contains(text, "コマンドが実行できない") and
-	    control.enemy_space == control.ENEMY_SPACE_NEAR then
-	    if string.contains(text, "近づかないとコマンドが") or
-		string.contains(text, "遠くにいるため、コマンドが")then
-		if control.debug then
-		    io_chat.info("前に詰める")
-		end
-		keyboard.longpush_key("w", 3.0)  -- 前に詰める
-		push_keys({"a"})  -- 少し左にずらす
-	    elseif string.contains(text, "姿が見えないためコマンドが") then
-		if control.debug then
-		    io_chat.info("左>後>前に移動")
-		end
-		push_keys({"a", "s", "w"})  -- 左>後>前に移動
-	    end
-	elseif string.contains(text, "の詠唱は中断された") then
-	    if control.debug then
-		 io_chat.warn("詠唱の中断を検知")
-	    end
-	elseif string.contains(text, "魔法を唱えることができない") then
-	    if control.debug then
-		io_chat.warn("魔法 詠唱の失敗を検知")
-	    end
-	elseif string.contains(text, "の命のカウントダウン") then
-	    command.send('input /item 聖水 <me> ; wait 1 ; input /item 聖水 <me>')
-	elseif string.contains(text, "ターゲット選択中は使用できません。") then
-	    push_keys({"escape"})  -- ターゲットを外す
-	end
-    end
-    incoming_text.add_listener("", incoming_text_handler)
     -- 全ての準備が整ってから tick 起動
     tick:loop(control.period)
 end)
