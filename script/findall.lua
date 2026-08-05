@@ -5,7 +5,6 @@ local lfs = require('lfs')
 package.path = package.path .. ";../?.lua"
 local res_items = require 'res/items'
 local res_key_items = require 'res/key_items'
-local utils = require 'utils'
 local io_console = require 'io/console'
 local item_vagary = require 'item/vagary'
 local item_shishin = require 'item/shishin'

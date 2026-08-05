@@ -2,7 +2,6 @@
 
 local packets = require('packets')
 local res_name = require('res_name')
-local command = require('command')
 local io_chat = require('io/chat')
 local task = require('task')
 local control = require('control')

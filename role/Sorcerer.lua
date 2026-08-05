@@ -4,7 +4,6 @@ local M = {}
 
 local utils = require 'utils'
 local io_chat = require'io/chat'
-local command = require 'command'
 local acinspect = require 'inspect'
 local task = require 'task'
 local pstatus = require 'player_status'

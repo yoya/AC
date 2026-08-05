@@ -5,7 +5,6 @@ local utils = require 'utils'
 local acjob = require 'job'
 local merge_lists = utils.table.merge_lists
 local merge_tables = utils.table.merge_tables
-local command = require 'command'
 local task = require 'task'
 local io_chat = require 'io/chat'
 local M = {}

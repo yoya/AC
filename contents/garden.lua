@@ -13,7 +13,6 @@ local push_keys = keyboard.push_keys
 local io_chat = require 'io/chat'
 local io_net = require 'io/net'
 
-local aczone = require 'zone'
 local acitem = require 'item'
 
 local item_data = require 'item/data'

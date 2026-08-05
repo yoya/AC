@@ -1,6 +1,5 @@
 local M = {}
 
-local io_chat = require 'io/chat'
 local actask = require 'task'
 local battle = require 'battle'
 

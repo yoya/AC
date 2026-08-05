@@ -2,7 +2,6 @@
 
 local M = { id = 257 }
 
-local io_chat = require 'io/chat'
 local ac_equip = require 'ac/equip'
 
 M.orig_body_item_id = 0

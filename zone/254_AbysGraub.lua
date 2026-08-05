@@ -2,7 +2,6 @@
 
 local M = { id = 254 }
 
-local acitem = require 'item'
 
 
 

@@ -9,7 +9,6 @@ local acinspect = require('inspect')
 local acevent = require('event')
 
 local ac_char = require('ac/char')
-local ac_defeated = require('ac/defeated')
 local ac_party = require('ac/party')
 local ac_stat = require('ac/stat')
 

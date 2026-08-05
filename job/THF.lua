@@ -3,7 +3,6 @@
 local M = {}
 
 local role_Melee = require 'role/Melee'
-local command = require 'command'
 local task = require 'task'
 local pstatus = require 'player_status'
 

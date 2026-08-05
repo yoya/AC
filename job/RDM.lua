@@ -7,7 +7,6 @@ local role_Melee = require 'role/Melee'
 local role_Sorcerer = require 'role/Sorcerer'
 local ac_party = require 'ac/party'
 
-local io_chat = require 'io/chat'
 local pstatus = require 'player_status'
 
 local M = {}

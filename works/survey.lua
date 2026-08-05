@@ -5,7 +5,6 @@ local M = {}
 local keyboard = require 'keyboard'
 -- local io_chat = require 'io/chat'
 local incoming_text = require 'incoming/text'
-local control = require 'control'
 
 M.auto = false
     

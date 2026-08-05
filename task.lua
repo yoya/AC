@@ -3,8 +3,6 @@
 local M = {}
 
 local control = require 'control'
-local utils = require('utils')
-local io_console = require('io/console')
 local command = require 'command'
 local ac_record = require 'ac/record'
 local ws = require 'ws'

@@ -5,7 +5,6 @@ local task = require 'task'
 local utils = require 'utils'
 local aczone = require 'zone'
 local contents = require 'contents'
-local acitem = require 'item'
 local ac_equip = require 'ac/equip'
 local pstatus = require 'player_status'
 

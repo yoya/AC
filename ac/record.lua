@@ -4,7 +4,6 @@ local M = {}
 
 local res_name = require 'res_name'
 
-local io_chat = require("io/chat")
 local ac_char = require("ac/char")
 local utils = require "utils"
 

@@ -2,7 +2,6 @@
 
 local M = { id = 137 }
 
-local io_net = require 'io/net'
 
 M.routes = {
     -- HP#1

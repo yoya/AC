@@ -7,7 +7,6 @@ __AC = M
 
 require('functions')
 local res_name = require 'res_name'
-local socket = require 'socket'
 local config = require 'config'
 local control = require 'control'
 local packets = require 'packets'

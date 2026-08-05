@@ -1,7 +1,6 @@
 --- mob 関連
 
 local utils = require('utils')
-local io_chat = require('io/chat')
 local pstatus = require 'player_status'
 
 local M = {}

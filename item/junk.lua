@@ -2,9 +2,7 @@
 
 local M = {}
 
-local utils = require 'utils'
 local acevent = require 'event'
-local io_chat = require 'io/chat'
 
 -- id の符号で用途を表す。
 --   正の id … 店売りする

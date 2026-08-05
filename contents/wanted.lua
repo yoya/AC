@@ -2,7 +2,6 @@ local M = {}
 
 local utils = require 'utils'
 local control = require 'control'
-local io_chat = require 'io/chat'--
 local io_net = require 'io/net'
 local keyboard = require 'keyboard'
 local push_keys = keyboard.push_keys

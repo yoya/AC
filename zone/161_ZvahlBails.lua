@@ -2,7 +2,6 @@
 
 local M = { id = 161 }
 
-local io_chat = require 'io/chat'
 
 M.routes = {
     -- 本

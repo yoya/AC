@@ -2,7 +2,6 @@ local M = {}
 
 local packets = require('packets')
 
-local io_chat = require('io/chat')
 
 local packet_handler = { }
 

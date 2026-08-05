@@ -6,9 +6,6 @@ local control = require 'control'
 local contents = require 'contents'
 local task = require 'task'
 local role_Melee = require 'role/Melee'
-local aczone = require('zone')
-local io_chat = require('io/chat')
-local acmob = require 'mob'
 local pstatus = require 'player_status'
 
 local piani_prefix = "input /ja ピアニッシモ <me>; wait 2; "

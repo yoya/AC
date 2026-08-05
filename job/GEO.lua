@@ -2,12 +2,9 @@
 
 local M = {}
 
-local command = require 'command'
 local role_Sorcerer = require 'role/Sorcerer'
 
-local aczone = require 'zone'
 local ac_pos = require 'ac/pos'
-local io_chat = require 'io/chat'
 local task = require 'task'
 local pstatus = require 'player_status'
 

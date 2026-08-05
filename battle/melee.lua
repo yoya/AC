@@ -27,7 +27,6 @@ local ac_party = require 'ac/party'
 local iam_leader = ac_party.iam_leader
 
 local pull = require 'pull'
-local ws = require 'ws'
 local pstatus = require 'player_status'
 
 M.so_long_to_get_fight_count = 0
