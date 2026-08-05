@@ -1018,7 +1018,8 @@ M.crystal_char_table = {
 function M.char_update_handler(char)
     for id, name in pairs(M.crystal_char_table) do
 	local p = char[name]
-	if p ~= nil and p > 4500 then  -- モグ預けが溢れそうなら店売り
+	-- モグ預けが溢れそうなら店売り。分からない時も店売り。
+	if (p ~= nil or p == -1) and p > 4500 then
 	    table.insert(M.JunkItems, id)
 	    M.SellItemIdSet[id] = true
 	    M.JunkItemIdSet[id] = true
