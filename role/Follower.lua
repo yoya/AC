@@ -121,53 +121,69 @@ local follow_warp_gimmick = function(leader)
     end
 end
 
--- 敵にターゲットして近接攻撃する
-local attack_enemy = function(leader, me_pos, item_level)
+-- リーダーが戦っている敵を返す。まだ交戦していなければ nil
+local leader_enemy = function(leader)
+    if leader.status ~= pstatus.ENGAGED or leader.target_index == 0 then
+        return nil
+    end
+    local mob = windower.ffxi.get_mob_by_index(leader.target_index)
+    if mob == nil or mob.status ~= pstatus.ENGAGED then
+        return nil  -- 敵と戦闘開始してなければ様子見
+    end
+    return mob
+end
+
+-- 交戦する敵を決める。リーダーが戦っている敵が最優先。リーダーがまだ
+-- 交戦していない間だけ、自分に絡んでいる敵 (bt) や味方にヘイトが向いて
+-- いる敵を拾う。順序を逆にすると、リーダーが次の敵に移った時に各自が
+-- バラバラの敵を掴んで落ち着かない。
+local search_enemy = function(leader, me_pos)
+    local mob = leader_enemy(leader)
+    if mob ~= nil then
+        return mob
+    end
+    mob = windower.ffxi.get_mob_by_target("bt")
+    if mob ~= nil then
+        return mob
+    end
+    return acmob.search_nearest_mob(me_pos, {
+        range = control.enemy_range,
+        linked_only = true,
+    })
+end
+
+-- 決めた敵に張り付いて近接攻撃する
+local attack_enemy = function(mob, item_level)
     windower.ffxi.run(false)
-    local mob = windower.ffxi.get_mob_by_target("bt")
-    if mob ~= nil then
-        command.send('input /target <bt>')
-    else
-        mob = acmob.search_nearest_mob(me_pos, {
-            range = control.enemy_range,
-            linked_only = true,
-        })
-    end
-    if mob == nil then
-        --- リーダーがターゲットしてる敵に合わせる
-        if leader.status ~= pstatus.ENGAGED or leader.target_index == 0 then
-            return
-        end
-        local target = windower.ffxi.get_mob_by_index(leader.target_index)
-        if target == nil or target.status ~= pstatus.ENGAGED then
-            return  -- 敵と戦闘開始してなければ様子見
-        end
-        -- リーダーが戦闘している敵にターゲット
-        io_net.target_by_mob_index(leader.target_index)
-        mob = windower.ffxi.get_mob_by_target("t")
-    end
-    if mob ~= nil then
+    -- 既にこの敵をターゲットしているなら入れ直さない。ターゲットを
+    -- 毎 tick 入れ直すと、その度にターゲットが揺れる。
+    local t = windower.ffxi.get_mob_by_target("t")
+    local retarget = (t == nil or t.index ~= mob.index)
+    if retarget then
         io_net.target_by_mob(mob)
-        if item_level >= 119 or mob.hpp < 100 then
-            -- 敵との距離は自分基準で測る (リーダー基準だと自分が範囲外でも
-            -- 攻撃を撃って失敗する)。5 が近接攻撃できるギリギリの距離。
-            local me = windower.ffxi.get_mob_by_target("me")
-            local dx = mob.x - me.x
-            local dy = mob.y - me.y
-            local dist = math.sqrt(dx*dx + dy*dy)
-            if dist <= 5 then
-                windower.ffxi.run(false)
-                coroutine.sleep(math.random(0,2)/4)
-                command.send('input /attack <t>')
-                task.reset_by_fight()
-            else
-                -- 遠ければ敵へ詰める (リーダーではなく敵に寄る)
-                turn_to_pos(me.x, me.y, mob.x, mob.y)
-                windower.ffxi.run(dx, dy)
-            end
-        end
     end
-    acprob.clear_prob_recast_time()
+    if item_level < 119 and mob.hpp >= 100 then
+        return
+    end
+    -- 敵との距離は自分基準で測る (リーダー基準だと自分が範囲外でも
+    -- 攻撃を撃って失敗する)。5 が近接攻撃できるギリギリの距離。
+    local me = windower.ffxi.get_mob_by_target("me")
+    local dx = mob.x - me.x
+    local dy = mob.y - me.y
+    local dist = math.sqrt(dx*dx + dy*dy)
+    if dist > 5 then
+        -- 遠ければ敵へ詰める (リーダーではなく敵に寄る)
+        turn_to_pos(me.x, me.y, mob.x, mob.y)
+        windower.ffxi.run(dx, dy)
+        return
+    end
+    windower.ffxi.run(false)
+    if retarget then
+        coroutine.sleep(0.3)  -- 注入直後の <t> はまだ切り替わっていない
+    end
+    coroutine.sleep(math.random(0,2)/4)
+    command.send('input /attack <t>')
+    task.reset_by_fight()
 end
 
 function M.tick_idle(player, me)
@@ -183,18 +199,26 @@ function M.tick_idle(player, me)
     sync_mount(player, leader)
     local me_pos = {}
     get_mob_position(me_pos, "me")
-    -- リーダーが戦闘中なら追従より交戦を優先する
-    local leader_engaged = (leader.status == pstatus.ENGAGED)
-    if follow_leader(me_pos, leader, leader_engaged) then
+    local joinable = can_join_battle(player.item_level)
+    local enemy = nil
+    if joinable and control.attack then
+        enemy = search_enemy(leader, me_pos)
+    end
+    if enemy ~= nil then
+        -- 交戦相手が決まったら移動は敵基準にする。リーダーと敵の両方を
+        -- 追うと、行き先が tick 毎に入れ替わって落ち着かない。
+        is_far = false
+    elseif follow_leader(me_pos, leader, leader.status == pstatus.ENGAGED) then
         return  -- まだリーダーに追従中
     end
-    if not can_join_battle(player.item_level) then
+    if not joinable then
         return
     end
     -- ワープギミックは attack が off でも追随する
     follow_warp_gimmick(leader)
-    if control.attack then
-        attack_enemy(leader, me_pos, player.item_level)
+    if enemy ~= nil then
+        attack_enemy(enemy, player.item_level)
+        acprob.clear_prob_recast_time()
     end
 end
 
