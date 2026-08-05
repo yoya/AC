@@ -217,6 +217,7 @@ M.zone_table = {
     [277] = require('zone/277_RaKazTurris'), -- ラ・カザナル宮天守
     [280] = require('zone/280_MogGarden'),  -- モグガーデン
     [281] = require('zone/281_Leafallia'),  -- リファーリア
+    [283] = require('zone/283_SilverKnife'), -- シルバー・ナイフ
     [287] = require('zone/287_LegionB'),    -- アブダルスの模型-レギオンB
     [288] = require('zone/288_EschaZiTah'), -- エスカ-ジ・タ
     [289] = require('zone/289_EschaRuAun'), -- エスカ-ル・オン
