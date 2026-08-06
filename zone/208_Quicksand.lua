@@ -47,17 +47,30 @@ M.routes = {
 	{x=567,y=-939,z=18.2,d=1},
 	{target="Fountain of Kings"}
     },
+    bc_return = {
+	{x=-900.7,y=-245.4,z=16.8,"BC方面に戻る"},
+	{x=-902,y=-255,z=16.7},
+	-- 段差を降りる
+	{x=-904,y=-258,z=19}, {x=-903,y=-265}, {x=-895,y=-296},
+	{x=-898,y=-314}, {x=-899,y=-325}, {x=-904,y=-336},
+	{x=-929,y=-340}, {x=-935,y=-335}, {x=-941,y=-308},
+	{x=-948,y=-301}, {x=-960,y=-301}, {x=-972,y=-300},
+	{x=-980,y=-291}, {x=-980,y=-283}, {}
+    },
 }
 
 M.essential_points = {
     -- たまに反応しない ので、次 pos する
     ent_west_d12 = {x=-738.9,y=-521.8,z=-16},
     ent_east_h10 = {x=700,y=-688.2,z=-24},
+    -- BC から戻ってきた場所
+    ent_bc_return = {x=-900.7,y=-245.4,z=16.8},
 }
 
 M.automatic_routes = {
     --ent_west_d12 = { route="ent" },  -- 時間かかるので放置しかねないので
     ent_east_h10 = { route="kings" },
+    ent_bc_return = { route="bc_return" },
 }
 
 return M
