@@ -109,6 +109,9 @@ function M.dothebest_main(player)
 end
 
 M.battle_equip = {
+    body = {
+	25786, -- アシェーラハーネス
+    },
     left_ring = {
         26229,  -- レコリング
         26190,  -- 月光の指輪
