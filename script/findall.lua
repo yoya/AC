@@ -64,10 +64,20 @@ end
 local chara_name_list = {}
 local everyone_item_count = {}
 
+-- エンピリアン装束は、素・+1・+2・再構築 IL109・再構築 IL119 をまとめて探す
+local empyrean_armor = {}
+for _, ids in ipairs({ item_empyrean.armor, item_empyrean.armor_p1,
+		       item_empyrean.armor_p2, item_empyrean.armor_109,
+		       item_empyrean.armor_119 }) do
+    for _, id in ipairs(ids) do
+	table.insert(empyrean_armor, id)
+    end
+end
+
 local ItemKeywords = {
     Vagary = item_vagary.drop_items,
     Shishin = item_shishin.items,
-    EmpyArmor = item_empyrean.armor,
+    EmpyArmor = empyrean_armor,
 }
 
 function item_match(item_name, kw)
