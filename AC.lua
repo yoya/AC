@@ -623,6 +623,14 @@ local cmd_patrol = function(zone, arg1, arg2)
 		coroutine.sleep(1)
 		push_keys({"enter"})
 		coroutine.sleep(19)
+		zone = windower.ffxi.get_info().zone
+		local me = windower.ffxi.get_mob_by_target("me")
+		if not aczone.in_moghouse(zone2, me) then
+		    command.send('input /logout')
+		    coroutine.sleep(5)
+		    push_keys({"down"})
+		    break
+		end
 		if arg2 == "mailbox" or arg2 == "m" or arg2 == "mm" then
 		    command.send('input /mailbox')  -- 宅配ポストを開ける
 		    coroutine.sleep(4)
