@@ -216,11 +216,6 @@ function M.automatic_routes_handler(zone, prev_zone, is_login, automatic_routes)
 	print("control.automove is false")
 	return
     end
-    local pos = ac_pos.current_pos()
-    if is_login and aczone.in_moghouse(zone, pos) then
-	io_chat.print("ログインしてすぐのモグハウスは自動移動オフ")
-	return
-    end
     local zone_object = aczone.zone_table[zone]
     if zone_object == nil then
 	return
@@ -239,7 +234,13 @@ function M.automatic_routes_handler(zone, prev_zone, is_login, automatic_routes)
     -- ゾーンイン直後は座標が安定しないので、少し待ってから基準位置を取る
     coroutine.sleep(3)
     if not is_current() then return end
-    pos = ac_pos.current_pos()
+    local pos = ac_pos.current_pos()
+    -- ログイン直後は me が取れず座標が nil になる。座標が安定してから判定しないと
+    -- モグハウスにいる事が分からず、自動移動を止め損なう
+    if is_login and aczone.in_moghouse(zone, pos) then
+	io_chat.print("ログインしてすぐのモグハウスは自動移動オフ")
+	return
+    end
     -- さらに待って、その間に動いていない事を確かめる
     coroutine.sleep(5)
     if not is_current() then return end
