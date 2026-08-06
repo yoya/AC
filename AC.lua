@@ -223,7 +223,7 @@ local idle_function_sell_junk_items = function(mob)
 	round = round + 1
 	-- 「集める → 売る → 捨てる」の順。集めた分をその周で処理しないと
 	-- 残数が減らず、進捗なしと誤判定する。
-	io_chat.print("かばんに移動を試みる")
+	io_chat.print("かばんに集める")
 	aggregate_junk_items_to_inventory(mob)
 	sell_junk_items_in_inventory()
 	drop_junk_items_in_inventory()
