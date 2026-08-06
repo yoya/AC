@@ -175,7 +175,7 @@ function M.safes_to_inventory_by_set(id_set)
 			-- 移動は 1 件ずつしか処理されない。連射すると大半が
 			-- 落ちる上に、次の check_inventory_freespace も古い
 			-- 空き数を見てしまうので、1 件毎に待つ。
-			coroutine.sleep(1)
+			coroutine.sleep(0.5)
 		    end
                 end
             end
