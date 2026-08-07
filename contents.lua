@@ -84,7 +84,7 @@ M.name_table = {
     [M.Redeem]      = {'Redeem', 'rede'},
     [M.GobMys]      = {'GobMys', 'gob'},
     [M.UnityWanted] = {'UnityWanted', 'wanted'},
-    [M.Sortie]      = {'Sortie', 'sor'},
+    [M.Sortie]      = {'Sortie', 'sort', 'sor'},
 }
 
 M.incoming_text_listener_id = nil
