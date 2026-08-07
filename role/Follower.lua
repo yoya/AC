@@ -22,6 +22,12 @@ local turn_to_front = ac_move.turn_to_front
 -- リーダーから離れているか。tick をまたいで保持する
 local is_far = false
 
+-- tick は control.period (既定 1秒) 周期。その間 run の向きを固定すると
+-- 動くリーダーには追い付けないので、tick の中で向きを出し直しながら走る。
+-- ac/move.lua の move_to が自動移動でやっているのと同じ考え方。
+local FOLLOW_STEP_SEC = 0.15
+local FOLLOW_STEP_NUM = 5
+
 -- p1 が乗り物系のワープギミックを触った時、追随する対象
 local warp_gimmick_names = {
     "Home Point", "Survival Guide", "Shimmering Circle", "Waypoint",
@@ -80,16 +86,33 @@ local follow_leader = function(me_pos, leader, engaged)
             is_far = true
         end
     end
-    if is_far then
-        if not was_far then
-            -- 追従を始める時だけ。毎 tick 送ると視点が動きっぱなしになる
-            turn_to_front()
+    if not is_far then
+        windower.ffxi.run(false)
+        return false
+    end
+    if not was_far then
+        -- 追従を始める時だけ。毎 tick 送ると視点が動きっぱなしになる
+        turn_to_front()
+    end
+    local stop_dist = math.random(2, 4)
+    for _ = 1, FOLLOW_STEP_NUM do
+        local mob = ac_party.leader_mob()
+        local me = windower.ffxi.get_mob_by_target("me")
+        if mob == nil or mob.x == nil or me == nil then
+            break  -- 見失った。次の tick で拾い直す
         end
-        turn_to_pos(me_pos.x, me_pos.y, leader.x, leader.y)
+        dx = mob.x - me.x
+        dy = mob.y - me.y
+        dist = math.sqrt(dx*dx + dy*dy)
+        if dist <= stop_dist then
+            break
+        end
+        turn_to_pos(me.x, me.y, mob.x, mob.y)
         windower.ffxi.run(dx, dy)
-        if dist > math.random(2, 4) then
-            return true  -- まだ遠いので今 tick は追従だけ
-        end
+        coroutine.sleep(FOLLOW_STEP_SEC)
+    end
+    if dist > stop_dist then
+        return true  -- まだ遠いので今 tick は追従だけ
     end
     is_far = false
     windower.ffxi.run(false)
