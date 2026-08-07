@@ -38,10 +38,11 @@ M.skillchain_table = {
 
 function M.ws(id)
     local now = os.time()
-    M.ws_time = now
+    -- 他パーティの WS でも自分の WS が抑制されるので、味方の WS だけ記録する
     if not ac_party.is_member_id(id) then
 	return
     end
+    M.ws_time = now
     local mob = windower.ffxi.get_mob_by_id(id)
     if mob.name == "Monberaux" then
 	return
