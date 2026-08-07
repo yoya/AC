@@ -152,7 +152,12 @@ M.exec = function()
         return
     end        
     local mob = windower.ffxi.get_mob_by_target("t")
-    if mob == nil or mob.distance/mob.model_size > 12 then
+    if mob == nil then
+        return
+    end
+    -- mob.distance は距離の2乗なので sqrt する (ac/pos.lua の distance と同じ)
+    -- model_size は敵の半径。近接の間合いに少し余裕を持たせる
+    if math.sqrt(mob.distance) > mob.model_size + 5 then
         return
     end
     local player = windower.ffxi.get_player()
