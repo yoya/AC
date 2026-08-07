@@ -30,86 +30,71 @@ local pull = require 'pull'
 local pstatus = require 'player_status'
 
 M.so_long_to_get_fight_count = 0
---- 戦闘中。リーダー、メンバー共通。
-function M.tick(player, me, mob)
-    -- print("battle/melee.tick")
-    local mob = windower.ffxi.get_mob_by_target("t")
-    -- 戦闘モードだけどタゲが外れる(稀に発生)
-    -- もしくは殴れる距離なのに敵が赤字に変わらない
-    if mob == nil or (mob.distance < (mob.model_scale * 1.5) and mob.status == pstatus.IDLE) then
-	if control.debug then
-	    io_chat.printf("M.so_long_to_get_fight_count:%d/7",
-			   M.so_long_to_get_fight_count)
-	end
-	if M.so_long_to_get_fight_count < 7 then
-	    M.so_long_to_get_fight_count = M.so_long_to_get_fight_count  + 1
-	else
-	    command.send('input /attack off')  -- 一旦諦める
-	    io_chat.noticef("M.so_long_to_get_fight_count:%d/7",
-			    M.so_long_to_get_fight_count)
-	    M.so_long_to_get_fight_count = 0
-	end
-	return
+
+--- 戦闘モードだけどタゲが外れる(稀に発生)。
+--- もしくは殴れる距離なのに敵が赤字に変わらない。
+--- 続くようなら一旦諦める。戦闘を続けられるなら true。
+local function tick_keep_fighting(mob)
+    if mob ~= nil and
+	not (mob.distance < (mob.model_scale * 1.5) and mob.status == pstatus.IDLE) then
+	M.so_long_to_get_fight_count = 0
+	return true
     end
-    M.so_long_to_get_fight_count = 0
-    local player = windower.ffxi.get_player()
-    local main_job = player.main_job
-    local sub_job = player.sub_job
----    print("XXX", preferred_enemy_list)
-    -- 中断してでも優先する敵
+    if control.debug then
+	io_chat.printf("M.so_long_to_get_fight_count:%d/7",
+		       M.so_long_to_get_fight_count)
+    end
+    if M.so_long_to_get_fight_count < 7 then
+	M.so_long_to_get_fight_count = M.so_long_to_get_fight_count  + 1
+    else
+	command.send('input /attack off')  -- 一旦諦める
+	io_chat.noticef("M.so_long_to_get_fight_count:%d/7",
+			M.so_long_to_get_fight_count)
+	M.so_long_to_get_fight_count = 0
+    end
+    return false
+end
+
+--- 中断してでも優先する敵が居たら、そちらに切り替える。
+local function tick_switch_to_prefer_mob(mob)
     local condition = {
 	range = control.enemy_range,
 	prefer_mobs = acmob.more_attractive_enemy_list,
 	name_match = control.enemy_filter,
     }
     local prefer_mob = acmob.search_nearest_mob(pull.base_pos, condition)
-    ---    print("prefereMob", prefer_mob)
-    if not utils.table.contains(acmob.more_attractive_enemy_list, mob.name) and prefer_mob ~= nil and mob.name ~= prefer_mob.name then
-	--        print("prefer_mob:", mob.name)
-        if iam_leader() then
-            io_net.target_by_mob(prefer_mob)
-            coroutine.sleep(1)
-            command.send('input /attack <t>')
-        else
-            --- 実リーダーが戦闘している敵に切り替える (p1 スロットとは限らない)
-            local leader = ac_party.leader_mob()
-            if leader ~= nil then
-                command.send('input /assist '..leader.name)
-            end
-        end
+    if utils.table.contains(acmob.more_attractive_enemy_list, mob.name) or
+	prefer_mob == nil or mob.name == prefer_mob.name then
+	return
     end
- ---   if not player or not player.target_index then
- ---       return
- ---   end
-    --- サポ白はPLなので、ずっとインビジ
-    local sub_job = player.sub_job
-    if false and sub_job == "WHM" then
-        if math.random(1, 100) <= 1 then
----            command.send('input /ma インビジ <me>')
----            coroutine.sleep(2)
-        end
-        return 
+    if iam_leader() then
+	io_net.target_by_mob(prefer_mob)
+	coroutine.sleep(1)
+	command.send('input /attack <t>')
+    else
+	--- 実リーダーが戦闘している敵に切り替える (p1 スロットとは限らない)
+	local leader = ac_party.leader_mob()
+	if leader ~= nil then
+	    command.send('input /assist '..leader.name)
+	end
     end
-    local enemy_pos = {}
-    local me_pos = {}
-    get_mob_position(enemy_pos, "t")
-    get_mob_position(me_pos, "me")
-    --- 戦闘してない？
-    if enemy_pos.x == nil then
-        print("if enemy_pos.x == nil")
-        return
-    end
-    local dx = enemy_pos.x - me_pos.x
-    local dy = enemy_pos.y - me_pos.y
-    local dist =  math.sqrt(dx*dx + dy*dy)
-    local enemy_space = 1
+end
+
+--- 敵とどれだけ間合いを空けるか。
+local function tick_get_enemy_space()
     if control.enemy_space == control.ENEMY_SPACE_NEAR then
-	enemy_space = 2
+	return 2
     elseif control.enemy_space ==  control.ENEMY_SPACE_MAGIC then
-	enemy_space = 4
+	return 4
     elseif control.enemy_space ==  control.ENEMY_SPACE_MANUAL then
-	enemy_space = 99999
+	return 99999
     end
+    return 1
+end
+
+--- 敵との間合いを詰める。まだ移動中(この tick はここで終わり)なら true。
+local function tick_approach_enemy(player, mob, dx, dy, dist)
+    local enemy_space = tick_get_enemy_space()
     if iam_leader() then
 	if dist > enemy_space then
 	    is_far = true
@@ -121,12 +106,12 @@ function M.tick(player, me, mob)
             windower.ffxi.run(dx, dy)
             -- 向きが悪くて戦闘が開始しない問題への対策
             -- command.send('setkey numpad5 down; wait 0.05; setkey numpad5 up')
-            return
+            return true
         elseif not control.calm then
 	    send_command_prob({
                 { 150, 0, 'setkey a down; wait 0.05; setkey a up', 0 }, -- 左
                 { 150, 0, 'setkey d down; wait 0.05; setkey d up', 0 }, -- 右
-                { 150, 0, 'setkey a down; wait 0.1; setkey a up', 0 }, 
+                { 150, 0, 'setkey a down; wait 0.1; setkey a up', 0 },
                 { 150, 0, 'setkey d down; wait 0.1; setkey d up', 0 },
                 { 200, 0, 'setkey a down; wait 0.15; setkey a up', 0 },
                 { 200, 0, 'setkey d down; wait 0.15; setkey d up', 0 },
@@ -144,11 +129,11 @@ function M.tick(player, me, mob)
     --- 止まって戦闘開始
     is_far = false
     windower.ffxi.run(false)
-    --- atan2 のままだと右を向くので、90度の補正
---    local dir = math.atan2(dx, dy) - 3.14/2
---    windower.ffxi.turn(dir)
-    turn_to_target("t")
----    if player.vitals.tp >= math.random(1100, 1200) then
+    return false
+end
+
+--- WS を撃つ TP に達しているか。
+local function tick_want_ws(player, mob)
     --- PLD はタゲ取り.RNG はエヴィ用。"BLM", "SMN", "SCH"はミルキル
     -- local tp100_jobs = {-"RNG", "BLM", "SMN", "SCH"}
     local tp100_jobs = {}
@@ -165,66 +150,130 @@ function M.tick(player, me, mob)
         tp_min = 2000
         tp_max = 2300
     end
-    local ws_request = false
     local now = os.time()
     -- 連携になるよう 3秒あける。MB を邪魔しないよう 連携から 10秒あける。
     if player.vitals.tp >= 1000 and
 	(acinspect.ws_time + 2) < now and (acinspect.sc_time + 10) < now then
-	ws_request = true
+	return true
     end
     if player.vitals.tp >= 2000 and
 	(acinspect.ws_time + 1) < now and (acinspect.sc_time + 10) < now then
 	-- TP:2000 超えは少しピーキーにする。
-	ws_request = true
+	return true
     end
 --    if player.vitals.tp >= 2500 and (acinspect.sc_time + 10) < now then
 	-- print("(now - sc_time):"..(now - acinspect.sc_time), acinspect.sc_time)
---	ws_request = true
+--	return true
 --    end
     -- ドメインベーションはTP1000即撃ち
     if player.vitals.tp >= 1000 and utils.table.contains(acmob.domain_enemy_list, mob.name) then
-	ws_request = true
+	return true
     end
     if control.wstp ~= nil and control.wstp ~= -1 and control.wstp <= player.vitals.tp then
-	ws_request = true
+	return true
     end
-    if ws_request == true then
-	local params = { level = actask.PRIORITY_HIGH}
-	actask.set_task_ex("//ws exec", params)
-	return
-    else
-        if player.item_level > 99 then
-            local commprob = get_send_command_prob_table(main_job, sub_job, 1)
+    return false
+end
+
+--- WS をタスクに積む。
+local function tick_request_ws()
+    local params = { level = actask.PRIORITY_HIGH}
+    actask.set_task_ex("//ws exec", params)
+end
+
+--- WS を撃たないときのアビリティ/魔法。
+local function tick_use_ability(player)
+    if player.item_level > 99 then
+        local commprob = get_send_command_prob_table(player.main_job, player.sub_job, 1)
 --            io_chat.print(commprob)
-            --send_command_prob(commprob, settings.Period, acprob.prob_recast_time)
-	    send_command_prob(commprob, control.period, acprob.prob_recast_time)
-        end
+        --send_command_prob(commprob, settings.Period, acprob.prob_recast_time)
+	send_command_prob(commprob, control.period, acprob.prob_recast_time)
     end
----    if math.random(1, 100) <= 1 then
-    --- 戦闘ターゲットがたまに外れる対策。とりあえずの方法。
+end
+
+--- 戦闘ターゲットがたまに外れる対策。とりあえずの方法。
+local function tick_keep_attack()
     if iam_leader() or control.puller then
         if math.random(1, 10) <= 1 then
             command.send('input /attack <t>')
         end
     end
-    --- たまに左や右にずれる。前や後にも。
-    if not control.calm then
-	send_command_prob({
-		{ 10, 10, 'setkey a down; wait 0.1; setkey a up', 0 }, -- left
-		{ 10, 10, 'setkey d down; wait 0.1; setkey d up', 0 }, -- right
-		{ 20, 10, 'setkey w down; wait 0.1; setkey w up', 0 }, -- forward
-		{ 20, 10, 'setkey s down; wait 0.1; setkey s up', 0 }, -- back
-			}, control.period, acprob.prob_recast_time)
+end
+
+--- たまに左や右にずれる。前や後にも。
+local function tick_jiggle()
+    if control.calm then
+	return
     end
-    if control.point_cheer then  --- アンバス：マンドラ
-        send_command_prob({
-            { 200, 1, 'input /point <t>', 1 },
-            { 100, 1, 'input /cheer <p1>', 1 },
-            { 100, 1, 'input /cheer <p2>', 1 },
-            { 100, 1, 'input /clap <p1>', 1 },
-            { 100, 1, 'input /clap <p2>', 1 },
-        }, control.period, acprob.prob_recast_time)
-    end  
+    send_command_prob({
+	    { 10, 10, 'setkey a down; wait 0.1; setkey a up', 0 }, -- left
+	    { 10, 10, 'setkey d down; wait 0.1; setkey d up', 0 }, -- right
+	    { 20, 10, 'setkey w down; wait 0.1; setkey w up', 0 }, -- forward
+	    { 20, 10, 'setkey s down; wait 0.1; setkey s up', 0 }, -- back
+			}, control.period, acprob.prob_recast_time)
+end
+
+--- アンバス：マンドラ
+local function tick_point_cheer()
+    if not control.point_cheer then
+	return
+    end
+    send_command_prob({
+        { 200, 1, 'input /point <t>', 1 },
+        { 100, 1, 'input /cheer <p1>', 1 },
+        { 100, 1, 'input /cheer <p2>', 1 },
+        { 100, 1, 'input /clap <p1>', 1 },
+        { 100, 1, 'input /clap <p2>', 1 },
+    }, control.period, acprob.prob_recast_time)
+end
+
+--- 戦闘中。リーダー、メンバー共通。
+function M.tick(player, me, mob)
+    -- print("battle/melee.tick")
+    local mob = windower.ffxi.get_mob_by_target("t")
+    if not tick_keep_fighting(mob) then
+	return
+    end
+    local player = windower.ffxi.get_player()
+    tick_switch_to_prefer_mob(mob)
+ ---   if not player or not player.target_index then
+ ---       return
+ ---   end
+    --- サポ白はPLなので、ずっとインビジ
+    if false and player.sub_job == "WHM" then
+        if math.random(1, 100) <= 1 then
+---            command.send('input /ma インビジ <me>')
+---            coroutine.sleep(2)
+        end
+        return
+    end
+    local enemy_pos = {}
+    local me_pos = {}
+    get_mob_position(enemy_pos, "t")
+    get_mob_position(me_pos, "me")
+    --- 戦闘してない？
+    if enemy_pos.x == nil then
+        print("if enemy_pos.x == nil")
+        return
+    end
+    local dx = enemy_pos.x - me_pos.x
+    local dy = enemy_pos.y - me_pos.y
+    local dist =  math.sqrt(dx*dx + dy*dy)
+    if tick_approach_enemy(player, mob, dx, dy, dist) then
+	return
+    end
+    --- atan2 のままだと右を向くので、90度の補正
+--    local dir = math.atan2(dx, dy) - 3.14/2
+--    windower.ffxi.turn(dir)
+    turn_to_target("t")
+    if tick_want_ws(player, mob) then
+	tick_request_ws()
+	return
+    end
+    tick_use_ability(player)
+    tick_keep_attack()
+    tick_jiggle()
+    tick_point_cheer()
 end
 
 return M
