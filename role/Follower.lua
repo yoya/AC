@@ -200,8 +200,11 @@ local search_enemy = function(leader, me_pos)
     if mob ~= nil then
         return mob
     end
+    -- bt は倒した敵が消えるまで残る。素通しすると死体を交戦相手として
+    -- 掴み続け、その間 tick_idle が追従を飛ばして死体の上で止まる。
+    -- 他の2つと同じ検査を通す。
     mob = windower.ffxi.get_mob_by_target("bt")
-    if mob ~= nil then
+    if mob ~= nil and acmob.is_mob_attackable(mob) then
         return mob
     end
     return acmob.search_nearest_mob(me_pos, {
