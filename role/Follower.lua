@@ -22,6 +22,12 @@ local turn_to_front = ac_move.turn_to_front
 -- リーダーから離れているか。tick をまたいで保持する
 local is_far = false
 
+-- リーダーを見失った時に向かう、最後に見えた位置と、そこへ走る期限
+local last_leader_pos = nil
+local lost_leader_deadline = 0
+-- 見えなくなってから、最後の位置へ走り続ける上限
+local LOST_LEADER_SEC = 30
+
 -- tick は control.period (既定 1秒) 周期。その間 run の向きを固定すると
 -- 動くリーダーには追い付けないので、tick の中で向きを出し直しながら走る。
 -- ac/move.lua の move_to が自動移動でやっているのと同じ考え方。
@@ -70,6 +76,12 @@ local sync_mount = function(player, leader)
     end
 end
 
+-- リーダーが見えている間、最後の位置を覚えておく
+local remember_leader = function(leader)
+    last_leader_pos = {x = leader.x, y = leader.y}
+    lost_leader_deadline = os.time() + LOST_LEADER_SEC
+end
+
 -- リーダーを追う。まだ追従中で戦闘に移れないなら true を返す。
 -- engaged が真 (リーダーが戦闘中) のときは交戦を優先し、ゆるい追従は
 -- 抑える。離れすぎたときだけ追いつく。
@@ -101,6 +113,7 @@ local follow_leader = function(me_pos, leader, engaged)
         if mob == nil or mob.x == nil or me == nil then
             break  -- 見失った。次の tick で拾い直す
         end
+        remember_leader(mob)
         dx = mob.x - me.x
         dy = mob.y - me.y
         dist = math.sqrt(dx*dx + dy*dy)
@@ -117,6 +130,25 @@ local follow_leader = function(me_pos, leader, engaged)
     is_far = false
     windower.ffxi.run(false)
     return false
+end
+
+-- リーダーが描画範囲外に出ると mob を引けない。そこで止まると永久に
+-- 置いていかれるので、最後に見えた位置まで走って拾い直しを狙う。
+local follow_lost_leader = function(me_pos)
+    if last_leader_pos == nil or me_pos.x == nil then
+        return
+    end
+    local dx = last_leader_pos.x - me_pos.x
+    local dy = last_leader_pos.y - me_pos.y
+    if math.sqrt(dx*dx + dy*dy) < 3 or os.time() > lost_leader_deadline then
+        -- 着いた、もしくは追い切れない (ワープした等)。諦める
+        last_leader_pos = nil
+        is_far = false
+        windower.ffxi.run(false)
+        return
+    end
+    turn_to_pos(me_pos.x, me_pos.y, last_leader_pos.x, last_leader_pos.y)
+    windower.ffxi.run(dx, dy)
 end
 
 -- 装備レベル的に戦闘に参加してよいか
@@ -217,14 +249,16 @@ function M.tick_idle(player, me)
         return
     end
     stow_crystals()
+    local me_pos = {}
+    get_mob_position(me_pos, "me")
     -- フォローする対象は party スロット p1 ではなく実リーダー
     local leader = ac_party.leader_mob()
     if leader == nil or leader.x == nil then
-        return  -- リーダーがいない / エリア外
+        follow_lost_leader(me_pos)  -- リーダーがいない / 描画範囲外
+        return
     end
+    remember_leader(leader)
     sync_mount(player, leader)
-    local me_pos = {}
-    get_mob_position(me_pos, "me")
     local joinable = can_join_battle(player.item_level)
     local enemy = nil
     if joinable and control.attack then
