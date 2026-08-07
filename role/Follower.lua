@@ -72,6 +72,7 @@ local follow_leader = function(me_pos, leader, engaged)
     local dx = leader.x - me_pos.x
     local dy = leader.y - me_pos.y
     local dist = math.sqrt(dx*dx + dy*dy)
+    local was_far = is_far
     if leader.hpp > 0 then
         if not engaged and dist > math.random(3, 5) then
             is_far = true  -- 非戦闘時のゆるい追従
@@ -80,8 +81,11 @@ local follow_leader = function(me_pos, leader, engaged)
         end
     end
     if is_far then
+        if not was_far then
+            -- 追従を始める時だけ。毎 tick 送ると視点が動きっぱなしになる
+            turn_to_front()
+        end
         turn_to_pos(me_pos.x, me_pos.y, leader.x, leader.y)
-        turn_to_front()
         windower.ffxi.run(dx, dy)
         if dist > math.random(2, 4) then
             return true  -- まだ遠いので今 tick は追従だけ
