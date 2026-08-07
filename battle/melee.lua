@@ -177,7 +177,8 @@ end
 
 --- WS をタスクに積む。
 local function tick_request_ws()
-    local params = { level = actask.PRIORITY_HIGH}
+    -- period の既定 10秒 では TP が余る。3秒に1回まで許す
+    local params = { level = actask.PRIORITY_HIGH, period = 3 }
     actask.set_task_ex("//ws exec", params)
 end
 
