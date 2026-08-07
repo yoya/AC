@@ -67,14 +67,13 @@ end
 -- リーダーを追う。まだ追従中で戦闘に移れないなら true を返す。
 -- engaged が真 (リーダーが戦闘中) のときは交戦を優先し、ゆるい追従は
 -- 抑える。離れすぎたときだけ追いつく。
--- 確率的に気づかせているのは、非戦闘時に人間らしい遅延を出すため。
+-- 歩き出す距離を乱数にしているのは、非戦闘時に人間らしい遅延を出すため。
 local follow_leader = function(me_pos, leader, engaged)
     local dx = leader.x - me_pos.x
     local dy = leader.y - me_pos.y
     local dist = math.sqrt(dx*dx + dy*dy)
     if leader.hpp > 0 then
-        if not engaged and math.random(1, 3) <= 2 and
-            dist > math.random(3, 5) and dist < 24 then
+        if not engaged and dist > math.random(3, 5) then
             is_far = true  -- 非戦闘時のゆるい追従
         elseif dist > math.random(6, 7) then -- 離れすぎたらすぐ気付く (戦闘中でも)
             is_far = true
