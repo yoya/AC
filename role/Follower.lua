@@ -28,6 +28,9 @@ local lost_leader_deadline = 0
 -- 見えなくなってから、最後の位置へ走り続ける上限
 local LOST_LEADER_SEC = 30
 
+-- リーダーの交戦相手に乗る距離。これより遠い敵には乗らない
+local JOIN_BATTLE_RANGE = 10
+
 -- tick は control.period (既定 1秒) 周期。その間 run の向きを固定すると
 -- 動くリーダーには追い付けないので、tick の中で向きを出し直しながら走る。
 -- ac/move.lua の move_to が自動移動でやっているのと同じ考え方。
@@ -196,9 +199,16 @@ end
 -- いる敵を拾う。順序を逆にすると、リーダーが次の敵に移った時に各自が
 -- バラバラの敵を掴んで落ち着かない。
 local search_enemy = function(leader, me_pos)
+    -- 遠くの敵には乗らない。乗ると follow_leader を飛ばして敵へ直進するので、
+    -- 釣ってキャンプへ戻るリーダーとすれ違い、道中の敵にリンクする。
+    -- 追従でリーダーに追い付けば、その敵は自然と範囲に入る
     local mob = leader_enemy(leader)
     if mob ~= nil then
-        return mob
+        local dx = mob.x - me_pos.x
+        local dy = mob.y - me_pos.y
+        if math.sqrt(dx*dx + dy*dy) <= JOIN_BATTLE_RANGE then
+            return mob
+        end
     end
     -- bt は倒した敵が消えるまで残る。素通しすると死体を交戦相手として
     -- 掴み続け、その間 tick_idle が追従を飛ばして死体の上で止まる。
