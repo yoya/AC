@@ -455,11 +455,13 @@ end
 M.stop = stop
 
 local start_party = function()
+    -- 自分の start() が先。io_ipc.send_party は人数分 sleep するので、後ろに
+    -- 置くと待っている間 base_pos が古いままで、古い場所へ走り出してしまう
+    start()
     if iam_leader() then
 	io_chat.notice('<<<<<<< AC START Party >>>>>>>')
 	io_ipc.send_party("start")
     end
-    start()
 end
 
 local stop_party = function()
