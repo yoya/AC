@@ -626,8 +626,9 @@ local cmd_patrol = function(zone, arg1, arg2)
 		push_keys({"enter"})
 		coroutine.sleep(19)
 		zone = windower.ffxi.get_info().zone
+		if zone == 0 then break end   -- おそらくログイン画面のまま
 		local me = windower.ffxi.get_mob_by_target("me")
-		if not aczone.in_moghouse(zone2, me) then
+		if not aczone.in_moghouse(zone, me) then
 		    command.send('input /logout')
 		    coroutine.sleep(5)
 		    push_keys({"down"})
