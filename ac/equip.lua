@@ -213,10 +213,10 @@ function M.tick(player)
     if player == nil then return end
     if player.status == pstatus.ENGAGED then
 	-- 118 は 妖蟲の髪飾り+1 用に許容する
-	if player.item_level >= 118 then
+	if player.item_level == nil or player.item_level <= 109 then
+	    M.equip_restore() -- 裸にされたら装備を戻す。
+	elseif 118 <= player.item_level then
 	    M.equip_save()
-	else
-	    M.equip_restore()
 	end
     end
 end
