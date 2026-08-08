@@ -1089,12 +1089,19 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
         control.point_cheer = not control.point_cheer
         io_chat.print({"do point&cheer for ambus", control.point_cheer})
     elseif subcommand == 'pos' then  -- よく使うので ac 直下のまま
+	print("zone id:"..zone)
         io_chat.print("zone id:"..zone)
-        local x = math.round(me.x, 1)
-        local y = math.round(me.y, 1)
-        local z = math.round(me.z, 1)
+        local x = 0
+        local y = 0
+        local z = 0
+	if me ~= nil and me.x ~= nil then
+	    x = math.round(me.x, 1)
+	    y = math.round(me.y, 1)
+	    z = math.round(me.z, 1)
+	end
 ---    print は - 記号を誤認しやすいので、表示しない
 ---        print("me position", " x="..x, "  y="..y, "  z="..z)
+	print("me position  x="..x.."  y="..y.."  z="..z)
         io_chat.print("me position  x="..x.."  y="..y.."  z="..z)
     elseif subcommand == 'puller' then
 	local onoff = argument_means_on(arg1)
