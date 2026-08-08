@@ -72,12 +72,15 @@ function M.tick(player, me)
     -- print("battle.tick")
     local mob = windower.ffxi.get_mob_by_target("t")
     if mob == nil then return end
-    if mob.name == player.name or mob.distance > 100 or
+    -- mob.distance は距離の2乗。素で比べると 10 より遠い敵で戦闘終了になり、
+    -- 遠くの敵に向かう間ずっと attack off と on を繰り返す
+    if mob.name == player.name or math.sqrt(mob.distance) > 100 or
 	mob.in_party or mob.in_alliancethen then
 	-- 稀に自分をタゲる事があるので、その時は一旦戦闘終了
 	-- 敵と距離がありすぎる時も何かおかしいので戦闘終了
 	-- パーティメンバーも戦ってたらやめる
 	command.send('input /attack off')
+	return  -- やめた直後に melee.tick が /attack <t> を打ち直さないように
     end
     local battle_object = M.battle_table[M.battle_type]
     if battle_object ~= nil then
