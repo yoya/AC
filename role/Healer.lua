@@ -30,37 +30,66 @@ function get_lower_hp_target(hpp_needed)
     return count, target
 end
 
+M.cure_action_table = {
+    { hp=1800, mp=8, cure='ケアル', tp=200, waltz='ケアルワルツ' },
+    { hp=1500, mp=24, cure='ケアルII', tp=350, waltz='ケアルワルツII' },
+    { hp=1000, mp=46, cure='ケアルIII', tp=500, waltz='ケアルワルツIII' },
+    -- ここから main RDM,WHM, DNCのみ
+    { hp=500, mp=99, cure='ケアルIV', tp=650, waltz='ケアルワルツIV' },
+}
+
 M.cure_if_party_h_pis_low = function(player, hp_need_cure)
     if player.status ~= pstatus.ENGAGED then
 	return  -- 戦闘してなければ、何もしない
     end
     local main_job = player.main_job
+    local sub_job = player.sub_job
     local player_mp = player.vitals.mp
-    if player_mp < 8 then
-        print("few player mp:"..player_mp)
-        return
+    local player_tp = player.vitals.tp
+
+    if main_job == "DNC" or sub_job =="DNC" then
+	if player_tp < 200 then
+	    print("few player tp:"..player_mp)
+	    return
+	end
+    else
+	if player_mp < 8 then
+	    print("few player mp:"..player_mp)
+	    return
+	end
     end
     local party = windower.ffxi.get_party()
     for i=0,5 do
         local t = "p"..i
         local member = party[t]
         if member ~= nil and  member.mob ~= nil then
+	    windower.ffxi.run(false)
             local hpp = member.hpp
             local hp = member.hp
             if hp > 0 and hpp < hp_need_cure
                 and hp < 1800 then
-		io_chat.print(t.." HP: "..hp.." ("..hpp.."%)")
+		io_chat.notice(t.." HP: "..hp.." ("..hpp.."%)")
                 local c = 'input /ma ケアル <'..t..'>'
+		if main_job == "DNC" or sub_job =="DNC" then
+		    c = 'input /ja ケアルワルツ <'..t..'>'
+		end
                 if hp < 300 and main_job == "WHM" then
                     c = 'input /ja 女神の祝福 <me>'
-                elseif hp < 500 and player_mp >= 88 then
-                   c = 'input /ma ケアルIV <'..t..'>'
-                elseif hp < 1000  and player_mp >= 46 then
-                    c = 'input /ma ケアルIII <'..t..'>'
-                elseif hp < 1500  and player_mp >= 24 then
-                    c = 'input /ma ケアルII <'..t..'>'
-                end
-                windower.ffxi.run(false)
+		else
+		    for _, cure_action in ipairs(M.cure_action_table) do
+			if hp < cure_action.hp then
+			    if main_job == "DNC" or sub_job =="DNC" then
+				if cure_action.tp < player_tp then
+				    c = 'input /ja '..cure_action.waltz..' <'..t..'>'
+				end
+			    else
+				if cure_action.mp < player_mp then
+				    c = 'input /ma '..cure_action.cure..' <'..t..'>'
+				end
+			    end
+			end
+		    end
+		end
                 command.send(c)
                 coroutine.sleep(2)
             end

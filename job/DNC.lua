@@ -2,6 +2,7 @@
 
 local M = {}
 
+local role_Healer = require 'role/Healer'
 local role_Melee = require 'role/Melee'
 local actask = require 'task'
 
@@ -35,6 +36,12 @@ function M.main_tick(player)
     else
 	actask.remove_task(level, t_a)
 	actask.set_task(level, t_d)
+    end
+end
+
+function M.sub_tick(player)
+    if role_Healer.sub_tick ~= nil then
+	role_Healer.sub_tick(player)
     end
 end
 
