@@ -10,6 +10,7 @@ local push_keys = keyboard.push_keys
 local ac_equip = require 'ac/equip'
 local incoming_text = require 'incoming/text'
 local acjob = require 'job'
+local io_chat = require 'io/chat'
 
 -- 戦闘スタイル
 

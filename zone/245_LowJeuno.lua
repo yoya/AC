@@ -2,6 +2,8 @@
 
 local M = { id = 245 }
 
+local command = require 'command'
+
 M.routes = {
     -- HP (M)
     neptune = {
