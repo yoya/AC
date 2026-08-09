@@ -53,16 +53,23 @@ M.routes = {
 	{x=420,y=-150,z=19.6}, {x=420,y=-144,z=19.6},
 	{target="Dimensional Portal"}, {a="touch"}
     },
+    maw = {
+        {x=-561.1,y=640.9,z=0,desc="Cavernous Maw(アビセア扉)"}, {wait=2},
+        {target="Cavernous Maw"},
+        {a="touch"}, {wait=1}, {a="up"}, {a="touch"}
+    },
 }
 
 M.essential_points = {
     book = {x=774,y=-19,z=29}, -- 本ワープ
     ring = {x=420,y=-150,z=19.6}, -- 指輪ワープ
+    from_jueno = {x=-561.1,y=640.9,z=0},
 }
 
 M.automatic_routes = {
     book = { route="book2dim", need_level=20 },
     ring = { route="ring2dim" },
+    from_jueno = { route="maw" },
 }
 
 return M
