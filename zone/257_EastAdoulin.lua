@@ -57,7 +57,7 @@ M.routes = {
 	{keys={"up", "enter"}}, -- ワープする？＞はい
     },
     mog2wp = {
-	{x=-53.7,y=-128.5,z=-0.1,desc="モグハウスすぐのWaypoint"},
+	{x=-53.7,y=-128.5,z=-0.1,desc="モグハウスすぐのWaypoint"}, {wait=1},
 	{x=-62,y=-122,z=0}, {target="Waypoint"}, {a="touch"}, {wait=2},
 	{keys={"right", "enter"}}, -- 東アドゥリン
 	{keys={"right", "down", "enter"}}, -- ヤッセ方面船着き場前
@@ -220,7 +220,8 @@ M.automatic_routes = {
     },
     homepoint_1 = { route="ionis-hp" },
     sun_square = { route="bayld" }, -- ベヤルド交換
-    moghouse_in = { route="house2garden", contents="Leveling", zone_from=-280},
+    moghouse_in = { route="house2garden", contents={"Leveling", "Abyssea"},
+		    zone_from=-280},
 }
 
 return M
