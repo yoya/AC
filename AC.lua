@@ -1291,6 +1291,7 @@ windower.register_event('login', function()
     -- ws.init()  -- このタイミングだと前のキャラのジョブが反映される
     seed_random()  -- load 時に player が nil だった場合の取り直し
     ac_stat.init()
+    ac_equip.init()  -- 前のキャラのバッグ内位置で装備し直さない
     ac_focus.login()
 end)
 
