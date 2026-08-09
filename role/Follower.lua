@@ -39,10 +39,10 @@ local FOLLOW_STEP_NUM = 5
 
 -- p1 が乗り物系のワープギミックを触った時、追随する対象
 local warp_gimmick_names = {
-    "Home Point", "Survival Guide", "Shimmering Circle", "Waypoint",
+    "Home Point", "Survival Guide", "Waypoint",
+    "Shimmering Circle", "Shaft Entrance",
     "Nunaarl Bthtrogg", "Undulating Confluence",
-    "Echo Disseminator",  -- WoE
-    "Veridical Conflux",  -- WoE
+    "Echo Disseminator", "Veridical Conflux", -- WoE
     "Ethereal", "Affi", "Dremi", "Shiftrix", "Dimmian",
     "Diaphanous",  -- ソーティ
     "Swirling Vortex",  -- アポリオン
