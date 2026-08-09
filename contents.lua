@@ -194,6 +194,11 @@ function M.get_contents_by_name(name)
     local names = M.name_table[M.type]
     if names == nil then return false end
     for i, n in ipairs(names) do
+	if name == nil or n == nil or
+	    type(name) ~= 'string' or type(n) ~= 'string' then
+	    io_chat.error("name == nil or n == nil", name, n)
+	    break
+	end
 	if name:lower() == n:lower() then
 	    return M.type, M.contents_table[M.type]
 	end
