@@ -75,7 +75,7 @@ function M.tick(player, me)
     -- mob.distance は距離の2乗。素で比べると 10 より遠い敵で戦闘終了になり、
     -- 遠くの敵に向かう間ずっと attack off と on を繰り返す
     if mob.name == player.name or math.sqrt(mob.distance) > 100 or
-	mob.in_party or mob.in_alliancethen then
+	mob.in_party or mob.in_alliance then
 	-- 稀に自分をタゲる事があるので、その時は一旦戦闘終了
 	-- 敵と距離がありすぎる時も何かおかしいので戦闘終了
 	-- パーティメンバーも戦ってたらやめる
