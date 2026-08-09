@@ -85,17 +85,30 @@ function is_mob_touchable(mob)  -- 宝箱とか
     end
 end
 --- 多分、戦える敵 (レイド戦は上記の敵のみ対応)
+-- spawn_type は湧き方を表すビットマスク
+--   1: PC / 2: NPC (攻撃対象外) / 4: パーティメンバー /
+--   8: アライアンスメンバー / 16: 敵 / 32: 扉・環境オブジェクト
+-- よく見る組み合わせ
+--   1: 他人の PC       2: 街の NPC、競売カウンター、伐採ポイント
+--   13 (1+4+8): 自分   14 (2+4+8): パーティに入っているフェイス
+--   16: モンスター     34 (2+32): 一部の扉
 function is_mob_attackable(mob)
     if mob.valid_target and mob.is_npc and mob.spawn_type == 16 and
 	(mob.status == pstatus.IDLE or mob.status == pstatus.ENGAGED) and
 	not utils.table.contains(non_attackable_mobs, mob.name) then
-	-- 敵が平常、または味方にヘイトを向けている
-	if mob.status == pstatus.IDLE or mob.claim_id == 0 or
-	    is_mob_linked(mob) or
-	    utils.table.contains(always_attackable_mobs, mob.name) then
-	    return true
+	-- 戦える敵は target_type == 2。1 は固定NPCで、戦おうとして失敗する。
+	-- target_type は LuaCore のビルドによっては entity_type という名前
+	-- なので、無い時は素通しする
+	if (mob.target_type or 2) == 2 then
+	    -- 敵が平常、または味方にヘイトを向けている
+	    if mob.status == pstatus.IDLE or mob.claim_id == 0 or
+		is_mob_linked(mob) or
+		utils.table.contains(always_attackable_mobs, mob.name) then
+		return true
+	    end
 	end
     end
+    return false
 end
 
 M.is_mob_attackable = is_mob_attackable

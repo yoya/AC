@@ -82,6 +82,7 @@ function search_enemy(range, excludeEmemy)
     for i, mob in ipairs(mob_arr) do
 	io_chat.set_next_color(8) -- 明るい赤紫
 	io_chat.print("search_enemy name", excludeEmemy, mob.name)
+	-- spawn_type == 16 は敵。値の一覧は mob.is_mob_attackable のコメント
 	if (mob.status == pstatus.IDLE or mob.status == pstatus.ENGAGED) and mob.spawn_type == 16 and
 	    mob.distance < range then
 	    if mob.name ~= excludeEmemy then
