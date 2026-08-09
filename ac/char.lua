@@ -52,16 +52,6 @@ function M.update_job_info(id, main_job, sub_job, char)
     M.char_table[id].main_job = main_job
     M.char_table[id].sub_job = sub_job
     --
-    if main_job_id ~= nil and main_job_id > 0 then
-	M.char_table[id].main_job = main_job
-    end
-    if sub_job_id ~= nil and sub_job_id > 0 then
-	M.char_table[id].sub_job = sub_job
-    end
-    --
-    local limit_breaker = char.limit_breaker
-    local current_merit_point = char.current_merit_point
-    local max_merit_point = char.max_merit_point
     if limit_breaker ~= nil and limit_breaker == true then
 	M.char_table[id][main_job].current_merit_point = current_merit_point
 	M.char_table[id][main_job].max_merit_point = max_merit_point

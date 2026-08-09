@@ -8,7 +8,6 @@ local M = {}
 
 function get_lower_hp_target(hpp_needed)
     local party = windower.ffxi.get_party()
-    local target = nil
     local min_hp = 99999
     local min_target = nil
     local count = 0
@@ -27,7 +26,7 @@ function get_lower_hp_target(hpp_needed)
             end
         end
     end
-    return count, target
+    return count, min_target
 end
 
 M.cure_action_table = {
