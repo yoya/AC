@@ -45,8 +45,8 @@ if method == nil then
     os.exit (1)
 end
 
-path = debug.getinfo(1,"S").source:sub(2)
-local dirname, filename = path:match('^(.*/)([^/]-)$')
+local path = debug.getinfo(1,"S").source:sub(2)
+local dirname = path:match('^(.*/)([^/]-)$')
 local savedDir = dirname.."/../saved/"
 
 local files = {}
@@ -65,7 +65,7 @@ for i, file in ipairs(files) do
     local f = io.open(savedDir..file)
     if f == nil then
 	print("Can't open file:"..savedDir..file)
-	exit(1)
+	os.exit(1)
     end
     local modtime = lfs.attributes(savedDir..file, 'modification')
     -- 一行目
@@ -73,7 +73,7 @@ for i, file in ipairs(files) do
     local table1 = split_multi(line1, {" "})
     if table1 == nil then
 	print("Wronf file:"..savedDir..file)
-	exit(1)
+	os.exit(1)
     end
     local name = table1[1]
     -- 二行目
@@ -89,6 +89,7 @@ for i, file in ipairs(files) do
     local domain_point = -1
     local mog_segments = -1
     local gallimaufry = -1
+    local login_point = -1
     if line2 ~= nil then
 	local table2 = split_multi(line2, {"Eminence:", "  Unity:", "  Gil:"})
 	if table2 ~= nil then
@@ -112,19 +113,16 @@ for i, file in ipairs(files) do
 	    mog_segments = tonumber(table4[3])
 	    gallimaufry = tonumber(table4[4])
 	    login_point = tonumber(table4[5])
-	end
-	if table4 ~= nil then
 	else
-	    local table4 = split_multi(line4, {"DomainP:", "  MogSeg:", "  Gallimau:"})
+	    table4 = split_multi(line4, {"DomainP:", "  MogSeg:", "  Gallimau:"})
 	    if table4 ~= nil then
 		domain_point = tonumber(table4[2])
 		mog_segments = tonumber(table4[3])
 		gallimaufry = tonumber(table4[4])
-		login_point = -1
 	    end
 	end
     end
-    local time, err = lfs.attributes(savedDir..file, 'modification')
+    local time = lfs.attributes(savedDir..file, 'modification')
     -- print(name, eminence_point, unity_point, time)
     local char  = {
 	modtime = modtime,
@@ -195,7 +193,7 @@ if method == 'l' or method == 'e' then
     table.sort(char_table, function(a,b) return a.name < b.name end)
 end
 
-total_gil = 0
+local total_gil = 0
 
 for i, char in pairs(char_table) do
     if method == 'l' and num <= 4 then
@@ -206,7 +204,7 @@ for i, char in pairs(char_table) do
 	end
     end
     local gil_str = string.gsub(char.gil, ',', '')
-    gil_num = tonumber(gil_str)
+    local gil_num = tonumber(gil_str)
     if gil_num ~= nil and gil_num > 0 then
 	total_gil = total_gil + gil_num
     end

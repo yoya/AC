@@ -110,7 +110,6 @@ function item_match(item_name, kw)
 end
 
 function own_item_count(chara_data)
-    local count = 0
     local item_ids = {}
     for _, bag in ipairs(bag_name_ja_list) do
 	local items = chara_data[bag.name]

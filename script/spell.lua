@@ -11,8 +11,7 @@ function table_union(t1, t2)
     for k, v in pairs(t2) do
 	if t[k] == nil then
 	    t[k] = v
-	else
-	    -- print("Warning: duplicate key:"..k.." v:"..v)
+	-- else print("Warning: duplicate key:"..k.." v:"..v)
 	end
     end
     return t
@@ -41,7 +40,7 @@ function get_ordered_key_array(t)
     for k, v in pairs(t) do
 	table.insert(a, k)
     end
-    table.sort(a, function(a, b) return tonumber(a) < tonumber(b) end)
+    table.sort(a, function(k1, k2) return tonumber(k1) < tonumber(k2) end)
     return a
 end
 
@@ -59,8 +58,8 @@ end
 local spell_type = arg[1]
 local chara_name = arg[2]
 
-path = debug.getinfo(1,"S").source:sub(2)
-local dirname, filename = path:match('^(.*/)([^/]-)$')
+local path = debug.getinfo(1,"S").source:sub(2)
+local dirname = path:match('^(.*/)([^/]-)$')
 local savedDir = dirname.."/../saved/"
 
 -- print("spell_type:"..spell_type, "chara_name:"..chara_name, "savedDir:"..savedDir)
@@ -89,7 +88,7 @@ for i, file in ipairs(files) do
 	local f = io.input(savedDir..file);
 	local text = f:read("*all")
 	local data = json.decode(text)
-	spell_table = table_diff(all_spell_table, data[spell_type])	
+	local spell_table = table_diff(all_spell_table, data[spell_type])	
 	--for k, v in pairs(spell_table) do
 	--    print(k, v)
 	--end
@@ -98,7 +97,7 @@ for i, file in ipairs(files) do
 	local all_count = table_count(all_spell_table)
 	local learned_count = table_count(data[spell_type])
 	print("==== "..file.." count:"..spell_count.." ("..all_count.."-"..learned_count..")")
-	for i, k in pairs(spell_keys) do
+	for _, k in pairs(spell_keys) do
 	    local v = spell_table[k]
 	    print(k, v)
 	end
