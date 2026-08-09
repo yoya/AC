@@ -49,12 +49,12 @@ M.cure_if_party_h_pis_low = function(player, hp_need_cure)
 
     if main_job == "DNC" or sub_job =="DNC" then
 	if player_tp < 200 then
-	    print("few player tp:"..player_mp)
+	    -- print("few player tp:"..player_mp)
 	    return
 	end
     else
 	if player_mp < 8 then
-	    print("few player mp:"..player_mp)
+	    -- print("few player mp:"..player_mp)
 	    return
 	end
     end
