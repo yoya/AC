@@ -109,6 +109,13 @@ function M.dothebest_main(player)
 end
 
 M.battle_equip = {
+    main = {
+	21565, -- トーレット
+    },
+    sub = {
+	21565, -- トーレット
+	21585, -- クレパスクラナイフ
+    },
     body = {
 	25786, -- アシェーラハーネス
     },
