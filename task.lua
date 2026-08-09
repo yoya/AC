@@ -32,8 +32,8 @@ local task_period_table = {}
 ---  duration: command にかかる時間
 ---  period: 同じ command を次に実行できるまでの時間
 ---  eachfight: 戦闘毎に period をリセットするか否か
-M.new_task = function(command, delay, duration, period, eachfight)
-    local t = {command=command, delay=delay, duration=duration, period=period,
+M.new_task = function(cmd, delay, duration, period, eachfight)
+    local t = {command=cmd, delay=delay, duration=duration, period=period,
 	       eachfight=eachfight}
     assert_task(t)
     return t
@@ -211,7 +211,7 @@ M.tick = function()
     if now < tick_next_time then
 	return
     end
-    local level, task = M.get_task()
+    local _, task = M.get_task()
     if task == nil then
 	return
     end

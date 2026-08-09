@@ -47,7 +47,6 @@ function M.ws(id)
     if mob.name == "Monberaux" then
 	return
     end
-    local datetime = os.date("%X", now)
     -- io_chat.set_next_color(6)
     --io_chat.printf("[%s] ws(%s) ", datetime, mob.name)
 end

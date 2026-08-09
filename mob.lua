@@ -154,7 +154,7 @@ function M.condition_match(pos, condition, mob)
 	end
 	local name_match = false
 	for _, name in ipairs(name_match_list) do
-	    local a, b = string.find(mob.name, name)
+	    local a = string.find(mob.name, name)
 	    if a ~= nil then
 		name_match = true
 		break

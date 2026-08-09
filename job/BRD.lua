@@ -37,7 +37,6 @@ function song(song_name, onoff, period, delay, target)
 end
 
 function song_tick(player)
-    local zone = windower.ffxi.get_info().zone
     local onoff = player.status > 0
     local me = windower.ffxi.get_mob_by_target("me")
     if M.parent.need_safety() then

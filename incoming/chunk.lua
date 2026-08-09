@@ -206,7 +206,6 @@ end
 
 -- Char Update
 packet_handler[0x0DF] = function(packet)
-    local id = packet["ID"]
     local char = {
 	main_job_id = packet["Main job"],
 	sub_job_id = packet["Sub job"],

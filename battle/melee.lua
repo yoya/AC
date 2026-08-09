@@ -231,11 +231,9 @@ end
 --- 戦闘中。リーダー、メンバー共通。
 function M.tick(player, me, mob)
     -- print("battle/melee.tick")
-    local mob = windower.ffxi.get_mob_by_target("t")
     if not tick_keep_fighting(mob) then
 	return
     end
-    local player = windower.ffxi.get_player()
     tick_switch_to_prefer_mob(mob)
  ---   if not player or not player.target_index then
  ---       return

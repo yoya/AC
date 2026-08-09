@@ -4,7 +4,6 @@
 local utils = require 'utils'
 local acjob = require 'job'
 local merge_lists = utils.table.merge_lists
-local merge_tables = utils.table.merge_tables
 local task = require 'task'
 local io_chat = require 'io/chat'
 local M = {}
@@ -69,7 +68,7 @@ M.send_command_prob = function(table, period)
     -- print("send_command_prob")
     local rnd = math.random(1, 1000)
     local pp = 0
-    local pn = 0
+    local pn
     for i, p_c in ipairs(table) do
         local p = p_c[1]  -- probability
         local r = p_c[2]  -- recast time
@@ -89,7 +88,7 @@ M.send_command_prob = function(table, period)
 --                windower.ffxi.run(false)
 --                coroutine.sleep(0.5)
                 -- command.send(c)
-		local level = task.PRIORITY_LOW
+		local level
 		if p >= 1000 then
 		    level = task.PRIORITY_TOP
 		elseif p >= 500 then

@@ -36,7 +36,6 @@ function M.start()
     -- print("battle start")
     -- 戦闘用装備に着替える
     -- right_ring = 14
-    local slot_name = "right_ring"
     local slot = 14
     local item_id = M.orig_equip_right_ring_item_id
     if item_id ~= nil then

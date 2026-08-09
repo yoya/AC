@@ -46,7 +46,7 @@ function inde_setup(job_rank)
     c = 'input /ja エントラスト <me>; wait 2; input /ma '..GEO_entrust..' <p2>'
     -- command, delay, duration, period, eachfight
     t = task.new_task(c, 2, 7, 600, false)
-    local done = task.set_task(level, t)
+    done = task.set_task(level, t)
     if done then
 	-- io_chat.set_next_color(6)
 	-- io_chat.print("エントラストインデ展開")

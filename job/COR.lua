@@ -59,8 +59,6 @@ function phantom_roll(roll_name, on, delay)
 end
 
 function roll_tick(player)
-    local zone = windower.ffxi.get_info().zone
-    local me = windower.ffxi.get_mob_by_target("me")
     local mob = windower.ffxi.get_mob_by_target("t")
     if M.parent.need_safety() then
 	phantom_roll("ダンサーロール", true, 0)  -- リジェネ
@@ -104,7 +102,6 @@ function M.main_tick(player)
     if role_Melee.main_tick ~= nil then
 	role_Melee.main_tick(player)
     end
-    local cors_roll = false
     if player.status == pstatus.ENGAGED then -- 戦闘中
 	roll_tick(player)
     end
@@ -178,10 +175,10 @@ function M.incoming_text_handler(text)
 	return
     end
     -- Upachanのダブルアップ\n→ファイターズロールの合計値が5になった！
-    local s = split_multi(text, {'ダブルアップ', '→', 'ロール', 'が', 'に'})
-    if s ~= nil then
-	local roll_name = s[3]
-	local roll_number = tonumber(s[5])
+    local s2 = split_multi(text, {'ダブルアップ', '→', 'ロール', 'が', 'に'})
+    if s2 ~= nil then
+	local roll_name = s2[3]
+	local roll_number = tonumber(s2[5])
 	COR_phantom_roll_up(roll_name, roll_number)
 	return
     end

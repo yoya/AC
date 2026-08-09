@@ -71,8 +71,6 @@ function M.tick(player)
     end
 end
 
-local listener_idx = 0
-
 -- 同じメッセージで複数 incoming handler が動く事があるので、その対処
 local furrow_check = false  -- 畑
 local pond_check = false  -- 池

@@ -42,7 +42,6 @@ local crystal_ids = item_data.crystal_ids -- クリスタル/塊
 local seal_ids = item_data.seal_ids -- 印章
 local cipher_ids = item_data.cipher_ids --  盟スクロール
 local bayld_swap_ids = item_data.bayld_swap_ids --  ベヤルド交換品
-local gob_dial_key_ids = item_data.gob_dial_key_ids -- 不思議箱ダイヤルキー
 
 
 -- https://docs.windower.net/commands/input/
@@ -65,7 +64,6 @@ ac_move.AC = M
 local ac_record = require 'ac/record'
 local ac_char = require 'ac/char'
 
-local turn_to_pos = ac_move.turn_to_pos
 local turn_to_front = ac_move.turn_to_front
 
 local ac_party = require 'ac/party'
@@ -83,8 +81,6 @@ local acitem = require 'item'
 
 local ws = require 'ws'
 local acprob = require 'prob'
-local send_command_prob = acprob.send_command_prob
-local get_send_command_prob_table = acprob.get_send_command_prob_table
 local aczone = require 'zone'
 aczone.AC = M  -- for callback
 local zone_change = require 'zone/change'
@@ -134,7 +130,7 @@ local idle_function_trade_items = function(tname, items, wait, enterWaits)
                 coroutine.sleep(1)
                 io_net.target_by_mob(mob)
                 coroutine.sleep(wait-1)
-                for i, w in ipairs(enterWaits) do
+                for _, w in ipairs(enterWaits) do
                     push_keys({"enter"})
 		    print("push enter > coroutine.sleep:"..w)
                     coroutine.sleep(1)
@@ -301,7 +297,6 @@ end
 
 local idle_function = function()
     -- print("idle_function")
-    local ret
     if  use_silt then
         windower.ffxi.run(false)
         use_silt = acitem.use_item_include_bags(6391)
@@ -639,7 +634,7 @@ local cmd_patrol = function(zone, arg1, arg2)
 		    command.send('input /mailbox')  -- 宅配ポストを開ける
 		    coroutine.sleep(4)
 		    if arg2 == "mm" then
-			for i = 1, 8 do
+			for _ = 1, 8 do
 			    push_keys({"enter", "enter"})
 			    coroutine.sleep(0.5)
 			    push_keys({"right"})
@@ -726,7 +721,7 @@ local cmd_use = function(arg1)
 	    coroutine.sleep(0.5)
 	    for i,id in ipairs(item_data.dec_items) do
 		local c = acitem.inventory_count_by_item_id(id)
-		for i = 1, c do
+		for _ = 1, c do
 		    acitem.use_item_include_bags(id)
 		    coroutine.sleep(3)  -- 2 だと NG
 		end
@@ -784,16 +779,16 @@ end
 
 -- ac timer <秒>: 残り時間をカウントダウン表示する
 local cmd_timer = function(arg1)
-    local start = os.time()
+    local start_time = os.time()
     local period = tonumber(arg1, 10)
     if period == nil then
 	io_chat.error("ac timer <period>", arg1)
 	return
     end
     io_chat.info("<<< timer start >>>", period)
-    while (os.time() - start) <= period do
-	local remain = period - (os.time() - start)
-	local th = 0
+    while (os.time() - start_time) <= period do
+	local remain = period - (os.time() - start_time)
+	local th
 	if remain < 5 then -- 毎秒
 	    th = remain
 	elseif remain < 30 then -- 5秒毎

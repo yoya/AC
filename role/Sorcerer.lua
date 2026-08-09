@@ -10,7 +10,6 @@ local pstatus = require 'player_status'
 
 M.magic = "ファイア"
 local MB_magic = "ファイア"
-local nonMB_magic = "ファイア"
 --local MB_magic = "ブリザド"
 --local MB_magic = "サンダー"
 
@@ -175,7 +174,7 @@ function M.magic_burst(player, magick_rank)
 end
 
 function M.main_tick(player)
-    local magick_rank = 3
+    local magick_rank
     local main_job = player.main_job
     if main_job == "BLM" or main_job == "SCH" then
 	magick_rank = 5

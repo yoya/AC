@@ -18,12 +18,6 @@ local ac_focus = require 'ac/focus'
 
 local SIGNATURE = "AC"
 
--- { {keyword, callback}, ... }
-local listener_table = {}
-local listener_table_last_idx = 0
-
-local player_name = nil
-
 function M.send(target, method, arg1, arg2, arg3)
     local player = windower.ffxi.get_player()
     if control.debug then

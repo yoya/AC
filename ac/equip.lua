@@ -41,14 +41,14 @@ function M.equip_item_by_slot_name(slot_name)
     local items = windower.ffxi.get_items()
     local id = items.equipment[slot_name]  -- bag 内 id
     local bag = items.equipment[slot_name.."_bag"]  -- どの bag か
-    local items = windower.ffxi.get_items(bag)
-    if items[id] == nil then
+    local bag_items = windower.ffxi.get_items(bag)
+    if bag_items[id] == nil then
 	print("Error: id:"..id.."bag:"..bag)
     end
-    if items[id] == nil then
+    if bag_items[id] == nil then
 	return nil
     end
-    local item_id = items[id].id  --(items[id] が nilのエラーが出た事がある)
+    local item_id = bag_items[id].id  --(items[id] が nilのエラーが出た事がある)
     return item_id
 end
 
@@ -147,9 +147,7 @@ function M.equip_item(slot, item_id)
     if type(slot) == "string" then  -- 文字列でも指定できるように
 	slot = equip_slots[slot]
     end
-    local bag = nil
-    local inv_id = nil
-    bag, inv_id = M.search_equip_item(item_id)
+    local bag, inv_id = M.search_equip_item(item_id)
     -- print("ac/equip", slot, item_id, bag, inv_id)
     if bag ~= nil then
 	windower.ffxi.set_equip(inv_id, slot, bag)

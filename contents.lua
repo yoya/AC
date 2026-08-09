@@ -208,7 +208,7 @@ end
 
 function M.match_contents_name(name)
     -- print("contents.match_contents_name(name)", name)
-    local i, c = M.get_contents_by_name(name)
+    local i = M.get_contents_by_name(name)
     if i == M.type then
 	return true
     end

@@ -3,9 +3,6 @@
 
 local M = {}
 
-local utils = require 'utils'
-local array_reverse = utils.table.array_reverse
-
 function target_pos(t)
     local mob = windower.ffxi.get_mob_by_target(t)
     if mob == nil then

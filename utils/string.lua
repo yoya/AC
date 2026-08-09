@@ -11,8 +11,8 @@ function M.split_multi(text, seps)
     local prev_start = 0
     local prev_end = 0
     local text_arr = {}
-    for i, s in ipairs(seps) do
-	local s, e = text:find(s)
+    for i, sep in ipairs(seps) do
+	local s, e = text:find(sep)
 	if s == nil or e == nil then
 	    return nil
 	end

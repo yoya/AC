@@ -37,10 +37,7 @@ function M.ws()
 end
 
 function table_has_data(t)
-    for k, v in pairs(t) do
-	return true
-    end
-    return false
+    return next(t) ~= nil
 end
 
 function M.print()

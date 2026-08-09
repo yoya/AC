@@ -487,7 +487,6 @@ local EQUIP_ITEM_BANK_KEY = 'use_equip_item'
 
 function M.use_equip_item(slot, item_id, item_name, delay)
     local ac_equip = require('ac/equip')
-    local task = require('task')
     task.all_clear() -- 他タスクが邪魔しないよう全消去
     ac_equip.equip_save(EQUIP_ITEM_BANK_KEY) -- 今の装備を記録
     coroutine.sleep(1)
@@ -522,8 +521,8 @@ function M.show_own_items(item_list)
 	for _, bag in ipairs(bag_name_ja_list) do
 	    local bag_name = bag.name
 	    local bag_name_ja = bag.ja
-	    local bag = items[bag_name]
-	    for _, b in ipairs(bag) do
+	    local bag_items = items[bag_name]
+	    for _, b in ipairs(bag_items) do
 		if b.id == item_id and b.count > 0 then
 		    line = string.format("%s %s(%d)", line, bag_name_ja, b.count)
 		end

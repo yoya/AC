@@ -3,7 +3,6 @@
 require('functions')
 local res_name = require 'res_name'
 local utils = require 'utils'
-local get_keys = utils.table.get_keys
 local command = require 'command'
 local io_chat = require 'io/chat'
 

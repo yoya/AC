@@ -151,7 +151,6 @@ function _table_to_string(data, depth)
 	    end
 	    text = text .. "},\n"
 	else
-	    local natural = M.is_natural_array(data)
 	    for k,v in pairs(data) do
 		if type(k) == "number" then
 		    k = "["..k.."]"

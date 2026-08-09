@@ -375,12 +375,12 @@ function move_to(route, route_table, next_route, reverse)
 		local curr_pos = current_pos()
 		M.AC.start_pos = curr_pos  -- 開始位置を更新
 		if prev_pos ~= nil then
-		    local d = distance(prev_pos, curr_pos)
-		    if d > 128 then
+		    local far = distance(prev_pos, curr_pos)
+		    if far > 128 then
 			io_chat.warn("too far next move point")
 			io_chat.printf("prev_pos(%d,%d) curr_pos(%d,%d) distance(%d) > 128",
 				       prev_pos.x, prev_pos.y,
-				       curr_pos.x, curr_pos.y, d)
+				       curr_pos.x, curr_pos.y, far)
 			local zone_id = windower.ffxi.get_info().zone
 			io_chat.printf("add midpoint (x=%d,y=%d) zone(%d) file",
 				       (prev_pos.x + curr_pos.x)/2,
@@ -434,7 +434,6 @@ function move_to(route, route_table, next_route, reverse)
             if p.a == "f8touch" or p.a == "opendoor" then
                 push_keys({"escape", "f8", "enter"})
                 coroutine.sleep(1.0)
-                touch = true
             end
             if p.a == "esc" then
                 push_keys({"escape"})
