@@ -4,7 +4,7 @@ local M = { id = 132 }
 
 function M.zone_in()
     local contents = require 'contents'
-    contents.set_contents(Abyssea)
+    contents.set_zone_override(contents.Abyssea)
 end
 
 M.routes = {

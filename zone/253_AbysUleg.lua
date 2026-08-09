@@ -4,6 +4,11 @@ local M = { id = 253 }
 
 local acitem = require 'item'
 
+function M.zone_in()
+    local contents = require 'contents'
+    contents.set_zone_override(contents.Abyssea)
+end
+
 M.routes = {
     conf = {
 	{x=-236,y=-520,z=-40}, {x=-222.6,y=-522.3},

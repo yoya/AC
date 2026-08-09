@@ -2,6 +2,11 @@
 
 local M = { id = 218 }
 
+function M.zone_in()
+    local contents = require 'contents'
+    contents.set_zone_override(contents.Abyssea)
+end
+
 M.routes = {
     conf = {
 	{x=430,y=320,z=0.3}, {x=424.4,y=326.9},
