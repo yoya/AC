@@ -11,7 +11,7 @@ local ac_equip = require 'ac/equip'
 M.orig_body_item_id = 0
 function M.zone_in()
     local contents = require 'contents'
-    contents.set_zone_override(contents.Redeem)  -- エミネンス、ユニティポイント交換
+    -- contents.set_zone_override(contents.Redeem)  -- エミネンス、ユニティポイント交換
     local orig_item_id = ac_equip.equip_item_by_slot_name("body")
     if orig_item_id ~= nil and orig_item_id ~= 27923 then
 	M.orig_body_item_id = orig_item_id
