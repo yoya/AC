@@ -97,9 +97,23 @@ local function has_item(item)
     return false
 end
 
+-- contents: そのコンテンツの時だけ有効。配列ならどれか1つに一致すれば良い
+local function match_contents(name)
+    local names = name
+    if type(name) ~= "table" then
+	names = { name }
+    end
+    for _, n in ipairs(names) do
+	if contents.match_contents_name(n) then
+	    return true
+	end
+    end
+    return false
+end
+
 -- contents / item の条件を全て満たすか。指定が無い条件は満たしているとみなす
 local function match_condition(t)
-    if t.contents ~= nil and not contents.match_contents_name(t.contents) then
+    if t.contents ~= nil and not match_contents(t.contents) then
 	return false
     end
     if t.item ~= nil and not has_item(t.item) then
