@@ -150,11 +150,14 @@ function move_to_action_faith(f)
 	elseif f == "balance" then
 	    faith_list = { "ヴァレンラール", "モンブロー",
 			  "ヨアヒム", "コルモル", "シルヴィ(UC)" }
+	elseif f == "cursna" then
+	    faith_list = { "イングリッド", "モンブロー",
+			   "ヨアヒム", "コルモル", "シルヴィ(UC)" }
+	elseif f == "guard" then
+	    faith_list = { "ブリジッド", "サクラ", "モーグリ", }
 	elseif f == "raise" then
 	    faith_list = { "モンブロー", "フェリアスコフィン",
 			  "ブリジッド", "クピピ", "コルモル" }
-	elseif f == "guard" then
-	    faith_list = { "ブリジッド", "サクラ", "モーグリ", }
 	else
 	    faith_list = { "ヨアヒム", "クピピ",
 			  "ブリジッド", "モーグリ", "サクラ" }
