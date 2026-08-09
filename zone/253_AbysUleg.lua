@@ -7,7 +7,10 @@ local acitem = require 'item'
 M.routes = {
     conf = {
 	{x=-236,y=-520,z=-40}, {x=-222.6,y=-522.3},
-	{x=-222.2,y=-524.9}, {a="f8touch"}
+	{x=-222.2,y=-524.9}, {a="f8touch"}, {wait=1},
+	-- ビジタントをつける
+	{keys={"right", "enter", "right", "enter", "up", "enter", "up", "enter"}}, {wait=2},
+	{x=-211,y=-501,z=-41.1}, {target="Veridical Conflux #01"}, {a="f8touch"}
     },
     -- #7
     gear = {
