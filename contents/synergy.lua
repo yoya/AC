@@ -24,17 +24,12 @@ M.PHASE_None = 0
 M.PHASE_Furnace = 1
 M.PHASE_Engineer = 2
 
-function M.init()
-    M.mob_Furnace = nil
-    M.mob_Engineer = nil
-    M.phase = M.PHASE_None
-    M.FurnaceExplosion = false
-    M.FurnaceDone = false
-end
-M.init()
-
-function M.tick(player)
-end
+--
+-- ここから下は phase で状態を持つ新しい実装。書きかけで、入口の
+-- SynergyFurnaceFunction / SynergyEngineerFunction は npc_action_handlers に
+-- 登録されていない (ファイル末尾を参照)。動いているのは *_old の方。
+-- 状態の初期化は、実際に効いている M.init (下のブロック) にまとめてある。
+--
 
 -- コマンド実行：無し。を前提にする。
 
@@ -239,15 +234,22 @@ function M.zone_out()
 end
 
 --
--- 古いコード、参考のため一時的に残す
+-- 古いコード、参考のため一時的に残す。
+-- npc_action_handlers が指しているのはこちらなので、動いているのはここ。
 --
 
+-- 上下どちらのブロックの状態もここで初期化する。
+-- 元は上下に M.init が1つずつあり、後に定義されたこちらだけが生きていて、
+-- 上のブロックの状態 (phase / Furnace*) は初期化されないままだった
 function M.init()
     M.mob_Furnace = nil
     M.mob_Engineer = nil
     M.explosion = false
     M.synergy_finish = false
     M.engineer_retry = false
+    M.phase = M.PHASE_None
+    M.FurnaceExplosion = false
+    M.FurnaceDone = false
 end
 M.init()
 
