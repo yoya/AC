@@ -5,6 +5,8 @@ Windower addon 。
 
 - https://pwiki.awm.jp/~yoya/?Windower/Addons/AC
 
+構成の決めごとは [ARCHITECTURE.md](ARCHITECTURE.md)。
+
 # settings
 
 ## Windower

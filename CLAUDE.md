@@ -1,7 +1,7 @@
 # AC (AccountCluster)
 
 FFXI の Windower アドオン。複数アカウントの操作を減らすための自動化。
-詳細は [README.md](README.md)。
+詳細は [README.md](README.md)、構成の決めごとは [ARCHITECTURE.md](ARCHITECTURE.md)。
 
 ## 開発環境
 
