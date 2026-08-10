@@ -218,6 +218,7 @@ M.zone_table = {
     [274] = require('zone/274_OutRaKaz'),   -- ラ・カザナル宮外郭
     [275] = require('zone/275_OutRaKaz_U1'), -- ラ・カザナル宮外郭〔Ｕ１〕
     [277] = require('zone/277_RaKazTurris'), -- ラ・カザナル宮天守
+    [278] = require('zone/278_GworaCorr'),  -- グォラ-歩廊
     [280] = require('zone/280_MogGarden'),  -- モグガーデン
     [281] = require('zone/281_Leafallia'),  -- リファーリア
     [283] = require('zone/283_SilverKnife'), -- シルバー・ナイフ
