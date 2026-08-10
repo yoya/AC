@@ -45,8 +45,12 @@ M.essential_points = {
 }
 
 M.automatic_routes = {
-    hp1_E = { route="vw" },
-    hp1_E = { route="mission", contents="mission" },
+    -- 同じキーを2行書くとテーブルコンストラクタは後勝ちになる。
+    -- 条件違いを並べるときは配列にする (pick_route が条件付きを優先する)
+    hp1_E = {
+	{ route="vw" },
+	{ route="mission", contents="mission" },
+    },
     hp2_A = { route="sgate" },
     hp3_M = { route="trust" },
 }
