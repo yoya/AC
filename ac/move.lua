@@ -24,6 +24,7 @@ local acitem = require 'item'
 
 local ac_party = require 'ac/party'
 local pstatus = require 'player_status'
+local pull = require 'pull'
 
 local turn_to_front = function(target)
     local push_numpad5 = 'setkey numpad5 down; wait 0.1; setkey numpad5 up'
@@ -75,18 +76,11 @@ function nearest_idx(pos, posTable)
     return near_idx
 end
 
+-- 別ルートを経由して dest へ向かう時の中継点を選ぶ、つもりだった関数。
+-- 書きかけのまま止まっており、呼び出し元もない。未実装であることを
+-- 隠さないよう nil を返すだけにしてある。
 function relay_idx(pos, dest, route_table)
-    local delay_dest = nil
-    local near_idx = nil
-    local near_dis = 99999
-    for d, route in pairs(route_table) do
-	if d ~= dest then
-	    for i, p in ipairs(route) do
-		local idx = nearest_idx(p, route)
-	    end
-	end
-    end
-    return relay_dest
+    return nil
 end
 
 -- 指定した方向に向く
@@ -226,7 +220,8 @@ function move_to_action(p, reverse)
     if p.auto ~= nil then
 	control.auto = p.auto
 	if p.auto then
-	    get_mob_position(M.AC.start_pos, "me")  -- start pos を更新
+	    pull.base_pos = {x=0, y=0, z=0}
+	    get_mob_position(pull.base_pos, "me")  -- 帰還地点を更新
 	end
     end
     if p.enemy_range ~= nil then
@@ -373,7 +368,7 @@ function move_to(route, route_table, next_route, reverse)
 		y = y + math.random(-d*100,d*100)/100
 		local dpos = {x=x,y=y,z=p.z}
 		local curr_pos = current_pos()
-		M.AC.start_pos = curr_pos  -- 開始位置を更新
+		pull.base_pos = curr_pos  -- 帰還地点を更新
 		if prev_pos ~= nil then
 		    local far = distance(prev_pos, curr_pos)
 		    if far > 128 then

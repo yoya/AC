@@ -12,6 +12,7 @@ local contents = require 'contents'
 local incoming_text = require 'incoming/text'
 local pstatus = require 'player_status'
 local acitem = require 'item'
+local pull = require 'pull'
 
 local M = {}
 
@@ -208,7 +209,7 @@ end
 function M.invoke_automatic_route(zone, sel)
     local zone_object = aczone.zone_table[zone]
     io_chat.printf("移動 %s => %s", sel.point, sel.route)
-    aczone.AC.start_pos = nil
+    pull.base_pos = nil
     ac_move.auto_move_to(zone, {sel.route}, zone_object.routes)
 end
 
@@ -342,7 +343,7 @@ function M.zone_change_handler(zone, prev_zone)
     print("zone/change zone_change_handler: "..zone.." <= "..tostring(prev_zone))
     ac_stat.init()
     task.all_clear()
-    aczone.AC.start_pos = nil
+    pull.base_pos = nil
     -- windower はログイン直後に prev_zone == zone を返す。同じゾーン内の
     -- 遷移 (モグハウス) でも同じ値になるので、zone_in 済みかどうかで区別する
     local is_login = (prev_zone == nil or prev_zone == zone)
