@@ -841,7 +841,9 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
     elseif subcommand == 'calm' then
 	local onoff = argument_means_on(arg1)
 	if onoff ~= nil then
-	    settings.Calm = onoff
+	    -- 実体は control.calm。settings.Calm は誰も読まないので
+	    -- ac calm on/off が効いていなかった
+	    control.calm = onoff
 	    io_chat.info("ac calm "..arg1)
 	else
 	    io_chat.error("Usage: ac calm (on|off)")

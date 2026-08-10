@@ -125,7 +125,7 @@ local function tick_approach_enemy(player, mob, dx, dy, dist)
                 { 300, 0, 'setkey a down; wait 0.25; setkey a up', 0 },
                 { 300, 0, 'setkey d down; wait 0.25; setkey d up', 0 },
                 { 500, 0, 'setkey s down; wait 0.01; setkey s up', 0 }, -- 後ろ
-         }, 1.0, acprob.prob_recast_time)
+         }, 1.0)
 	    --- 一回だけなので 1 を入れる。
 	else
 	    windower.ffxi.run(false)
@@ -192,8 +192,7 @@ local function tick_use_ability(player)
     if player.item_level > 99 then
         local commprob = get_send_command_prob_table(player.main_job, player.sub_job, 1)
 --            io_chat.print(commprob)
-        --send_command_prob(commprob, settings.Period, acprob.prob_recast_time)
-	send_command_prob(commprob, control.period, acprob.prob_recast_time)
+	send_command_prob(commprob, control.period)
     end
 end
 
@@ -216,7 +215,7 @@ local function tick_jiggle()
 	    { 10, 10, 'setkey d down; wait 0.1; setkey d up', 0 }, -- right
 	    { 20, 10, 'setkey w down; wait 0.1; setkey w up', 0 }, -- forward
 	    { 20, 10, 'setkey s down; wait 0.1; setkey s up', 0 }, -- back
-			}, control.period, acprob.prob_recast_time)
+			}, control.period)
 end
 
 --- アンバス：マンドラ
@@ -230,7 +229,7 @@ local function tick_point_cheer()
         { 100, 1, 'input /cheer <p2>', 1 },
         { 100, 1, 'input /clap <p1>', 1 },
         { 100, 1, 'input /clap <p2>', 1 },
-    }, control.period, acprob.prob_recast_time)
+    }, control.period)
 end
 
 --- 戦闘中。リーダー、メンバー共通。
