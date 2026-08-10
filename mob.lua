@@ -70,6 +70,9 @@ local non_attackable_mobs = {
     "Exenmille", -- 過去サンドクエスト「影」
     "Naja Salaheem", -- 巨人の懐へ
     "Mnejing", -- 憂鬱なるガッサド
+    -- 信徒キップドリックス。他では戦うので区別がいる
+    --"Dazbog",
+    --"Magh Bihu",
 }
 
 function is_mob_touchable(mob)  -- 宝箱とか
