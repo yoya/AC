@@ -17,7 +17,7 @@ stds.windower = {
 	-- Windower の libs が標準ライブラリに生やす拡張メソッド
 	math      = { fields = { "round" } },
 	string    = { fields = { "contains", "split" } },
-	coroutine = { fields = { "sleep" } },  -- Windower の coroutine.sleep
+	coroutine = { fields = { "sleep", "schedule" } },  -- Windower の拡張
 	-- lists/sets/tables/classes を require した時に生えるもの
 	"T", "L", "S", "class",
     },

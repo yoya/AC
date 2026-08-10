@@ -1281,8 +1281,16 @@ windower.register_event('load', function()
     task.set_task_simple("ac inject currinfo1", 2, 1)
     task.set_task_simple("ac inject currinfo2", 4, 1)
     task.set_task_simple("//record char", 6, 1)
-    -- 全ての準備が整ってから tick 起動
-    tick:loop(control.period)
+    -- 全ての準備が整ってから tick 起動。
+    -- functions.loop は interval を呼び出し時に捕まえてしまうので、
+    -- ac tick <period> で control.period を変えても効かなかった。
+    -- 毎周 control.period を読み直す自前ループにする
+    coroutine.schedule(function()
+	while true do
+	    tick()
+	    coroutine.sleep(control.period)
+	end
+    end, 0)
 end)
 
 windower.register_event('login', function()
