@@ -98,6 +98,12 @@ yield ができず `attempt to yield across metamethod/C-call boundary` にな�
 3. 中断は世代番号の不一致で判定する（`zone/change.lua` の `is_current()` クロージャが
    一番よくできている。これを手本にする）
 
+**宿題**: `tick_serial` が例外で落ちると、tick を回している coroutine ごと死んで
+アドオンがリロードまで沈黙する。`AC.lua` の `tick_running` + `TICK_STUCK_SEC` は
+これを直すつもりで入っているが、tick は while ループひとつから逐次に呼ばれるだけなので
+ガードには到達せず、働いていない。直すなら tick を毎回別の coroutine として起こし、
+時刻ベースのガードで見張る形にする。
+
 **宿題**: 二重起動ガードが 4 系統ある。世代番号方式に 1 本化する。
 
 | 場所 | 今の手法 |

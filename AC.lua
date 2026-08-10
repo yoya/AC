@@ -344,11 +344,20 @@ local idle_function = function()
     contents.npc_action_handler(zone, mob)
 end
 
--- tick_serial が例外で中断すると tick_running が true のまま残り、以降の
--- tick が全て弾かれて addon が沈黙する。pcall では包めない。Windower の
--- Lua は 5.1 で、pcall (C 関数) の内側から coroutine.sleep の yield が
--- できず "attempt to yield across metamethod/C-call boundary" になるため。
--- 代わりに開始時刻を持ち、一定時間を超えたら中断したとみなして再開する。
+-- tick の二重起動ガード。ただし現状これは働かない。
+--
+-- tick を回しているのは load の while ループひとつだけで、tick() を呼ぶ
+-- 場所も他にない。厳密に逐次なので tick_running が true のまま次の tick が
+-- 来ることがなく、TICK_STUCK_SEC の復帰パスにも到達しない。
+--
+-- 元の狙いは「tick_serial が例外で落ちても復帰する」だったが、例外が出ると
+-- ループの coroutine ごと死ぬので、そもそも次の tick が来ない。リロードする
+-- まで沈黙する、という問題は今も残っている。
+-- pcall では包めない。Windower の Lua は 5.1 で、pcall (C 関数) の内側から
+-- coroutine.sleep の yield ができず
+-- "attempt to yield across metamethod/C-call boundary" になるため。
+-- 直すなら tick を毎回別の coroutine として起こし、この時刻ベースの
+-- ガードで見張る形にする必要がある。ARCHITECTURE.md 参照。
 local tick_running = false
 local tick_started = 0
 -- 売却などで数分かかることがあるので余裕を持たせる
@@ -423,7 +432,6 @@ function tick_serial()
 end
 
 local start = function()
-    settings = config.load(defaults)
     control.attack = true
     pull.base_pos = {x=0,y=0,z=0}
     get_mob_position(pull.base_pos, "me")
