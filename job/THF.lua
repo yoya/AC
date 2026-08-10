@@ -83,4 +83,9 @@ M.battle_equip = {
     },
 }
 
+function M.incoming_text_handler(text)
+    --if string.contains(text, "インビンシブル") ~= false then
+    --end
+end
+
 return M
