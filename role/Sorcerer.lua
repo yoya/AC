@@ -56,8 +56,8 @@ M.resist_magic_table = {
     ['Quetzalcoatl'] = {'エアロ', 'ストーン'},
     ['Mireu'] = {'ファイア'},
     --
-    ['Apex Jagil'] = {'ウォーター'},
-    ['Apex Toad'] = {'ウォーター'},
+    ['Apex Jagil'] = {'ウォータ'},
+    ['Apex Toad'] = {'ウォータ'},
 }
 
 function within_time(x, a, b)

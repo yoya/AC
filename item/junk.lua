@@ -1024,7 +1024,8 @@ function M.char_update_handler(char)
     for id, name in pairs(M.crystal_char_table) do
 	local p = char[name]
 	-- モグ預けが溢れそうなら店売り。分からない時も店売り。
-	if p == nil or p > 4500 then
+	-- char update のたびに呼ばれるので、同じ id を積まないようにする
+	if (p == nil or p > 4500) and M.JunkItemIdSet[id] ~= true then
 	    table.insert(M.JunkItems, id)
 	    M.SellItemIdSet[id] = true
 	    M.JunkItemIdSet[id] = true

@@ -22,9 +22,6 @@ function M.init()
 end
 M.init()
 
-function M.tick(player)
-end
-
 function M.zone_in()
     M.init()
 end

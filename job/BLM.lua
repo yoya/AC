@@ -31,20 +31,6 @@ M.main_job_prob_table = {
 
 M.sub_job_prob_table = { }
 
-M.battle_equip = {
-    body = {
-	23445, -- ＳＰコート+3
-	23110, -- ＳＰコート+2
-	27831, -- ＳＰコート+1
-    },
-    left_ring = {
-	26184, -- スティキニリング+1
-    },
-    right_ring = {
-	26225, -- メダダリング
-    },
-}
-
 function M.invoke_magick_debuff(player, magic, onoff, need_mp)
     if player.vitals.mp < need_mp then
 	return
