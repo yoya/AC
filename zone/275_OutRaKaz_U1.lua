@@ -4,18 +4,18 @@
 local M = { id = 275 }
 
 function M.zone_in()
-    local contents =  __AC.contents
     print("Vagary in")
     -- 場所によってはソーティもあるので、一旦なくす
     --[[
+    local contents =  __AC.contents
     contents.set_zone_override(contents.Vagary)
     ]]
 end
 
 function M.zone_out()
-    local contents =  __AC.contents
     print("Vagary out")
     --[[
+    local contents =  __AC.contents
     contents.clear_zone_override()
     ]]
 end
