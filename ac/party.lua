@@ -77,22 +77,10 @@ function M.is_member_index(index)
     return false
 end
 
+-- 元は未定義の id と、注入されていない M.parent を参照していて呼ぶと落ちた。
+-- やりたい事は count_member と同じなので、そちらに寄せる
 function M.has_job_member_in_party(jobName)
-    local stat = M.parent.stat
-    local party = windower.ffxi.get_party()
-    for i = 0, 5 do -- 自分含めて全員
-	local target = "p"..i
-	local member = party[target]
-	local info = M.member_table[id]
-	-- 該当メンバーがいる。かつエリア内にいる
-	if info ~= nil and info.index > 0 and
-	    info.main_job == jobName then -- 間違ってそう。要調査
-	    info.target = target
-	    print("ac/party.has_job_member_in_party", info.main_job, jobName)
-	    return true
-	end
-    end
-    return false
+    return M.count_member({ main_job = jobName }) > 0
 end
 
 function M.has_tank_job_member_in_party()

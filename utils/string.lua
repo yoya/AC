@@ -46,10 +46,18 @@ function M.gil_string(gil, sep, digit)
     return gil_str2
 end
 
--- 標準 string.format は nil を受け取るとエラー終了するので、その対策
+-- 標準 string.format は nil を受け取るとエラー終了するので、その対策。
+-- io/chat.printf は pcall で凌いでいるが、こちらは nil を "(nil)" に
+-- 置き換えて渡すので、どの引数が nil だったかが出力に残る
 function M.format(f, ...)
-    -- ... を走査して nil なら "(nil" に上書きする処理
-    format(f, ...)
+    local n = select('#', ...)
+    local args = {...}
+    for i = 1, n do
+	if args[i] == nil then
+	    args[i] = "(nil)"
+	end
+    end
+    return string.format(f, unpack(args, 1, n))
 end
 
 return M
