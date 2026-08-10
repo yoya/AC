@@ -39,7 +39,7 @@ M.routes = {
 M.essential_points = {
     entrance1 = {x=-605.8,y=436.1,z=-23.8},
     entrance2 = {x=-236.5,y=413.4,z=-138.4},
-    entrance3 = {x=60.1,y=473.4,y=-225.5},
+    entrance3 = {x=60.1,y=473.4,z=-225.5},
     entrance4 = {x=189.8,y=346.5,z=-174.7},
     entrance5 = {x=527.3,y=559.2,z=-39.3},
     bc_in = {x=8.1,y=-108.4,z=-33.3},

@@ -45,7 +45,7 @@ M.essential_points = {
 }
 
 M.automatic_routes = {
-    hp1_E = { route="vw", contents="peculiar" },
+    hp1_E = { route="vw" },
     hp1_E = { route="mission", contents="mission" },
     hp2_A = { route="sgate" },
     hp3_M = { route="trust" },

@@ -13,7 +13,7 @@ M.routes = {
     },
     -- アンバスを出たとこ
     hp1 = { -- #HP(1) へ
-	{x=-34.2,y=58.1,y=-16},
+	{x=-34.2,y=58.1,z=-16},
 	{x=-16,y=69,d=1}, {x=-13,y=72,d=1},
 	{x=-13,y=85.5}, {target="Home Point #1"}
     },
@@ -21,7 +21,7 @@ M.routes = {
 
 M.essential_points = {
     hp1 = {x=-12.7,y=86.3,z=-15.7},
-    from_legion = {-34.2,y=58.1,y=-16},
+    from_legion = {x=-34.2,y=58.1,z=-16},
 }
 
 M.automatic_routes = {
