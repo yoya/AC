@@ -6,5 +6,7 @@ M.routes = {
 }
 
 M.essential_points = {
-    entrance = {x=17,y=0,z=0}
+    entrance = {x=17,y=0,z=0},
 }
+
+return M
