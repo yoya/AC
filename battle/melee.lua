@@ -88,6 +88,11 @@ local function tick_get_enemy_space()
 	return 4
     elseif control.enemy_space ==  control.ENEMY_SPACE_MANUAL then
 	return 99999
+    elseif control.enemy_space == control.ENEMY_SPACE_RANGE or
+	control.enemy_space == control.ENEMY_SPACE_ROLE then
+	-- 未実装。control.lua の TODO 通り、遠隔は遠隔の、魔法使いは魔法の
+	-- 間合いを取りたいが、まだ NEAR 相当で動く
+	return 1
     end
     return 1
 end

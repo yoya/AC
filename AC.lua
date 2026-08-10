@@ -953,7 +953,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	elseif arg1 == 'magic' then
 	    control.enemy_space = control.ENEMY_SPACE_MAGIC
 	elseif arg1 == 'role' then
-	    control.enemy_space = control.ENEMY_SPACE_ROKE
+	    control.enemy_space = control.ENEMY_SPACE_ROLE
 	else
 	    print("ac enemyspace (near|manual|magic|role)")
 	end
@@ -1001,7 +1001,9 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	if control.debug then
 	    print("ac focus", arg1)
 	end
-	if ac_focus.focus_my_index ~= arg1 then
+	-- arg1 はコマンド由来なので文字列。数値の focus_my_index と
+	-- そのまま比べると常に不一致になり、自分宛でも IPC を投げていた
+	if ac_focus.focus_my_index ~= tonumber(arg1) then
 	    -- index が自分以外なら他にフォーカスを譲る
 	    io_ipc.send_all("focus", arg1)
 	end
