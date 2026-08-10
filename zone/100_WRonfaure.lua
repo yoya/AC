@@ -19,7 +19,9 @@ M.essential_points = {
 }
     
 M.automatic_routes = {
-    book = { route="lathe" },
+    -- ルート側が xxx に改名されていて lathe は存在しない。
+    -- 実質無効だったので、無効だと分かる形にしておく
+    book = { route="lathe", disabled=true },
 }
 
 return M

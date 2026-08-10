@@ -10,7 +10,7 @@ M.essential_points = {
 }
 
 M.automatic_routes = {
-    entrance = { route="dremi" },
+    entrance = { route="dremi", disabled=true }, -- dremi ルートは未作成
 }
 
 M.automatic_trust = {

@@ -141,6 +141,8 @@ local function can_exec(f, t)
 end
 
 -- ひとつの essential_point の route 群から実行するものを1つ選ぶ。
+-- disabled = true のものは無効。存在しないルート名を書いて無効化する
+-- ハックがあったので、意図を書ける形にしたもの。
 -- 条件 (contents / item) 付きの一致を、条件なしより優先する。
 -- 一致があるならそれだけを見る。leader_only や need_level で
 -- 実行できない時に条件なしの既定ルートへ落とさない為
@@ -148,7 +150,8 @@ local function pick_route(f, entry, prev_zone)
     local matched = nil    -- 条件付きで、条件を満たしたもの
     local fallback = nil   -- 条件指定なし
     for _, t in ipairs(route_list(entry)) do
-	if t ~= nil and not skip_by_zone_from(t, prev_zone) then
+	if t ~= nil and t.disabled ~= true and
+	    not skip_by_zone_from(t, prev_zone) then
 	    if t.contents ~= nil or t.item ~= nil then
 		if matched == nil and match_condition(t) then
 		    matched = t

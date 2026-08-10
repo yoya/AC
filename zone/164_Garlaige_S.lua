@@ -36,7 +36,8 @@ M.essential_points = {
 }
 
 M.automatic_routes = {
-    book = { route="moogle" }, -- 動かないように
+    -- 存在しないルート名 moogle を書いて無効化していたもの
+    book = { route="moogle", disabled=true }, -- 動かないように
 }
 
 return M
