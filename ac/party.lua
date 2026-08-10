@@ -133,7 +133,10 @@ function M.count_member(cond)
     local count = 0
     for id, info in pairs(M.member_table) do
 	if info.index > 0 then
-	    if M.prop_match_if_exist(info, cond, "main_job") or
+	    -- cond に指定された項目を「全て」満たすものを数える。
+	    -- or だと、指定していない項目が常に true を返すので
+	    -- {main_job="PLD"} を渡しても全員が数えられてしまっていた
+	    if M.prop_match_if_exist(info, cond, "main_job") and
 		M.prop_match_if_exist(info, cond, "name") then
 		count = count + 1
 	    end
