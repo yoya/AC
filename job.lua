@@ -99,8 +99,12 @@ function M.tick(player)
     if aczone.is_city_zone(zone_id) then
 	return  -- 街中ではジョブ毎の処理はする事がない。ないよね？
     end
-    local main_tick = M.job_table[player.main_job].main_tick
-    local sub_tick = M.job_table[player.sub_job].sub_tick
+    -- サポ無し ("NON") やモンストロシティ等、job_table に無いジョブがある。
+    -- ここで nil を引くと tick 全体が止まるので、ジョブ側の存在から確認する
+    local main_job = M.job_table[player.main_job]
+    local sub_job = M.job_table[player.sub_job]
+    local main_tick = main_job ~= nil and main_job.main_tick or nil
+    local sub_tick = sub_job ~= nil and sub_job.sub_tick or nil
     if main_tick ~= nil then
 	main_tick(player)
     end
@@ -127,7 +131,8 @@ end
 
 function M.battle_start()
     local player = windower.ffxi.get_player()
-    local battle_equip = M.job_table[player.main_job].battle_equip
+    local main_job = M.job_table[player.main_job]
+    local battle_equip = main_job ~= nil and main_job.battle_equip or nil
     if battle_equip ~= nil then
 	ac_equip.equip_item_by_priority_tree(battle_equip)
     end
@@ -139,11 +144,13 @@ function M.dothebest(player)
     if aczone.is_city_zone(zone_id) then
 	return  -- 街中ではジョブ毎の処理はする事がない。ないよね？
     end
-    local dothebest_sub = M.job_table[player.sub_job].dothebest_sub
+    local main_job = M.job_table[player.main_job]
+    local sub_job = M.job_table[player.sub_job]
+    local dothebest_sub = sub_job ~= nil and sub_job.dothebest_sub or nil
     if dothebest_sub ~= nil then
 	dothebest_sub(player)
     end
-    local dothebest_main = M.job_table[player.main_job].dothebest_main
+    local dothebest_main = main_job ~= nil and main_job.dothebest_main or nil
     if dothebest_main ~= nil then
 	dothebest_main(player)
     end
