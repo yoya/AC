@@ -144,6 +144,7 @@ M.zone_table = {
     [161] = require('zone/161_ZvahlBails'), -- ズヴァール城外郭
     [162] = require('zone/162_ZvahlKeep'),  -- ズヴァール城内郭
     [164] = require('zone/164_Garlaige_S'), -- ガルレージュ要塞〔Ｓ〕
+    [165] = require('zone/165_ThroneRoom'), -- 王の間
     [166] = require('zone/166_Ranguemont'), -- ラングモント峠
     [167] = require('zone/167_Bostaunieu'), -- ボストーニュ監獄
     [168] = require('zone/168_OracleChmb'), -- 宣託の間
