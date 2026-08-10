@@ -90,19 +90,6 @@ function item_match(item_name, kw)
 	    end
 	end
     end
-    --    if kw == 'Vagary' or kw == 'Shishin' then
-    if false then
-	local items = item_vagary.drop_items
-	if kw == 'Shishin' then
-	    items = item_shishin.items
-	end
-	for _, id in pairs(items) do
-	    local item = res_items[id]
-	    if item_name == item.ja then
-		return true
-	    end
-	end
-    end
     if string.find(item_name, kw) ~= nil then
 	return true
     end
