@@ -4,6 +4,7 @@ local M = {}
 
 local control = require 'control'
 local command = require 'command'
+local utils = require 'utils'
 local task = require 'task'
 local acitem = require 'item'
 local item_data = require 'item/data'
@@ -36,6 +37,27 @@ local JOIN_BATTLE_RANGE = 10
 -- ac/move.lua の move_to が自動移動でやっているのと同じ考え方。
 local FOLLOW_STEP_SEC = 0.15
 local FOLLOW_STEP_NUM = 5
+
+-- 走行速度 (yalm/秒)。最後のステップで走り過ぎないよう、残り距離を走る時間に
+-- 直すのに使う。実際がこれより速くても FOLLOW_STEP_SEC で頭打ちになるだけなので、
+-- 装備やマウントで速くなる分は見ずに基本値のままにしておく。
+local RUN_SPEED = 5.0
+
+-- 追従を始める距離と、止まる距離。tick 毎に引き直すと同じ場所で「遠い/近い」が
+-- 入れ替わって落ち着かないので、追従が終わった時に一度だけ引いて、次に歩き出す
+-- までその値を使う。開始と停止の間は必ず空ける (重なると振動する)。
+local start_dist, start_dist_engaged, stop_dist
+
+-- 直前の追従で走った向き。行き過ぎ (向きが反転) の検出に使う
+local last_run_vec = nil
+
+-- 歩き出す距離を乱数にしているのは、非戦闘時に人間らしい遅延を出すため
+local roll_follow_dist = function()
+    stop_dist = math.random(2, 3)
+    start_dist = math.random(5, 6)
+    start_dist_engaged = math.random(7, 8)
+end
+roll_follow_dist()
 
 -- p1 が乗り物系のワープギミックを触った時、追随する対象
 local warp_gimmick_names = {
@@ -88,28 +110,28 @@ end
 -- リーダーを追う。まだ追従中で戦闘に移れないなら true を返す。
 -- engaged が真 (リーダーが戦闘中) のときは交戦を優先し、ゆるい追従は
 -- 抑える。離れすぎたときだけ追いつく。
--- 歩き出す距離を乱数にしているのは、非戦闘時に人間らしい遅延を出すため。
 local follow_leader = function(me_pos, leader, engaged)
     local dx = leader.x - me_pos.x
     local dy = leader.y - me_pos.y
     local dist = math.sqrt(dx*dx + dy*dy)
     local was_far = is_far
     if leader.hpp > 0 then
-        if not engaged and dist > math.random(3, 5) then
+        if not engaged and dist > start_dist then
             is_far = true  -- 非戦闘時のゆるい追従
-        elseif dist > math.random(6, 7) then -- 離れすぎたらすぐ気付く (戦闘中でも)
+        elseif dist > start_dist_engaged then -- 離れすぎたらすぐ気付く (戦闘中でも)
             is_far = true
         end
     end
     if not is_far then
         windower.ffxi.run(false)
+        last_run_vec = nil
         return false
     end
     if not was_far then
         -- 追従を始める時だけ。毎 tick 送ると視点が動きっぱなしになる
         turn_to_front()
     end
-    local stop_dist = math.random(2, 4)
+    local arrived = false
     for _ = 1, FOLLOW_STEP_NUM do
         local mob = ac_party.leader_mob()
         local me = windower.ffxi.get_mob_by_target("me")
@@ -121,17 +143,41 @@ local follow_leader = function(me_pos, leader, engaged)
         dy = mob.y - me.y
         dist = math.sqrt(dx*dx + dy*dy)
         if dist <= stop_dist then
+            arrived = true
+            break
+        end
+        if last_run_vec ~= nil and
+            utils.vector.CosineSimilarity(last_run_vec, {x=dx, y=dy}) < 0 then
+            -- 前に走った向きの逆を向いた = リーダーを追い越している。ここで
+            -- 走ると追い越し直して往復になるので、着いたものとして止める
+            arrived = true
             break
         end
         turn_to_pos(me.x, me.y, mob.x, mob.y)
         windower.ffxi.run(dx, dy)
-        coroutine.sleep(FOLLOW_STEP_SEC)
+        last_run_vec = {x = dx, y = dy}
+        -- 残り距離のぶんだけ走る。まるごと走ると stop_dist を踏み越える
+        coroutine.sleep(math.min(FOLLOW_STEP_SEC, (dist - stop_dist) / RUN_SPEED))
     end
-    if dist > stop_dist then
-        return true  -- まだ遠いので今 tick は追従だけ
+    if not arrived then
+        -- 最後のステップの後は距離を測っていない。古い距離で走り続けると
+        -- 次の tick まで無補正で進んでリーダーを追い越すので、測り直して決める
+        local mob = ac_party.leader_mob()
+        local me = windower.ffxi.get_mob_by_target("me")
+        if mob == nil or mob.x == nil or me == nil then
+            windower.ffxi.run(false)  -- 測れないので走らせたままにしない
+            return true
+        end
+        dx = mob.x - me.x
+        dy = mob.y - me.y
+        if math.sqrt(dx*dx + dy*dy) > stop_dist then
+            return true  -- まだ遠いので今 tick は追従だけ
+        end
     end
     is_far = false
+    last_run_vec = nil
     windower.ffxi.run(false)
+    roll_follow_dist()  -- 次に歩き出す距離を決める
     return false
 end
 
@@ -147,11 +193,13 @@ local follow_lost_leader = function(me_pos)
         -- 着いた、もしくは追い切れない (ワープした等)。諦める
         last_leader_pos = nil
         is_far = false
+        last_run_vec = nil
         windower.ffxi.run(false)
         return
     end
     turn_to_pos(me_pos.x, me_pos.y, last_leader_pos.x, last_leader_pos.y)
     windower.ffxi.run(dx, dy)
+    last_run_vec = {x = dx, y = dy}
 end
 
 -- 装備レベル的に戦闘に参加してよいか
@@ -281,6 +329,7 @@ function M.tick_idle(player, me)
         -- 交戦相手が決まったら移動は敵基準にする。リーダーと敵の両方を
         -- 追うと、行き先が tick 毎に入れ替わって落ち着かない。
         is_far = false
+        last_run_vec = nil
     elseif follow_leader(me_pos, leader, leader.status == pstatus.ENGAGED) then
         return  -- まだリーダーに追従中
     end
