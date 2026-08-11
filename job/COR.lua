@@ -41,8 +41,7 @@ M.sub_job_prob_table = {
     -- { 100, 300, 'input /ja ファイターズロール  <me>', 3 },
 }
 
--- ロールの実行を task に積む時の command。実体は M.exec_roll (下で登録する)。
--- ロール性能装備に着替えてから撃ちたいので、chat コマンドを直に積まない
+-- ロールの実行を task に積む時の command。実体は M.exec_roll (下で登録する)
 local ROLL_COMMAND_PREFIX = "//cor roll "
 
 function phantom_roll(roll_name, on, delay)
@@ -144,8 +143,7 @@ local ROLL_PLANS = {
     },
 }
 
--- 面倒を見るロール全部。plan に入らなかったものは毎 tick off にして予約を
--- 取り消す。ROLL_PLANS から作るので、候補を足した時の載せ忘れが起きない
+-- 面倒を見るロール全部。ROLL_PLANS から作るので、候補を足した時の載せ忘れが起きない
 local ALL_MANAGED_ROLLS = {}
 do
     local seen = {}
@@ -159,7 +157,7 @@ do
     end
 end
 
--- 自分が撃ったロール。名前 -> 最初に撃った時刻 (ダブルアップでは更新しない)
+-- 自分が撃ったロール。名前 -> 最初に撃った時刻
 local my_roll_time = {}
 
 -- ロール名(ja) -> status id。res.buffs で en が "Roll" で終わる31件がロール。
@@ -219,8 +217,7 @@ local function fold_recast()
     return ability_recast(FOLD_RECAST_ID)
 end
 
--- バースト中か。バーストしたロールは解除するまで枠を1つ占有し続ける。
--- またフォールドはバーストを優先して消すので、入れ替えの狙いが外れる
+-- バースト中か。フォールドはバーストを優先して消すので、入れ替えの狙いが外れる
 local function is_busted(player)
     if player == nil or player.buffs == nil then
 	return false
@@ -376,7 +373,7 @@ local function apply_roll_plan(player, plan)
 end
 
 function roll_tick(player)
-    -- plan が空でも呼ぶ。呼ばないと前の状況で積んだ予約が残って発火する
+    -- 括弧は current_roll_plan の2つ目の戻り値 (一致した plan) を捨てるため
     apply_roll_plan(player, (current_roll_plan()))
 end
 
