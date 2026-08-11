@@ -95,7 +95,8 @@ local ROLL_REPLACE_USE_FOLD = false
 local ROLL_FOLD_BUST = true
 -- 撃った直後は buff にまだ乗っていない。落ち着くまで入れ替え判定をしない
 local ROLL_SETTLE_SEC = 10
-local FOLD_RECAST_ID = 198  -- res/job_abilities.lua [178] Fold の recast_id
+local FOLD_RECAST_ID = 198       -- res/job_abilities.lua [178] Fold の recast_id
+local SNAKE_EYE_RECAST_ID = 197  -- res/job_abilities.lua [177] Snake Eye の recast_id
 local BUST_STATUS_ID = 309  -- res/buffs.lua [309] バスト
 
 -- ロールの候補表。上から順に match を見て、最初に一致したものを使う。
@@ -209,9 +210,15 @@ end
 
 -- フォールドの残りリキャスト秒。取れない時は nil。
 -- nil の時はどの分岐も「撃たない」側に倒れる
-local function fold_recast()
+-- アビリティの残りリキャスト秒。取れない時は nil。
+-- nil の時はどの分岐も「使えない」側に倒れる
+local function ability_recast(recast_id)
     local recasts = windower.ffxi.get_ability_recasts()
-    return recasts ~= nil and recasts[FOLD_RECAST_ID] or nil
+    return recasts ~= nil and recasts[recast_id] or nil
+end
+
+local function fold_recast()
+    return ability_recast(FOLD_RECAST_ID)
 end
 
 -- バースト中か。バーストしたロールは解除するまで枠を1つ占有し続ける。
@@ -544,14 +551,34 @@ function COR_phantom_roll_up(roll_name, roll_number, is_double_up)
     if roll_number >= 6 then
 	-- TODO: フォールド使える場合は return しない
 	if roll_number == roll_info.unlucky then
-	    if control.debug then
-		io_chat.set_next_color(6)
-		io_chat.print("アンラッキーロール("..roll_number..")！ > スネークアイ&ダブルアップ")
+	    -- スネークアイがあれば出目を確定させて振り直す。
+	    -- 無くても、バーストした時にフォールドで戻せるなら振ってみる。
+	    -- どちらも使えないなら振らない
+	    if ability_recast(SNAKE_EYE_RECAST_ID) == 0 then
+		if control.debug then
+		    io_chat.set_next_color(6)
+		    io_chat.print("アンラッキーロール("..roll_number..")！ > スネークアイ&ダブルアップ")
+		end
+		local c = "input /ja スネークアイ <me>; wait 2; input /ja ダブルアップ <me>"
+		task.set_task(task.PRIORITY_MIDDLE,
+			     -- command, delay, duration, period, eachfight
+			     task.new_task(c, 1, 1, 5, false))
+	    elseif fold_recast() == 0 then
+		if control.debug then
+		    io_chat.set_next_color(6)
+		    io_chat.print("アンラッキーロール("..roll_number..")！ > "..
+				  "スネークアイ無し。フォールドがあるのでダブルアップ")
+		end
+		phantom_roll_double_up(true)
+	    else
+		if control.debug then
+		    io_chat.set_next_color(3)
+		    io_chat.print("アンラッキーロール("..roll_number..")！ > "..
+				  "スネークアイもフォールドも無いので打ち止め")
+		end
+		phantom_roll_double_up(false)
+		equip_attack()
 	    end
-	    local c = "input /ja スネークアイ <me>; wait 2; input /ja ダブルアップ <me>"
-	    task.set_task(task.PRIORITY_MIDDLE,
-			 -- command, delay, duration, period, eachfight
-			 task.new_task(c, 1, 1, 5, false))
 	    return
 	end
 	if control.debug then
