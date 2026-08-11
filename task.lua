@@ -145,6 +145,29 @@ function M.reset_task(level, task)
     return i
 end
 
+-- 頭が // のコマンドは chat に流さず、ここに登録された関数を呼ぶ。
+-- 登録するのは呼ぶ側 (ジョブやコンテンツ) なので、task は中身を知らずに済む。
+-- prefix は前方一致。重複しない名前を付けること
+M.command_handlers = {}
+
+function M.add_command_handler(prefix, fn)
+    assert(string.find(prefix, '//', 1, true) == 1,
+	   "prefix need to start with //: "..prefix)
+    assert(type(fn) == "function", "fn need to be a function: "..prefix)
+    M.command_handlers[prefix] = fn
+end
+
+-- 一致したら prefix より後ろを渡して呼ぶ。呼んだら true
+local function call_command_handler(c)
+    for prefix, fn in pairs(M.command_handlers) do
+	if string.find(c, prefix, 1, true) == 1 then
+	    fn(string.sub(c, #prefix + 1))
+	    return true
+	end
+    end
+    return false
+end
+
 local PRIORITY_SIMPLE = M.PRIORITY_MIDDLE
 -- ある程度決め打ちの設定でタスク生成
 function M.set_task_simple(c, delay, duration)
@@ -229,7 +252,11 @@ M.tick = function()
 	end
 	command.send(c)
     else
-	if string.find(c, '//echo ') == 1 then
+	-- 以下の3つは add_command_handler ができる前からあるもの。
+	-- 新しいものはこちらに足さず、登録側で add_command_handler を使う
+	if call_command_handler(c) then
+	    do end
+	elseif string.find(c, '//echo ') == 1 then
 	    local io_chat = require('io/chat')
 	    io_chat.set_next_color(5)
 	    io_chat.print(string.sub(c, 8))

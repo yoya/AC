@@ -6,6 +6,8 @@ local utils = require 'utils'
 local control = require 'control'
 local io_chat = require 'io/chat'
 local ac_data = require 'ac/data'
+local ac_equip = require 'ac/equip'
+local command = require 'command'
 local task = require 'task'
 local role_Melee = require 'role/Melee'
 local incoming_text = require 'incoming/text'
@@ -39,8 +41,12 @@ M.sub_job_prob_table = {
     -- { 100, 300, 'input /ja ファイターズロール  <me>', 3 },
 }
 
+-- ロールの実行を task に積む時の command。実体は M.exec_roll (下で登録する)。
+-- ロール性能装備に着替えてから撃ちたいので、chat コマンドを直に積まない
+local ROLL_COMMAND_PREFIX = "//cor roll "
+
 function phantom_roll(roll_name, on, delay)
-    local c = "input /ja "..roll_name.." <me>"
+    local c = ROLL_COMMAND_PREFIX..roll_name
     local level = task.PRIORITY_MIDDLE
     local period = 300 / 4
     if roll_name == "コルセアズロール" then
@@ -57,6 +63,26 @@ function phantom_roll(roll_name, on, delay)
 	task.remove_task(level, t)
     end
 end
+
+-- 攻撃装備に戻す。ロールを続けない (ダブルアップしない) と決めた所から呼ぶ
+local function equip_attack()
+    if control.debug then
+	io_chat.info("roll: 攻撃装備に戻す")
+    end
+    ac_equip.equip_item_by_priority_tree(M.attack_equip)
+end
+
+-- ロールを実行する。task から //cor roll <ロール名> で呼ばれる。
+-- equip_item_by_priority_tree は装備を送った後に1秒 sleep するので、
+-- 「1秒前に着替える」はそのまま満たされる
+function M.exec_roll(roll_name)
+    if control.debug then
+	io_chat.infof("roll: ロール装備に着替えて %s", roll_name)
+    end
+    ac_equip.equip_item_by_priority_tree(M.roll_equip)
+    command.send("input /ja "..roll_name.." <me>")
+end
+task.add_command_handler(ROLL_COMMAND_PREFIX, M.exec_roll)
 
 local MAX_ACTIVE_ROLLS = 2
 local ROLL_INTERVAL_SEC = 61  -- ロールのリキャストが60秒なので、それより後
@@ -506,11 +532,13 @@ function COR_phantom_roll_up(roll_name, roll_number, is_double_up)
     if roll_info == nil then
 	io_chat.set_next_color(3)
 	io_chat.print("Unknown phantom roll:"..roll_name)
+	equip_attack()  -- 続けるか分からないので、ロール装備のままにしない
 	return
     end
     if roll_number == roll_info.lucky then
 	io_chat.set_next_color(6)
 	io_chat.print(roll_name.."("..roll_number..") ラッキーロール！")
+	equip_attack()
 	return
     end
     if roll_number >= 6 then
@@ -531,6 +559,7 @@ function COR_phantom_roll_up(roll_name, roll_number, is_double_up)
 	     io_chat.print(roll_name.." "..roll_number.." で打ち止め ("..roll_info.lucky.."/"..roll_info.unlucky..")")
 	end
 	phantom_roll_double_up(false) -- たまに暴発するのを防ぎたい
+	equip_attack()
 	return
     end
     if control.debug then
@@ -571,6 +600,7 @@ function M.incoming_text_handler(text)
 	task.set_task(task.PRIORITY_MIDDLE,
 		     -- command, delay, duration, period, eachfight
 		     task.new_task(c, 1, 1, 5, false))
+	equip_attack()
 	return
     end
 end
