@@ -208,8 +208,6 @@ local function my_active_rolls(player)
     return active, count
 end
 
--- フォールドの残りリキャスト秒。取れない時は nil。
--- nil の時はどの分岐も「撃たない」側に倒れる
 -- アビリティの残りリキャスト秒。取れない時は nil。
 -- nil の時はどの分岐も「使えない」側に倒れる
 local function ability_recast(recast_id)
