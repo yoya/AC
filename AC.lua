@@ -1162,12 +1162,16 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    show_mob()
 	elseif arg1 == 'party' then
 	    ac_party.show_party_members()
+	elseif arg1 == 'roll' then
+	    if not acjob.show(player, "roll", arg2) then
+		io_chat.warn("ac show roll: 今のメインジョブに roll 表示はありません")
+	    end
 	elseif arg1 == 'stat' then
 	    ac_stat.print()
 	elseif arg1 == 'task' then
 	    task.print()
 	else
-	    io_chat.print("ac show { char | chatcolor | control | inventory | listener | mob | party | stat | task }")
+	    io_chat.print("ac show { auto | char | chatcolor | control | inventory | listener | mob | party | roll [all] | stat | task }")
 	end
     elseif subcommand == 'shutdown' then
 	io_chat.notice("#### Shutdown!!!")

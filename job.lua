@@ -156,6 +156,21 @@ function M.dothebest(player)
     end
 end
 
+-- ジョブ固有の表示 (ac show <name> → job/XXX.lua の M.show_<name>)。
+-- job_table に無いジョブや、その表示を持たないジョブなら false を返す
+function M.show(player, name, ...)
+    if player == nil then
+	return false
+    end
+    local main_job = M.job_table[player.main_job]
+    local show = main_job ~= nil and main_job["show_"..name] or nil
+    if show == nil then
+	return false
+    end
+    show(player, ...)
+    return true
+end
+
 -- 戦闘を安全側に倒す状況
 function M.need_safety()
     -- print("need_safety")
