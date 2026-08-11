@@ -26,9 +26,10 @@ function M.init(accountList)
     M.focus_my_index = 0
     for i,_ in pairs(focus_list) do
 	-- ex) command.send('bind @1 ac focus 1')
-	local bind_command = 'bind @'..tostring(i)..' ac focus '..tostring(i)
-	local bind_command = 'bind ~%'..tostring(i)..' ac focus '..tostring(i)
-	command.send(bind_command)
+	local bind_command1 = 'bind @'..tostring(i)..' ac focus '..tostring(i)
+	local bind_command2 = 'bind ~%'..tostring(i)..' ac focus '..tostring(i)
+	command.send(bind_command1)
+	command.send(bind_command2)
     end
     -- Alt-tab は乗っ取れなかった。残念。
     command.send('bind ^tab ac focus -1')
