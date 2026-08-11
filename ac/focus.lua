@@ -27,6 +27,7 @@ function M.init(accountList)
     for i,_ in pairs(focus_list) do
 	-- ex) command.send('bind @1 ac focus 1')
 	local bind_command = 'bind @'..tostring(i)..' ac focus '..tostring(i)
+	local bind_command = 'bind ~%'..tostring(i)..' ac focus '..tostring(i)
 	command.send(bind_command)
     end
     -- Alt-tab は乗っ取れなかった。残念。
