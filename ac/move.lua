@@ -253,10 +253,10 @@ function move_to_action(p, reverse)
 	    if mob == nil or mob.name ~= p.target then
 		-- print("tab")
 		push_keys({"tab"})
-		coroutine.sleep(0.2)
+		coroutine.sleep(0.25)
 	    elseif mob.distance < 16 then
 		utils.target_lockon(true)
-		coroutine.sleep(0.5)
+		coroutine.sleep(1)
 		break
 	    end
 	end
