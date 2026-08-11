@@ -77,7 +77,7 @@ function M.dothebest_sub(player)
     end
 end
 
-M.battle_equip = {
+M.attack_equip = {
     body = {
 	25786, -- アシェーラハーネス
 	23733, -- マリグナスタバード

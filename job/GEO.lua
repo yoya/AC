@@ -158,7 +158,7 @@ function M.dothebest_main(player)
     inde_setup(1)
 end
 
-M.battle_equip = {
+M.attack_equip = {
     main = {
 	21070, -- イドリス
 	21080, -- イドリス

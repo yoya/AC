@@ -575,7 +575,7 @@ function M.incoming_text_handler(text)
     end
 end
 
-M.battle_equip = {
+M.attack_equip = {
     main = {
 	21581, -- ロスタム
 	21565, -- トーレット

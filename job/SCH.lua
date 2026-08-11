@@ -49,7 +49,7 @@ function M.sub_tick(player)
     end
 end
 
-M.battle_equip = {
+M.attack_equip = {
     body = {
 	25787, -- シャマシュローブ
 	25719, -- マーリンジュバ

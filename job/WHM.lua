@@ -61,7 +61,7 @@ function M.sub_tick(player)
     end
 end
 
-M.battle_equip = {
+M.attack_equip = {
     body = {
 	23154, -- ＥＢブリオー+2
 	26969, -- ヴリコダラジュポン (ケアル装備)

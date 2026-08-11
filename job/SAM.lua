@@ -26,7 +26,7 @@ function M.main_tick(player)
     end
 end
 
-M.battle_equip = {
+M.attack_equip = {
     main = {
 	21952, -- 真斬魔刀
 	21980, -- 真斬魔刀

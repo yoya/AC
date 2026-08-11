@@ -41,7 +41,7 @@ function M.main_tick(player)
     end
 end
 
-M.battle_equip = {
+M.attack_equip = {
     body = {
 	25785, -- デーゴンブレスト
 	26190, -- 月光の指輪

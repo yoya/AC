@@ -132,9 +132,9 @@ end
 function M.battle_start()
     local player = windower.ffxi.get_player()
     local main_job = M.job_table[player.main_job]
-    local battle_equip = main_job ~= nil and main_job.battle_equip or nil
-    if battle_equip ~= nil then
-	ac_equip.equip_item_by_priority_tree(battle_equip)
+    local attack_equip = main_job ~= nil and main_job.attack_equip or nil
+    if attack_equip ~= nil then
+	ac_equip.equip_item_by_priority_tree(attack_equip)
     end
 end
 

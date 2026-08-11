@@ -107,7 +107,7 @@ function M.sub_tick(player)
     toolbag_proc(ninja_tools_list)
 end
 
-M.battle_equip = {
+M.attack_equip = {
     main = {
 	21922, -- 五虎退
     },

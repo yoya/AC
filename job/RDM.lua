@@ -131,7 +131,7 @@ function M.sub_tick(player)
     end
 end
 
-M.battle_equip = {
+M.attack_equip = {
     body = {
 	23469, -- ＶＩタバード+3
 	23156, -- ＬＴサヨン+2

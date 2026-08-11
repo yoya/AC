@@ -130,7 +130,7 @@ function M.dothebest_sub(player)
     end
 end
 
-M.battle_equip = {
+M.attack_equip = {
     body = {
 	25766, -- フロプトブレスト (命中+47 攻+53)
 	25785, -- デーゴンブレスト (命中+45 攻+45)

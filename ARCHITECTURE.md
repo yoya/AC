@@ -280,13 +280,13 @@ M.listeners     -- enter 中だけ自動で付け外しされるリスナ表
 
 形式が 2 系統あり、互いに変換されない。
 
-- **item_id の優先順ツリー** — `job/*.battle_equip`。`ac/equip.equip_item_by_priority_tree` が使う
+- **item_id の優先順ツリー** — `job/*.attack_equip`。`ac/equip.equip_item_by_priority_tree` が使う
 - **装備位置のスナップショット** — `ac/equip` の `equip_set` / `equip_set_bank`。
   脱衣攻撃対策で「今の装備をそのまま戻す」ためのもの
 
 置き場所が 6 箇所に分散している。うち `job/COR.roll_equip`、`ac/equip.city_equip`、
 `ac/equip.walk_equip` は参照ゼロ。`battle.lua` は右指だけ独自に ID 直書きで付け替えていて、
-`battle_equip` に `right_ring` を持つ 14 ジョブでは直後に上書きされる。
+`attack_equip` に `right_ring` を持つ 14 ジョブでは直後に上書きされる。
 
 **宿題**: 前者を 1 箇所に集め、後者は脱衣対策専用だと明記する。
 

@@ -46,7 +46,7 @@ function M.main_tick(player)
     end
 end
 
-M.battle_equip = {
+M.attack_equip = {
     main = {
 	21722, -- ドリケナス
     },

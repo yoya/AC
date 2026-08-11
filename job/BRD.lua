@@ -107,7 +107,7 @@ function M.dothebest_main(player)
 
 end
 
-M.battle_equip = {
+M.attack_equip = {
     main = {
 	21565, -- トーレット
     },

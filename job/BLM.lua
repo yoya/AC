@@ -90,7 +90,7 @@ function M.sub_tick(player)
     end
 end
 
-M.battle_equip = {
+M.attack_equip = {
     body = {
 	23445, -- ＳＰコート+3
 	23110, -- ＳＰコート+2
