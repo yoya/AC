@@ -630,11 +630,16 @@ local cmd_patrol = function(zone, arg1, arg2)
 		push_keys({"enter"})
 		coroutine.sleep(19)
 		zone = windower.ffxi.get_info().zone
-		if zone == 0 then break end   -- おそらくログイン画面のまま
+		if zone == 0 then
+		    print("maybe, you are in login select")
+		    push_keys({"down"})
+		    break
+		end   -- おそらくログイン画面のまま
 		local me = windower.ffxi.get_mob_by_target("me")
 		if not aczone.in_moghouse(zone, me) then
-		    command.send('input /logout')
-		    coroutine.sleep(5)
+		    io_chat.errorf("多分、モグハウスじゃないです zone:%d", zone)
+		    command.send('input /logout')  -- 30秒かかる
+		    coroutine.sleep(30 + 1)
 		    push_keys({"down"})
 		    break
 		end
