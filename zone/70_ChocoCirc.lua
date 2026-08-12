@@ -5,25 +5,6 @@ local M = { id = 70 }
 local incoming_text = require 'incoming/text'
 local task = require 'task'
 
-function M.incoming_text_handler(text)
-    -- レースが終わったらデジョンする
-    -- エミネンス目標対応で、レースの連続観戦はしない前提
-    if string.contains(text, "次回の開催までごきげんよう！") then
-	task.set_task_simple("ac warp", 10, 5)
-    end
-end
-
-M.text_handler_idx = nil
-function M.zone_in()
-    M.text_handler_idx = incoming_text.add_listener("", M.incoming_text_handler)
-end
-
-function M.zone_out()
-    if M.text_handler_idx ~= nil then
-	incoming_text.remove_listener(M.text_handler_idx)
-    end
-end
-
 M.routes = {
     ent = {
 	{x=-320,y=-475,z=-0.3}, {x=-326,y=-464},
@@ -47,18 +28,25 @@ M.routes = {
 	--{a="f8touch"}, {a="wait"},
 	--{a="wait"}, {a="up"}, {a="wait"}, {a="enter"}
     },
+    -- 観客席
+    seats = {
+	{x=-35.6,y=-125.6,z=-14.5},
+	{x=-37,y=-112,z=-12.4,d=5} -- d=10 だと壁にめり込む事がある
+    }
 }
 
 M.essential_points = {
     wand_warp_point = {x=-320,y=-475,z=-0.3},
     from_aht = {x=-149.9,y=-386.4,z=0},
     from_aht_warp = {x=-280,y=-463,z=-4},
+    audience_in = {x=-35.6,y=-125.6,z=-14.5}
 }
 
 M.automatic_routes = {
     wand_warp_point = { route="ent" },
     from_aht = { route="aht2warp" },
     from_aht_warp = { route="aht2warp2ent" },
+    audience_in = { route="seats" },
 }
 
 return M

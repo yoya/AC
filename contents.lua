@@ -24,8 +24,9 @@ M.Redeem      = 15  -- 換金(エミネンス/ユニティポイント)
 M.GobMys      = 16  -- ゴブの不思議箱 (Gobbie Mystery Box)
 M.UnityWanted = 17  -- ユニティ・ウォンテッド
 M.Sortie      = 18  -- ソーティ
+M.ChocoboRace = 19  -- チョコボレース
 
-M.all_contents = { M.Idle, M.Leveling, M.Ambus, M.Works, M.Trove,  M.Mission, M.Abyssea, M.Garden, M.Trial, M.Raives, M.WKR, M.LoginPoint, M.Vagary, M.Synergy, M.Redeem, M.GobMys, M.UnityWanted, M.Sortie }
+M.all_contents = { M.Idle, M.Leveling, M.Ambus, M.Works, M.Trove,  M.Mission, M.Abyssea, M.Garden, M.Trial, M.Raives, M.WKR, M.LoginPoint, M.Vagary, M.Synergy, M.Redeem, M.GobMys, M.UnityWanted, M.Sortie, M.ChocoboRace }
 
 M.ambus   = require 'contents/ambus'
 M.trial   = require 'contents/trial'
@@ -39,6 +40,7 @@ M.abyssea = require 'contents/abyssea'
 M.redeem  = require 'contents/redeem'
 M.wanted  = require 'contents/wanted'
 M.sortie  = require 'contents/sortie'
+M.chocobo = require 'contents/chocobo'
 M.contents_table = {
     -- モードが必要なだけで特別な処理のないcontentsは、ここに追加しない
     [M.Ambus]       = M.ambus,
@@ -53,6 +55,7 @@ M.contents_table = {
     [M.Redeem]      = M.redeem,
     [M.UnityWanted] = M.wanted,
     [M.Sortie]      = M.sortie,
+    [M.ChocoboRace] = M.chocobo,
 }
 for c, m in pairs(M.contents_table) do
     m.parent = M
@@ -64,7 +67,6 @@ M.type = M.Idle
 M.user_type = M.Idle
 -- ゾーン由来の一時的な上書き。nil なら上書きなし
 M.zone_override = nil
-
 
 M.name_table = {
     [M.Idle]        = {'Idle', nil, ''},
@@ -85,6 +87,7 @@ M.name_table = {
     [M.GobMys]      = {'GobMys', 'gob'},
     [M.UnityWanted] = {'UnityWanted', 'wanted'},
     [M.Sortie]      = {'Sortie', 'sort', 'sor'},
+    [M.ChocoboRace] = {'ChocoboRace', 'Chocobo', 'Choco', 'Race'},
 }
 
 M.incoming_text_listener_id = nil
@@ -116,7 +119,6 @@ local function apply(c, force)
 	end
     end
 end
-
 -- ゾーン由来の上書きがあればそれを、無ければユーザ指定を実効値にする
 local function refresh(force)
     apply(M.zone_override or M.user_type, force)

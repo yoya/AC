@@ -27,16 +27,16 @@ end
 M.routes = {
     -- モグハウス
     mog2hp = {
-	{x=-53.7,y=-128.5,z=-0.1,desc="HPからモグハウス"},
+	{x=-53.7,y=-128.5,z=-0.1,desc="モグハウスからHP"},
 	-- {x=-54,y=-100,z=0,d=2},
 	{x=-54,y=-99,d=1},
 	-- -- {x=-54,y=-91,d=1}, -- {x=-48,y=-90,d=1}, {x=-50,y=-92,d=1},
 	{a="f8"}, {target="Home Point #2"}, {a="touch"}
     },
     ['mog2hp-spm'] = {
-	{x=-53.7,y=-128.5,z=-0.1,desc="HPからモグハウス>サンド港(M)"},
+	{x=-53.7,y=-128.5,z=-0.1,desc="モグハウス>HP>サンド港(M)"},
 	-- {x=-54,y=-100,z=0,d=2},
-	{x=-54,y=-99,d=1}, {wait=2},  -- 表示されるまで待つ
+	{x=-53,y=-98,d=1}, {wait=2},  -- 表示されるまで待つ
 	{a="f8"}, {target="Home Point #2"}, {a="touch"}, {wait=2},
 	{keys={"enter"}}, -- どのロージョンにする
 	{keys={"right"}}, -- サンドリア王国
@@ -46,14 +46,25 @@ M.routes = {
 	{keys={"up", "enter"}}, -- ワープする？＞はい
     },
     ['mog2hp-abys'] = {
-	{x=-53.7,y=-128.5,z=-0.1,desc="HPからモグハウス>ジュノ港(E)"},
+	{x=-53.7,y=-128.5,z=-0.1,desc="モグハウス>HP>ジュノ港(E)"},
 	-- {x=-54,y=-100,z=0,d=2},
-	{x=-54,y=-99,d=1}, {wait=2},  -- 表示されるまで待つ
+	{x=-53,y=-98,d=1}, {wait=2},  -- 表示されるまで待つ
 	{a="f8"}, {target="Home Point #2"}, {a="touch"}, {wait=2},
 	{keys={"enter"}}, -- どのロージョンにする
 	{keys={"right", "right", "enter"}}, -- ジュノ
 	{keys={"right", "right", "enter"}}, -- ジュノ港
 	{keys={"down", "enter"}}, -- #1(E)
+	{keys={"up", "enter"}}, -- ワープする？＞はい
+    },
+    ['mog2hp-choco'] = {
+	{x=-53.7,y=-128.5,z=-0.1,desc="モグハウス>HP>アトルガン#3(A)"},
+	-- {x=-54,y=-100,z=0,d=2},
+	{x=-53,y=-98,d=1}, {wait=2},  -- 表示されるまで待つ
+	{a="f8"}, {target="Home Point #2"}, {a="touch"}, {wait=2},
+	{keys={"enter"}}, -- どのロージョンにする
+	{keys={"right", "right", "down", "down", "enter"}}, -- 西アトルガン地方
+	{keys={"down", "enter"}}, -- アトルガン白門
+	{keys={"right", "enter"}}, -- #3(A)
 	{keys={"up", "enter"}}, -- ワープする？＞はい
     },
     mog2wp = {
@@ -205,6 +216,7 @@ M.automatic_routes = {
 	{ route="mog2wp", contents="Sortie" },
 	{ route="mog2wp", contents="Leveling" },
 	{ route="mog2hp-abys", contents="Abyssea" },
+	{ route="mog2hp-choco", contents="ChocoboRace" },
     },
     homepoint_2_M = {
 	{ route="moghouse" },
