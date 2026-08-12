@@ -102,7 +102,8 @@ function is_mob_attackable(mob)
 	-- 戦える敵は target_type == 2。1 は固定NPCで、戦おうとして失敗する。
 	-- target_type は LuaCore のビルドによっては entity_type という名前
 	-- なので、無い時は素通しする
-	if (mob.target_type or 2) == 2 then
+	-- デュミナスの戦闘可能な Hydra が 6 の時があったので追加
+	if (mob.target_type or 2) == 2 or (mob.target_type or 6) == 6 then
 	    -- 敵が平常、または味方にヘイトを向けている
 	    if mob.status == pstatus.IDLE or mob.claim_id == 0 or
 		is_mob_linked(mob) or
