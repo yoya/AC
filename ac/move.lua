@@ -254,7 +254,7 @@ function move_to_action(p, reverse)
 		-- print("tab")
 		push_keys({"tab"})
 		coroutine.sleep(0.25)
-	    elseif mob.distance < 16 then
+	    elseif mob.distance <= 35.56 then
 		utils.target_lockon(true)
 		coroutine.sleep(1)
 		break
