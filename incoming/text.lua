@@ -34,6 +34,9 @@ function M.duplication_check(keyword, callback)
 end
 
 function M.add_listener(keyword, callback)
+    if type(keyword) ~= "string" or type(callback) ~= "function" then
+	print(debug.traceback())
+    end
     assert(type(keyword) == "string")
     assert(type(callback) == "function")
     if M.duplication_check(keyword, callback) then
