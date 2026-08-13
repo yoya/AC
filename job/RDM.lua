@@ -11,6 +11,12 @@ local pstatus = require 'player_status'
 
 local M = {}
 
+-- コンバート。res/job_abilities.lua [83] コンバート (recast_id=49)
+local CONVERT_ABILITY_ID = 83
+local CONVERT_RECAST_ID = 49
+local CONVERT_MP_RATE = 0.5   -- MP がこの割合以下で撃つ
+local CONVERT_HP_RATE = 0.8   -- HP↔MP が入れ替わるので、HP に余裕がある時だけ撃つ
+
 M.main_job_prob_table = {
     { 500, 300*2, 'input /ja コンポージャー <me>', 2 },
     -- { 100, 30, 'input /ma ディスペル <t>', 3 },
@@ -32,7 +38,6 @@ M.main_job_prob_table = {
     { 5, 600, 'input /ma アクアベール <me>', 5},
     { 5, 300, 'input /ma ブリンク <me>', 5},
     { 5, 300, 'input /ma ストンスキン <me>', 5},
-    { 10, 600/4, 'input /ja コンバート <me>', 1 },
 }
 
 M.sub_job_prob_table = {
@@ -51,8 +56,56 @@ M.sub_job_prob_table = {
 --]]
     { 10, 120-30, 'input /ma ヘイスト <p1>', 7 },
     { 10, 120-30, 'input /ma ヘイスト <p3>', 7 },
-    { 10, 600/3, 'input /ja コンバート <me>', 2 },
 }
+
+-- アビリティの残りリキャスト秒。取れない時は nil。
+-- nil の時はどの分岐も「使えない」側に倒れる
+local function ability_recast(recast_id)
+    local recasts = windower.ffxi.get_ability_recasts()
+    return recasts ~= nil and recasts[recast_id] or nil
+end
+
+-- コンバートを覚えているか。サポ RDM が40未満の時、
+-- get_ability_recasts は 0 (使える) を返し得るので、こちらでも確かめる
+local function has_convert()
+    local abilities = windower.ffxi.get_abilities()
+    if abilities == nil or abilities.job_abilities == nil then
+	return false
+    end
+    for _, id in ipairs(abilities.job_abilities) do
+	if id == CONVERT_ABILITY_ID then
+	    return true
+	end
+    end
+    return false
+end
+
+-- MP が減っていて、HP に余裕があり、リキャストが空いている時にコンバート
+local function convert_tick(player)
+    local v = player.vitals
+    if v == nil or v.max_mp == nil or v.max_mp <= 0 then
+	return
+    end
+    if v.mp > v.max_mp * CONVERT_MP_RATE then
+	return
+    end
+    if v.max_hp == nil or v.max_hp <= 0 then
+	return  -- max_hp が 0 だと HP 0 でも下の判定を素通りする
+    end
+    if v.hp < v.max_hp * CONVERT_HP_RATE then
+	return
+    end
+    if not has_convert() then
+	return
+    end
+    local recast = ability_recast(CONVERT_RECAST_ID)
+    if recast == nil or recast > 0 then
+	return
+    end
+    -- command, delay, duration, period, eachfight
+    task.set_task(task.PRIORITY_MIDDLE,
+		  task.new_task('input /ja コンバート <me>', 0, 2, 10, false))
+end
 
 function M.invoke_magick_buff(player, magic, onoff, duration, need_mp)
     -- 間隔90固定なのどうにしかする
@@ -74,6 +127,7 @@ function M.invoke_magick_debuff(player, magic, onoff, duration, need_mp)
 end
 
 function M.main_tick(player)
+    convert_tick(player)
     if role_Melee.main_tick ~= nil then
 	role_Melee.main_tick(player)
     end
@@ -113,6 +167,8 @@ function M.main_tick(player)
 end
 
 function M.sub_tick(player)
+    -- コンバートは自分の MP 回復なので、本職 RDM の有無に関係なく撃つ
+    convert_tick(player)
     if role_Healer.sub_tick ~= nil then
 	role_Healer.sub_tick(player)
     end
