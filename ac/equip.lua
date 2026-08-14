@@ -43,9 +43,7 @@ function M.equip_item_by_slot_name(slot_name)
     local bag = items.equipment[slot_name.."_bag"]  -- どの bag か
     local bag_items = windower.ffxi.get_items(bag)
     if bag_items[id] == nil then
-	print("Error: id:"..id.."bag:"..bag)
-    end
-    if bag_items[id] == nil then
+	print("Error: id:"..id.." bag:"..bag)
 	return nil
     end
     local item_id = bag_items[id].id  --(items[id] が nilのエラーが出た事がある)
