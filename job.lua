@@ -130,9 +130,13 @@ function M.tick(player)
 end
 
 function M.battle_start()
+    M.set_attack_equip()
+end
+
+function M.set_attack_equip()
     local player = windower.ffxi.get_player()
-    local main_job = M.job_table[player.main_job]
-    local attack_equip = main_job ~= nil and main_job.attack_equip or nil
+    local main_job_obj = M.job_table[player.main_job]
+    local attack_equip = main_job_obj ~= nil and main_job_obj.attack_equip or nil
     if attack_equip ~= nil then
 	ac_equip.equip_item_by_priority_tree(attack_equip)
     end
