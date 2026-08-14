@@ -580,12 +580,12 @@ local cmd_garden = function(zone, arg1)
 	utils.target_lockon(true)
 	coroutine.sleep(2)
 	windower.ffxi.run(false)
-	coroutine.sleep(1)
+	coroutine.sleep(2)
 	push_keys({"enter"})
 	coroutine.sleep(1)
 	-- 別の場所に移動したい
 	push_keys({"right", "right", "up", "enter"})
-	coroutine.sleep(1)
+	coroutine.sleep(0.5)
 	if arg1 == 'return' or arg1 == 'ret' or arg1 == 'r' then
 	    push_keys({"down", "enter"})          -- 元に戻る
 	elseif arg1 == 'west' or arg1 == 'w' then

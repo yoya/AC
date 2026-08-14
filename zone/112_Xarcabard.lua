@@ -40,14 +40,31 @@ M.routes = {
 	{x=-141.1,y=112.8}, {x=-139.7,y=132.1}, {x=-134.7,y=136},
 	{}
     },
+    trail = {
+	{x=576.2,y=-264.8,z=0,desc="Trail Markings"},
+	{x=574,y=-271,z=-0.8},
+	{target="Trail Markings"}, {a="touch"}
+    },
+    hero = {
+	{x=576.2,y=-264.8,z=0,desc="Heroes' Gambit"},
+	{x=564,y=-284,z=0,d=1},
+	{target="Heroes' Gambit"}, {a="touch"}
+    },
+    hero2trail = {
+	{x=564,y=-284,z=0,"デュミナス・ザルカバード"},
+	{x=570,y=-275,z=-0.5,d=1},
+    },
 }
 
 M.essential_points = {
     from_jueno = {x=270.1,y=-73.3,z=-7.9}, -- 別のzoneと間違えてない？
     book = {x=204,y=-204,z=-24.2},
+    unity_warp = {x=576.2,y=-264.8,z=0},
 }
 
 M.automatic_routes = {
     from_jueno = { route="maw"},
+    unity_warp = { route="trail" },
 }
+
 return M
