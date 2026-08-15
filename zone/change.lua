@@ -13,8 +13,17 @@ local incoming_text = require 'incoming/text'
 local pstatus = require 'player_status'
 local acitem = require 'item'
 local pull = require 'pull'
+local role_Leader = require 'role/Leader'
+local role_Follower = require 'role/Follower'
 
 local M = {}
+
+-- 位置を覚えている追従処理を初期に戻す。ゾーン移動やワープの後は、覚えた
+-- 座標が別の場所を指すので、放っておくとそこへ走り続ける
+local function reset_role_move()
+    role_Leader.reset_move()
+    role_Follower.reset_move()
+end
 
 M.incoming_text_listener_id = nil
 
@@ -37,6 +46,7 @@ function M.logout()
     M.current_zone = nil
     M.prev_zone = nil
     M.prev_pos = nil
+    reset_role_move()
 end
 
 local function pos_str(pos)
@@ -347,6 +357,7 @@ function M.zone_change_handler(zone, prev_zone)
     ac_stat.init()
     task.all_clear()
     pull.base_pos = nil
+    reset_role_move()
     -- windower はログイン直後に prev_zone == zone を返す。同じゾーン内の
     -- 遷移 (モグハウス) でも同じ値になるので、zone_in 済みかどうかで区別する
     local is_login = (prev_zone == nil or prev_zone == zone)
@@ -399,6 +410,7 @@ function M.warp_handler(zone, pos, prev_pos, dist)
     print("zone/change:warp " .. zone .. ":" .. pos_str(pos) .. " << " ..
 	  pos_str(prev_pos) .. " dist:" ..  math.round(dist, 2))
     task.all_clear()
+    reset_role_move()
     local zone_object = aczone.zone_table[zone]
     if zone_object == nil then
 	return

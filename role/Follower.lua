@@ -347,6 +347,20 @@ local attack_enemy = function(mob, item_level)
     task.reset_by_fight()
 end
 
+-- ゾーン移動やワープをまたぐと、覚えている座標は別の場所を指す。そこへ
+-- 走り続けないよう、走るのを止めて覚えた位置を捨てる
+function M.reset_move()
+    is_far = false
+    last_leader_pos = nil
+    lost_leader_deadline = 0
+    last_run_vec = nil
+    run_to_gimmick = false
+    -- ゾーンチェンジ中やログアウト後は me を引けない。その時は走っていない
+    if windower.ffxi.get_mob_by_target("me") ~= nil then
+        windower.ffxi.run(false)
+    end
+end
+
 function M.tick_idle(player, me)
     if not player then
         return

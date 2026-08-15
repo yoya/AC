@@ -29,7 +29,7 @@ M.preferred_enemy_list = {
     "Quetzalcoatl's Sibilus", "Quetzalcoatl",
     "Mireu",
     -- 実験
-    "Apex Jagil", "Apex Toad",  -- ウォーの門、トード。
+    "Apex Jagil", -- "Apex Toad",  -- ウォーの門、トード。
     "Mourioche",  -- マンドラ
     -- アルタナM
     "Cait Sith Ceithir",
@@ -65,6 +65,18 @@ local search_target = function(me_pos)
         })
     end
     return mob
+end
+
+-- ゾーン移動やワープをまたぐと、覚えている向きは意味を失う。base_pos は
+-- 別に捨てられるので、往復検知の状態だけ初期に戻す
+function M.reset_move()
+    is_far = false
+    prev_dx = 0
+    prev_dy = 0
+    -- ゾーンチェンジ中やログアウト後は me を引けない。その時は走っていない
+    if windower.ffxi.get_mob_by_target("me") ~= nil then
+        windower.ffxi.run(false)
+    end
 end
 
 function M.tick_idle(player, me)
