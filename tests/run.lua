@@ -26,6 +26,7 @@ local tests = {
     "os_test.lua",
     "exem_test.lua",
     "junkitem_test.lua",
+    "brd_test.lua",
     "task_test.lua",
     "prob_test.lua",
     "pipe_test.lua",

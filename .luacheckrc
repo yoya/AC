@@ -71,7 +71,6 @@ local legacy_globals = {
     "phantom_roll", "roll_tick", "phantom_roll_double_up", "COR_phantom_roll_up",
     "invoke_shoot", "provoke", "attacker", "defender",
     "inde_setup", "geo_setup", "geo_release", "geo_release_with_contexte",
-    "song", "song_tick",
 }
 for _, name in ipairs(legacy_globals) do
     table.insert(globals, name)

@@ -1172,12 +1172,16 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    if not acjob.show(player, "roll", arg2) then
 		io_chat.warn("ac show roll: 今のメインジョブに roll 表示はありません")
 	    end
+	elseif arg1 == 'song' then
+	    if not acjob.show(player, "song", arg2) then
+		io_chat.warn("ac show song: 今のメインジョブに song 表示はありません")
+	    end
 	elseif arg1 == 'stat' then
 	    ac_stat.print()
 	elseif arg1 == 'task' then
 	    task.print()
 	else
-	    io_chat.print("ac show { auto | char | chatcolor | control | inventory | listener | mob | party | roll [all] | stat | task }")
+	    io_chat.print("ac show { auto | char | chatcolor | control | inventory | listener | mob | party | roll [all] | song [all] | stat | task }")
 	end
     elseif subcommand == 'shutdown' then
 	io_chat.notice("#### Shutdown!!!")
