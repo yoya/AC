@@ -183,7 +183,7 @@ trade.lua       NPC トレード
 |---|---|
 | load | seed, focus, ws, zone_in, task 3 件 |
 | login | seed, stat, equip, focus |
-| logout | zone_change, equip, contents の zone_override, party ×2, inspect, battle, prob, task |
+| logout | zone_change, equip, contents の zone_override, party ×2, inspect, battle, prob, buff, task |
 | job change | ws, stat, equip, task 3 件 |
 | zone change | record ×2, stat, task, control.auto（リーダーのみ）, move.auto, use_* ×3, point_cheer, zone_change_handler, ws, task ×3, control の INIT_VALUES ×4, base_pos |
 

@@ -62,6 +62,7 @@ local ac_pos = require 'ac/pos'
 local ac_move = require 'ac/move'
 ac_move.AC = M
 local ac_record = require 'ac/record'
+local ac_buff = require 'ac/buff'
 local ac_char = require 'ac/char'
 
 local turn_to_front = ac_move.turn_to_front
@@ -1329,6 +1330,7 @@ windower.register_event('logout', function()
     -- パーティ情報が届くまでの間、前のキャラのものを使わせない
     ac_party.leader_id = nil
     ac_party.member_table = {}
+    ac_buff.reset()  -- 前のキャラのバフ残り時間で判断させない
     acinspect.alliance_table = {}
     battle.orig_equip_right_ring_item_id = nil  -- 前のキャラの指輪を付けない
     acprob.prob_recast_time = {}  -- 前のキャラのリキャストで待たせない

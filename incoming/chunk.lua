@@ -8,6 +8,7 @@ local task = require('task')
 local acinspect = require('inspect')
 local acevent = require('event')
 
+local ac_buff = require('ac/buff')
 local ac_char = require('ac/char')
 local ac_party = require('ac/party')
 local ac_stat = require('ac/stat')
@@ -142,10 +143,32 @@ packet_handler[0x061] = function(packet)
     ac_char.update(player.id, char)
 end
 
+-- 自分のバフと、その失効時刻。バフが変わると届く。
+-- windower.ffxi.get_player().buffs は ID しか持たないので、残り時間が
+-- 要るコード (歌の掛け直し等) はここ経由で ac/buff を読む
+local BUFF_EMPTY = 255  -- 空き枠
+
+local function update_self_buffs(packet)
+    local entries = {}
+    for i = 1, 32 do
+	local id = packet["Buffs "..i]
+	local time = packet["Time "..i]
+	if id ~= nil and id ~= BUFF_EMPTY and time ~= nil then
+	    table.insert(entries, { id = id, time = time })
+	end
+    end
+    ac_buff.update_self(entries)
+end
+
 -- This packet likely varies based on jobs, but currently I only have it worked out for Monstrosity.
 packet_handler[0x063] = function(packet)
     local player = windower.ffxi.get_player()
     if player == nil then
+	return
+    end
+    -- Order で中身が変わる。9 はバフ、それ以外 (2) がメリポ等
+    if packet["Order"] == 9 then
+	update_self_buffs(packet)
 	return
     end
     local char = {
