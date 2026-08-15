@@ -185,18 +185,49 @@ packet_handler[0x067] = function(packet)
     -- packet["Message Type"], packet["Owner Index"])
 end
 
+-- メンバーのバフ ID を組み立てる。Buffs (32バイト) が下位 8bit、
+-- Bit Mask (8バイト) が 1 バフあたり 2bit で上位を持つ。
+-- 残り時間は入っていないので、分かるのは有無だけ。
+-- ビットの並び順は実機で未検証。job/BRD.lua の USE_MEMBER_LACK 参照
+local function decode_member_buffs(mask, low)
+    local ids = {}
+    if type(mask) ~= "string" or type(low) ~= "string" then
+	return ids
+    end
+    for n = 1, 32 do
+	local b = low:byte(n)
+	local m = mask:byte(math.floor((n - 1) / 4) + 1)
+	if b == nil or m == nil then
+	    break
+	end
+	-- Lua 5.1 なのでビット演算子は使わない
+	local high = math.floor(m / (4 ^ ((n - 1) % 4))) % 4
+	local id = b + high * 256
+	if id ~= BUFF_EMPTY then
+	    table.insert(ids, id)
+	end
+    end
+    return ids
+end
+
 -- Party status icon update
 packet_handler[0x076] = function(packet)
-    --[[ packets/fields.lua を見ると以下の構造っぽいけど駄目
-    for i, member in ipairs(packet["Party Buffs"]) do
-	local index = member["Index"]
-	ac_party.update_party_member_info({
-	    id = packet["ID"],
-	    index = member["Index"],
-	    buffs = member["Buffs"],
-	})
+    local now = os.time()
+    for i = 1, 5 do
+	local id = packet["ID "..i]
+	local index = packet["Index "..i]
+	-- 不在のメンバーは 0 で埋められている。
+	-- index を必ず入れる。count_member が info.index を数値として見るので、
+	-- ここで index 無しのエントリを作ると落ちる
+	if type(id) == "number" and id > 0 and type(index) == "number" then
+	    ac_party.update_party_member_info(id, {
+		index = index,
+		buffs = decode_member_buffs(packet["Bit Mask "..i],
+					    packet["Buffs "..i]),
+		buffs_at = now,
+	    })
+	end
     end
-    ]]
 end
 
 -- Alliance status update

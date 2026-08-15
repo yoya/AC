@@ -145,6 +145,28 @@ function M.count_member(cond)
     return count
 end
 
+-- メンバーのバフ情報の鮮度。0x076 はバフが変わった時に届くので、これより
+-- 古ければ「分からない」とする。古い情報で「歌が欠けている」と誤判定すると
+-- 歌い過ぎる方に倒れるので、分からない側を選ぶ
+local BUFF_FRESH_SEC = 60
+
+-- メンバーにかかっている status_id のバフの数。分からなければ nil。
+-- 0x076 は残り時間を持たないので、数えられるのは有無だけ
+function M.member_buff_count(id, status_id)
+    local info = M.member_table[id]
+    if info == nil or info.buffs_at == nil or
+	os.time() - info.buffs_at > BUFF_FRESH_SEC then
+	return nil
+    end
+    local count = 0
+    for _, buff_id in ipairs(info.buffs) do
+	if buff_id == status_id then
+	    count = count + 1
+	end
+    end
+    return count
+end
+
 function M.show_party_members()
     io_chat.set_next_color(5)
     io_chat.print("=== show_party_members")
