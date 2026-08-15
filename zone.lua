@@ -91,6 +91,7 @@ M.zone_table = {
     [83] = require('zone/83_Vunkerl_S'),    -- ブンカール〔Ｓ〕
     [84] = require('zone/84_Batallia_S'),   -- バタリア丘陵〔Ｓ〕
     [85] = require('zone/85_LaVaule_S'),    -- ラヴォール村〔Ｓ〕
+    [86] = require('zone/86_Everbloom'),    -- 常花の石窟
     [87] = require('zone/87_BasMarket_S'),  -- バストゥーク商業区〔Ｓ〕
     [89] = require('zone/89_Grauberg_S'),   -- グロウベルグ〔Ｓ〕
     [90] = require('zone/90_Pashhow_S'),    -- パシュハウ沼〔Ｓ〕
