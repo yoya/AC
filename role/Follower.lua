@@ -59,6 +59,17 @@ local roll_follow_dist = function()
 end
 roll_follow_dist()
 
+-- ワープギミックに寄る距離。これより遠い target は、ゾーンをまたいで
+-- 別の mob を指した target_index とみなし、追わない
+local WARP_GIMMICK_RANGE = 30
+
+-- ワープギミックに着いたとみなす距離
+local WARP_GIMMICK_STOP_DIST = 3
+
+-- ワープギミックへ走っている最中か。走り出した後に条件が消える事が
+-- あるので、止める為に覚えておく
+local run_to_gimmick = false
+
 -- p1 が乗り物系のワープギミックを触った時、追随する対象
 local warp_gimmick_names = {
     "Home Point", "Survival Guide", "Waypoint",
@@ -218,16 +229,47 @@ local can_join_battle = function(item_level)
     return true
 end
 
--- p1 がワープギミックを触ったら、その target まで追随する
+-- ギミックへ走っているなら止める
+local stop_gimmick_run = function()
+    if run_to_gimmick then
+        run_to_gimmick = false
+        windower.ffxi.run(false)
+    end
+end
+
+-- p1 がワープギミックを触ったら、その target まで追随する。
+-- run(true) のオートランだと、向いている方向へそのまま走り出す上に
+-- 止める者がいないので、向きを合わせて座標で寄り、着いたら自分で止める
 local follow_warp_gimmick = function(leader)
     if leader.target_index == 0 then
+        stop_gimmick_run()
         return
     end
     local target = windower.ffxi.get_mob_by_index(leader.target_index)
-    if target ~= nil and is_warp_gimmick(target.name) then
-        io_net.target_by_mob_index(leader.target_index)
-        windower.ffxi.run(true)
+    if target == nil or target.x == nil or not is_warp_gimmick(target.name) then
+        stop_gimmick_run()
+        return
     end
+    local me = windower.ffxi.get_mob_by_target("me")
+    if me == nil or me.x == nil then
+        stop_gimmick_run()
+        return
+    end
+    local dx = target.x - me.x
+    local dy = target.y - me.y
+    local dist = math.sqrt(dx*dx + dy*dy)
+    if dist > WARP_GIMMICK_RANGE then
+        stop_gimmick_run()
+        return
+    end
+    io_net.target_by_mob_index(leader.target_index)
+    if dist <= WARP_GIMMICK_STOP_DIST then
+        stop_gimmick_run()
+        return
+    end
+    turn_to_pos(me.x, me.y, target.x, target.y)
+    windower.ffxi.run(dx, dy)
+    run_to_gimmick = true
 end
 
 -- リーダーが戦っている敵を返す。まだ交戦していなければ nil
@@ -315,6 +357,7 @@ function M.tick_idle(player, me)
     -- フォローする対象は party スロット p1 ではなく実リーダー
     local leader = ac_party.leader_mob()
     if leader == nil or leader.x == nil then
+        stop_gimmick_run()
         follow_lost_leader(me_pos)  -- リーダーがいない / 描画範囲外
         return
     end
@@ -334,6 +377,7 @@ function M.tick_idle(player, me)
         return  -- まだリーダーに追従中
     end
     if not joinable then
+        stop_gimmick_run()
         return
     end
     -- ワープギミックは attack が off でも追随する
