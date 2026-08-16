@@ -23,7 +23,8 @@ M.essential_points = {
 }
 
 M.automatic_trust = {
-    "ヴァレンラール", "モンブロー", "セルテウス",
+    --"ヴァレンラール", "モンブロー", "セルテウス",
+    "モンブロー", "セルテウス",
 }
 
 M.automatic_routes = {
