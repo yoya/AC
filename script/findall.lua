@@ -9,6 +9,8 @@ local io_console = require 'io/console'
 local item_vagary = require 'item/vagary'
 local item_shishin = require 'item/shishin'
 local item_empyrean = require 'item/empyrean'
+local item_artifact = require 'item/artifact'
+local item_relic = require 'item/relic'
 
 local bag_name_ja_list = {
     { name='inventory', ja='バッグ'},     -- マイバッグ
@@ -45,7 +47,7 @@ if #arg < 1 then
     print("ex) lua script/findall.lua ヘルクリア")
     print("ex) lua script/findall.lua ヘルクリア Upaupa ")
     print("ex) lua script/findall.lua (Vagary|Shishin) Upaupa ")
-    print("ex) lua script/findall.lua EmpyArmor Upaupa ")
+    print("ex) lua script/findall.lua (ArtifactArmor|RelicArmor|EmpyArmor) Upaupa ")
     return 1
 end
 
@@ -64,20 +66,28 @@ end
 local chara_name_list = {}
 local everyone_item_count = {}
 
--- エンピリアン装束は、素・+1・+2・再構築 IL109・再構築 IL119 をまとめて探す
-local empyrean_armor = {}
-for _, ids in ipairs({ item_empyrean.armor, item_empyrean.armor_p1,
-		       item_empyrean.armor_p2, item_empyrean.armor_109,
-		       item_empyrean.armor_119 }) do
-    for _, id in ipairs(ids) do
-	table.insert(empyrean_armor, id)
+-- ジョブ専用装束は、素・+1・+2・再構築 IL109・再構築 IL119 をまとめて探す
+local function all_armor(item_set)
+    local ids = {}
+    -- AF には +2 が無いので、テーブルに穴を空けないよう名前で引く
+    for _, name in ipairs({ 'armor', 'armor_p1', 'armor_p2',
+			    'armor_109', 'armor_119' }) do
+	local list = item_set[name]
+	if list ~= nil then
+	    for _, id in ipairs(list) do
+		table.insert(ids, id)
+	    end
+	end
     end
+    return ids
 end
 
 local ItemKeywords = {
     Vagary = item_vagary.drop_items,
     Shishin = item_shishin.items,
-    EmpyArmor = empyrean_armor,
+    EmpyArmor = all_armor(item_empyrean),
+    ArtifactArmor = all_armor(item_artifact),
+    RelicArmor = all_armor(item_relic),
 }
 
 function item_match(item_name, kw)
