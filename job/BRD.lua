@@ -60,9 +60,9 @@ local SONG_RANGE = 10
 -- ac show song all でメンバーの本数が実際と合う事を確かめてから true にする
 local USE_MEMBER_LACK = false
 
--- 歌った結果が 0x063 で返ってくるのを待つ上限。歌が中断されると
--- バフが変わらず 0x063 が来ないので、待ちっぱなしにしない
-local SING_WAIT_MAX = 30
+-- 積んだ歌の着弾を待つ上限。歌が中断されると残りが増えないので、
+-- いつまでも待たない
+local PENDING_MAX = 30
 
 -- task が実行する時に呼ばれるコマンド。歌った時刻をここで記録する
 local SONG_COMMAND = "//brdsong "
@@ -72,13 +72,22 @@ local SONG_COMMAND = "//brdsong "
 -- 積んだ時刻で記録すると、キューで待っている間のぶん残りを長く見積もる
 local my_song = {}
 
--- 最後に歌った時刻 (曲を問わない)
-local last_sing_at = 0
+-- 積んだけれど、まだ着弾を確認していない歌の status。
+-- 着弾するまで次を積まない。判定できないまま次を積むと、まだ残り 0 に
+-- 見えている曲をもう一度積んだり、対応がずれたまま別の曲を選んだりする。
+--
+-- 「0x063 が来たか」では判定できない (歌に限らずどのバフが変わっても飛ぶ)。
+-- 「その曲の残りが増えたか」でも判定できない (status を共有する曲は、歌った
+-- 瞬間に対応が入れ替わって別の曲の残りを拾う)。
+-- そこで、その status の実測そのものを見る。歌が乗れば、本数が増えるか、
+-- 一番短い残りが伸びるかのどちらかが必ず起きる
+local pending_sid = nil
+local pending_count = 0
+local pending_min = 0
+local pending_at = 0
 
 task.add_command_handler(SONG_COMMAND, function(song_name)
-    local now = os.time()
-    my_song[song_name] = now
-    last_sing_at = now
+    my_song[song_name] = os.time()
     command.send("input /song "..song_name.." <me>")
 end)
 
@@ -207,6 +216,15 @@ local function plan_remains(plan)
 				  lacking_status(plan, status_of))
 end
 
+-- status_id の実測の、本数と一番短い残り。self_remains は降順なので末尾が最短
+local function family_state(sid)
+    local rs = sid ~= nil and ac_buff.self_remains(sid) or nil
+    if rs == nil then
+	return 0, 0
+    end
+    return #rs, rs[#rs] or 0
+end
+
 local function song_tick(player)
     -- 待機中と戦闘中だけ。死亡/イベント/休憩/マウント中は歌えない
     if player.status ~= pstatus.IDLE and player.status ~= pstatus.ENGAGED then
@@ -217,11 +235,15 @@ local function song_tick(player)
     if ac_buff.self_updated_at == nil then
 	return
     end
-    -- 歌った結果が届くまで次を積まない。待たずに積むと、まだ残り 0 に
-    -- 見えている今歌ったばかりの曲を、もう一度積んでしまう
-    if last_sing_at > 0 and ac_buff.self_updated_at <= last_sing_at and
-	os.time() - last_sing_at < SING_WAIT_MAX then
-	return
+    -- 積んだ歌が着弾するまで次を積まない
+    if pending_sid ~= nil then
+	local count, min = family_state(pending_sid)
+	if count > pending_count or min > pending_min or
+	    os.time() - pending_at >= PENDING_MAX then
+	    pending_sid = nil  -- 着弾した、または中断されたので諦める
+	else
+	    return
+	end
     end
     local plan = current_plan()
     local remains = plan_remains(plan)
@@ -232,6 +254,12 @@ local function song_tick(player)
     local name = song_plan.pick_song(plan, remains)
     if name == nil then
 	return
+    end
+    local sid = get_song_status_by_name()[name]
+    if sid ~= nil then
+	pending_sid = sid
+	pending_count, pending_min = family_state(sid)
+	pending_at = os.time()
     end
     -- command, delay, duration, period, eachfight
     task.set_task(task.PRIORITY_MIDDLE,
