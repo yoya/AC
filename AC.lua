@@ -586,7 +586,7 @@ local cmd_garden = function(zone, arg1)
 	windower.ffxi.run(false)
 	coroutine.sleep(2)
 	push_keys({"enter"})
-	coroutine.sleep(1)
+	coroutine.sleep(2)
 	-- 別の場所に移動したい
 	push_keys({"right", "right", "up", "enter"})
 	coroutine.sleep(0.5)
@@ -651,14 +651,14 @@ local cmd_patrol = function(zone, arg1, arg2)
 		    command.send('input /mailbox')  -- 宅配ポストを開ける
 		    coroutine.sleep(4)
 		    if arg2 == "mm" then
-			for _ = 1, 8 do
+			for i = 1, 8 do
 			    push_keys({"enter", "enter"})
 			    coroutine.sleep(0.5)
 			    push_keys({"right"})
 			    coroutine.sleep(0.5)
 			    if i == 4 then
 				push_keys({"left", "left", "left", "down"})
-				coroutine.sleep(1)
+				coroutine.sleep(0.5)
 			    end
 			end
 		    end
@@ -1048,7 +1048,7 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    push_keys({"enter"})
 	    coroutine.sleep(1)
 	    push_keys({"up", "enter"})  -- 出るエリアを選択する
-	    coroutine.sleep(1)
+	    coroutine.sleep(0.5)
 	    if arg1 == 'west' or arg1 == 'w' then
 		push_keys({"enter"})  -- 西アドゥリン
 	    elseif arg1 == 'east' or arg1 == 'e' then
