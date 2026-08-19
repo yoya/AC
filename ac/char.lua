@@ -239,8 +239,9 @@ function M.print()
     io_chat.print("### ac/char print #"..#M.char_table)
     for id, char in pairs(M.char_table) do
 	local mob = windower.ffxi.get_mob_by_id(id)
+	local mob_name = mob.name and mob.name or "(no mob)"
 	io_chat.set_next_color(6)
-	io_chat.print(id, mob.name, char)
+	io_chat.print(id, mob_name, char)
     end
 end
 
