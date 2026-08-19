@@ -63,6 +63,47 @@ do
     end
 end
 
+print("=== plan_remains: 自分で歌っていない曲は不明にする (再読込直後)")
+do
+    -- my_song が空。実測は3件あるが、どれがどの曲かは決められない。
+    -- plan の順で当てずっぽうに割り当てると、残り 400 秒の曲を「残り 200 秒」
+    -- と読んで上書きしてしまう。触らない事にする
+    local r = song_plan.plan_remains(PLAN, STATUS,
+				     { [214] = {350}, [198] = {400, 300, 200},
+				       [215] = {280, 250} }, {}, nil)
+    check("マーチは family に1曲なので自明", r[1], 350)
+    check("メヌエットV", r[2], song_plan.UNKNOWN)
+    check("メヌエットIV", r[3], song_plan.UNKNOWN)
+    check("メヌエットIII", r[4], song_plan.UNKNOWN)
+    check("エチュード (怪力)", r[5], song_plan.UNKNOWN)
+    check("エチュード (妙技)", r[6], song_plan.UNKNOWN)
+    check("不明なら歌い始めない", song_plan.should_sing(r), false)
+    check("不明なら選ばない", song_plan.pick_song(PLAN, r), nil)
+end
+
+print("=== plan_remains: 実測が足りない分は 0 (乗っていない)")
+do
+    -- 3曲ぶん要るのに実測が1件。歌っていないので対応は決められないが、
+    -- 2曲は本当に乗っていないので、そこは歌い直す
+    local r = song_plan.plan_remains(PLAN, STATUS, { [198] = {400} }, {}, nil)
+    check("1件ぶんは不明", r[2], song_plan.UNKNOWN)
+    check("残りは乗っていない", r[3], 0)
+    check("残りは乗っていない", r[4], 0)
+    check("乗っていない曲があれば歌う", song_plan.should_sing(r), true)
+end
+
+print("=== plan_remains: 歌った曲と歌っていない曲が混ざる")
+do
+    -- V だけ自分で歌った。実測3件のうち一番長いのが V。
+    -- 残り2件は再読込前の分なので、IV/III のどちらかは決められない
+    local r = song_plan.plan_remains(PLAN, STATUS,
+				     { [198] = {400, 300, 200} },
+				     { ["猛者のメヌエットV"] = 1000 }, nil)
+    check("歌った V は実測の最長", r[2], 400)
+    check("歌っていない IV は不明", r[3], song_plan.UNKNOWN)
+    check("歌っていない III は不明", r[4], song_plan.UNKNOWN)
+end
+
 print("=== plan_remains: メンバーに欠けている family は 0 に落とす")
 do
     local r = song_plan.plan_remains(PLAN, STATUS,

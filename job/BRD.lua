@@ -281,9 +281,11 @@ function M.show_song(player, arg)
     end
     for i, name in ipairs(plan) do
 	local at = my_song[name]
-	io_chat.printf("%d %s status:%s 残り:%d秒 歌った:%s",
-		       i, name, tostring(status_of[name]),
-		       math.floor(remains[i]),
+	-- 自分で歌っていない曲は、実測のどれに当たるか決められない
+	local remain = remains[i] == song_plan.UNKNOWN and "不明"
+	    or (math.floor(remains[i]).."秒")
+	io_chat.printf("%d %s status:%s 残り:%s 歌った:%s",
+		       i, name, tostring(status_of[name]), remain,
 		       at == nil and "-" or (now - at).."秒前")
     end
     io_chat.set_next_color(6)

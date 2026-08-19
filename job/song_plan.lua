@@ -12,6 +12,13 @@ M.EXPIRE_SOON = 60
 M.EXPIRE_SOON_ALL = 120
 M.EXPIRE_SOON_NUM = 2
 
+-- 残りが分からない曲。乗っているらしいが、実測のどれに当たるかを
+-- 決められない時に使う。閾値のどちらにも掛からない値なので、
+-- should_sing も pick_song もこれを「歌わなくてよい」と扱う。
+-- 分からないものを勝手に「切れかけ」と読むと、残りが沢山ある歌を
+-- 上書きしてしまう
+M.UNKNOWN = math.huge
+
 -- plan の各曲の残り秒を出す。かかっていない曲は 0。
 ---  plan       : 歌名の配列。並びがそのまま優先順
 ---  status_of  : 歌名 => status id
@@ -24,6 +31,13 @@ M.EXPIRE_SOON_NUM = 2
 --- エチュードは両方 215)。実測の側は「どの曲か」を持っていないので、
 --- 新しく歌ったものほど残りが長い事を使って、family ごとに
 --- 「歌った時刻の新しい順」と「残りの長い順」を突き合わせる。
+---
+--- 突き合わせられるのは自分が歌った曲だけ。sung_at に記録の無い曲は
+--- アドオンを読み直す前から乗っていたもので、実測のどれに当たるか決められない。
+--- そこを plan の順で埋めると、残りが沢山ある曲を「切れかけ」と読んで
+--- 上書きしてしまうので、実測が余っている分だけ UNKNOWN にして触らない。
+--- 実測が足りない分は本当に乗っていないので 0 (歌い直す) にする。
+---
 --- ソウルボイス等で1曲だけ効果時間が伸びると family 内の対応はずれるが、
 --- 残り秒の集合そのものは正しいので、歌うか否かの判断は狂わない。
 function M.plan_remains(plan, status_of, remains_of, sung_at, lacking)
@@ -46,7 +60,8 @@ function M.plan_remains(plan, status_of, remains_of, sung_at, lacking)
     end
     local remain_of_name = {}
     for sid, names in pairs(family) do
-	-- 新しく歌った順。同じ時刻なら plan の順で決める (毎回同じ結果にする為)
+	-- 自分が歌った曲を新しい順に前へ。歌っていない曲は後ろ。
+	-- 同じ時刻なら plan の順で決める (毎回同じ結果にする為)
 	table.sort(names, function(a, b)
 	    local ta, tb = sung_at[a] or 0, sung_at[b] or 0
 	    if ta ~= tb then
@@ -54,12 +69,32 @@ function M.plan_remains(plan, status_of, remains_of, sung_at, lacking)
 	    end
 	    return order[a] < order[b]
 	end)
+	local known = 0
+	for _, name in ipairs(names) do
+	    if sung_at[name] ~= nil then
+		known = known + 1
+	    end
+	end
 	local remains = remains_of[sid] or {}
+	-- 自分の記録に紐付かない実測。アドオンを読み直す前に歌った分がこれ
+	local spare = #remains - known
 	for i, name in ipairs(names) do
 	    if lacking[sid] then
 		remain_of_name[name] = 0  -- メンバーに入っていないので歌い直す
-	    else
+	    elseif i <= known then
+		-- 自分が歌った曲。後から歌ったものほど残りが長い
 		remain_of_name[name] = remains[i] or 0
+	    elseif #names == 1 then
+		-- その status を使う曲が plan に1つしかないなら、実測が
+		-- どれに当たるかは自明。歌っていなくても残りが分かる
+		remain_of_name[name] = remains[i] or 0
+	    elseif i - known <= spare then
+		-- 乗ってはいるが、実測のどれに当たるかは決められない。
+		-- ここで残りを当てずっぽうに割り当てると、残りが沢山ある曲を
+		-- 「切れかけ」と読んで上書きしてしまう
+		remain_of_name[name] = M.UNKNOWN
+	    else
+		remain_of_name[name] = 0  -- 枠が足りていないので乗っていない
 	    end
 	end
     end
