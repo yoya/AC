@@ -113,6 +113,42 @@ do
     check("メヌエットは欠け扱い", r[2], 0)
 end
 
+print("=== max_songs: 楽器の歌数+とクラリオンコールで本数が決まる")
+do
+    check("楽器なし", song_plan.max_songs(nil, false), 2)
+    check("知らない楽器 (ギャッラルホルン)", song_plan.max_songs(18840, false), 2)
+    check("マルシュアス (歌数+ なし)", song_plan.max_songs(21398, false), 2)
+    check("ミラクルチアー", song_plan.max_songs(22249, false), 3)
+    check("ブラーハープ", song_plan.max_songs(21400, false), 3)
+    check("ブラーハープ+1", song_plan.max_songs(21401, false), 3)
+    check("テルパンダー", song_plan.max_songs(21407, false), 3)
+    check("ラックナシェード (歌数+1)", song_plan.max_songs(22306, false), 3)
+    check("ラックナシェード (歌数+2)", song_plan.max_songs(22307, false), 4)
+    -- 同じ名前で歌数が違うので、名前では引けない
+    check("ダウルダヴラ Lv85 (歌数+ なし)", song_plan.max_songs(18574, false), 2)
+    check("ダウルダヴラ Lv90", song_plan.max_songs(18575, false), 3)
+    check("ダウルダヴラ Lv95", song_plan.max_songs(18576, false), 3)
+    check("ダウルダヴラ Lv99", song_plan.max_songs(18571, false), 4)
+    check("ダウルダヴラ Lv99 (別 id)", song_plan.max_songs(18839, false), 4)
+    -- レイヴの中でしか歌数+1 が乗らないので数えない
+    check("カマラデリハープ", song_plan.max_songs(21408, false), 2)
+    check("クラリオンコール中は +1", song_plan.max_songs(18571, true), 5)
+    check("楽器なし + クラリオンコール", song_plan.max_songs(nil, true), 3)
+end
+
+print("=== trim: 維持できる本数まで切り詰める")
+do
+    local t = song_plan.trim(PLAN, 2)
+    check("2曲になる", #t, 2)
+    check("優先順の上から残る", t[1], "栄光の凱旋マーチ")
+    check("2曲目", t[2], "猛者のメヌエットV")
+    check("本数が足りていれば元のまま", song_plan.trim(PLAN, 10), PLAN)
+    check("0 本なら空", #song_plan.trim(PLAN, 0), 0)
+    check("切り詰めた plan では溢れた曲を選ばない",
+	  song_plan.pick_song(t, song_plan.plan_remains(t, STATUS, {}, {}, nil)),
+	  "栄光の凱旋マーチ")
+end
+
 print("=== should_sing")
 do
     check("1曲が 59 秒", song_plan.should_sing({300, 300, 59}), true)

@@ -8,6 +8,7 @@ local io_chat = require 'io/chat'
 local task = require 'task'
 local role_Melee = require 'role/Melee'
 local pstatus = require 'player_status'
+local res_name = require 'res_name'
 local ac_buff = require 'ac/buff'
 local ac_party = require 'ac/party'
 local song_plan = require 'job/song_plan'
@@ -34,13 +35,13 @@ M.sub_job_prob_table = {
 -- 渡し、決まった1曲を task に積むだけ。
 
 -- 歌う曲。配列の順がそのまま優先順で、上から埋める。
--- 装備で維持できる本数より多く並べると、新しい歌が古い歌を押し出して
--- 永久に歌い続ける事になる (warn_overflow で気付けるようにしてある)
+-- 楽器で維持できる本数を超えた分は current_plan が切り捨てるので、
+-- ここは多めに並べておいてよい (クラリオンコール中は1曲増える)
 local SONG_PLANS = {
     attack = { "栄光の凱旋マーチ", "猛者のメヌエットV", "猛者のメヌエットIV",
-	       "猛者のメヌエットIII", "怪力のエチュード", "妙技のエチュード" },
-    safety = { "重装騎兵のミンネV", "闘龍士のマンボ",
-	       "戦士達のピーアンVI", "栄光の凱旋マーチ" },
+	       "怪力のエチュード", "妙技のエチュード" },
+    safety = { "重装騎兵のミンネV", "闘龍士のマンボ", "栄光の凱旋マーチ",
+	       "重装騎兵のミンネIV", "戦士達のピーアンVI"  },
 }
 
 -- 歌唱時間 (res/spells.lua の cast_time = 8) に余裕を足したもの。
@@ -63,6 +64,9 @@ local USE_MEMBER_LACK = false
 -- 積んだ歌の着弾を待つ上限。歌が中断されると残りが増えないので、
 -- いつまでも待たない
 local PENDING_MAX = 30
+
+-- クラリオンコールの status (res/job_abilities.lua)。歌える本数が1曲増える
+local CLARION_CALL_STATUS = 499
 
 -- task が実行する時に呼ばれるコマンド。歌った時刻をここで記録する
 local SONG_COMMAND = "//brdsong "
@@ -108,16 +112,52 @@ local function get_song_status_by_name()
     return song_status_by_name
 end
 
+-- 今装備している楽器の item id。range スロットが空なら nil。
+-- 歌える本数は歌い終わった瞬間の楽器で決まるので、判断のたびに見る。
+-- 名前ではなく id を返す。ダウルダヴラとラックナシェードは同じ名前で
+-- 歌数が違うものがあり、名前では区別できない
+local function equipped_instrument_id()
+    local items = windower.ffxi.get_items()
+    local equipment = items ~= nil and items.equipment or nil
+    if equipment == nil or equipment.range == nil or equipment.range <= 0 then
+	return nil  -- 楽器を持っていない (短剣で殴っている時など)
+    end
+    local bag_items = windower.ffxi.get_items(equipment.range_bag)
+    local item = bag_items ~= nil and bag_items[equipment.range] or nil
+    if item == nil or item.id == nil then
+	return nil
+    end
+    return item.id
+end
+
+local function has_clarion_call(player)
+    for _, id in ipairs(player.buffs or {}) do
+	if id == CLARION_CALL_STATUS then
+	    return true
+	end
+    end
+    return false
+end
+
+-- 今の楽器とクラリオンコールで、同時に維持できる歌の本数
+local function max_songs(player)
+    return song_plan.max_songs(equipped_instrument_id(),
+			       has_clarion_call(player))
+end
+
 -- 今の状況で歌う曲の並び。
 -- need_safety() は今のターゲットで決まるので、戦闘の切れ目で裏返る。
 -- 構成が入れ替わると新しい方の曲が全部「未掛かり」に見えて全曲歌い直しに
--- なるので、一定時間続いた時だけ切り替える
+-- なるので、一定時間続いた時だけ切り替える。
+--
+-- 最後に、維持できる本数まで切り詰める。切り詰めないと、新しい歌が古い歌を
+-- 押し出して、押し出された曲が「残り 0」に見え、休みなく歌い続ける
 local PLAN_SWITCH_SEC = 10
 local plan_key = "attack"
 local plan_pending = nil
 local plan_pending_at = 0
 
-local function current_plan()
+local function current_plan(player)
     local want = M.parent.need_safety() and "safety" or "attack"
     local now = os.time()
     if want == plan_key then
@@ -129,7 +169,7 @@ local function current_plan()
 	plan_key = want
 	plan_pending = nil
     end
-    return SONG_PLANS[plan_key]
+    return song_plan.trim(SONG_PLANS[plan_key], max_songs(player))
 end
 
 -- plan を status id ごとの本数に畳む
@@ -175,9 +215,9 @@ local function lacking_status(plan, status_of)
 end
 
 -- 直近で plan を一巡して歌ったのに、まだ枠が埋まっていないか。
--- 埋まらないのは plan の本数が装備で維持できる本数を超えている時で、
--- 放っておくと新しい歌が古い歌を押し出して永久に歌い続ける。
--- plan を勝手に削らず、人が直せるように警告だけ出す
+-- plan は current_plan が維持できる本数まで切り詰めてあるので、埋まらない
+-- のは song_plan.EXTRA_SONGS_BY_ID の見積もりが実機とずれている時。
+-- 放っておくと新しい歌が古い歌を押し出して永久に歌い続ける
 local WARN_INTERVAL = 300
 local warned_at = 0
 local function warn_overflow(plan, remains)
@@ -194,7 +234,7 @@ local function warn_overflow(plan, remains)
 	    if now - warned_at > WARN_INTERVAL then
 		warned_at = now
 		io_chat.warnf("歌が %d 曲は維持できていません。"..
-			      "SONG_PLANS の本数を減らすか装備を見直してください",
+			      "song_plan.EXTRA_SONGS_BY_ID を見直してください",
 			      #plan)
 	    end
 	    return
@@ -245,7 +285,7 @@ local function song_tick(player)
 	    return
 	end
     end
-    local plan = current_plan()
+    local plan = current_plan(player)
     local remains = plan_remains(plan)
     warn_overflow(plan, remains)
     if not song_plan.should_sing(remains) then
@@ -298,7 +338,7 @@ end
 -- 判断に使っている値をそのまま出す。USE_MEMBER_LACK を有効にしてよいか、
 -- 換算定数がずれていないかを、実機で確かめる為の窓口でもある
 function M.show_song(player, arg)
-    local plan = current_plan()
+    local plan = current_plan(player)
     local status_of = get_song_status_by_name()
     local remains = plan_remains(plan)
     local now = os.time()
@@ -317,6 +357,12 @@ function M.show_song(player, arg)
 		       at == nil and "-" or (now - at).."秒前")
     end
     io_chat.set_next_color(6)
+    local inst = equipped_instrument_id()
+    io_chat.printf("楽器:%s クラリオンコール:%s 維持できる本数:%d (plan %d曲中%d曲)",
+		   inst == nil and "なし"
+		       or (res_name.item_ja(inst).."("..inst..")"),
+		   tostring(has_clarion_call(player)), max_songs(player),
+		   #SONG_PLANS[plan_key], #plan)
     io_chat.printf("歌う:%s 次の曲:%s メンバー参照:%s",
 		   tostring(song_plan.should_sing(remains)),
 		   tostring(song_plan.pick_song(plan, remains)),

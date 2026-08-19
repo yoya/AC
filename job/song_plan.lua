@@ -19,6 +19,53 @@ M.EXPIRE_SOON_NUM = 2
 -- 上書きしてしまう
 M.UNKNOWN = math.huge
 
+-- 楽器の「歌数+」(item id => 追加本数)。楽器は range スロット。
+-- ここに無い楽器と、楽器を持っていない時は 0 (SONGS_BASE のまま)。
+--
+-- 名前ではなく id で引く。ダウルダヴラ (4種) とラックナシェード (2種) は
+-- 同じ名前で歌数が違うので、名前では正しく引けない。
+-- カマラデリハープ (21408) は「レイヴ:歌数+1」で Odyssey レイヴの中だけなので入れない
+M.EXTRA_SONGS_BY_ID = {
+    [18575] = 1,  -- ダウルダヴラ (Lv90)
+    [18576] = 1,  -- ダウルダヴラ (Lv95)
+    [18571] = 2,  -- ダウルダヴラ (Lv99)
+    [18839] = 2,  -- ダウルダヴラ (Lv99)
+    [21400] = 1,  -- ブラーハープ
+    [21401] = 1,  -- ブラーハープ+1
+    [21407] = 1,  -- テルパンダー
+    [22249] = 1,  -- ミラクルチアー
+    [22306] = 1,  -- ラックナシェード
+    [22307] = 2,  -- ラックナシェード (強化後)
+}
+-- 楽器を持っていない時に維持できる本数
+M.SONGS_BASE = 2
+
+-- 維持できる歌の本数。
+---  instrument_id : 今装備している楽器の item id。持っていなければ nil
+---  clarion_call  : クラリオンコール中か
+--- 知らない楽器は加算しない。多く見積もると plan が歌枠を超え、
+--- 新しい歌が古い歌を押し出して永久に歌い続ける事になる
+function M.max_songs(instrument_id, clarion_call)
+    local n = M.SONGS_BASE + (M.EXTRA_SONGS_BY_ID[instrument_id] or 0)
+    if clarion_call then
+	n = n + 1
+    end
+    return n
+end
+
+-- plan を維持できる本数まで切り詰める。溢れた分は歌わない。
+-- 切り詰めずに歌うと押し出し合いになり、残りが沢山ある歌まで歌い直す
+function M.trim(plan, n)
+    if #plan <= n then
+	return plan
+    end
+    local out = {}
+    for i = 1, n do
+	out[i] = plan[i]
+    end
+    return out
+end
+
 -- plan の各曲の残り秒を出す。かかっていない曲は 0。
 ---  plan       : 歌名の配列。並びがそのまま優先順
 ---  status_of  : 歌名 => status id
