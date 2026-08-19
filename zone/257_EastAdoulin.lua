@@ -15,12 +15,17 @@ function M.zone_in()
 	M.orig_body_item_id = 0
     end
     ac_equip.equip_item("body", 27923)  -- カウンセラーガーブ
+    ac_equip.equip_item("right_ring", 27590)  -- シュネデックリング
 end
 
 function M.zone_out()
     if M.orig_body_item_id > 0 then
 	ac_equip.equip_item("body", M.orig_body_item_id) -- 前のに戻す
 	M.orig_body_item_id = 0
+    else
+	local acjob = require 'job'
+	acjob.set_attack_equip()
+	ac_equip.equip_item("right_ring", 27590)  -- シュネデックリング
     end
 end
 
