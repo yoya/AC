@@ -70,6 +70,10 @@ for i, file in ipairs(files) do
     local modtime = lfs.attributes(savedDir..file, 'modification')
     -- 一行目
     local line1 = f:read()
+    if type(line1) ~= "string" then
+	print("Wronf file:"..savedDir..file.." (line1 ~= string)")
+	os.exit(1)
+    end
     local table1 = split_multi(line1, {" "})
     if table1 == nil then
 	print("Wronf file:"..savedDir..file)
