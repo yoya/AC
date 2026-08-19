@@ -130,7 +130,10 @@ local idle_function_trade_items = function(tname, items, wait, enterWaits)
 		print("trade item:"..id)
                 coroutine.sleep(1)
                 io_net.target_by_mob(mob)
-                coroutine.sleep(wait-1)
+		if (wait-2) > 0 then
+		    coroutine.sleep(wait-2)
+		end
+                coroutine.sleep(1) -- targetからenter まで 1secの間を保証
                 for _, w in ipairs(enterWaits) do
                     push_keys({"enter"})
 		    print("push enter > coroutine.sleep:"..w)
