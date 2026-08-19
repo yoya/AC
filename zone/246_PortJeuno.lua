@@ -10,6 +10,16 @@ M.routes = {
 	{x=-54.5,y=3.5}, {x=-57,y=8.5}, {x=-55.5,y=10.5},
 	{a="esc"}, {target="Shemo"}, {auto=true}
     },
+    ['shemo2hp-adu-east-mog'] = {
+	{x=-55.5,y=10.5,"Shemo から HP#1に戻る"},
+	{x=-57,y=8.5}, {x=-54.5,y=3.5},	{x=-29,y=3}, {x=36,y=8.8,z=0},
+	{a="f8"}, {target="Home Point #1"},{wait=1}, {a="touch"}, {wait=2},
+	{keys={"enter"}}, -- どのロージョンにする
+	{keys={"right", "right", "right", "enter"}}, -- アドゥリン諸島
+	{keys={"right", "enter"}}, -- 東アドゥリン
+	{keys={"right", "enter"}}, -- HP#2(M)
+	{keys={"up", "enter"}} -- ワープする？＞はい
+    },
     abys = { {x=36,y=8.8,z=0, desc="アビセア"},
 	{x=-45,y=-4}, {x=-50,y=-7,d=1}, -- {x=-53,y=-8,d=1},
 	{target="Joachim"}, {wait=4},
@@ -45,7 +55,7 @@ M.automatic_routes = {
 
 function M.incoming_text_listener(text)
     if string.contains(text, "↑ トレード終了 ↑") then
-	command.send("ac move -shemo")
+	command.send("ac move shemo2hp-adu-east-mog")
     end
 end
 
