@@ -62,7 +62,7 @@ M.routes = {
     },
     ['hp-jeuno-port'] = {
 	{x=-51.2,y=-95,z=-0.1}, {wait=4},
-	{a="f8"}, {target="Home Point #2"}, {wait=1}, {a="touch"}, {wait=2},
+	{a="f8"}, {target="Home Point #2"}, {wait=2}, {a="touch"}, {wait=2},
 	{keys={"enter"}}, -- どのロージョンにする
 	{keys={"right", "right", "enter"}}, -- ジュノ
 	{keys={"right", "right", "enter"}}, -- ジュノ港

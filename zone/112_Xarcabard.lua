@@ -40,6 +40,18 @@ M.routes = {
 	{x=-141.1,y=112.8}, {x=-139.7,y=132.1}, {x=-134.7,y=136},
 	{}
     },
+    garuda = {
+	{x=204,y=-204,z=-24.2,"空の王の小像(サンドリアM)"},
+	{x=197,y=-207}, {a="mount"}, {x=192,y=-201}, {x=196,y=-114},
+	{x=202,y=-29}, {x=204,y=11}, {x=220,y=71},
+	{x=220,y=92,z=-13.5}, {x=217,y=108,z=-17.8}, {x=217,y=129,z=-21.6},
+	{x=208,y=140,z=-26.8}, {x=199,y=127,z=-27.8},
+	{x=197,y=113,z=-27.8}, {a="dismount"}, {x=181,y=85,z=-32.8},
+	{target="???"}, {a="touch"},
+	---
+	--{x=210,y=138},
+    },
+    -- UnityWarp
     trail = {
 	{x=576.2,y=-264.8,z=0,desc="Trail Markings"},
 	{x=574,y=-271,z=-0.8},
@@ -64,6 +76,7 @@ M.essential_points = {
 
 M.automatic_routes = {
     from_jueno = { route="maw"},
+    book = { route="garuda", contents="mission" },
     unity_warp = { route="trail" },
 }
 

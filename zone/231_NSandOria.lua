@@ -32,19 +32,19 @@ M.routes = {
     },
 }
 
-M.hp2_points = {x=10,y=94,z=-0.2}
 M.hp3_M_points = {x=69,y=9,z=-0.2}
 
 M.essential_points = {
-    hp2 = M.hp2_points,
-    hp2_mission = M.hp2_points,
+    hp2 = {x=10,y=94,z=-0.2},
     hp3_M = M.hp3_M_points,
     hp3_M_mission = M.hp3_M_points,
 }
 
 M.automatic_routes = {
-    hp2_mission = { route="castle", contents="mission" },
-    hp2 = { route="phantom" },
+    hp2 = {
+	{ route="castle", contents="mission" },
+	{ route="phantom" },
+    },
     hp3_M = { route="daiseido" },
     hp3_M_mission = { route="papal", contents="mission" },
 }

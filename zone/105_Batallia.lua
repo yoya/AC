@@ -26,16 +26,25 @@ M.routes = {
 	{x=-407,y=-206}, {x=-420,y=-226},
 	{x=-439.4,y=-242.2,z=-8}, {}
     },
+    -- eldieme
+    levi = {
+	{x=166.4,y=-603.4,z=24.2,desc="海の王の小像(サンドリアM)"},
+	{x=169,y=-592}, {x=179,y=-581}, {x=188,y=-584},
+	{x=207,y=-606}, {x=214,y=-610}, {x=213,y=-612,z=16.5},
+	{target="???"} -- , {a="touch"}
+    },
 }
 
 M.essential_points = {
     from_jueno = {x=486.3,y=-163.3,z=8.3},
     book = {x=-67,y=448,z=-1.5},
     from_jugner = {x=-439.4,y=-242.2,z=-8},
+    from_eldieme = {x=166.4,y=-603.4,z=24.2},
 }
 
 M.automatic_routes = {
     from_jueno = { route="vw" },
+    from_eldieme = { route="levi", contents="mission"},
 }
 
 return M
