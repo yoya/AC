@@ -160,8 +160,15 @@ function move_to_action_faith(f)
     windower.ffxi.run(false)
     coroutine.sleep(1)
     local party_count = ac_party.count_member()
+    if party_count == 0 then
+	party_count = 1  -- ソロの時
+    end
     for i = 1, (6 - party_count) do
 	f = faith_list[i]
+	if f == nil then
+	    io_chat.errorf("faith_list[%d] f == nil", i)
+	    break
+	end
 	command.send('input /ma '..f..' <me>')
 	coroutine.sleep(7.0)
     end
