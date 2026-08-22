@@ -1138,7 +1138,11 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	end
     elseif subcommand == 'reload' then
 	io_chat.notice("ac reload (myself)")
-	task.set_task_simple("lua u AC; wait 1; lua l AC", 0, 1)
+	if arg1 == nil then
+	    task.set_task_simple("lua u AC; wait 1; lua l AC", 0, 1)
+	else
+	    task.set_task_simple("lua u AC; wait 1; lua l AC ; wait 2 ; ac contents "..arg1, 0, 1)
+	end
     elseif subcommand == 'roundtrip' then
 	local n = tonumber(arg1, 10)
 	control.auto = true
