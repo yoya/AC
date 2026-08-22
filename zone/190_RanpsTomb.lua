@@ -67,27 +67,27 @@ M.routes = {
 	{x=-17,y=144}, {x=-10,y=124}, {x=-10,y=112}, {x=-31,y=102},
 	{x=-44,y=99}, {x=-50,y=94}, {x=-67,y=64}, {x=-76,y=60},
     },
-    heavy= {
+    heavy = {
 	{x=-120,y=248.5,z=0,desc="HeavyStone Door ランペールの墓(サンドリアM)"},
 	{ route="common4" },
 	{x=14,y=180}, {x=-8,y=176}, {x=-18,y=174}, {x=-21,y=168},
 	{x=-17,y=144}, {x=-7,y=132}, {x=47,y=110}, {x=57,y=95},
 	{x=59,y=72}, {x=52,y=63}, {x=35,y=58}, {x=9,y=61},
 	{x=-8,y=56}, {x=-27,y=29}, {x=-36,y=20,d=1},
-	{a="esc"}, {target="Heavy Stone Door"}
+	{a="esc"}, {target="Heavy Stone Door"}, {wait=2}, {a="touch"}
     },
 }
 
-M.book_point = {x=-120,y=248.5,z=0}
-
 M.essential_points = {
-    book = M.book_point,
-    book_mission = M.book_point,
+    book = {x=-120,y=248.5,z=0}
 }
 
 M.automatic_routes = {
-    book = { route="common" },
-    book_mission = { route="common", contents="mission" },
+    book = {
+	{ route="common" },
+	--book_mission = { route="common", contents="mission" },
+	{ route="heavy", contents="mission" },
+    },
 }
 
 return M

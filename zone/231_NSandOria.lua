@@ -30,14 +30,17 @@ M.routes = {
 	{x=132,y=123,z=-11,d=1}, {a="f8"},
 	{target="Door:Papal Chambers"}, {a="touch"}
     },
+    -- お城から
+    castle_to_HP2 = {
+	{x=0,y=108.6,z=-2}, {x=8,y=97,z=-0.3},
+	{target="Home Point #2"}, {wait=2}, {a="touch"},
+    },
 }
-
-M.hp3_M_points = {x=69,y=9,z=-0.2}
 
 M.essential_points = {
     hp2 = {x=10,y=94,z=-0.2},
-    hp3_M = M.hp3_M_points,
-    hp3_M_mission = M.hp3_M_points,
+    hp3_M = {x=69,y=9,z=-0.2},
+    from_castle = {x=0,y=108.6,z=-2},
 }
 
 M.automatic_routes = {
@@ -45,8 +48,11 @@ M.automatic_routes = {
 	{ route="castle", contents="mission" },
 	{ route="phantom" },
     },
-    hp3_M = { route="daiseido" },
-    hp3_M_mission = { route="papal", contents="mission" },
+    hp3_M = {
+	{ route="daiseido" },
+	{ route="papal", contents="mission" },
+    },
+    from_castle = { route="castle_to_HP2" },
 }
 
 
