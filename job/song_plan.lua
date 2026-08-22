@@ -53,6 +53,31 @@ function M.max_songs(instrument_id, clarion_call)
     return n
 end
 
+-- 楽器の持ち替え。
+--
+-- 普段はミラクルチアー (歌数+1) で、維持できる本数まで歌えたら、もう1曲
+-- 載せる為だけにダウルダヴラ (歌数+2) へ持ち替え、載ったら戻す。
+-- 歌える本数は歌が着弾した瞬間の楽器で決まるので、持ち替えは曲と曲の間で
+-- 済んでいればよい。
+--
+-- ダウルダヴラに持ち替える本数はクラリオンコールで動かさない (依頼通り)。
+-- クラリオンコール中はミラクルチアーでも1曲多く持てるので、その1曲まで
+-- ミラクルチアーで歌いたいなら、ここも +1 する事になる
+M.DAURDABLA_FROM = 3   -- ミラクルチアーで維持できる本数 (SONGS_BASE + 1)
+M.MIRACLE_FROM = 4     -- ダウルダヴラで維持できる本数 (SONGS_BASE + 2)
+
+-- 今かかっている歌の本数で、どちらの楽器を着けたいかを返す。
+--- song_count   : 自分にかかっている歌の本数
+--- clarion_call : クラリオンコール中か
+--- 戻り値: "daurdabla" | "miracle"
+function M.want_instrument(song_count, clarion_call)
+    local back = M.MIRACLE_FROM + (clarion_call and 1 or 0)
+    if M.DAURDABLA_FROM <= song_count and song_count < back then
+	return "daurdabla"
+    end
+    return "miracle"
+end
+
 -- plan を維持できる本数まで切り詰める。溢れた分は歌わない。
 -- 切り詰めずに歌うと押し出し合いになり、残りが沢山ある歌まで歌い直す
 function M.trim(plan, n)

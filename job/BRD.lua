@@ -11,6 +11,7 @@ local pstatus = require 'player_status'
 local res_name = require 'res_name'
 local ac_buff = require 'ac/buff'
 local ac_party = require 'ac/party'
+local ac_equip = require 'ac/equip'
 local song_plan = require 'job/song_plan'
 
 M.main_job_prob_table = {
@@ -97,19 +98,46 @@ end)
 
 -- 歌名(ja) => status id。res.spells の type == "BardSong" から作る。
 -- job/COR.lua の get_roll_id_by_name と同じ作り。
--- status を共有する曲があるので、ID から曲名は引けない (逆向きは作らない)
+-- status を共有する曲があるので、ID から曲名は引けない (逆向きは作らない)。
+-- 歌の status の集合 (何本かかっているかを数える為) も同じ所で作る
 local song_status_by_name = nil
-local function get_song_status_by_name()
-    if song_status_by_name == nil then
-	local res = require('resources')
-	song_status_by_name = {}
-	for _, spell in pairs(res.spells) do
-	    if spell.type == "BardSong" and type(spell.ja) == "string" then
-		song_status_by_name[spell.ja] = spell.status
+local song_status_set = nil
+local function build_song_status()
+    if song_status_by_name ~= nil then
+	return
+    end
+    local res = require('resources')
+    song_status_by_name = {}
+    song_status_set = {}
+    for _, spell in pairs(res.spells) do
+	if spell.type == "BardSong" and type(spell.ja) == "string" then
+	    song_status_by_name[spell.ja] = spell.status
+	    if type(spell.status) == "number" and spell.status > 0 then
+		song_status_set[spell.status] = true
 	    end
 	end
     end
+end
+
+local function get_song_status_by_name()
+    build_song_status()
     return song_status_by_name
+end
+
+-- 自分にかかっている歌の本数。0x063 をまだ受けていなければ nil。
+-- 他の詩人 (トラスト含む) の歌も 0x063 には並ぶ。誰が歌ったかは分からない
+-- ので、その分は多めに数える。多めに数えると「もう枠が埋まった」と読んで
+-- ミラクルチアーのまま歌う側に倒れる
+local function song_count()
+    if ac_buff.self_updated_at == nil then
+	return nil
+    end
+    build_song_status()
+    local n = 0
+    for sid in pairs(song_status_set) do
+	n = n + (ac_buff.self_count(sid) or 0)
+    end
+    return n
 end
 
 -- 今装備している楽器の item id。range スロットが空なら nil。
@@ -143,6 +171,62 @@ end
 local function max_songs(player)
     return song_plan.max_songs(equipped_instrument_id(),
 			       has_clarion_call(player))
+end
+
+--
+-- 楽器の持ち替え
+--
+-- 3曲かかったらダウルダヴラ (歌数+2) に着替えてもう1曲載せ、4曲
+-- (クラリオンコール中は5曲) 載ったらミラクルチアー (歌数+1) に戻す。
+-- 判断は song_plan.want_instrument にある
+
+local MIRACLE_CHEER_IDS = { 22249 }  -- ミラクルチアー
+-- ダウルダヴラ。歌数+2 の Lv99 を先に見る。持っていないなら +1 の物でも
+-- ミラクルチアーと同じ本数までは載るので、無理には着替えない
+local DAURDABLA_IDS = { 18839, 18571 }
+
+-- 持ち替えの対象。これ以外の物を着けている時は、自分で選んだものとして触らない
+local SWAP_TARGET = {}
+for _, id in ipairs(MIRACLE_CHEER_IDS) do SWAP_TARGET[id] = true end
+for _, id in ipairs(DAURDABLA_IDS) do SWAP_TARGET[id] = true end
+
+-- ids のどれかに着替える。既に着けていれば何もしない。
+-- どれも持っていなければ false (持ち替えられない)
+local function equip_instrument(ids, now_id)
+    for _, id in ipairs(ids) do
+	if id == now_id then
+	    return true
+	end
+    end
+    for _, id in ipairs(ids) do
+	if ac_equip.search_equip_item(id) ~= nil then
+	    ac_equip.equip_item("range", id)
+	    return true
+	end
+    end
+    return false
+end
+
+local function instrument_tick(player)
+    -- 死亡/イベント/休憩中は着替えない。歌えないので急ぐ必要もない
+    if player.status ~= pstatus.IDLE and player.status ~= pstatus.ENGAGED then
+	return
+    end
+    -- 短剣で殴っている時や、他の楽器を選んで着けている時は触らない
+    local now_id = equipped_instrument_id()
+    if now_id == nil or SWAP_TARGET[now_id] == nil then
+	return
+    end
+    local count = song_count()
+    if count == nil then
+	return  -- 残り時間をまだ受けていない。本数が分からないので触らない
+    end
+    local want = song_plan.want_instrument(count, has_clarion_call(player))
+    if want == "daurdabla" then
+	equip_instrument(DAURDABLA_IDS, now_id)
+    else
+	equip_instrument(MIRACLE_CHEER_IDS, now_id)
+    end
 end
 
 -- 今の状況で歌う曲の並び。
@@ -330,6 +414,7 @@ function M.main_tick(player)
     if role_Melee.main_tick ~= nil then
 	role_Melee.main_tick(player)
     end
+    instrument_tick(player)
     song_tick(player)
     lullaby_tick(player)
 end
@@ -363,6 +448,11 @@ function M.show_song(player, arg)
 		       or (res_name.item_ja(inst).."("..inst..")"),
 		   tostring(has_clarion_call(player)), max_songs(player),
 		   #SONG_PLANS[plan_key], #plan)
+    local count = song_count()
+    io_chat.printf("かかっている歌:%s 着けたい楽器:%s", tostring(count),
+		   count == nil and "-"
+		       or song_plan.want_instrument(count,
+						    has_clarion_call(player)))
     io_chat.printf("歌う:%s 次の曲:%s メンバー参照:%s",
 		   tostring(song_plan.should_sing(remains)),
 		   tostring(song_plan.pick_song(plan, remains)),

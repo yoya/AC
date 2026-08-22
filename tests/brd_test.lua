@@ -175,5 +175,22 @@ do
 	  nil)
 end
 
+print("=== want_instrument: 楽器の持ち替え")
+do
+    check("0曲", song_plan.want_instrument(0, false), "miracle")
+    check("2曲", song_plan.want_instrument(2, false), "miracle")
+    check("3曲でダウルダヴラ", song_plan.want_instrument(3, false), "daurdabla")
+    check("4曲でミラクルチアーに戻す",
+	  song_plan.want_instrument(4, false), "miracle")
+    check("クラリオンコール中の3曲",
+	  song_plan.want_instrument(3, true), "daurdabla")
+    check("クラリオンコール中の4曲はまだダウルダヴラ",
+	  song_plan.want_instrument(4, true), "daurdabla")
+    check("クラリオンコール中は5曲で戻す",
+	  song_plan.want_instrument(5, true), "miracle")
+    check("数え過ぎてもミラクルチアー",
+	  song_plan.want_instrument(6, false), "miracle")
+end
+
 print(("=== brd_test: %d NG"):format(ng))
 assert(ng == 0, "brd_test failed")
