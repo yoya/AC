@@ -212,12 +212,16 @@ function M.incoming_text_handler(text)
 	-- local flotsam = windower.ffxi.get_mob_by_name("Flotsam")
 	-- 消えても情報に変化なしなので困る
     end
+    --
+    -- モグに戻る処理
+    --
     if mob ~= nil and mob.name == 'Flotsam' then
 	    if text:contains("を手にいれた！") or text:contains("を処分しました") then
 		command.send("ac move mogsale")
 	    end
     end
-    if text:contains("今日はここまでにしておいた方が良さそうだ") then
+    if text:contains("今はここまでにしておいた方がよさそうだ") or
+	text:contains("アイテムを整理した後、話しかけてください") then
 	command.send("ac move mogsale")
     end
 end
