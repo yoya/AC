@@ -37,7 +37,8 @@ function M.incoming_text_handler(text)
 	push_keys({1, "numpad*"}) -- lock を外す
     elseif string.contains(text, "Sparks Buying Finished.") or
 	string.contains(text, "アイテムを整理した後") then
-	windower.ffxi.run(24 - me.x, -120 - me.y)
+	--windower.ffxi.run(24 - me.x, -120 - me.y)
+	windower.ffxi.run(24 - me.x, -121 - me.y)  --XXX
     elseif string.contains(text, "You do not have enough sparks.") or
 	string.contains(text, "エミネンスが足りません") or
 	string.contains(text, "アイテム等の交換に使用できるエミネンスポイントは、") then
@@ -85,7 +86,7 @@ function M.incoming_text_handler(text)
 	end
 	push_keys({1, "right", "down", "enter"}) -- どうする？
 	push_keys({2, "right", "right", "right", "enter"}) -- 次へ進む
-	push_keys({2, "right", "right", "enter"}) -- プライズパウダー
+	push_keys({2, "right", "down", "down", "enter"}) -- プライズパウダー
 	io_chat.info("ユニティポイント交換額", exchange_point)
 	coroutine.sleep(3)
 	for c in tostring(exchange_point):gmatch(".") do
@@ -96,9 +97,9 @@ function M.incoming_text_handler(text)
 	end
 	coroutine.sleep(1)
 	push_keys({"enter"})  -- ダミー (これないと動かない)
-	coroutine.sleep(3)  -- <= まだ縮められるかも？
-	push_keys({"enter"})
 	coroutine.sleep(2)  -- <= まだ縮められるかも？
+	push_keys({"enter"})
+	coroutine.sleep(1)  -- <= まだ縮められるかも？
 	push_keys({"enter", "up", "enter"})
     end
 end
