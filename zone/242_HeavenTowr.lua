@@ -25,7 +25,7 @@ M.essential_points = {
 }
 
 M.automatic_routes = {
-    -- from_win = { route="kupi" },
+    from_win = { route="kupi", contents="mission" },
     -- from_win = { route="chumi" },
 }
 
