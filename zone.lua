@@ -110,6 +110,7 @@ M.zone_table = {
     [112] = require('zone/112_Xarcabard'),  -- ザルカバード
     [113] = require('zone/113_Teriggan'),   -- テリガン岬
     [114] = require('zone/114_EastAltepa'), -- 東アルテパ砂漠
+    [116] = require('zone/116_ESartabarta'), -- 東サルタバルタ
     [117] = require('zone/117_Tahrongi'),   -- タロンギ大峡谷
     [118] = require('zone/118_Buburimu'),   -- ブブリム半島
     [121] = require('zone/121_ZiTah'),      -- 聖地ジ・タ
