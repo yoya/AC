@@ -67,7 +67,10 @@ function M.receive(message)
     end
     local sig = message:sub(1, SIGNATURE:len())
     if sig ~= SIGNATURE then
-	print("unknown signature:", sig)
+	-- 他のアドオン (WC など) の IPC も全窓に届く。自分宛でないので黙って捨てる
+	if control.debug then
+	    print("io/ipc.receive: other signature:", sig)
+	end
 	return
     end
     local words = split(message, ".")
