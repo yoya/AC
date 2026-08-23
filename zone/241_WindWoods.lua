@@ -24,14 +24,33 @@ M.routes = {
 	{x=61,y=184}, {x=59,y=211}, {x=54,y=217}, {x=54,y=236},
 	{x=56,y=238}, {x=62.4,y=239.1,z=-4.8,d=1}, {a="f8touch"}
     },
+    -- #2(E)
+    rako = {
+	{x=108,y=-56,z=-5,desc="Rakoh Buuma(ガード)"},
+	{x=105,y=-30}, {x=109,y=-25,z=-5},
+	{target="Rakoh Buuma"}
+    },
+    -- #3(M)
+    apu = {
+	{x=-92,y=63,z=-5,desc="Apururu(手の院)"},
+	{x=-81,y=38}, {x=-75,y=37}, {x=-61,y=44}, {x=-55,y=41},
+	{x=-41,y=-5}, {x=-36,y=-7}, {x=-31,y=-4},
+	{x=-25,y=10}, {target="Door:Manustery"}, {a="opendoor"},
+	{x=-20,y=11}, {x=-14,y=15},
+	{target="Apururu"}, {a="touch"}
+    },
 }
 
 M.essential_points = {
     hp1 = {x=10.1,y=0.6,z=-2.5},
+    hp2E = {x=108,y=-56,z=-5},
+    hp3M = {x=-92,y=63,z=-5},
 }
 
 M.automatic_routes = {
     -- hp1 = { route="nana" },
+    hp2E = { route="rako", contents="mission" },
+    hp3M = { route="apu", contents="mission" },
 }
 
 return M

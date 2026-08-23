@@ -5,7 +5,7 @@ local M = { id = 116 }
 M.routes = {
     -- ウィンダス出口から
     lily = {
-	{x=-125.6,y=-520.5,z=-4,desc="内ホルトト遺跡(Lily Tower)"},
+	{x=-125.6,y=-520.5,z=-4,desc="[J-6] 内ホルトト遺跡(Lily Tower)"},
 	{x=-106,y=-514,z=-4.8}, {a="mount"},
 	{x=5,y=-402}, {x=35,y=-370}, {x=106,y=-315},
 	{x=191,y=-231}, {x=213,y=-121},
@@ -15,6 +15,15 @@ M.routes = {
 	-- 塔の入り口
 	{x=361.5,y=100.5}, {a="dismount"}, {x=380,y=100,z=-13.2}, {}
     },
+    marg = {
+	{x=-125.6,y=-520.5,z=-4,desc="[J-11] 内ホルトト遺跡((Marguerite Tower)"},
+	{x=-105,y=-517}, {a="mount"},
+	{x=-13,y=-447}, {x=4,y=-432}, {x=75,y=-385}, {x=129,y=-337},
+	{x=183,y=-291}, {x=213,y=-289}, {x=249,y=-293},
+	{x=264,y=-298}, {x=279,y=-336},
+	-- 入り口
+	{x=260,y=-442}, {a="dismount"}, {x=260,y=-458,z=-17.2},
+    },
 }
 
 M.essential_points = {
@@ -22,7 +31,7 @@ M.essential_points = {
 }
 
 M.automatic_routes = {
-    from_win = { route="lily", contents="mission" },
+    from_win = { route="marg", contents="mission" },
 }
 
 return M
