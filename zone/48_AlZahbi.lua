@@ -22,4 +22,12 @@ M.routes = {
     },
 }
 
+M.essential_points = {
+    -- ビシージ開始で飛ぶ場所
+    xxx1 = {x=65.6,y=39.1,z=0},
+    xxx2 = {x=63.1,y=39.2, z=0},
+}
+M.automatic_routes = {
+}
+
 return M
