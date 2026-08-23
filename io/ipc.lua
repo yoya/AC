@@ -9,7 +9,6 @@ local utils = require 'utils'
 local split = utils.split
 local task = require 'task'
 local acitem = require 'item'
-local ac_focus = require 'ac/focus'
 
 --[[
     AC.*.Upaupa.WS.1
@@ -122,8 +121,6 @@ function M.receive(message)
 	else
 	    print("ac all build party")
 	end
-    elseif method == 'focus' then
-	ac_focus.focus(arg1)
     elseif method == 'party' then
 	M.receive_party(source, arg1, arg2, arg3, arg4)
     elseif method == 'submit' then

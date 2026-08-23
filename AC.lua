@@ -7,7 +7,6 @@ __AC = M
 
 require('functions')
 local res_name = require 'res_name'
-local config = require 'config'
 local control = require 'control'
 local packets = require 'packets'
 
@@ -18,19 +17,8 @@ local works = require 'works'
 local contents = require 'contents'
 contents.AC = M
 local pull = require 'pull'
-local defaults = {
-    AccountList = { },
-    Control = { Debug = "off", },
-}
-
-local settings = config.load(defaults)
-
 local io_chat = require 'io/chat'
 local acevent = require 'event'
-
-local ac_focus = require 'ac/focus'
-
-ac_focus.init(settings.AccountList)
 
 local use_silt = false
 local use_beads = false
@@ -45,11 +33,7 @@ local bayld_swap_ids = item_data.bayld_swap_ids --  ベヤルド交換品
 
 
 -- https://docs.windower.net/commands/input/
--- 邪魔なショートカットを無効化
--- command.send('bind @d ac print Win+D are disabled') -- デスクトップ表示/非表示
-command.send('bind @l ac print Win+L are disabled') -- 画面ロック
-command.send('bind @m ac print Win+M are disabled') -- 全ウィンドウ最小化
--- 操作
+-- 操作 (ウィンドウ切り替え系の bind は WC アドオンが持つ)
 command.send('bind ^d ac party start') -- alt-d
 command.send('bind !d ac party stop')  -- ctl-d
 command.send('bind @d ac stop')        -- win-d
@@ -1016,16 +1000,6 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	    print("ac finishblow", arg1)
 	end
 	-- setFinish
-    elseif subcommand == 'focus' then
-	if control.debug then
-	    print("ac focus", arg1)
-	end
-	-- arg1 はコマンド由来なので文字列。数値の focus_my_index と
-	-- そのまま比べると常に不一致になり、自分宛でも IPC を投げていた
-	if ac_focus.focus_my_index ~= tonumber(arg1) then
-	    -- index が自分以外なら他にフォーカスを譲る
-	    io_ipc.send_all("focus", arg1)
-	end
     elseif subcommand == 'garden' or subcommand == 'g' then
 	cmd_garden(zone, arg1)
     elseif subcommand == 'house' or subcommand == 'h' then
@@ -1301,10 +1275,6 @@ end
 
 windower.register_event('load', function()
     seed_random()
-    local player = windower.ffxi.get_player()
-    if player ~= nil then
-	ac_focus.load(player)
-    end
     ws.init()
     local zone = windower.ffxi.get_info().zone
     zone_change.zone_in_handler(zone, nil, true)
@@ -1329,7 +1299,6 @@ windower.register_event('login', function()
     seed_random()  -- load 時に player が nil だった場合の取り直し
     ac_stat.init()
     ac_equip.init()  -- 前のキャラのバッグ内位置で装備し直さない
-    ac_focus.login()
 end)
 
 windower.register_event('logout', function()

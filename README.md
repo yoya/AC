@@ -22,8 +22,12 @@ lua load findAll;
 - Windower/scripts/init.txt
 ```
 lua load AC
+lua load WC
 lua load sparks
 ```
+
+- WC (ウィンドウ切り替え。もとは AC の `ac focus`)
+  - https://github.com/yoya/WC
 
 - sparks
   - https://github.com/sethmccauley/Addons/tree/master/sparks
