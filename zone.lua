@@ -171,6 +171,7 @@ M.zone_table = {
     [195] = require('zone/195_Eldieme'),    -- エルディーム古墳
     [196] = require('zone/196_Gusgen'),     -- グスゲン鉱山
     [197] = require('zone/197_CrawlNest'),  -- クロウラーの巣
+    [198] = require('zone/198_Shakhrami'),  -- シャクラミの地下迷宮
     [200] = require('zone/200_Garlaige'),   -- ガルレージュ要塞
     [201] = require('zone/201_ClstGales'),  -- 突風の回廊
     [202] = require('zone/202_ClstStorms'), -- 雷鳴の回廊
