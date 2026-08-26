@@ -134,6 +134,7 @@ M.zone_table = {
     [140] = require('zone/140_GhelsbaOp'),  -- ゲルスバ野営陣
     [142] = require('zone/142_Yughott'),    -- ユグホトの岩屋
     [143] = require('zone/143_Palborough'), -- パルブロ鉱山
+    [144] = require('zone/144_Waughroon'),  -- ワールンの祠
     [145] = require('zone/145_Giddeus'),    -- ギデアス
     [147] = require('zone/147_Beadeaux'),   -- ベドー
     [148] = require('zone/148_QulunDome'),  -- クゥルンの大伽藍
