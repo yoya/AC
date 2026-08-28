@@ -53,42 +53,78 @@ function M.max_songs(instrument_id, clarion_call)
     return n
 end
 
+-- 維持したい歌の本数。
+---  keep_id : 普段着ける楽器の item id (ミラクルチアー)
+---  grow_id : 枠を増やす時だけ着ける楽器の item id (ダウルダヴラ)。
+---            持っていなければ nil
+---
+--- 歌の枠は、今かかっていない曲を歌った瞬間の楽器の歌数まで増える。
+--- どちらの楽器にも持ち替えられるので、維持できるのは多い方の本数。
+---
+--- クラリオンコールは数えない。効果中は1曲多く載せられるが、切れた後は
+--- 同じ本数まで増やし直せない。数えると「載せられないのに残り 0 に見える曲」
+--- が plan に残り、押し出し合いのまま歌い続ける事になる
+function M.target_songs(keep_id, grow_id)
+    return math.max(M.max_songs(keep_id, false), M.max_songs(grow_id, false))
+end
+
 -- 楽器の持ち替え。
 --
--- 普段はミラクルチアー (歌数+1) で、維持できる本数まで歌えたら、もう1曲
--- 載せる為だけにダウルダヴラ (歌数+2) へ持ち替え、載ったら戻す。
--- 歌える本数は歌が着弾した瞬間の楽器で決まるので、持ち替えは曲と曲の間で
--- 済んでいればよい。
+-- 歌の枠が増えるのは「今かかっていない曲」を歌った時だけで、増やせるのは
+-- その歌が着弾した瞬間の楽器の歌数まで。かかっている曲の歌い直しは枠を
+-- 増やさないので、普段の楽器 (ミラクルチアー) のままでよい。
+-- つまりダウルダヴラが要るのは、普段の楽器で載る本数まで埋まっていて、
+-- まだ目標に届いていない間だけ。
 --
--- ダウルダヴラに持ち替える本数はクラリオンコールで動かさない (依頼通り)。
--- クラリオンコール中はミラクルチアーでも1曲多く持てるので、その1曲まで
--- ミラクルチアーで歌いたいなら、ここも +1 する事になる
-M.DAURDABLA_FROM = 3   -- ミラクルチアーで維持できる本数 (SONGS_BASE + 1)
-M.MIRACLE_FROM = 4     -- ダウルダヴラで維持できる本数 (SONGS_BASE + 2)
-
--- 今かかっている歌の本数で、どちらの楽器を着けたいかを返す。
---- song_count   : 自分にかかっている歌の本数
---- clarion_call : クラリオンコール中か
+-- 持ち替えは曲と曲の間で済んでいればよい。
+---  song_count : 自分が押さえている枠の数
+---  keep_cap   : 普段の楽器で載る本数 (クラリオンコール中は1曲多い)
+---  target     : 維持したい本数 (M.target_songs)
 --- 戻り値: "daurdabla" | "miracle"
-function M.want_instrument(song_count, clarion_call)
-    local back = M.MIRACLE_FROM + (clarion_call and 1 or 0)
-    if M.DAURDABLA_FROM <= song_count and song_count < back then
+function M.want_instrument(song_count, keep_cap, target)
+    if keep_cap <= song_count and song_count < target then
 	return "daurdabla"
     end
     return "miracle"
 end
 
--- plan を維持できる本数まで切り詰める。溢れた分は歌わない。
--- 切り詰めずに歌うと押し出し合いになり、残りが沢山ある歌まで歌い直す
-function M.trim(plan, n)
-    if #plan <= n then
-	return plan
+-- 維持する曲と、その残り秒を選ぶ。
+---  plan    : 優先順の全曲
+---  remains : plan と同じ並びの残り秒 (M.plan_remains の戻り値)
+---  target  : 自分から増やしてよい本数 (M.target_songs)
+--- 戻り値: 選んだ曲の配列と、同じ並びの残り秒
+---
+--- 今かかっている曲は、優先順が下でも target を超えていても落とさない。
+--- 落とすと誰も残り時間を見ないまま切れて、枠が1つ減る。枠は歌が載った
+--- 瞬間の楽器の歌数までしか増やせないので、一度減らすと簡単には戻らない
+--- (クラリオンコール中に載せた分がこれに当たる)。
+---
+--- かかっていない曲は「枠を増やす歌」なので、target まで優先順の上から足す。
+--- target を超えて足すと、新しい歌が古い歌を押し出して、押し出された曲が
+--- 「残り 0」に見え、休みなく歌い続ける事になる
+function M.keep_plan(plan, remains, target)
+    local keep = {}
+    local held = 0
+    for i in ipairs(plan) do
+	if (remains[i] or 0) > 0 then
+	    keep[i] = true
+	    held = held + 1
+	end
     end
-    local out = {}
-    for i = 1, n do
-	out[i] = plan[i]
+    for i in ipairs(plan) do
+	if not keep[i] and held < target then
+	    keep[i] = true
+	    held = held + 1
+	end
     end
-    return out
+    local out, out_remains = {}, {}
+    for i, name in ipairs(plan) do
+	if keep[i] then
+	    table.insert(out, name)
+	    table.insert(out_remains, remains[i] or 0)
+	end
+    end
+    return out, out_remains
 end
 
 -- plan の各曲の残り秒を出す。かかっていない曲は 0。
@@ -192,14 +228,26 @@ function M.should_sing(remains)
     return soon >= 1 or soon_all >= M.EXPIRE_SOON_NUM
 end
 
--- 次に歌う1曲。優先順の上から、未掛かり/閾値割れの最初のもの。無ければ nil
+-- 次に歌う1曲。無ければ nil。
+--
+-- 乗っていない曲があるなら、そこは枠を増やす歌なので優先順の上から埋める。
+-- 全部乗っているなら、残りの一番短い曲を歌い直す。ここを優先順で選ぶと、
+-- 4曲を回している時に切れかけの曲を後回しにして落としてしまう。
+-- 枠を一度落とすと、ダウルダヴラを持ち直すまで戻らない
 function M.pick_song(plan, remains)
     for i, name in ipairs(plan) do
-	if (remains[i] or 0) < M.EXPIRE_SOON_ALL then
+	if (remains[i] or 0) <= 0 then
 	    return name
 	end
     end
-    return nil
+    local pick, least = nil, M.EXPIRE_SOON_ALL
+    for i, name in ipairs(plan) do
+	local r = remains[i] or 0
+	if r < least then
+	    pick, least = name, r
+	end
+    end
+    return pick
 end
 
 return M

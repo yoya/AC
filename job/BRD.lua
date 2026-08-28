@@ -36,13 +36,15 @@ M.sub_job_prob_table = {
 -- 渡し、決まった1曲を task に積むだけ。
 
 -- 歌う曲。配列の順がそのまま優先順で、上から埋める。
--- 楽器で維持できる本数を超えた分は current_plan が切り捨てるので、
--- ここは多めに並べておいてよい (クラリオンコール中は1曲増える)
+-- 何曲維持するかは song_plan.keep_plan が決める (自分から増やすのは
+-- target_songs まで。それを超えて既にかかっている曲は維持する) ので、
+-- ここは多めに並べておいてよい
 local SONG_PLANS = {
-    attack = { "栄光の凱旋マーチ", "猛者のメヌエットV", "猛者のメヌエットIV",
-	       "怪力のエチュード", "妙技のエチュード" },
+    attack = { "栄光の凱旋マーチ", "猛者のメヌエットV",
+	       "怪力のエチュード", "妙技のエチュード",
+	       "猛者のメヌエットIV" },
     safety = { "重装騎兵のミンネV", "闘龍士のマンボ", "栄光の凱旋マーチ",
-	       "重装騎兵のミンネIV", "戦士達のピーアンVI"  },
+	       "重装騎兵のミンネIV", "戦士達のピーアンVI" },
 }
 
 -- 歌唱時間 (res/spells.lua の cast_time = 8) に余裕を足したもの。
@@ -62,22 +64,37 @@ local SONG_RANGE = 10
 -- ac show song all でメンバーの本数が実際と合う事を確かめてから true にする
 local USE_MEMBER_LACK = false
 
--- 積んだ歌の着弾を待つ上限。歌が中断されると残りが増えないので、
--- いつまでも待たない
+-- コマンドを送ってから着弾を待つ上限。歌が中断されると残りが増えないので、
+-- いつまでも待たない。歌唱時間 (8秒) に 0x063 が届くまでの余裕を足したもの
 local PENDING_MAX = 30
+-- 積んでからコマンドが出るまでの上限。task のキューが詰まっている時に、
+-- 出ない歌を待ち続けて他の曲まで切らさない為
+local QUEUE_MAX = 60
 
 -- クラリオンコールの status (res/job_abilities.lua)。歌える本数が1曲増える
 local CLARION_CALL_STATUS = 499
 
--- task が実行する時に呼ばれるコマンド。歌った時刻をここで記録する
+-- task が実行する時に呼ばれるコマンド。実体は song_sent
 local SONG_COMMAND = "//brdsong "
 
 -- 自分が歌った時刻。歌名 => 時刻。
--- set_task の時点ではなく、task が実際にコマンドを送った瞬間に記録する。
--- 積んだ時刻で記録すると、キューで待っている間のぶん残りを長く見積もる
+-- 記録するのは「着弾を確認した瞬間」。コマンドを送った時点で記録すると、
+-- 中断された歌 (移動中・沈黙・戦闘不能) まで歌った事になる。
+-- status を共有する曲は、この時刻の新しい順と実測の長い順を突き合わせて
+-- 対応を決めているので、乗っていない歌を「一番新しく歌った」と記録すると
+-- 対応が入れ替わり、まだ残りのある曲を歌い直して、本当に切れかけの曲を
+-- そのまま切らす (4曲が3曲に減る)。
+-- 着弾で記録する限り、時刻の新しい順と残りの長い順は必ず一致する
 local my_song = {}
 
--- 積んだけれど、まだ着弾を確認していない歌の status。
+-- 積んだけれど、まだ着弾を確認していない歌。
+--   name  : 歌名
+--   sid   : status id
+--   count : コマンドを送った時の、その status の本数
+--   min   : コマンドを送った時の、その status の一番短い残り
+--   at    : コマンドを送った時刻 (まだ送っていなければ積んだ時刻)
+--   sent  : コマンドを送ったか
+--   want  : その歌の為に選んだ楽器。着弾するまで持ち替え直さない為
 -- 着弾するまで次を積まない。判定できないまま次を積むと、まだ残り 0 に
 -- 見えている曲をもう一度積んだり、対応がずれたまま別の曲を選んだりする。
 --
@@ -85,16 +102,10 @@ local my_song = {}
 -- 「その曲の残りが増えたか」でも判定できない (status を共有する曲は、歌った
 -- 瞬間に対応が入れ替わって別の曲の残りを拾う)。
 -- そこで、その status の実測そのものを見る。歌が乗れば、本数が増えるか、
--- 一番短い残りが伸びるかのどちらかが必ず起きる
-local pending_sid = nil
-local pending_count = 0
-local pending_min = 0
-local pending_at = 0
-
-task.add_command_handler(SONG_COMMAND, function(song_name)
-    my_song[song_name] = os.time()
-    command.send("input /song "..song_name.." <me>")
-end)
+-- 一番短い残りが伸びるかのどちらかが必ず起きる。
+-- 見るのは「コマンドを送った時」の値。積んだ時の値と比べると、キューで
+-- 待っている間に同じ status の曲が切れただけで「着弾した」と読んでしまう
+local pending = nil
 
 -- 歌名(ja) => status id。res.spells の type == "BardSong" から作る。
 -- job/COR.lua の get_roll_id_by_name と同じ作り。
@@ -125,9 +136,9 @@ local function get_song_status_by_name()
 end
 
 -- 自分にかかっている歌の本数。0x063 をまだ受けていなければ nil。
--- 他の詩人 (トラスト含む) の歌も 0x063 には並ぶ。誰が歌ったかは分からない
--- ので、その分は多めに数える。多めに数えると「もう枠が埋まった」と読んで
--- ミラクルチアーのまま歌う側に倒れる
+-- 他の詩人 (トラスト含む) の歌も 0x063 には並ぶので、これは「自分の枠が
+-- 何本埋まっているか」ではない。歌う判断には使わず (そちらは filled_slots)、
+-- ac show song で「誰かが同じ歌を載せていないか」を見る為だけに使う
 local function song_count()
     if ac_buff.self_updated_at == nil then
 	return nil
@@ -167,81 +178,103 @@ local function has_clarion_call(player)
     return false
 end
 
--- 今の楽器とクラリオンコールで、同時に維持できる歌の本数
-local function max_songs(player)
-    return song_plan.max_songs(equipped_instrument_id(),
-			       has_clarion_call(player))
-end
-
 --
 -- 楽器の持ち替え
 --
--- 3曲かかったらダウルダヴラ (歌数+2) に着替えてもう1曲載せ、4曲
--- (クラリオンコール中は5曲) 載ったらミラクルチアー (歌数+1) に戻す。
--- 判断は song_plan.want_instrument にある
+-- 普段はミラクルチアー (歌数+1)。歌の枠を増やす時だけダウルダヴラ (歌数+2)
+-- に着替え、増やしたら戻す。判断は song_plan.want_instrument にある。
+--
+-- 枠が増えるのは「今かかっていない曲」を歌った時だけで、かかっている曲を
+-- 歌い直しても増えも減りもしない。だから普段はミラクルチアーで歌えばよく、
+-- 逆に一度落とした枠はダウルダヴラを持ち直すまで戻らない
 
-local MIRACLE_CHEER_IDS = { 22249 }  -- ミラクルチアー
--- ダウルダヴラ。歌数+2 の Lv99 を先に見る。持っていないなら +1 の物でも
--- ミラクルチアーと同じ本数までは載るので、無理には着替えない
+local MIRACLE_CHEER_ID = 22249  -- ミラクルチアー
+-- ダウルダヴラ。歌数+2 の Lv99 だけを見る。歌数+1 の物はミラクルチアーと
+-- 同じ本数までしか載らないので、持ち替える意味がない
 local DAURDABLA_IDS = { 18839, 18571 }
 
 -- 持ち替えの対象。これ以外の物を着けている時は、自分で選んだものとして触らない
-local SWAP_TARGET = {}
-for _, id in ipairs(MIRACLE_CHEER_IDS) do SWAP_TARGET[id] = true end
+local SWAP_TARGET = { [MIRACLE_CHEER_ID] = true }
 for _, id in ipairs(DAURDABLA_IDS) do SWAP_TARGET[id] = true end
 
--- ids のどれかに着替える。既に着けていれば何もしない。
--- どれも持っていなければ false (持ち替えられない)
-local function equip_instrument(ids, now_id)
-    for _, id in ipairs(ids) do
-	if id == now_id then
-	    return true
+-- 持っているダウルダヴラの item id。持っていなければ nil。
+-- 維持したい本数がこれで決まる。毎 tick 全バッグを走査するのは重いので
+-- 覚えておき、装備を入れ替えた時に追随できるよう時々引き直す
+local GROW_RECHECK = 300
+local grow_id = nil  -- nil:まだ見ていない  false:持っていない
+local grow_id_at = 0
+local function grow_instrument_id()
+    local now = os.time()
+    if grow_id == nil or now - grow_id_at >= GROW_RECHECK then
+	grow_id = false
+	for _, id in ipairs(DAURDABLA_IDS) do
+	    if ac_equip.search_equip_item(id) ~= nil then
+		grow_id = id
+		break
+	    end
 	end
+	grow_id_at = now
     end
-    for _, id in ipairs(ids) do
-	if ac_equip.search_equip_item(id) ~= nil then
-	    ac_equip.equip_item("range", id)
-	    return true
-	end
-    end
-    return false
+    return grow_id or nil
 end
 
-local function instrument_tick(player)
-    -- 死亡/イベント/休憩中は着替えない。歌えないので急ぐ必要もない
-    if player.status ~= pstatus.IDLE and player.status ~= pstatus.ENGAGED then
-	return
-    end
-    -- 短剣で殴っている時や、他の楽器を選んで着けている時は触らない
-    local now_id = equipped_instrument_id()
-    if now_id == nil or SWAP_TARGET[now_id] == nil then
-	return
-    end
-    local count = song_count()
-    if count == nil then
-	return  -- 残り時間をまだ受けていない。本数が分からないので触らない
-    end
-    local want = song_plan.want_instrument(count, has_clarion_call(player))
-    if want == "daurdabla" then
-	equip_instrument(DAURDABLA_IDS, now_id)
-    else
-	equip_instrument(MIRACLE_CHEER_IDS, now_id)
-    end
+-- 今の楽器まわりの状況。get_items を何度も引かないよう、1 tick に1回作る。
+--   id       : 今着けている楽器の item id (楽器を持っていなければ nil)
+--   swap     : 持ち替えの対象か。短剣や、自分で選んだ楽器なら false
+--   keep_cap : 普段の楽器で載る本数。クラリオンコール中は1曲多い
+--   target   : 維持したい歌の本数
+--
+-- target を今着けている楽器で決めないのは、ダウルダヴラに持ち替えている間
+-- だけ本数が増えると、その隙に余分な1曲を歌ってしまい (クラリオンコール中
+-- なら5曲目)、ミラクルチアーに戻した時にその曲が plan から外れて、誰も
+-- 残り時間を見ないまま切れる為
+local function instrument_state(player)
+    local id = equipped_instrument_id()
+    local swap = id ~= nil and SWAP_TARGET[id] ~= nil
+    return {
+	id = id,
+	swap = swap,
+	keep_cap = song_plan.max_songs(MIRACLE_CHEER_ID,
+				       has_clarion_call(player)),
+	-- 持ち替えないなら、今の楽器で載る本数がそのまま目標
+	target = swap
+	    and song_plan.target_songs(MIRACLE_CHEER_ID, grow_instrument_id())
+	    or song_plan.max_songs(id, false),
+    }
 end
 
--- 今の状況で歌う曲の並び。
+-- 着けたい楽器に着替える。
+-- 着弾待ちの間は選び直さない。歌い終わる前に戻すと、その歌は戻した後の
+-- 楽器の歌数で載る事になり、増やすつもりだった枠が増えない。
+--- filled : 自分が押さえている枠の数
+--- 戻り値: 選んだ楽器 ("daurdabla" | "miracle")。触らなかったなら nil
+local function instrument_tick(inst, filled)
+    if not inst.swap then
+	return nil
+    end
+    local want = pending and pending.want
+    if want == nil then
+	want = song_plan.want_instrument(filled, inst.keep_cap, inst.target)
+    end
+    -- ダウルダヴラを持っていなければ普段の楽器のまま (歌数は増やせない)
+    local id = want == "daurdabla" and grow_instrument_id() or MIRACLE_CHEER_ID
+    if id ~= inst.id then
+	ac_equip.equip_item("range", id)
+    end
+    return want
+end
+
+-- 今の状況で歌う曲の並び (優先順の全曲)。何曲維持するかは
+-- song_plan.keep_plan が決めるので、ここでは切り詰めない。
 -- need_safety() は今のターゲットで決まるので、戦闘の切れ目で裏返る。
 -- 構成が入れ替わると新しい方の曲が全部「未掛かり」に見えて全曲歌い直しに
--- なるので、一定時間続いた時だけ切り替える。
---
--- 最後に、維持できる本数まで切り詰める。切り詰めないと、新しい歌が古い歌を
--- 押し出して、押し出された曲が「残り 0」に見え、休みなく歌い続ける
+-- なるので、一定時間続いた時だけ切り替える
 local PLAN_SWITCH_SEC = 10
 local plan_key = "attack"
 local plan_pending = nil
 local plan_pending_at = 0
 
-local function current_plan(player)
+local function current_plan()
     local want = M.parent.need_safety() and "safety" or "attack"
     local now = os.time()
     if want == plan_key then
@@ -253,7 +286,7 @@ local function current_plan(player)
 	plan_key = want
 	plan_pending = nil
     end
-    return song_plan.trim(SONG_PLANS[plan_key], max_songs(player))
+    return SONG_PLANS[plan_key]
 end
 
 -- plan を status id ごとの本数に畳む
@@ -299,7 +332,7 @@ local function lacking_status(plan, status_of)
 end
 
 -- 直近で plan を一巡して歌ったのに、まだ枠が埋まっていないか。
--- plan は current_plan が維持できる本数まで切り詰めてあるので、埋まらない
+-- plan は song_plan.keep_plan が維持できる本数まで絞ってあるので、埋まらない
 -- のは song_plan.EXTRA_SONGS_BY_ID の見積もりが実機とずれている時。
 -- 放っておくと新しい歌が古い歌を押し出して永久に歌い続ける
 local WARN_INTERVAL = 300
@@ -340,6 +373,28 @@ local function plan_remains(plan)
 				  lacking_status(plan, status_of))
 end
 
+-- 今維持する曲と、その残り秒。song_tick と表示で共用する。
+-- 優先順の全曲で残りを出してから選ぶ。先に切り詰めると、優先順の下にある
+-- 「今かかっている曲」が消えて、誰も歌い直さないまま切れる
+local function current_plan_remains(target)
+    local full = current_plan()
+    return song_plan.keep_plan(full, plan_remains(full), target)
+end
+
+-- 自分が押さえている歌の枠の数。plan の曲で、今かかっているものを数える。
+-- ac_buff には他の詩人 (トラスト含む) の歌も並ぶので、そちらを数えると枠が
+-- 埋まって見えて、ダウルダヴラに持ち替えられず4曲目を足せなくなる。
+-- 歌の枠は詩人ごとに別なので、数えるのは自分の plan の分だけでよい
+local function filled_slots(remains)
+    local n = 0
+    for _, r in ipairs(remains) do
+	if r > 0 then
+	    n = n + 1
+	end
+    end
+    return n
+end
+
 -- status_id の実測の、本数と一番短い残り。self_remains は降順なので末尾が最短
 local function family_state(sid)
     local rs = sid ~= nil and ac_buff.self_remains(sid) or nil
@@ -347,6 +402,55 @@ local function family_state(sid)
 	return 0, 0
     end
     return #rs, rs[#rs] or 0
+end
+
+-- task がコマンドを送る時に呼ばれる。ここが「歌い始めた瞬間」なので、
+-- 着弾の判定に使う実測はここで取り直す。
+-- 積んだ歌と違う曲が出て来る事がある (待っている間に諦めた後で task の
+-- キューから出て来た時) ので、送った曲でそのまま作り直す
+local function song_sent(song_name)
+    local sid = get_song_status_by_name()[song_name]
+    if sid == nil then
+	pending = nil  -- status が引けない曲は着弾を判定できない。待たない
+    else
+	-- 積んだ時に選んだ楽器は引き継ぐ。捨てると歌っている間に選び直して、
+	-- 増やすつもりだった枠が増えない
+	local want = pending and pending.name == song_name and pending.want or nil
+	local count, min = family_state(sid)
+	pending = { name = song_name, sid = sid, count = count, min = min,
+		    at = os.time(), sent = true, want = want }
+    end
+    command.send("input /song "..song_name.." <me>")
+end
+
+task.add_command_handler(SONG_COMMAND, song_sent)
+
+-- 積んだ歌の着弾待ちか。着弾した/諦めたら pending を畳んで false を返す
+local function waiting_song()
+    if pending == nil then
+	return false
+    end
+    local now = os.time()
+    if not pending.sent then
+	if now - pending.at >= QUEUE_MAX then
+	    pending = nil  -- キューから出て来ない。積み直す
+	    return false
+	end
+	return true
+    end
+    local count, min = family_state(pending.sid)
+    if count > pending.count or min > pending.min then
+	my_song[pending.name] = now  -- 着弾した。歌った時刻はここで記録する
+	pending = nil
+	return false
+    end
+    if now - pending.at >= PENDING_MAX then
+	-- 中断されたらしい。歌った事にはしないので、この曲は残りの実測どおり
+	-- 「切れかけ」のまま見え、次の tick で歌い直される
+	pending = nil
+	return false
+    end
+    return true
 end
 
 local function song_tick(player)
@@ -359,18 +463,18 @@ local function song_tick(player)
     if ac_buff.self_updated_at == nil then
 	return
     end
-    -- 積んだ歌が着弾するまで次を積まない
-    if pending_sid ~= nil then
-	local count, min = family_state(pending_sid)
-	if count > pending_count or min > pending_min or
-	    os.time() - pending_at >= PENDING_MAX then
-	    pending_sid = nil  -- 着弾した、または中断されたので諦める
-	else
-	    return
-	end
+    -- 積んだ歌が着弾するまで次を積まない。
+    -- 残りを出すより先に見る。着弾した時刻の記録がここで入るので、後から
+    -- 見ると status を共有する曲の対応が1 tick ずれ、乗ったばかりの曲を
+    -- もう一度歌ってしまう
+    local waiting = waiting_song()
+    local inst = instrument_state(player)
+    local plan, remains = current_plan_remains(inst.target)
+    -- 楽器は歌っていない間も見る (着弾したら普段の楽器に戻す為)
+    local want = instrument_tick(inst, filled_slots(remains))
+    if waiting then
+	return
     end
-    local plan = current_plan(player)
-    local remains = plan_remains(plan)
     warn_overflow(plan, remains)
     if not song_plan.should_sing(remains) then
 	return
@@ -381,9 +485,10 @@ local function song_tick(player)
     end
     local sid = get_song_status_by_name()[name]
     if sid ~= nil then
-	pending_sid = sid
-	pending_count, pending_min = family_state(sid)
-	pending_at = os.time()
+	-- 積んだ印。実測は song_sent (コマンドを送る時) で取り直す
+	local count, min = family_state(sid)
+	pending = { name = name, sid = sid, count = count, min = min,
+		    at = os.time(), sent = false, want = want }
     end
     -- command, delay, duration, period, eachfight
     task.set_task(task.PRIORITY_MIDDLE,
@@ -414,7 +519,6 @@ function M.main_tick(player)
     if role_Melee.main_tick ~= nil then
 	role_Melee.main_tick(player)
     end
-    instrument_tick(player)
     song_tick(player)
     lullaby_tick(player)
 end
@@ -423,9 +527,9 @@ end
 -- 判断に使っている値をそのまま出す。USE_MEMBER_LACK を有効にしてよいか、
 -- 換算定数がずれていないかを、実機で確かめる為の窓口でもある
 function M.show_song(player, arg)
-    local plan = current_plan(player)
+    local inst = instrument_state(player)
+    local plan, remains = current_plan_remains(inst.target)
     local status_of = get_song_status_by_name()
-    local remains = plan_remains(plan)
     local now = os.time()
     io_chat.set_next_color(5)
     io_chat.print("=== song")
@@ -442,17 +546,18 @@ function M.show_song(player, arg)
 		       at == nil and "-" or (now - at).."秒前")
     end
     io_chat.set_next_color(6)
-    local inst = equipped_instrument_id()
-    io_chat.printf("楽器:%s クラリオンコール:%s 維持できる本数:%d (plan %d曲中%d曲)",
-		   inst == nil and "なし"
-		       or (res_name.item_ja(inst).."("..inst..")"),
-		   tostring(has_clarion_call(player)), max_songs(player),
+    io_chat.printf("楽器:%s クラリオンコール:%s 維持したい本数:%d (plan %d曲中%d曲)",
+		   inst.id == nil and "なし"
+		       or (res_name.item_ja(inst.id).."("..inst.id..")"),
+		   tostring(has_clarion_call(player)), inst.target,
 		   #SONG_PLANS[plan_key], #plan)
-    local count = song_count()
-    io_chat.printf("かかっている歌:%s 着けたい楽器:%s", tostring(count),
-		   count == nil and "-"
-		       or song_plan.want_instrument(count,
-						    has_clarion_call(player)))
+    local filled = filled_slots(remains)
+    io_chat.printf("押さえている枠:%d 普段の楽器で載る本数:%d 着けたい楽器:%s",
+		   filled, inst.keep_cap,
+		   song_plan.want_instrument(filled, inst.keep_cap, inst.target))
+    -- 他の詩人 (トラスト含む) の歌も混ざる。判断には使っていない
+    io_chat.printf("自分に乗っている歌 (他の詩人の分も含む):%s",
+		   tostring(song_count()))
     io_chat.printf("歌う:%s 次の曲:%s メンバー参照:%s",
 		   tostring(song_plan.should_sing(remains)),
 		   tostring(song_plan.pick_song(plan, remains)),

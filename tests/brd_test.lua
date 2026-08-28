@@ -136,17 +136,46 @@ do
     check("楽器なし + クラリオンコール", song_plan.max_songs(nil, true), 3)
 end
 
-print("=== trim: 維持できる本数まで切り詰める")
+print("=== keep_plan: 維持する曲を選ぶ")
 do
-    local t = song_plan.trim(PLAN, 2)
+    -- 何もかかっていなければ、優先順の上から target 曲
+    local t, r = song_plan.keep_plan(PLAN, {0, 0, 0, 0, 0, 0}, 2)
     check("2曲になる", #t, 2)
-    check("優先順の上から残る", t[1], "栄光の凱旋マーチ")
+    check("優先順の上から埋める", t[1], "栄光の凱旋マーチ")
     check("2曲目", t[2], "猛者のメヌエットV")
-    check("本数が足りていれば元のまま", song_plan.trim(PLAN, 10), PLAN)
-    check("0 本なら空", #song_plan.trim(PLAN, 0), 0)
+    check("残りも同じ並びで返る", r[2], 0)
+    check("0 本なら空", #song_plan.keep_plan(PLAN, {0,0,0,0,0,0}, 0), 0)
+    check("本数が足りていれば全曲",
+	  #song_plan.keep_plan(PLAN, {0,0,0,0,0,0}, 10), #PLAN)
     check("切り詰めた plan では溢れた曲を選ばない",
-	  song_plan.pick_song(t, song_plan.plan_remains(t, STATUS, {}, {}, nil)),
-	  "栄光の凱旋マーチ")
+	  song_plan.pick_song(t, r), "栄光の凱旋マーチ")
+end
+
+print("=== keep_plan: 今かかっている曲は落とさない")
+do
+    -- 優先順が下の 5,6番目がかかっている。target は 2 曲だが、落とすと
+    -- 誰も歌い直さないまま切れて枠が減るので、維持する側に入れる
+    local t, r = song_plan.keep_plan(PLAN, {0, 0, 0, 0, 300, 200}, 2)
+    check("かかっている2曲だけ", #t, 2)
+    check("1曲目", t[1], "怪力のエチュード")
+    check("2曲目", t[2], "妙技のエチュード")
+    check("残りも同じ並び", r[1], 300)
+    -- 楽器から可能な本数 (target) より多くかかっている時も、その本数を維持する
+    local t2 = song_plan.keep_plan(PLAN, {300, 300, 300, 300, 300, 0}, 4)
+    check("target を超えていても5曲維持", #t2, 5)
+    check("溢れている分は足さない", t2[5], "怪力のエチュード")
+    -- かかっている分が target に足りなければ、優先順の上から足す
+    local t3 = song_plan.keep_plan(PLAN, {0, 0, 0, 0, 300, 0}, 3)
+    check("足りない分を優先順の上から足す", #t3, 3)
+    check("かかっている曲", t3[3], "怪力のエチュード")
+    check("足した曲", t3[1], "栄光の凱旋マーチ")
+    check("足した曲", t3[2], "猛者のメヌエットV")
+    -- 不明 (乗ってはいる) も枠を押さえているものとして数える
+    local t4 = song_plan.keep_plan(PLAN,
+				   {song_plan.UNKNOWN, song_plan.UNKNOWN,
+				    0, 0, 0, 0}, 2)
+    check("不明は落とさない", #t4, 2)
+    check("不明の曲", t4[1], "栄光の凱旋マーチ")
 end
 
 print("=== should_sing")
@@ -160,36 +189,68 @@ do
     check("未掛かりが1曲", song_plan.should_sing({300, 300, 0}), true)
 end
 
-print("=== pick_song: 優先順の上位から")
+print("=== pick_song: 未掛かりは優先順、歌い直しは切れかけ順")
 do
-    -- 切れかけは 4番目 (メヌエットIII) だが、1番目のマーチも閾値割れなので
-    -- 優先順の上のマーチを先に埋める
-    check("上位が閾値割れなら上位",
+    -- 全部乗っているなら、閾値割れの中で残りの一番短いものを歌い直す。
+    -- 優先順で選ぶと、切れかけの曲を後回しにして枠を落としてしまう
+    check("閾値割れが2曲なら残りの短い方",
 	  song_plan.pick_song(PLAN, {100, 300, 300, 50, 300, 300}),
-	  "栄光の凱旋マーチ")
-    check("上位が足りていれば切れかけ",
+	  "猛者のメヌエットIII")
+    check("閾値割れが1曲ならその曲",
 	  song_plan.pick_song(PLAN, {300, 300, 300, 50, 300, 300}),
 	  "猛者のメヌエットIII")
+    check("同じ残りなら優先順の上",
+	  song_plan.pick_song(PLAN, {50, 300, 300, 50, 300, 300}),
+	  "栄光の凱旋マーチ")
+    -- 乗っていない曲は枠を増やす歌。切れかけより先に、優先順の上から埋める
+    check("未掛かりがあれば優先順の上から",
+	  song_plan.pick_song(PLAN, {300, 0, 300, 10, 300, 300}),
+	  "猛者のメヌエットV")
     check("全曲足りていれば nil",
 	  song_plan.pick_song(PLAN, {300, 300, 300, 300, 300, 300}),
 	  nil)
+    check("境界: 120 秒ちょうどは選ばない",
+	  song_plan.pick_song(PLAN, {120, 300, 300, 300, 300, 300}),
+	  nil)
+end
+
+print("=== target_songs: 維持したい本数")
+do
+    local MIRACLE, DAURDABLA = 22249, 18839
+    check("ミラクルチアー + ダウルダヴラ",
+	  song_plan.target_songs(MIRACLE, DAURDABLA), 4)
+    check("ダウルダヴラを持っていない",
+	  song_plan.target_songs(MIRACLE, nil), 3)
+    check("ミラクルチアーを持っていない",
+	  song_plan.target_songs(nil, DAURDABLA), 4)
+    check("どちらも無い", song_plan.target_songs(nil, nil), 2)
+    -- クラリオンコールは数えない。切れた後に増やし直せないので、
+    -- 数えると押し出し合いのまま歌い続ける事になる
+    check("引数にクラリオンコールは無い", song_plan.target_songs(MIRACLE), 3)
 end
 
 print("=== want_instrument: 楽器の持ち替え")
 do
-    check("0曲", song_plan.want_instrument(0, false), "miracle")
-    check("2曲", song_plan.want_instrument(2, false), "miracle")
-    check("3曲でダウルダヴラ", song_plan.want_instrument(3, false), "daurdabla")
+    -- ミラクルチアーで3曲、クラリオンコール中は4曲まで載る。
+    -- 目標はダウルダヴラ込みの4曲
+    local MIRACLE_CAP, CLARION_CAP, TARGET = 3, 4, 4
+    check("0曲", song_plan.want_instrument(0, MIRACLE_CAP, TARGET), "miracle")
+    check("2曲", song_plan.want_instrument(2, MIRACLE_CAP, TARGET), "miracle")
+    check("3曲でダウルダヴラ",
+	  song_plan.want_instrument(3, MIRACLE_CAP, TARGET), "daurdabla")
     check("4曲でミラクルチアーに戻す",
-	  song_plan.want_instrument(4, false), "miracle")
-    check("クラリオンコール中の3曲",
-	  song_plan.want_instrument(3, true), "daurdabla")
-    check("クラリオンコール中の4曲はまだダウルダヴラ",
-	  song_plan.want_instrument(4, true), "daurdabla")
-    check("クラリオンコール中は5曲で戻す",
-	  song_plan.want_instrument(5, true), "miracle")
+	  song_plan.want_instrument(4, MIRACLE_CAP, TARGET), "miracle")
+    -- クラリオンコール中はミラクルチアーのまま4曲目まで載る。
+    -- ここでダウルダヴラに持ち替えると5曲目を歌ってしまう
+    check("クラリオンコール中の3曲はミラクルチアー",
+	  song_plan.want_instrument(3, CLARION_CAP, TARGET), "miracle")
+    check("クラリオンコール中の4曲もミラクルチアー",
+	  song_plan.want_instrument(4, CLARION_CAP, TARGET), "miracle")
     check("数え過ぎてもミラクルチアー",
-	  song_plan.want_instrument(6, false), "miracle")
+	  song_plan.want_instrument(6, MIRACLE_CAP, TARGET), "miracle")
+    -- ダウルダヴラを持っていなければ目標は3曲。持ち替えようとしない
+    check("目標に届いていれば持ち替えない",
+	  song_plan.want_instrument(3, MIRACLE_CAP, 3), "miracle")
 end
 
 print(("=== brd_test: %d NG"):format(ng))
