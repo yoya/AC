@@ -12,6 +12,7 @@ M.more_attractive_enemy_list = {
     -- アンバス
     "Tyny Lycopodium",
     "Skullcap", "Bozzetto Elemental",
+    "Bozzetto Housemaker", "Bozzetto Urchin", -- ミーブル回
     -- 醴泉島
     "Wretched Poroggo", "Water Elemental",
     -- Void Watch

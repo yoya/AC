@@ -29,7 +29,9 @@ M.preferred_enemy_list = {
     "Quetzalcoatl's Sibilus", "Quetzalcoatl",
     "Mireu",
     -- 実験
-    "Apex Jagil", -- "Apex Toad",  -- ウォーの門、トード。
+    -- "Apex Jagil",  -- 2026/8/26 強化された？
+    -- 火曜日なのにモンクMlv39、リコイルダイブで2143ダメージ
+    "Apex Toad",  -- ウォーの門、トード。
     "Mourioche",  -- マンドラ
     -- アルタナM
     "Cait Sith Ceithir",
