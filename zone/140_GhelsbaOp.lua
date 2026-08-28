@@ -25,14 +25,24 @@ M.routes = {
 	{x=59,y=-44}, {x=50,y=-56}, {x=15,y=-60},
 	{x=-2,y=-61.1,z=0.1}, {}
     },
+    -- ゲルスバ砦から
+    war = {
+	{x=125.9,y=181.9,z=-19.8}, {x=113,y=180}, {x=75,y=180},
+	{x=68,y=179}, {x=52,y=176}, {x=19,y=177}, {x=-6,y=178},
+	{x=-14,y=185}, {x=-16,y=201}, {x=-18,y=210}, {x=-11,y=215},
+	{x=-10,y=222}, {x=-34,y=238}, {x=-59,y=248}
+	-- {target="Warchief Vatgit"}
+    },
 }
 
 M.essential_points = {
     entrance = {x=100,y=-38,z=0.2},
+    from_fort = {x=125.9,y=181.9,z=-19.8},
 }
 
 M.automatic_routes = {
     entrance = { route="common" },
+    from_fort = { route="war" },
 }
 
 return M

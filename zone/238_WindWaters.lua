@@ -10,6 +10,19 @@ M.routes = {
 	{x=-23,y=90}, {a="opendoor"}, {x=-23,y=94},
 	{x=-27.5,y=102.3}, {a="f8touch"}
     },
+    -- HP#2 M)
+    aura = {
+	{x=137,y=-14,z=0,desc="耳の院(Aurastery)"},
+	{x=155,y=0}, {x=156,y=8}, {x=150,y=20}, {x=136,y=32},
+	-- 通路を横切る
+	{x=110,y=65}, {x=108,y=74}, {x=112,y=82}, {x=121,y=95},
+	{x=125,y=112}, {x=145,y=136}, {x=150,y=170}, {x=157,y=181},
+	{x=163,y=184}, {x=165,y=181},
+	{target="Door:Aurastery"}, {a="f8touch"},
+	{x=165,y=179}, {x=162,y=166,z=-0.2}, {x=162,y=163,z=-1.2},
+	{x=164,y=159}, {target="Moreno-Toeno"}, {a="touch"}
+	
+    },
     -- HP#3 (鼻の院)
     leepe = { -- フェンリル試練 Leepe-Hoppe
 	{x=4,y=-175,z=-4}, {x=-2,y=-197,z=-4}, {x=4,y=-207,z=-4},
@@ -37,11 +50,13 @@ M.routes = {
 }
 
 M.essential_points = {
-    hp_1 = {x=-33,y=131.7,z=-5}
+    hp_1 = {x=-33,y=131.7,z=-5},
+    hp_2M = {x=137,y=-14,z=0},
 }
 
 M.automatic_routes = {
     hp_1 = { route="tosuka" },
+    hp_2M = { route="aura" },
 }
 
 return M

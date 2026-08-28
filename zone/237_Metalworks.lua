@@ -19,6 +19,13 @@ M.routes = {
 	{x=-23.2,y=-2}, {x=-16.7,y=-4.8}, {x=-14.3,y=-3.5},
 	{x=-13,y=1.1}, {a="f8touch"}
     },
+    win = {
+	{x=45,y=-18,z=-14,desc="ウィンダス領事館"},
+	{x=36,y=0}, {x=25,y=22},
+	{target="Door:Windurstian Consul"}, {a="f8touch"}, {x=24,y=25},
+	{x=18,y=32}, {x=18,y=35},
+	{x=23,y=40,z=-16.4}, {target="Patt-Pott"}, {a="touch"}
+    }
 }
 
 return M
