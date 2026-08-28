@@ -18,6 +18,9 @@ function M.iam_leader()
 	return nil
     end
     local party = windower.ffxi.get_party()
+    if party.p1 == nil then
+	return true -- ソロの時はリーダー扱い
+    end
     local party1_leader = party.party1_leader
     -- print("ac_party.iam_leader", party.party1_leader, player.id)
     if party1_leader == nil then
