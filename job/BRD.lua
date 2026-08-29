@@ -6,6 +6,7 @@ local command = require 'command'
 local contents = require 'contents'
 local io_chat = require 'io/chat'
 local task = require 'task'
+local acmob = require 'mob'
 local role_Melee = require 'role/Melee'
 local pstatus = require 'player_status'
 local res_name = require 'res_name'
@@ -247,14 +248,17 @@ end
 -- 着弾待ちの間は選び直さない。歌い終わる前に戻すと、その歌は戻した後の
 -- 楽器の歌数で載る事になり、増やすつもりだった枠が増えない。
 --- filled : 自分が押さえている枠の数
+--- grow   : 枠を増やしてよいか。周囲に敵がいない間は増やさない
 --- 戻り値: 選んだ楽器 ("daurdabla" | "miracle")。触らなかったなら nil
-local function instrument_tick(inst, filled)
+local function instrument_tick(inst, filled, grow)
     if not inst.swap then
 	return nil
     end
     local want = pending and pending.want
     if want == nil then
-	want = song_plan.want_instrument(filled, inst.keep_cap, inst.target)
+	want = grow
+	    and song_plan.want_instrument(filled, inst.keep_cap, inst.target)
+	    or "miracle"
     end
     -- ダウルダヴラを持っていなければ普段の楽器のまま (歌数は増やせない)
     local id = want == "daurdabla" and grow_instrument_id() or MIRACLE_CHEER_ID
@@ -453,6 +457,41 @@ local function waiting_song()
     return true
 end
 
+-- 周囲に敵がいるか。街中で歌い続けない為の門番。
+--
+-- ゾーンでは判断できない。アルザビやアトルガン白門は普段は街だが、
+-- ビシージ中は敵が湧く。街を除外すると、そこで歌わなくなる。
+--
+-- acmob.is_mob_attackable は使わない。あちらは「自分が殴れるか」なので、
+-- NPC にヘイトが向いている敵を弾く。ビシージの敵はほとんどそれに当たる。
+-- ここで見たいのは「敵がそこに居るか」だけ。
+--
+-- 範囲は視界の広さに合わせる。get_mob_array に載るのはクライアントが
+-- 持っている範囲 (50 前後) までなので、ここを大きくすると実質
+-- 「クライアントが敵を1体でも知っているか」になる。街ではそれが 0 なので、
+-- 街を弾く目的はこれで足りる。狭くするとビシージで門から寄って来る敵に
+-- 気付くのが遅れ、4曲揃う前に接敵する
+local SONG_ENEMY_RANGE = 50
+
+local function enemy_near(player)
+    if player.status == pstatus.ENGAGED then
+	return true  -- 戦闘中。相手が索敵の外に居ても敵は居る
+    end
+    local me = windower.ffxi.get_mob_by_target("me")
+    if me == nil or me.x == nil then
+	return false
+    end
+    for _, mob in pairs(windower.ffxi.get_mob_array()) do
+	-- spawn_type == 16 が敵。値の一覧は acmob.is_mob_attackable のコメント
+	if mob.spawn_type == 16 and mob.valid_target and mob.x ~= nil and
+	    (mob.status == pstatus.IDLE or mob.status == pstatus.ENGAGED) and
+	    acmob.distance(mob, me) <= SONG_ENEMY_RANGE then
+	    return true
+	end
+    end
+    return false
+end
+
 local function song_tick(player)
     -- 待機中と戦闘中だけ。死亡/イベント/休憩/マウント中は歌えない
     if player.status ~= pstatus.IDLE and player.status ~= pstatus.ENGAGED then
@@ -468,11 +507,18 @@ local function song_tick(player)
     -- 見ると status を共有する曲の対応が1 tick ずれ、乗ったばかりの曲を
     -- もう一度歌ってしまう
     local waiting = waiting_song()
+    local enemy = enemy_near(player)
     local inst = instrument_state(player)
     local plan, remains = current_plan_remains(inst.target)
     -- 楽器は歌っていない間も見る (着弾したら普段の楽器に戻す為)
-    local want = instrument_tick(inst, filled_slots(remains))
+    local want = instrument_tick(inst, filled_slots(remains), enemy)
     if waiting then
+	return
+    end
+    -- 周囲に敵がいない間は歌わない。街に立っているだけで歌い続けない為。
+    -- 着弾待ちより後に見る。歌い終わる前に敵が居なくなっても、その歌の
+    -- 着弾は記録しないと status を共有する曲の対応が狂う
+    if not enemy then
 	return
     end
     warn_overflow(plan, remains)
@@ -558,10 +604,11 @@ function M.show_song(player, arg)
     -- 他の詩人 (トラスト含む) の歌も混ざる。判断には使っていない
     io_chat.printf("自分に乗っている歌 (他の詩人の分も含む):%s",
 		   tostring(song_count()))
-    io_chat.printf("歌う:%s 次の曲:%s メンバー参照:%s",
+    io_chat.printf("歌う:%s 次の曲:%s メンバー参照:%s 周囲の敵:%s",
 		   tostring(song_plan.should_sing(remains)),
 		   tostring(song_plan.pick_song(plan, remains)),
-		   tostring(USE_MEMBER_LACK))
+		   tostring(USE_MEMBER_LACK),
+		   tostring(enemy_near(player)))
     if arg ~= "all" then
 	return
     end
