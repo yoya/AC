@@ -31,7 +31,7 @@ M.preferred_enemy_list = {
     -- 実験
     -- "Apex Jagil",  -- 2026/8/26 強化された？
     -- 火曜日なのにモンクMlv39、リコイルダイブで2143ダメージ
-    "Apex Toad",  -- ウォーの門、トード。
+    --"Apex Toad",  -- ウォーの門、トード。
     "Mourioche",  -- マンドラ
     -- アルタナM
     "Cait Sith Ceithir",
