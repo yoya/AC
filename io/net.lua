@@ -23,6 +23,24 @@ local io_chat = require 'io/chat'
 local ASSIST_ID = 0x058
 -- size は dword 単位。4 dword = 16 バイト。b9b7H なので size は 9bit 左シフト
 local ASSIST_HEADER = ASSIST_ID + 4 * 0x200
+local ASSIST_SIZE = 16  -- ヘッダ 4 + 本体 12
+
+-- 数字付きの書式 ('I3H2' 等) は使わない。Windower の pack は数字の意味が
+-- 書式ごとに違う (libs/packets.lua の b9 はビット幅、make_pack_string の
+-- S8 はバイト長、I3 は繰り返し数) 上に、'I3' の解釈を確かめられる用例が
+-- addons/ 配下に他に 1 つも無い。もし「3 バイトの int」と解釈されていると、
+-- 引数が 2 個しか消費されず 5 バイトの壊れたパケットが飛ぶ。
+-- 単体の 'I' と 'H' は libs/packets.lua が実際に使っていて解釈が揺れない。
+--
+-- libs/packets.build と同じバイト列になる (あちらは本体 10 バイトを 12 に
+-- 詰めて size = 1 + 12/4 = 4。ここは 0x0E に Target Index を書く分だけ違う)
+local build_assist = function(player, mob)
+    return ('I'):pack(ASSIST_HEADER) ..  -- 00 ヘッダ
+	('I'):pack(player.id) ..         -- 04 Player ID
+	('I'):pack(mob.id) ..            -- 08 Target ID
+	('H'):pack(player.index) ..      -- 0C Player Index
+	('H'):pack(mob.index)            -- 0E Target Index
+end
 
 M.target_by_mob = function(mob)
     if mob == nil then
@@ -33,10 +51,21 @@ M.target_by_mob = function(mob)
     if player == nil then
 	return false
     end
-    windower.packets.inject_incoming(
-	ASSIST_ID,
-	('I3H2'):pack(ASSIST_HEADER, player.id, mob.id,
-		      player.index, mob.index))
+    local data = build_assist(player, mob)
+    if #data ~= ASSIST_SIZE then
+	-- 出たらここが原因。壊れたパケットは撃たない
+	io_chat.errorf("io/net: 0x058 の組み立てが %d バイト (%d のはず)",
+		       #data, ASSIST_SIZE)
+	return false
+    end
+    if control.debug then
+	io_chat.printf("io/net: 0x058 [%s] -> %s idx:%d",
+		       (data:gsub(".", function(c)
+				     return string.format("%02X ", c:byte())
+				 end)),
+		       tostring(mob.name), mob.index)
+    end
+    windower.packets.inject_incoming(ASSIST_ID, data)
     return true
 end
 
