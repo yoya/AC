@@ -201,8 +201,14 @@ function M.equip_item_by_priority_tree(item_tree)
 	    end
 	end
     end
+    -- 装備を送った後の 1 秒。job/COR.lua がこの sleep を当てにしている
     coroutine.sleep(1)
-    utils.target_lockon(true)
+    -- ここでロックを掛けない。元は「着替えるとロックが外れるので」入れたが、
+    -- この関数は戦闘開始 (job.battle_start) から毎回呼ばれるようになった。
+    -- 掛けたロックを外す者がいないので、戦闘後にタゲが隣の味方へ移ると
+    -- そこで固定され、io/net の 0x058 注入が通らなくなる。以降ずっと
+    -- 「攻撃対象ではありません」を撃ち続ける。
+    -- ロックが要る所 (モグガーデン、シナジー、works) は自分で掛けている
 end
     
 function M.tick(player)
