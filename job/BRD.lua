@@ -482,9 +482,9 @@ local function enemy_near(player)
 	return false
     end
     for _, mob in pairs(windower.ffxi.get_mob_array()) do
-	-- spawn_type == 16 が敵。値の一覧は acmob.is_mob_attackable のコメント
-	if mob.spawn_type == 16 and mob.valid_target and mob.x ~= nil and
-	    (mob.status == pstatus.IDLE or mob.status == pstatus.ENGAGED) and
+	-- is_mob_attackable ではなく is_enemy。前者は claim まで見るので、
+	-- NPC にヘイトが向いている敵 (ビシージはほとんどそれ) を弾いてしまう
+	if acmob.is_enemy(mob) and mob.x ~= nil and
 	    acmob.distance(mob, me) <= SONG_ENEMY_RANGE then
 	    return true
 	end
