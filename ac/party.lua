@@ -18,15 +18,21 @@ function M.iam_leader()
 	return nil
     end
     local party = windower.ffxi.get_party()
-    if party.p1 == nil then
-	return true -- ソロの時はリーダー扱い
-    end
     local party1_leader = party.party1_leader
     -- print("ac_party.iam_leader", party.party1_leader, player.id)
     if party1_leader == nil then
 	party1_leader = M.leader_id
     else
 	M.leader_id = party1_leader
+    end
+    -- ソロの時はリーダー扱い。ただし判定はキャッシュの後。party1_leader は
+    -- ソロだと nil なので、p1 == nil を先に見ると、パーティ情報がまだ
+    -- 届いていないだけのメンバーまでリーダーになり、role/Leader.tick_idle 側に
+    -- 流れてしまう。実リーダーを一度でも見ていれば M.leader_id が残っているので、
+    -- それも無い時だけを本当のソロとする。M.leader_mob() も同じ M.leader_id を
+    -- 見るので、この順なら 2 つの答えが食い違わない
+    if party1_leader == nil and party.p1 == nil then
+	return true
     end
     if party1_leader == player.id then
         return true
