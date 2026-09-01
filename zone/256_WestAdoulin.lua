@@ -48,6 +48,18 @@ M.routes = {
 	{x=-31.8,y=30}, {x=-29.1,y=35.1},
 	{x=-28.6,y=35.8} ,{a="f8touch"}
     },
+    ['cou-works'] = {
+	{x=4.9,y=-4.7,z=0}, {x=-10,y=6,z=-0.1}, {x=-32.5,y=28.7,z=0.7},
+	{x=-31.8,y=30}, {x=-29.1,y=35.1},
+	{x=-28.6,y=35.8}, {a="f8touch"}, {target="Task Delegator"},
+	{wait=2}, {keys={"enter", "enter", "enter"}}, {wait=2},
+	{a="f8touch"}, {target="Task Delegator"}, {wait=2},
+	{keys={"enter"}}, {wait=1},
+	{keys={"down", "down", "enter"}}, {wait=1},
+	{keys={"enter"}}, {wait=1},
+	{keys={"down", "down", "enter"}}, {wait=1},
+	{keys={"up", "enter"}}, {wait=1},
+    },
     couwp = { {x=-30,y=33.7}, {x=-32.5,y=28.7,z=0.7}, {x=-10,y=6,z=-0.1},
 	{x=1.3,y=-2.4}, {x=0.9,y=-2.3}, -- {x=2.0,y=-2.9},
 	{x=4,y=-4.5,z=0}, {a="f8touch"}
@@ -138,7 +150,10 @@ M.automatic_routes = {
     moogle = { route="moogle" }, -- 動かないように
     wp_pio = { route="pio"},
     wp_mum = { route="mum" },
-    wp_cou = { route="cou" },
+    wp_cou = {
+	{ route="cou" },
+	{ route="cou-works", contents="works" },
+    },
     wp_inv = { route="inv" },
     hp_2_M = { route="unity" },
     moghouse = {

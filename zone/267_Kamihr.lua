@@ -37,7 +37,7 @@ M.routes = {
     },
     -- WP#2から
     works = { -- レイブ
-	{x=8.2,y=-283,z=43,desc="ワークス消化"}, {wait=5},
+	{x=8.2,y=-283,z=43,desc="ワークス消化"}, {wait=4},
 	{target="Bivouac#2 Administrator"}, {a="touch"}, {wait=3},
 	{target="Waypoint"}, {a="touch"}, {wait=1},
 	{keys={"down", "down", "enter"}}, -- 西アドゥリン
