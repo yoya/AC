@@ -362,6 +362,9 @@ function tick()
     tick_running = true
     tick_started = os.time()
     tick_serial()
+    -- tick_serial はどこでも return するので、走行の後始末はここでやる。
+    -- 「誰も走りたいと言わなかった tick なら止める」
+    ac_move.apply_run()
     tick_running = false
 end
 
@@ -386,6 +389,8 @@ function tick_serial()
     --
     ac_equip.tick(player)
     acjob.tick(player)
+    -- リーダーだけが送る。フォロワーはこれで参戦する敵を知る
+    io_ipc.publish_enemy()
     -- クリスタルはカバンに仕舞う
     if acitem.check_bags_freespace() then
         for i, id in pairs(crystal_ids) do

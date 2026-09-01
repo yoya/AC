@@ -40,6 +40,40 @@ function M.iam_leader()
     return false
 end
 
+-- リーダーが IPC で配ってくる交戦相手。
+--
+-- 他 PC の target_index は、その PC がロックオンしていない限り自分の
+-- クライアントに届かない。届かない間は 0 か、クライアントが最後に観測した
+-- 古い値 (戦闘前に触っていた味方やフェイス) が残る。それを敵と見なすと
+-- 味方を殴りに行くし、見送ると claim が付く (リーダーが実際に殴る) まで
+-- 参戦できない。どちらも避けたいので、リーダー自身に教えてもらう。
+M.leader_enemy_index = nil
+M.leader_enemy_id = nil
+local leader_enemy_at = 0
+
+-- これより古い情報は使わない。リーダーが落ちた時に古い敵を掴み続けない為
+local LEADER_ENEMY_FRESH_SEC = 10
+
+-- io/ipc から呼ばれる。source は送り主の名前で、実リーダー以外は捨てる
+function M.set_leader_enemy(source, index, id)
+    local leader = M.leader_mob()
+    if leader == nil or leader.name ~= source then
+	return  -- 同じマシンの別窓。パーティのリーダーではない
+    end
+    M.leader_enemy_index = index
+    M.leader_enemy_id = id
+    leader_enemy_at = os.time()
+end
+
+-- リーダーの交戦相手の index, id。分からなければ nil
+function M.get_leader_enemy()
+    if M.leader_enemy_index == nil or M.leader_enemy_index == 0 or
+	os.time() - leader_enemy_at > LEADER_ENEMY_FRESH_SEC then
+	return nil
+    end
+    return M.leader_enemy_index, M.leader_enemy_id
+end
+
 -- パーティリーダーの mob を返す。フォローすべき相手はスロット "p1" とは
 -- 限らない (p0 は必ず自分で、p1 は自分以外の先頭にすぎない)。実リーダーは
 -- party1_leader の id で引く。M.leader_id は iam_leader がキャッシュする。

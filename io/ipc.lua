@@ -9,6 +9,8 @@ local utils = require 'utils'
 local split = utils.split
 local task = require 'task'
 local acitem = require 'item'
+local ac_party = require 'ac/party'
+local pstatus = require 'player_status'
 
 --[[
     AC.*.Upaupa.WS.1
@@ -58,6 +60,42 @@ function M.send_party(method, arg1, arg2, arg3, arg4)
         end
     end
     return false
+end
+
+-- リーダーが自分の交戦相手をフォロワーへ配る。
+--
+-- 他 PC の target_index はロックオンしていないと届かないので、こちらから
+-- 教える。交戦中 (status ENGAGED) の時だけ配るのは、リーダーがただ見ている
+-- だけの敵にフォロワーが飛び付かない為。リーダーの status は /attack on で
+-- すぐ立つので、claim が付くのを待つより数秒早い。
+local published_index = nil
+local published_at = 0
+-- 変わらなくても時々送り直す。後から起きた窓やリロードした窓が拾えるように
+local PUBLISH_RESEND_SEC = 3
+
+function M.publish_enemy()
+    if ac_party.iam_leader() ~= true then
+	return
+    end
+    local player = windower.ffxi.get_player()
+    if player == nil then
+	return
+    end
+    local index, id = 0, 0
+    if player.status == pstatus.ENGAGED then
+	local t = windower.ffxi.get_mob_by_target("t")
+	if t ~= nil then
+	    index, id = t.index, t.id
+	end
+    end
+    local now = os.time()
+    if index == published_index and now - published_at < PUBLISH_RESEND_SEC then
+	return
+    end
+    published_index = index
+    published_at = now
+    -- send_all は 1 通で済む。send_party は人数分 sleep するので tick では使わない
+    M.send_all("enemy", index, id)
 end
 
 function M.receive(message)
@@ -121,6 +159,8 @@ function M.receive(message)
 	else
 	    print("ac all build party")
 	end
+    elseif method == 'enemy' then
+	ac_party.set_leader_enemy(source, tonumber(arg1), tonumber(arg2))
     elseif method == 'party' then
 	M.receive_party(source, arg1, arg2, arg3, arg4)
     elseif method == 'submit' then

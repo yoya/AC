@@ -8,9 +8,10 @@ local command = require 'command'
 local task = require 'task'
 local utils = require 'utils'
 local acmob = require 'mob'
-local io_net = require 'io/net'
+local ac_target = require 'ac/target'
 local acprob = require 'prob'
 local pull = require 'pull'
+local ac_move = require 'ac/move'
 
 local get_mob_position = acmob.get_mob_position
 
@@ -77,7 +78,7 @@ function M.reset_move()
     prev_dy = 0
     -- ゾーンチェンジ中やログアウト後は me を引けない。その時は走っていない
     if windower.ffxi.get_mob_by_target("me") ~= nil then
-        windower.ffxi.run(false)
+        ac_move.want_stop()
     end
 end
 
@@ -89,12 +90,12 @@ function M.tick_idle(player, me)
     end
     local mob = search_target(me_pos)
     if mob ~= nil and control.attack then
-        windower.ffxi.run(false)
-        io_net.target_by_mob(mob)
-        coroutine.sleep(0.2)
-        command.send('input /target <t>')
-        coroutine.sleep(0.2)
-        command.send('input /attack on')
+        ac_move.want_stop()
+        -- 掴めた時だけ撃つ。掴めていない <t> に /attack on を撃つと、
+        -- その時たまたま乗っている味方を殴りに行く。実際に撃つのは末尾
+        if not ac_target.want(mob) then
+            return
+        end
     elseif pull.base_pos ~= nil then
         -- 敵がいなければ base_pos に戻る
         local dx = pull.base_pos.x - me_pos.x
@@ -104,9 +105,9 @@ function M.tick_idle(player, me)
             is_far = true
         end
         if is_far then
-            windower.ffxi.run(dx, dy)
+            ac_move.want_run(dx, dy)
             if dist < 2 then
-                windower.ffxi.run(false)
+                ac_move.want_stop()
                 is_far = false
             end
         end
@@ -119,10 +120,13 @@ function M.tick_idle(player, me)
             -- 逆向きに動いたら近くになったと判断して停止
             is_far = false
             coroutine.sleep(0.2)
-            windower.ffxi.run(false)
+            ac_move.want_stop()
         end
     end
-    if control.attack then
+    -- 敵を見つけた時だけ。/attack on はその時の <t> に効くので、mob が nil の
+    -- まま毎 tick 送ると、倒した敵の後にオートターゲットで乗った味方などを
+    -- 撃ち続けて「攻撃対象ではありません」が出続ける
+    if control.attack and mob ~= nil then
         command.send('input /attack on')
         acprob.clear_prob_recast_time()
         task.reset_by_fight()

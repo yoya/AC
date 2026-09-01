@@ -26,6 +26,55 @@ local ac_party = require 'ac/party'
 local pstatus = require 'player_status'
 local pull = require 'pull'
 
+--
+-- 走行の意図
+--
+-- windower.ffxi.run は「止めるまで走り続ける」ので、走り出した後に return する
+-- 経路が 1 つ増えるたびに、そこへ run(false) を書き足す事になっていた。書き
+-- 忘れると、直前の向き (待機中に base_pos へ戻る向き等) へ走り続ける。
+--
+-- そこで「今 tick 走りたいか」を意図として持ち、tick の末尾で
+-- apply_run() が「誰も走りたいと言わなかった tick なら止める」を引き受ける。
+-- 走り出しは今まで通り即座に効くので、tick 内で向きを出し直すループ
+-- (role/Follower.follow_leader 等) はそのまま動く。
+--
+-- run を直接呼んでよいのは、自分で最後まで面倒を見る自動移動 (_auto_move_to)
+-- と、まだ移していない contents/ works だけ。role/ と battle/ はここを通す。
+local run_wanted = nil   -- この tick に want_run / want_stop が呼ばれたか
+local run_active = false -- ここが走らせている最中か
+
+-- 走る。向きは毎 tick 出し直す前提 (相対座標なので tick をまたぐと古くなる)
+M.want_run = function(dx, dy)
+    run_wanted = true
+    windower.ffxi.run(dx, dy)
+    run_active = true
+end
+
+-- 止める
+M.want_stop = function()
+    run_wanted = false
+    if run_active then
+	windower.ffxi.run(false)
+	run_active = false
+    end
+end
+
+-- tick の末尾で 1 度だけ呼ぶ。tick_serial のどこで return しても通るよう、
+-- AC.lua の tick() から呼ぶ事
+M.apply_run = function()
+    if M.auto then
+	-- 自動移動が走行を持っている。触らない
+	run_wanted = nil
+	return
+    end
+    if run_wanted == nil and run_active then
+	-- 誰も走りたいと言わなかった。止め忘れの経路はここで回収する
+	windower.ffxi.run(false)
+	run_active = false
+    end
+    run_wanted = nil
+end
+
 local turn_to_front = function(target)
     local push_numpad5 = 'setkey numpad5 down; wait 0.1; setkey numpad5 up'
     command.send(push_numpad5..'; wait 0.5; '..push_numpad5)

@@ -11,6 +11,8 @@ local ac_equip = require 'ac/equip'
 local incoming_text = require 'incoming/text'
 local acjob = require 'job'
 local io_chat = require 'io/chat'
+local acmob = require 'mob'
+local ac_target = require 'ac/target'
 
 -- 戦闘スタイル
 
@@ -71,6 +73,17 @@ end
 function M.tick(player, me)
     -- print("battle.tick")
     local mob = windower.ffxi.get_mob_by_target("t")
+    -- ロックオンしていないと、交戦中でもタゲが外れたり隣の味方へ移ったりする。
+    -- そのまま attack off にすると「待機 → 敵を掴み直す → 交戦」を繰り返して
+    -- 落ち着かない。今殴っている敵 (bt) が居るならタゲを戻すだけにする
+    if mob == nil or mob.name == player.name or
+	mob.in_party or mob.in_alliance then
+	local bt = windower.ffxi.get_mob_by_target("bt")
+	if bt ~= nil and acmob.is_mob_attackable(bt) then
+	    ac_target.want(bt)
+	    return  -- 次の tick から普通に戦う
+	end
+    end
     if mob == nil then return end
     -- mob.distance は距離の2乗。素で比べると 10 より遠い敵で戦闘終了になり、
     -- 遠くの敵に向かう間ずっと attack off と on を繰り返す

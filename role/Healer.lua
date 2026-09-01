@@ -3,6 +3,7 @@
 local command = require 'command'
 local io_chat = require 'io/chat'
 local pstatus = require 'player_status'
+local ac_move = require 'ac/move'
 
 local M = {}
 
@@ -62,7 +63,7 @@ M.cure_if_party_h_pis_low = function(player, hp_need_cure)
         local t = "p"..i
         local member = party[t]
         if member ~= nil and  member.mob ~= nil then
-	    windower.ffxi.run(false)
+	    ac_move.want_stop()
             local hpp = member.hpp
             local hp = member.hp
             if hp > 0 and hpp < hp_need_cure

@@ -10,10 +10,10 @@ local acitem = require 'item'
 local item_data = require 'item/data'
 local acmob = require 'mob'
 local ac_move = require 'ac/move'
-local io_net = require 'io/net'
 local acprob = require 'prob'
 local ac_party = require 'ac/party'
 local pstatus = require 'player_status'
+local ac_target = require 'ac/target'
 
 local crystal_ids = item_data.crystal_ids -- クリスタル/塊
 local get_mob_position = acmob.get_mob_position
@@ -134,7 +134,7 @@ local follow_leader = function(me_pos, leader, engaged)
         end
     end
     if not is_far then
-        windower.ffxi.run(false)
+        ac_move.want_stop()
         last_run_vec = nil
         return false
     end
@@ -165,7 +165,7 @@ local follow_leader = function(me_pos, leader, engaged)
             break
         end
         turn_to_pos(me.x, me.y, mob.x, mob.y)
-        windower.ffxi.run(dx, dy)
+        ac_move.want_run(dx, dy)
         last_run_vec = {x = dx, y = dy}
         -- 残り距離のぶんだけ走る。まるごと走ると stop_dist を踏み越える
         coroutine.sleep(math.min(FOLLOW_STEP_SEC, (dist - stop_dist) / RUN_SPEED))
@@ -176,7 +176,7 @@ local follow_leader = function(me_pos, leader, engaged)
         local mob = ac_party.leader_mob()
         local me = windower.ffxi.get_mob_by_target("me")
         if mob == nil or mob.x == nil or me == nil then
-            windower.ffxi.run(false)  -- 測れないので走らせたままにしない
+            ac_move.want_stop()  -- 測れないので走らせたままにしない
             return true
         end
         dx = mob.x - me.x
@@ -187,7 +187,7 @@ local follow_leader = function(me_pos, leader, engaged)
     end
     is_far = false
     last_run_vec = nil
-    windower.ffxi.run(false)
+    ac_move.want_stop()
     roll_follow_dist()  -- 次に歩き出す距離を決める
     return false
 end
@@ -205,11 +205,11 @@ local follow_lost_leader = function(me_pos)
         last_leader_pos = nil
         is_far = false
         last_run_vec = nil
-        windower.ffxi.run(false)
+        ac_move.want_stop()
         return
     end
     turn_to_pos(me_pos.x, me_pos.y, last_leader_pos.x, last_leader_pos.y)
-    windower.ffxi.run(dx, dy)
+    ac_move.want_run(dx, dy)
     last_run_vec = {x = dx, y = dy}
 end
 
@@ -233,7 +233,7 @@ end
 local stop_gimmick_run = function()
     if run_to_gimmick then
         run_to_gimmick = false
-        windower.ffxi.run(false)
+        ac_move.want_stop()
     end
 end
 
@@ -262,24 +262,46 @@ local follow_warp_gimmick = function(leader)
         stop_gimmick_run()
         return
     end
-    io_net.target_by_mob_index(leader.target_index)
+    ac_target.want(target)
     if dist <= WARP_GIMMICK_STOP_DIST then
         stop_gimmick_run()
         return
     end
     turn_to_pos(me.x, me.y, target.x, target.y)
-    windower.ffxi.run(dx, dy)
+    ac_move.want_run(dx, dy)
     run_to_gimmick = true
 end
 
 -- リーダーが戦っている敵を返す。まだ交戦していなければ nil
 local leader_enemy = function(leader)
+    -- リーダーが IPC で配ってくる index を優先する。他 PC の target_index は
+    -- ロックオンしていないと届かず、古い値が残るので当てにならない。
+    -- IPC ならリーダーが交戦した時点で分かるので、claim を待つより数秒早い
+    local index, id = ac_party.get_leader_enemy()
+    if index ~= nil then
+        local mob = windower.ffxi.get_mob_by_index(index)
+        if mob == nil or (id ~= nil and id ~= 0 and mob.id ~= id) then
+            return nil  -- ゾーンをまたいで index が別の mob を指している
+        end
+        if not acmob.is_enemy(mob) then
+            return nil
+        end
+        return mob
+    end
+    -- IPC が来ていない (リーダーが古い AC、もしくは落ちている) 時の従来経路
     if leader.status ~= pstatus.ENGAGED or leader.target_index == 0 then
         return nil
     end
     local mob = windower.ffxi.get_mob_by_index(leader.target_index)
     if mob == nil or mob.status ~= pstatus.ENGAGED then
         return nil  -- 敵と戦闘開始してなければ様子見
+    end
+    -- 交戦相手が敵であることを確かめる。leader.target_index は他 PC の
+    -- 情報なので更新が遅れ、戦闘前に触っていた味方や NPC を指したままの
+    -- ことがある。status 1 (戦闘中) は PC もフェイスも取る値なので、上の
+    -- 検査では抜けてしまう
+    if not acmob.is_enemy(mob) then
+        return nil
     end
     return mob
 end
@@ -313,38 +335,31 @@ local search_enemy = function(leader, me_pos)
     })
 end
 
--- 決めた敵に張り付いて近接攻撃する
+-- 決めた敵に交戦する。間合いを詰めるのは交戦した後
 local attack_enemy = function(mob, item_level)
-    windower.ffxi.run(false)
-    -- 既にこの敵をターゲットしているなら入れ直さない。ターゲットを
-    -- 毎 tick 入れ直すと、その度にターゲットが揺れる。
-    local t = windower.ffxi.get_mob_by_target("t")
-    local retarget = (t == nil or t.index ~= mob.index)
-    if retarget then
-        io_net.target_by_mob(mob)
+    ac_move.want_stop()
+    if not ac_target.want(mob) then
+        return  -- 掴めていない。撃つと味方を殴りに行く
     end
     if item_level < 119 and mob.hpp >= 100 then
-        return
+        return  -- 装備が薄いので、リーダーが削るまで待つ
     end
-    -- 敵との距離は自分基準で測る (リーダー基準だと自分が範囲外でも
-    -- 攻撃を撃って失敗する)。5 が近接攻撃できるギリギリの距離。
-    local me = windower.ffxi.get_mob_by_target("me")
-    local dx = mob.x - me.x
-    local dy = mob.y - me.y
-    local dist = math.sqrt(dx*dx + dy*dy)
-    if dist > 5 then
-        -- 遠ければ敵へ詰める (リーダーではなく敵に寄る)
-        turn_to_pos(me.x, me.y, mob.x, mob.y)
-        windower.ffxi.run(dx, dy)
-        return
-    end
-    windower.ffxi.run(false)
-    if retarget then
-        coroutine.sleep(0.3)  -- 注入直後の <t> はまだ切り替わっていない
-    end
-    coroutine.sleep(math.random(0,2)/4)
+    -- /attack は距離に関係なく通る。近接の間合いまで詰めてから撃っていた頃は、
+    -- 到着するまでの 1〜2 tick 参戦できなかった。掴めた時点で撃つ
     command.send('input /attack <t>')
     task.reset_by_fight()
+    -- 撃った後もこの tick のうちに寄っておく。次の tick からは status が
+    -- ENGAGED になり、間合いは battle/melee.tick_approach_enemy が詰める
+    local me = windower.ffxi.get_mob_by_target("me")
+    if me == nil or me.x == nil then
+        return
+    end
+    local dx = mob.x - me.x
+    local dy = mob.y - me.y
+    if math.sqrt(dx*dx + dy*dy) > 5 then
+        turn_to_pos(me.x, me.y, mob.x, mob.y)
+        ac_move.want_run(dx, dy)
+    end
 end
 
 -- ゾーン移動やワープをまたぐと、覚えている座標は別の場所を指す。そこへ
@@ -357,7 +372,7 @@ function M.reset_move()
     run_to_gimmick = false
     -- ゾーンチェンジ中やログアウト後は me を引けない。その時は走っていない
     if windower.ffxi.get_mob_by_target("me") ~= nil then
-        windower.ffxi.run(false)
+        ac_move.want_stop()
     end
 end
 
@@ -399,6 +414,8 @@ function M.tick_idle(player, me)
     if enemy ~= nil then
         attack_enemy(enemy, player.item_level)
         acprob.clear_prob_recast_time()
+    else
+        ac_target.clear()
     end
 end
 

@@ -5,7 +5,7 @@ local control = require 'control'
 local command = require 'command'
 
 local io_chat = require 'io/chat'
-local io_net = require 'io/net'
+local ac_target = require 'ac/target'
 
 local acinspect = require 'inspect'
 local actask = require 'task'
@@ -68,9 +68,9 @@ local function tick_switch_to_prefer_mob(mob)
 	return
     end
     if iam_leader() then
-	io_net.target_by_mob(prefer_mob)
-	coroutine.sleep(1)
-	command.send('input /attack <t>')
+	if ac_target.want(prefer_mob) then
+	    command.send('input /attack <t>')
+	end
     else
 	--- 実リーダーが戦闘している敵に切り替える (p1 スロットとは限らない)
 	local leader = ac_party.leader_mob()
@@ -100,19 +100,25 @@ end
 --- 敵との間合いを詰める。まだ移動中(この tick はここで終わり)なら true。
 local function tick_approach_enemy(player, mob, dx, dy, dist)
     local enemy_space = tick_get_enemy_space()
-    if iam_leader() then
-	if dist > enemy_space then
-	    is_far = true
-	end
+    -- リーダーだけが詰めていた。フォロワーは role/Follower が近接の間合いまで
+    -- 運んでから交戦していたので、それで足りていた。今は掴めた時点で交戦する
+    -- (参戦を 1〜2 tick 早める) ので、遠いまま交戦した分をここで詰める。
+    -- ENEMY_SPACE_MANUAL の時は enemy_space が 99999 なので、今まで通り動かない
+    if dist > enemy_space then
+	is_far = true
     end
     if is_far then
         --　戦闘中でないときは、WSやMAを自粛。フェイスが動かないので。
         if dist / mob.model_size > enemy_space or player.status == pstatus.IDLE then
-            windower.ffxi.run(dx, dy)
+            ac_move.want_run(dx, dy)
             -- 向きが悪くて戦闘が開始しない問題への対策
             -- command.send('setkey numpad5 down; wait 0.05; setkey numpad5 up')
             return true
-        elseif not control.calm then
+        elseif iam_leader() and not control.calm then
+            -- 横ずれは「向きが悪くて戦闘が開始しない」時の揺さぶり。
+            -- この分岐は着いた後もほぼ毎 tick 通る (確率の合計が 1000 を
+            -- 超えていて必ず 1 つ撃つ) ので、フォロワーにやらせると
+            -- 敵の周りで左右に動き続けて落ち着かない
 	    send_command_prob({
                 { 150, 0, 'setkey a down; wait 0.05; setkey a up', 0 }, -- 左
                 { 150, 0, 'setkey d down; wait 0.05; setkey d up', 0 }, -- 右
@@ -128,12 +134,12 @@ local function tick_approach_enemy(player, mob, dx, dy, dist)
          }, 1.0)
 	    --- 一回だけなので 1 を入れる。
 	else
-	    windower.ffxi.run(false)
+	    ac_move.want_stop()
         end
     end
     --- 止まって戦闘開始
     is_far = false
-    windower.ffxi.run(false)
+    ac_move.want_stop()
     return false
 end
 
@@ -236,7 +242,7 @@ end
 function M.tick(player, me, mob)
     -- print("battle/melee.tick")
     if not tick_keep_fighting(mob) then
-	return
+	return  -- 走行は tick 末尾の ac_move.apply_run() が止める
     end
     tick_switch_to_prefer_mob(mob)
  ---   if not player or not player.target_index then
