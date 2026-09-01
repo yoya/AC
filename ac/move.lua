@@ -387,7 +387,7 @@ function move_to(route, route_table, next_route, reverse)
         else
 	    if p.route ~= nil then
 		local r = route_table[p.route]
-		move_to(r, route_table)
+		move_to(r, route_table, nil, reverse)
 	    end
 	    if utils.table.count_keys(p) == 0 then
                 -- {} の時はオートラン
