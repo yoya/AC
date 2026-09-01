@@ -39,10 +39,12 @@ M.routes = {
 
 M.essential_points = {
     book = {x=453,y=181.3,z=-8},
+    from_toraimarai = {x=-259.6,y=242.9,z=8},
 }
 
 M.automatic_routes = {
     book = { route="mafumon" },
+
 }
 
 return M

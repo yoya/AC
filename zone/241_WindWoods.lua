@@ -27,7 +27,7 @@ M.routes = {
     -- #2(E)
     rako = {
 	{x=108,y=-56,z=-5,desc="Rakoh Buuma(ガード)"},
-	{x=105,y=-30}, {x=109,y=-25,z=-5},
+	{x=105,y=-34}, {x=109,y=-25,z=-5},
 	{target="Rakoh Buuma"}
     },
     -- #3(M)
