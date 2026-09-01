@@ -97,7 +97,7 @@ function M.incoming_text_handler(text)
 	end
 	coroutine.sleep(1)
 	push_keys({"enter"})  -- ダミー (これないと動かない)
-	coroutine.sleep(2)  -- <= まだ縮められるかも？
+	coroutine.sleep(1)  -- <= まだ縮められるかも？
 	push_keys({"enter"})
 	coroutine.sleep(1)  -- <= まだ縮められるかも？
 	push_keys({"enter", "up", "enter"})
