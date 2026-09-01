@@ -248,7 +248,7 @@ M.automatic_routes = {
     homepoint_2_M = {
 	{ route="moghouse" },
 	-- オーブを持っている時は、モグハウスに行かずワープ先の選択まで進める
-	{ route="hp2warp", item={
+	{ route="hp2warp", contents="trove", item={
 	      9275,  -- マーズオーブ
 	      9276,  -- ビーナスオーブ
 	} },
