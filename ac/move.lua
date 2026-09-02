@@ -229,6 +229,15 @@ function move_to_action_faith(f)
     ]]
 end
 
+function M.opendoor(name)
+    io_net.target_by_mob_name(name)
+    coroutine.sleep(0.2)
+    push_keys({"enter"})
+    coroutine.sleep(0.5)
+    push_keys({"enter"})
+    coroutine.sleep(1.0)
+end
+
 function move_to_action(p, reverse)
     if (not reverse and p.a == "dismount") or (reverse and p.a=="mount") then
 	command.send('input /dismount')
@@ -289,6 +298,9 @@ function move_to_action(p, reverse)
     end
     if p.keys ~= nil then
 	push_keys(p.keys)
+    end
+    if p.opendoor ~= nil then
+	M.opendoor(p.opendoor)
     end
     if p.puller ~= nil then
 	control.puller = p.puller
