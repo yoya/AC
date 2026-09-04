@@ -136,6 +136,7 @@ M.zone_table = {
     [143] = require('zone/143_Palborough'), -- パルブロ鉱山
     [144] = require('zone/144_Waughroon'),  -- ワールンの祠
     [145] = require('zone/145_Giddeus'),    -- ギデアス
+    [146] = require('zone/146_BalgasDais'), -- バルガの舞台
     [147] = require('zone/147_Beadeaux'),   -- ベドー
     [148] = require('zone/148_QulunDome'),  -- クゥルンの大伽藍
     [149] = require('zone/149_Davoi'),      -- ダボイ
