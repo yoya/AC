@@ -229,13 +229,36 @@ function move_to_action_faith(f)
     ]]
 end
 
-function M.opendoor(name)
+function M.action_touch(name)
+    local found = false
+    local count = 0
+    -- ターゲットが見えるまで待つ
+    while not found do
+	count = count + 1
+	local mob = windower.ffxi.get_mob_by_name(name)
+	if mob == nil or mob.name ~= name then
+	    io_chat.warnf("ac/move.action_touch not found:%s %d/10",
+			  name, count)
+	    coroutine.sleep(0.5)
+	else
+	    found = true
+	end
+	if count > 10 then
+	    io_chat.errorf("ac/move.action_touch not found:%s) %d/10",
+			   name, count)
+	    return
+	end
+    end
+    -- ターゲットを合わせる
     io_net.target_by_mob_name(name)
     coroutine.sleep(0.2)
-    push_keys({"enter"})
+    utils.target_lockon(true) -- ロックする
+    push_keys({"enter"})  -- 無駄打ち
+    coroutine.sleep(0.2)
+    push_keys({"enter"})  -- 本打ち
     coroutine.sleep(0.5)
-    push_keys({"enter"})
-    coroutine.sleep(1.0)
+    utils.target_lockon(false) -- ロックを外す
+    coroutine.sleep(0.5)
 end
 
 function move_to_action(p, reverse)
@@ -300,7 +323,8 @@ function move_to_action(p, reverse)
 	push_keys(p.keys)
     end
     if p.opendoor ~= nil then
-	M.opendoor(p.opendoor)
+	io_chat.warn("deplicated ac/move.opendoor, instead of use touch")
+	M.action_touch(p.opendoor)
     end
     if p.puller ~= nil then
 	control.puller = p.puller
@@ -331,6 +355,9 @@ function move_to_action(p, reverse)
     end
     if p.target_lockon ~= nil then
 	utils.target_lockon(p.target_lockon)
+    end
+    if p.touch ~= nil then
+	M.action_touch(p.touch)
     end
     if p.w ~= nil then
 	p.wait = p.w
