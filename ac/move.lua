@@ -572,7 +572,8 @@ function auto_move_to(zone_id, destTable, route_table)
             print("not defined zone route", zone_id)
         else
 	    io_chat.set_next_color(5) -- 水色
-	    io_chat.printf("### routa table: (num:%d)", utils.table.count_keys(route_table))
+	    io_chat.printf("### route table: (num:%d) zone:%d",
+			   utils.table.count_keys(route_table), zone_id)
 	    local NGlist = {}
             for dest, route in pairs(route_table) do
 		local pos = current_pos()
