@@ -88,6 +88,42 @@ local function enmity_douse(player)
 		  task.new_task('input /ja エンミティダウス <me>', 0, 2, 10, false))
 end
 
+-- マナウォール。res/job_abilities.lua [254] マナウォール (recast_id=39, status=437)
+local MANA_WALL_ABILITY_ID = 254
+local MANA_WALL_RECAST_ID = 39
+local MANA_WALL_STATUS_ID = 437
+
+-- ダメージを MP で肩代わりするので、MP が無いと意味が無い。
+-- かかっている間は撃ち直さない
+local function mana_wall(player)
+    if player.status ~= pstatus.ENGAGED then
+	return
+    end
+    if player.vitals.mp <= 0 then
+	return
+    end
+    if utils.table.contains(player.buffs or {}, MANA_WALL_STATUS_ID) then
+	return
+    end
+    -- 覚えていない時も get_ability_recasts は 0 (使える) を返し得るので、
+    -- 習得済みかどうかも確かめる
+    local abilities = windower.ffxi.get_abilities()
+    if abilities == nil or abilities.job_abilities == nil then
+	return
+    end
+    if not utils.table.contains(abilities.job_abilities, MANA_WALL_ABILITY_ID) then
+	return
+    end
+    local recasts = windower.ffxi.get_ability_recasts()
+    local recast = recasts ~= nil and recasts[MANA_WALL_RECAST_ID] or nil
+    if recast == nil or recast > 0 then
+	return
+    end
+    -- command, delay, duration, period, eachfight
+    task.set_task(task.PRIORITY_HIGH,
+		  task.new_task('input /ja マナウォール <me>', 0, 2, 10, false))
+end
+
 function within_time(x, a, b)
     if a <= x and x < b then
 	return true
@@ -213,7 +249,11 @@ function M.main_tick(player)
     else
 	return -- MB しない
     end
-    if player.vitals.hp < 1000 then
+    if player.vitals.hp < player.vitals.max_hp * 0.8 then
+	if player.vitals.hp < player.vitals.max_hp * 0.5 then
+	    -- マナウォールを実行できれば実行する
+	    mana_wall(player)
+	end
 	enmity_douse(player)
     end
     M.magic_burst(player, magick_rank)
