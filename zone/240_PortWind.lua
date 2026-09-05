@@ -19,6 +19,11 @@ M.routes = {
 	{x=-113,y=106,z=-3.3},
 	{target="Hakkuru-Rinkuru"}, {a="touch"}
     },
+    -- HP#2(E)
+    west = {
+	{x=-208,y=209,z=-8,"西サルタバルタへ出る"},
+	{x=-231,y=202}, {x=-244.5,y=198.5,z=-8}, {}
+    },
     -- HP#3(M)
     yujuju = {
 	{x=179,y=226,z=-12,desc="港前の Yujuju"},
@@ -30,10 +35,12 @@ M.routes = {
 
 M.essential_points = {
     hp1 = {x=-188,y=100,z=-4},
+    hp2E = {x=-208,y=209,z=-8},
 }
 
 M.automatic_routes = {
     hp1 = { route="hakku", contents="mission" },  -- 口の院
+    hp2E = { route="west" },
 }
 
 return M

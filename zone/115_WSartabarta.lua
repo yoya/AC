@@ -3,6 +3,15 @@
 local M = { id = 115 }
 
 M.routes = {
+    -- ウィンダス港から
+    ['south-tower'] = {
+	{x=166.5,y=-319,z=0,desc="[F-11]ダリアの塔(満月の泉)"},
+	{x=103,y=-332},	{x=14,y=-349}, {x=-67,y=-361},
+	{x=-133,y=-359},
+	{x=-200,y=-359}, {x=-267,y=-359},
+	{x=-335,y=-359}, {x=-340,y=-362}, {x=-340,y=-380}, {}
+    },
+    -- 本
     gid = {
 	{x=-14.3,y=315.7,z=-12.8,desc="ギデアス行き"},
 	{x=-25,y=319}, {a="mount"},
@@ -15,10 +24,12 @@ M.routes = {
 
 M.essential_points = {
     book = {x=-14.3,y=315.7,z=-12.8},
+    from_win_port = {x=166.5,y=-319,z=0},
 }
 
 M.automatic_routes = {
     book = { route="gid" },
+    from_win_port = { route="south-tower"}
 }
 
 return M

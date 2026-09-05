@@ -36,13 +36,15 @@ M.routes = {
 	-- {x=-54,y=-100,z=0,d=2},
 	{x=-54,y=-99,d=1},
 	-- -- {x=-54,y=-91,d=1}, -- {x=-48,y=-90,d=1}, {x=-50,y=-92,d=1},
-	{a="f8"}, {target="Home Point #2"}, {wait=1}, {a="touch"}
+	--{a="f8"}, {target="Home Point #2"}, {wait=1}, {a="touch"}
+	{a="f8"}, {touch="Home Point #2"}
     },
     ['mog2hp-spm'] = {
 	{x=-53.7,y=-128.5,z=-0.1,desc="モグハウス>HP>サンド港(M)"},
 	-- {x=-54,y=-100,z=0,d=2},
 	{x=-53,y=-98,d=1}, {wait=2},  -- 表示されるまで待つ
-	{a="f8"}, {target="Home Point #2"}, {wait=1}, {a="touch"}, {wait=2},
+	--{a="f8"}, {target="Home Point #2"}, {wait=1}, {a="touch"}, {wait=2},
+	{a="f8"}, {touch="Home Point #2"}, {wait=2},
 	{keys={"enter"}}, -- どのロージョンにする
 	{keys={"right", "enter"}}, -- サンドリア王国
 	{keys={"right", "enter"}}, -- サンドリア港
@@ -53,7 +55,8 @@ M.routes = {
 	{x=-53.7,y=-128.5,z=-0.1,desc="モグハウス>HP>ジュノ港(E)"},
 	-- {x=-54,y=-100,z=0,d=2},
 	{x=-53,y=-98,d=1}, {wait=2},  -- 表示されるまで待つ
-	{a="f8"}, {target="Home Point #2"}, {wait=1}, {a="touch"}, {wait=2},
+	--{a="f8"}, {target="Home Point #2"}, {wait=1}, {a="touch"}, {wait=2},
+	{a="f8"}, {touch="Home Point #2"}, {wait=2},
 	{keys={"enter"}}, -- どのロージョンにする
 	{keys={"right", "right", "enter"}}, -- ジュノ
 	{keys={"right", "right", "enter"}}, -- ジュノ港
@@ -62,7 +65,8 @@ M.routes = {
     },
     ['hp-jeuno-port'] = {
 	{x=-51.2,y=-95,z=-0.1}, {wait=4},
-	{a="f8"}, {target="Home Point #2"}, {wait=2}, {a="touch"}, {wait=2},
+	--{a="f8"}, {target="Home Point #2"}, {wait=2}, {a="touch"}, {wait=2},
+	{a="f8"}, {touch="Home Point #2"}, {wait=2},
 	{keys={"enter"}}, -- どのロージョンにする
 	{keys={"right", "right", "enter"}}, -- ジュノ
 	{keys={"right", "right", "enter"}}, -- ジュノ港
@@ -73,7 +77,8 @@ M.routes = {
 	{x=-53.7,y=-128.5,z=-0.1,desc="モグハウス>HP>アトルガン#3(A)"},
 	-- {x=-54,y=-100,z=0,d=2},
 	{x=-53,y=-98,d=1}, {wait=2},  -- 表示されるまで待つ
-	{a="f8"}, {target="Home Point #2"}, {wait=1}, {a="touch"}, {wait=2},
+	--{a="f8"}, {target="Home Point #2"}, {wait=1}, {a="touch"}, {wait=2},
+	{a="f8"}, {touch="Home Point #2"}, {wait=2},
 	{keys={"enter"}}, -- どのロージョンにする
 	{keys={"right", "right", "down", "down", "enter"}}, -- 西アトルガン地方
 	{keys={"down", "enter"}}, -- アトルガン白門
@@ -84,7 +89,8 @@ M.routes = {
 	{x=-53.7,y=-128.5,z=-0.1,desc="モグハウス>HP>マウラ#1"},
 	-- {x=-54,y=-100,z=0,d=2},
 	{x=-53,y=-98,d=1}, {wait=2},  -- 表示されるまで待つ
-	{a="f8"}, {target="Home Point #2"}, {wait=1}, {a="touch"}, {wait=2},
+	--{a="f8"}, {target="Home Point #2"}, {wait=1}, {a="touch"}, {wait=2},
+	{a="f8"}, {touch="Home Point #2"}, {wait=2},
 	{keys={"enter"}}, -- どのリージョンにする
 	{keys={"right", "right", "right", "right", "down", "down", "enter"}}, -- コルシュシュ
 	{keys={"down", "enter"}}, --  マウラ
@@ -93,8 +99,9 @@ M.routes = {
     },
     mog2wp = {
 	{x=-53.7,y=-128.5,z=-0.1,desc="モグハウスすぐのWaypoint"}, {wait=1},
-	{x=-62,y=-122,z=0}, {target="Waypoint"}, {wait=1},
-	{a="touch"}, {wait=2},
+	--{x=-62,y=-122,z=0}, {target="Waypoint"}, {wait=1},
+	--{a="touch"}, {wait=2},
+	{x=-62,y=-122,z=0}, {touch="Waypoint"}, {wait=2},
 	{keys={"right", "enter"}}, -- 東アドゥリン
 	{keys={"right", "down", "enter"}}, -- ヤッセ方面船着き場前
     },
@@ -102,7 +109,8 @@ M.routes = {
 	{x=-56,y=-128.5,z=-0.1,desc="ゴブの不思議箱"},
 	--{x=-58,y=-100}, {x=-63,y=-94},
 	{x=-58,y=-101}, {x=-64,y=-94},
-	{x=-80,y=-94,d=1}, {target="Winrix"}, {wait=1}, {a="touch"}, {wait=1},
+	--{x=-80,y=-94,d=1}, {target="Winrix"}, {wait=1}, {a="touch"}, {wait=1},
+	{x=-80,y=-94,d=1}, {touch="Winrix"}, {wait=1},
 	{a="touch"}, {keys={"down", "right", "right", "enter", 10, "escape"}},
 	--{wait=5}, {a="esc"},
 	{x=-64,y=-94}, {x=-58,y=-101},
@@ -111,14 +119,15 @@ M.routes = {
     works = {
 	{x=-56,y=-128.5,z=-0.1,desc="ワークス消化"},
 	{x=-61,y=-123,z=0,d=1}, {wait=2},  -- 表示されるまで待つ,
-	{target="Waypoint"}, {wait=1}, {a="touch"}, {wait=2},
+	--{target="Waypoint"}, {wait=1}, {a="touch"}, {wait=2},
+	{touch="Waypoint"}, {wait=2},
 	{keys={"right", "right", "right", "down", "enter"}}, -- カミール山麓
 	{wait=0.5}, {keys={"right", "enter"}}, -- #2
     },
     auction = {
 	{x=-56,y=-128.5,z=-0.1,desc="モグハウスからオークションへ"},
 	{x=-54,y=-99}, {x=-48,y=-94},
-	{x=-24.5,y=-92.3,z=-0.6}, {target="Auction Counter"}
+	{x=-24.5,y=-92.3,z=-0.6}, {touch="Auction Counter"}
     },
     -- HP#2(M)
     moghouse = {
@@ -130,7 +139,8 @@ M.routes = {
     hp2warp = {
 	{auto=false},  -- auto だとリーダーの後を追いかけるので
 	{x=-50.5,y=-95,z=-0.1,desc="HP#2からワープ先の選択まで"},
-	{a="f8"}, {target="Home Point #2"}, {wait=1}, {a="touch"}
+	--{a="f8"}, {target="Home Point #2"}, {wait=1}, {a="touch"}
+	{a="f8"}, {touch="Home Point #2"}
     },
     -- PCK
     pck = {
@@ -169,7 +179,8 @@ M.routes = {
 	{target="Quiri-Aliri"}, {wait=1},
 	{a="enter"}, {wait=1}, {a="enter"}, {keys={"up", "enter"}},
 	{wait=2}, {x=-57.6,y=85.1,d=1}, {a="esc"},
-	{target="Waypoint"}, {wait=1}, {a="touch"}, {wait=2},
+	--{target="Waypoint"}, {wait=1}, {a="touch"}, {wait=2},
+	{touch="Waypoint"}, {wait=2},
 	{keys={"right", "right", "right", "enter"}}, -- マリアミ渓谷を選択
 	{keys={"right", "right", "enter"}}, -- #4 を選択
     },
@@ -177,8 +188,10 @@ M.routes = {
 	{auto=false},  -- auto だとリーダーの後を追いかけるので
 	-- Waypoint
 	{x=-57.8,y=85.2,z=-0.1},{x=-54.3,y=85,d=1},
-	{target="Quiri-Aliri"}, {wait=1},
-	{a="enter"}, {wait=1}, {a="enter"}, {keys={"up", "enter"}},
+	--{target="Quiri-Aliri"}, {wait=1},
+	--{a="enter"}, {wait=1}, {a="enter"}, {keys={"up", "enter"}},
+	{touch="Quiri-Aliri"}, {wait=1},
+	{a="enter"}, {keys={"up", "enter"}},
 	{wait=2}, {x=-57.6,y=85.1,d=1}, {a="esc"},
 	{target="Waypoint"}, {wait=1}, {a="touch"}, {wait=2},
 	{keys={"right", "right", "right", "down", "enter"}}, -- カミール
@@ -190,8 +203,10 @@ M.routes = {
 	{x=-52.9,y=58.9,z=-0.1}, {x=-54,y=78,d=1},
 	{x=-53.5,y=82,d=1},
 	-- HP#1
-	{target="Quiri-Aliri"}, {wait=1},
-	{a="enter"}, {wait=1}, {a="enter"}, {keys={"up", "enter"}},
+	--{target="Quiri-Aliri"}, {wait=1},
+	--{a="enter"}, {wait=1}, {a="enter"}, {keys={"up", "enter"}},
+	{touch="Quiri-Aliri"}, {wait=1},
+	{a="enter"}, {keys={"up", "enter"}},
 	{wait=2}, {x=-57.6,y=85.1,d=1},
 	{target="Waypoint"}, {wait=1}, {a="touch"}, {wait=2},
 	{keys={"right", "right", "right", "enter"}}, -- マリアミ渓谷を選択

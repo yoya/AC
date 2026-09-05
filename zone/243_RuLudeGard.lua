@@ -17,6 +17,7 @@ M.routes = {
     taiko = {
 	{x=-6,y=-1,z=3,desc="太公の間"}, {x=-3.3,y=2.5}, {x=-1, y=27.9},
 	{x=-1.7,y=34}, {x=-0.3,y=68.6},
+	{touch="Door:Audience Chamber"}
     },
     pheri = {
 	{x=-6,y=-1,z=3,desc="Pherimociel"}, {x=-3,y=2.4}, {x=-1.6,y=28.6},
@@ -31,8 +32,12 @@ M.routes = {
     win = {
 	{x=-6,y=-1,z=3,desc="ウィンダス領事館"}, {x=-2,y=-8},
 	{x=2,y=-32,z=9}, {x=8,y=-34}, {x=24,y=-36},
-	{target="Door:Windurstian Emb."}, {a="f8touch"}, {x=28,y=-36},
-	{x=32,y=-37,z=9},
+	{touch="Door:Windurstian Emb."}, {x=28,y=-36},
+	-- {x=32,y=-37,z=9},
+	{x=36,y=-28},
+	{touch="Door:Windurstian Emb."}, {x=36,y=-24},
+	{x=33,y=-22,z=9},
+	{touch="Door:Windurstian Emb."}
     },
     proto = {
 	{x=-6,y=-1,z=3,desc="Proto-Waypoint"}, {x=-22,y=-10,d=1},
