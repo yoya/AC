@@ -60,6 +60,34 @@ M.resist_magic_table = {
     ['Apex Toad'] = {'ウォータ'},
 }
 
+-- エンミティダウス。res/job_abilities.lua [272] エンミティダウス (recast_id=34)
+local ENMITY_DOUSE_ABILITY_ID = 272
+local ENMITY_DOUSE_RECAST_ID = 34
+
+-- 敵対心が溜まって殴られている想定なので、戦闘中かつ使える時だけ撃つ
+local function enmity_douse(player)
+    if player.status ~= pstatus.ENGAGED then
+	return
+    end
+    -- 覚えていない時も get_ability_recasts は 0 (使える) を返し得るので、
+    -- 習得済みかどうかも確かめる
+    local abilities = windower.ffxi.get_abilities()
+    if abilities == nil or abilities.job_abilities == nil then
+	return
+    end
+    if not utils.table.contains(abilities.job_abilities, ENMITY_DOUSE_ABILITY_ID) then
+	return
+    end
+    local recasts = windower.ffxi.get_ability_recasts()
+    local recast = recasts ~= nil and recasts[ENMITY_DOUSE_RECAST_ID] or nil
+    if recast == nil or recast > 0 then
+	return
+    end
+    -- command, delay, duration, period, eachfight
+    task.set_task(task.PRIORITY_HIGH,
+		  task.new_task('input /ja エンミティダウス <me>', 0, 2, 10, false))
+end
+
 function within_time(x, a, b)
     if a <= x and x < b then
 	return true
@@ -184,6 +212,9 @@ function M.main_tick(player)
 	magick_rank = 3
     else
 	return -- MB しない
+    end
+    if player.vitals.hp < 1000 then
+	enmity_douse(player)
     end
     M.magic_burst(player, magick_rank)
 end
