@@ -330,6 +330,7 @@ local idle_function = function()
 	works.survey.ergon_locus_function()
     end
     contents.npc_action_handler(zone, mob)
+    aczone.npc_action_handler(zone, mob)
 end
 
 -- tick の二重起動ガード。ただし現状これは働かない。

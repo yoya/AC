@@ -316,4 +316,18 @@ function M.event_handler(event_type)
     end
 end
 
+function M.npc_action_handler(zone, mob)
+    local zone_obj = M.zone_table[zone]
+    if zone_obj ~= nil then
+	local handlers = zone_obj.npc_action_handlers
+	if handlers ~= nil then
+	    for name, handler in pairs(handlers) do
+		if mob.name == name then
+		    handler(zone, mob)
+		end
+	    end
+	end
+    end
+end
+
 return M
