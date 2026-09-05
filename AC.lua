@@ -69,6 +69,7 @@ local acprob = require 'prob'
 local aczone = require 'zone'
 aczone.AC = M  -- for callback
 local zone_change = require 'zone/change'
+local zonein = require 'zone/zonein'
 local outgoing_chunk = require 'outgoing/chunk'
 local incoming_chunk = require 'incoming/chunk'
 local incoming_text = require 'incoming/text'
@@ -1283,6 +1284,9 @@ windower.register_event('load', function()
     seed_random()
     ws.init()
     local zone = windower.ffxi.get_info().zone
+    -- ロード時は既にそのゾーンに居るので、ゾーンイン完了 (outgoing 0x011) は
+    -- もう飛んだ後。待たせると自動移動がここで止まってしまう
+    zonein.assume_done()
     zone_change.zone_in_handler(zone, nil, true)
     -- command, delay, duration
     task.set_task_simple("ac inject currinfo1", 2, 1)

@@ -15,6 +15,7 @@ local acitem = require 'item'
 local pull = require 'pull'
 local role_Leader = require 'role/Leader'
 local role_Follower = require 'role/Follower'
+local zonein = require 'zone/zonein'
 
 local M = {}
 
@@ -46,6 +47,7 @@ function M.logout()
     M.current_zone = nil
     M.prev_zone = nil
     M.prev_pos = nil
+    zonein.reset()
     reset_role_move()
 end
 
@@ -226,8 +228,20 @@ function M.invoke_automatic_route(zone, sel)
     ac_move.auto_move_to(zone, {sel.route}, zone_object.routes)
 end
 
-function M.automatic_routes_handler(zone, prev_zone, is_login, automatic_routes)
+-- ゾーンイン完了後、座標と status が落ち着くまでの待ち
+local SETTLE_SEC = 2
+-- その後、自分で動き出していないかを確かめる時間
+local MOVE_CHECK_SEC = 3
+-- 同じゾーン内のワープ (WP など) には 0x011 が来ない。従来通り時間で待つ
+local WARP_SETTLE_SEC = 3
+local WARP_MOVE_CHECK_SEC = 5
+
+-- wait_zone_in: ゾーンイン完了 (outgoing 0x011) を待つか。
+--   ゾーン移動は待つ。同じゾーン内のワープは 0x011 が来ないので待たない
+function M.automatic_routes_handler(zone, prev_zone, is_login, automatic_routes,
+				    wait_zone_in)
     print("zone/change.automatic_routes_handler", zone)
+    local started_at = os.time()
     -- 起動の世代を進める。判定の前に何秒も待つので、待っている間に次の
     -- ゾーン移動やワープが来たら、古い起動は捨てる。
     -- 同じモグハウス出入りが zone change と warp の両方から来る事もある
@@ -248,29 +262,40 @@ function M.automatic_routes_handler(zone, prev_zone, is_login, automatic_routes)
     if zone_object == nil then
 	return
     end
-    local player = windower.ffxi.get_player()
-    if player == nil or player.status == pstatus.DEAD then
-	print("player and player.status", player and player.status)
-	coroutine.sleep(3)
-	if not is_current() then return end
-	player = windower.ffxi.get_player()
-	if player == nil or player.status == pstatus.DEAD then
-	    io_chat.print("移動しない status: ", player and player.status)
+    -- 背景の読み込みが終わる前に走ると、背景が出ないまま操作不能になる事が
+    -- ある。クライアントが読み込みを終えた合図 (outgoing 0x011) を待つ
+    local settle_sec = SETTLE_SEC
+    local move_check_sec = MOVE_CHECK_SEC
+    if wait_zone_in then
+	-- 時間切れも、新しいゾーン移動での中断も、待った側は何もしない
+	if not zonein.wait_done(started_at, is_current) then
 	    return
 	end
+    else
+	settle_sec = WARP_SETTLE_SEC
+	move_check_sec = WARP_MOVE_CHECK_SEC
     end
-    -- ゾーンイン直後は座標が安定しないので、少し待ってから基準位置を取る
-    coroutine.sleep(3)
+    -- 完了直後は座標も status も落ち着いていないので、少し待ってから見る
+    coroutine.sleep(settle_sec)
     if not is_current() then return end
+    local player = windower.ffxi.get_player()
+    if player == nil or player.status == pstatus.DEAD then
+	io_chat.print("移動しない status: ", player and player.status)
+	return
+    end
     local pos = ac_pos.current_pos()
-    -- ログイン直後は me が取れず座標が nil になる。座標が安定してから判定しないと
-    -- モグハウスにいる事が分からず、自動移動を止め損なう
+    -- 座標が取れない間は、どこにいるか分からない。モグハウスにいる事も
+    -- 分からないので、判定せずに見送る
+    if pos == nil then
+	print("zone/change: 座標が取れないので自動移動しない")
+	return
+    end
     if is_login and aczone.in_moghouse(zone, pos) then
 	io_chat.print("ログインしてすぐのモグハウスは自動移動オフ")
 	return
     end
     -- さらに待って、その間に動いていない事を確かめる
-    coroutine.sleep(5)
+    coroutine.sleep(move_check_sec)
     if not is_current() then return end
     if not ac_pos.is_near(pos, 0.5) then
 	print("zone/change: 動いているので自動移動しない")
@@ -338,7 +363,7 @@ function M.zone_in_handler(zone, prev_zone, is_login)
 	local automatic_routes = zone_object.automatic_routes
 	if automatic_routes ~= nil then
 	    M.automatic_routes_handler(zone, prev_zone, is_login,
-				       automatic_routes)
+				       automatic_routes, true)
 	end
 	if iam_leader() then
 	    local automatic_trust = zone_object.automatic_trust
@@ -424,7 +449,8 @@ function M.warp_handler(zone, pos, prev_pos, dist)
     end
     local automatic_routes = zone_object.automatic_routes
     if automatic_routes ~= nil then
-	M.automatic_routes_handler(zone, zone, false, automatic_routes)
+	-- 同じゾーン内なのでゾーンイン完了 (0x011) は来ない
+	M.automatic_routes_handler(zone, zone, false, automatic_routes, false)
     end
 end
 
