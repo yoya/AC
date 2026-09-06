@@ -26,6 +26,10 @@ local WAIT_MAX_SEC = 60
 -- 'zone change' イベントと 0x011 の前後が環境で入れ替わっても動くように
 local GRACE_SEC = 3
 local POLL_SEC = 0.5
+-- 0x011 を受けてから、動いてよいと見なすまでの間。
+-- 0x011 の直後はまだ触れないらしく、ワープ直後にギミックへ触りに行く処理が
+-- 半分位失敗していた
+local READY_SEC = 3
 
 function M.reset()
     M.done_at = nil
@@ -45,13 +49,19 @@ function M.assume_done()
     M.done_at = os.time()
 end
 
--- since 以降 (GRACE_SEC の猶予付き) のゾーンイン完了を待つ。
--- 待てたら true。時間切れと中断は false。
+-- since 以降 (GRACE_SEC の猶予付き) のゾーンイン完了を待ち、さらに
+-- READY_SEC 置いてから返る。待てたら true。時間切れと中断は false。
 -- is_current は「この起動がまだ最新か」を返す関数 (省略可)
 function M.wait_done(since, is_current)
     local deadline = os.time() + WAIT_MAX_SEC
     while true do
 	if M.done_at ~= nil and M.done_at >= since - GRACE_SEC then
+	    -- done_at は os.time() なので秒未満が落ちている。経過時間を引かず、
+	    -- 気づいた時点から待つ事で 0x011 から必ず READY_SEC 以上空ける
+	    coroutine.sleep(READY_SEC)
+	    if is_current ~= nil and not is_current() then
+		return false
+	    end
 	    return true
 	end
 	if os.time() > deadline then
