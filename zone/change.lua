@@ -232,8 +232,10 @@ end
 local SETTLE_SEC = 2
 -- その後、自分で動き出していないかを確かめる時間
 local MOVE_CHECK_SEC = 3
--- 同じゾーン内のワープ (WP など) には 0x011 が来ない。従来通り時間で待つ
-local WARP_SETTLE_SEC = 3
+-- 同じゾーン内のワープ (WP など) では 0x011 が飛ばない (実機で確認済み)。
+-- 待つ相手がいないので時間で待つしかない。ワープ直後はギミックに触れず、
+-- 触りに行く処理が失敗するので、ゾーン移動側と揃う位まで長く取る
+local WARP_SETTLE_SEC = 5
 local WARP_MOVE_CHECK_SEC = 5
 
 -- wait_zone_in: ゾーンイン完了 (outgoing 0x011) を待つか。
@@ -449,7 +451,7 @@ function M.warp_handler(zone, pos, prev_pos, dist)
     end
     local automatic_routes = zone_object.automatic_routes
     if automatic_routes ~= nil then
-	-- 同じゾーン内なのでゾーンイン完了 (0x011) は来ない
+	-- 同じゾーン内のワープでは 0x011 が飛ばないので待てない
 	M.automatic_routes_handler(zone, zone, false, automatic_routes, false)
     end
 end
