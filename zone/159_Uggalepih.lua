@@ -39,6 +39,19 @@ M.routes = {
 	{x=333.9, y=301.4}, {x=340,y=304.1},
 	{x=340,y=328.7,z=0}
     },
+    thief = {
+	{x=198.9,y=298.5,z=-16,desc="盗賊のナイフ、入り口"},
+	{x=216,y=299}, {faith="balance"}, {x=219,y=296},
+	{x=200,y=288,z=-9.3}
+    },
+}
+
+M.essential_points = {
+    thief = {x=198.9,y=298.5,z=-16},
+}
+
+M.automatic_routes = {
+    thief = { route = "thied" },
 }
 
 return M
