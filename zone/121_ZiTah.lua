@@ -54,4 +54,8 @@ M.routes = {
     },
 }
 
+M.essential_items = {
+    1181, -- グゥーブーの腐葉土
+}
+
 return M
