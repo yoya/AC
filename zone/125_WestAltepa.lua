@@ -5,7 +5,9 @@ local M = { id = 125 }
 M.routes = {
     -- CL125ワープ
     pec = {
-	{x=91.3,y=-23.4,desc="珍妙なモンスター"}, {x=71,y=5}, {a="mount"},
+	{x=91.3,y=-23.4,desc="珍妙なモンスター"}, {x=71,y=5},
+	{faith="balance"},
+	{a="mount"},
 	{x=52.4,y=32.7}, {x=-15.3,y=167.4}, {a="dismount"}
     },
     ruby = {
@@ -97,6 +99,14 @@ M.routes = {
 	{x=-285,y=57}, {a="dismount"}, {x=-264,y=52,z=-8,d=1},
 	{a="esc"}, {target="Dreamrose"},
     },
+}
+
+M.essential_points = {
+    unity_warp = {x=91.3,y=-23.4},
+}
+
+M.automatic_routes = {
+    unity_warp = { route="pec", contents="Peculiar"},
 }
 
 return M

@@ -43,7 +43,10 @@ M.essential_points = {
 }
 
 M.automatic_routes = {
-    from_jueno = { route="vw" },
+    from_jueno = {
+	{ route="vw" },
+	{ route="pec", contents="Peculiar"},
+    },
     from_eldieme = { route="levi", contents="mission"},
 }
 

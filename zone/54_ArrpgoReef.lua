@@ -28,12 +28,19 @@ M.routes = {
 	{x=472,y=115},
     },
     -- カダーバ沼から
+    pec = {
+	{x=-560,y=380,z=-7.6,desc="Apukallu Guide (長老ペンギン)"},
+	{x=-537,y=383}, {faith="balance"}, {x=-533,y=377},
+	{x=-538,y=368}, {x=-543,y=351}, {x=-546,y=344}, {x=-543,y=338},
+	{x=-466,y=338}, {x=-454,y=342}, {x=-436,y=342}, {x=-420,y=346},
+	{x=-403,y=347,z=-7.8,d=1},
+    },
     guide = {
 	{x=-560,y=380,z=-7.6,desc="Apukallu Guide (長老ペンギン)"},
 	{x=-537,y=383}, {faith="balance"}, {x=-533,y=377},
 	{x=-538,y=368}, {x=-543,y=351}, {x=-546,y=344}, {x=-543,y=338},
 	{x=-510,y=338}, {x=-501,y=328}, {x=-501,y=305},
-	{x=-506,y=301}, {x=-520,y=300}, {x=-542,y=285,d=1},
+	{x=-506,y=301}, {x=-520,y=300}, {x=-540,y=286,d=1},
 	{target="Apkallu Guide"}, {a="touch"}
     },
     -- H6 入り口
@@ -57,7 +64,10 @@ M.essential_points = {
 
 M.automatic_routes = {
     book = { route='door-fang' },
-    from_Caedarva = { route="guide" },
+    from_Caedarva = {
+	{ route="guide" },
+	{ route="pec", contents="Peculiar"},
+    },
 }
 
 M.essential_items = {

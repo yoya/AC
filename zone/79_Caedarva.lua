@@ -5,8 +5,8 @@ local M = { id = 79 }
 M.routes = {
     -- ユニティワープ
     pec = {
-	{x=660,y=239.5,z=-4,desc="珍妙なモンスター"},
-	{x=652,y=260}, {a="mount"}, {x=657.6,y=282.9},
+	{x=660,y=239.5,z=-4,desc="珍妙なモンスター"}, {x=652,y=260},
+	{faith="balance"}, {a="mount"}, {x=657.6,y=282.9},
 	{x=687,y=326.2}, {x=709.7,y=357.8},
 	{x=728,y=384.6}, {x=720.6,y=449.4},
 	{x=732.6,y=477.1}, {x=734.4,y=519.5},
@@ -52,7 +52,7 @@ M.essential_points = {
 M.automatic_routes = {
     book_warp = { route="arra" },
     -- hp = { route="odin" },
-    unity_warp = { route="pec" },
+    unity_warp = { route="pec", contents="Peculiar" },
 }
 
 return M

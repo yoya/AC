@@ -19,6 +19,10 @@ M.routes = {
 	{x=-83,y=159,d=1,z=0},
 	{target="Elijah"}, {a="touch"}
     },
+    pec = {  -- 外に出る
+	{x=-100,y=167.6,z=0,desc="外に出る(奇妙へ)"},
+	{x=-98,y=172}, {x=-103.6,y=187.9,z=0}, {}
+    },
     -- HP (A)
     choco = {
 	{x=-52,y=15,z=1,desc="チョコボ厩舎"},
@@ -35,10 +39,14 @@ M.routes = {
 
 M.essential_points = {
     hp1E = {x=-100,y=167.6,z=0},
+    from_bata = {x=-103.6,y=187.9,z=0},
 }
 
 M.automatic_routes = {
-    hp1E = { route="eli" }, -- Elijah
+    hp1E = {
+	{ route="eli" }, -- Elijah
+	{ route="pec", contents="Peculiar"},
+    },
 }
 
 return M

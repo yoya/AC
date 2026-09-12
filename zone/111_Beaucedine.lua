@@ -5,9 +5,9 @@ local M = { id = 111 }
 M.routes = {
     -- フェイン入り口。エスケプで出たとこ
     pec = { -- 珍妙なモンスター
-	{x=279,y=536,z=20}, {x=291,y=507.5}, {a="mount"},
-	{x=379,y=394.8}, {x=382.9,y=302.5}, {x=397.3,y=282.9},
-	{a="dismount"}
+	{x=279,y=536,z=20}, {x=291,y=507.5}, {faith="balance"}, {a="mount"},
+	{x=335,y=451}, {x=379,y=394.8}, {x=382.9,y=302.5},
+	{x=397.3,y=282.9}, {a="dismount"}
     },
     pond = { -- さらに池まで。
 	{x=279,y=536,z=20}, {x=291,y=507.5}, {a="mount"},
@@ -74,7 +74,10 @@ M.routes = {
 
 M.essential_points = {
     book = {x=-29,y=-124,z=-59.7},
+    escape = {x=279,y=536,z=20},
 }
-M.automatic_routes = { }
+M.automatic_routes = {
+    escape = { route="pec", contents="Peculiar" },
+}
 
 return M

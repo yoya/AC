@@ -30,7 +30,10 @@ M.essential_points = {
 }
 
 M.automatic_routes = {
-    hp_1 = { route="esca" },
+    hp_1 = {
+	{ route="esca" },
+	{ route="pec", contents="Peculiar"},
+    },
 }
     
 return M

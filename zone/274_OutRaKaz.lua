@@ -8,7 +8,8 @@ M.routes = {
     },
     pec = { -- 珍妙なモンスター。カミールへの出口まで
 	{x=-148,y=27,z=-170}, {x=-98.8,y=-7.9,z=-176.3},
-	{x=-38.4,y=-19.4,z=-179.3}
+	{x=-38.4,y=-19.4,z=-179.3},
+	{touch="Liseran Door: Exit"}, {wait=1}, {keys={"enter"}},
     },
     raive = {
 	{x=-148,y=27,z=-170}, {x=-93,y=-28},
@@ -26,7 +27,10 @@ M.essential_points = {
 }
 
 M.automatic_routes = {
-    wp = { route="common"},
+    wp = {
+	{ route="common"},
+	{ route="pec", contents="Peculiar"},
+    }
 }
 
 return M

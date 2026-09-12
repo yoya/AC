@@ -146,16 +146,23 @@ M.routes = {
 	{x=-228.9,y=364.5,z=3.3,desc="ソーティ(Sortie)"},
 	{x=-240,y=365,z=2.8,d=1},
     },
+    -- カザナルから出たところ
+    pec = {
+	{x=-279.7,y=60.4,z=20}, {x=-273,y=64,z=20,d=1},
+	{faith="balance"}
+    },
 }
 
 M.essential_points = {
     wp2 = {x=8.2,y=-283,z=43},
     wp4 = {x=-228.9,y=364.5,z=3.3},
+    from_kaza = {x=-279.7,y=60.4,z=20},
 }
 
 M.automatic_routes = {
     wp2 = { route="works", contents="Works" },
     wp4 = { route="sortie" },
+    from_kaza = { route="pec" },
 }
 
 return M
