@@ -7,7 +7,7 @@ M.routes = {
     tosuka = {
 	{x=-33,y=131.7,z=-5}, {x=-39,y=105},
 	{x=-32,y=87}, {x=-23,y=87},
-	{x=-23,y=90}, {a="opendoor"}, {x=-23,y=94},
+	{x=-23,y=90}, {touch="Door:Optistery"}, {x=-23,y=94},
 	{x=-27.5,y=102.3}, {a="f8touch"}
     },
     -- HP#2 M)
@@ -18,7 +18,7 @@ M.routes = {
 	{x=110,y=65}, {x=108,y=74}, {x=112,y=82}, {x=121,y=95},
 	{x=125,y=112}, {x=145,y=136}, {x=150,y=170}, {x=157,y=181},
 	{x=163,y=184}, {x=165,y=181},
-	{target="Door:Aurastery"}, {a="f8touch"},
+	{touch="Door:Aurastery"},
 	{x=165,y=179}, {x=162,y=166,z=-0.2}, {x=162,y=163,z=-1.2},
 	{x=164,y=159}, {target="Moreno-Toeno"}, {a="touch"}
 	

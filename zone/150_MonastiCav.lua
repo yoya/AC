@@ -12,7 +12,8 @@ M.routes = {
     },
     -- 通り過ぎるだけ
     forward = {
-	{x=37.3,y=-380.4}, {x=26.5,y=-377.7}, {x=-19,y=-380},
+	{x=37.3,y=-380.4,desc="通り抜け"},
+	{x=26.5,y=-377.7}, {x=-19,y=-380},
 	{x=-22.3,y=-315.8},
 	-- 狭いところ
 	{x=-13.7,y=-268.4},{x=-34.9,y=-259.8},{x=-58,y=-261.6},
@@ -25,5 +26,13 @@ M.routes = {
     },
 }
 
+M.essential_points = {
+    from_davoiN = {x=-43.8,y=-100.9},
+    from_davoiS = {x=37.3,y=-380.4},
+}
+M.automatic_routes = {
+    from_davoiN = { route="stone" },
+    from_davoiS = { route="forward" },
+}
 
 return M

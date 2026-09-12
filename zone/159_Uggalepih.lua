@@ -48,6 +48,7 @@ M.routes = {
 
 M.essential_points = {
     thief = {x=198.9,y=298.5,z=-16},
+    ehitsu = {x=-60,y=82,z=-8},
 }
 
 M.automatic_routes = {

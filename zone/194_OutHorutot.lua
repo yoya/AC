@@ -13,7 +13,7 @@ M.routes = {
 	{x=588,y=-660,z=0}, {target="Gate: Magical Gizmo"},
 	{a="touch"}
     },
-    xxx = {
+    gizmo2 = {
 	{x=579.6,y=-637,z=-24,desc="ウィンダスM 満月の泉"},
 	{x=-578,y=-651}, {faith="balance"}, {x=-571,y=-658},
 	-- 階段を降りる
@@ -28,17 +28,32 @@ M.routes = {
 	{touch="Cracked Wall"}, {wait=1},
 	{x=-334,y=-660}, {x=-292,y=-660},
 	{target="Gate: Magical Gizmo"},
+    },
+    -- アマリリスの塔から
+    xxx = {
+	{x=-316.8,y=860,z=-8,desc="ウィンダスM8-2 王と道化師"},
+	{x=-331,y=858}, {faith="balance"},
+	{x=-338,y=851}, {x=-338,y=781},
+	{x=-322,y=768}, {x=-318,y=760}, {x=-314,y=758},	{x=-299,y=743},
+	{x=-252,y=740}, {touch="Cracked Wall"}, {x=-248,y=740},
+	{x=-231,y=735}, {x=-226,y=725}, {x=-227,y=713},
+	{x=-249,y=696}, {x=-254,y=692}, {x=-261,y=661},
+	{x=-300,y=624}, {x=-315,y=622}, {x=-344,y=623},
+	{x=-382,y=652}, {x=-396,y=659},
+	{x=-410,y=657}, {x=-414,y=651},
+	{x=-422,y=621,z=0}, {touch="Cracked Wall"}, {auto=true}
     }
 }
 
 M.essential_points = {
     entrance = {x=579.6,y=-637,z=-24},
-    from_F11 = {x=-580,y=-637,z=-8},
+    from_F11 = {x=-580,y=-637,z=-8}, -- [F-11] から
+    from_F4 = {x=-316.8,y=860,z=-8}, -- [F-4]アマリリスの塔から
 }
 
 M.automatic_routes = {
     entrance = { route="gizmo" },
-    from_F11 = { route="xxx" },
+    from_F11 = { route="gizmo2" },
 }
 
 return M

@@ -42,7 +42,7 @@ M.routes = {
     proto = {
 	{x=-6,y=-1,z=3,desc="Proto-Waypoint"}, {x=-22,y=-10,d=1},
 	{x=-26,y=-14,z=3,d=1}, {x=-36,y=-40,z=0},
-	{a="f8"}, {target="Proto-Waypoint"},
+	{a="f8"}, {touch="Proto-Waypoint"},
     },
 }
 

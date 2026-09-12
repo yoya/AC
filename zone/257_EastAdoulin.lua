@@ -179,8 +179,8 @@ M.routes = {
 	{target="Quiri-Aliri"}, {wait=1},
 	{a="enter"}, {wait=1}, {a="enter"}, {keys={"up", "enter"}},
 	{wait=2}, {x=-57.6,y=85.1,d=1}, {a="esc"},
-	--{target="Waypoint"}, {wait=1}, {a="touch"}, {wait=2},
-	{touch="Waypoint"}, {wait=2},
+	{target="Waypoint"}, {a="touch"}, {wait=2}, -- 空打ちあり
+	-- {touch="Waypoint"}, {wait=2},
 	{keys={"right", "right", "right", "enter"}}, -- マリアミ渓谷を選択
 	{keys={"right", "right", "enter"}}, -- #4 を選択
     },

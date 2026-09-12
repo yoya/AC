@@ -43,16 +43,22 @@ M.routes = {
 	{x=-98,y=58}, {x=-92,y=69}, {x=-83,y=97}, {x=-83,y=113},
 	{x=-72,y=132}, {x=-47,y=142}, {x=-29,y=141}, {x=-15,y=135}
 	-- 隠し通路出たとこ
-    }
+    },
+    from_jueno_proto = {
+	{x=24.3,y=129.8,z=-6.7}, {x=22,y=129,z=-7.3},
+	{faith="balance"},
+    },
 }
 
 M.essential_points = {
     hp_1 = {x=87,y=-217,z=-15.7},
+    from_jueno_proto = {x=24.3,y=129.8,z=-6.7},
 }
 
 
 M.automatic_routes = {
     hp_1 = { route="i11" },
+    from_jueno_proto = { route="from_jueno_proto" },
 }
 
 return M

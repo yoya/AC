@@ -28,7 +28,13 @@ M.routes = {
     rako = {
 	{x=108,y=-56,z=-5,desc="Rakoh Buuma(ガード)"},
 	{x=105,y=-34}, {x=109,y=-25,z=-5},
-	{target="Rakoh Buuma"}
+	{touch="Rakoh Buuma"}
+    },
+    rako2hp = {
+	{x=109,y=-25,z=-5,desc="Rakoh から HP に戻る"},
+	{x=105,y=-34},
+	{x=108,y=-56,z=-5},
+	{touch="Home Point #2"}
     },
     -- #3(M)
     apu = {
@@ -37,7 +43,7 @@ M.routes = {
 	{x=-41,y=-5}, {x=-36,y=-7}, {x=-31,y=-4},
 	{x=-25,y=10}, {target="Door:Manustery"}, {a="opendoor"},
 	{x=-20,y=11}, {x=-14,y=15},
-	{target="Apururu"}, {a="touch"}
+	{touch="Apururu"},
     },
 }
 
@@ -52,5 +58,11 @@ M.automatic_routes = {
     hp2E = { route="rako", contents="mission" },
     hp3M = { route="apu", contents="mission" },
 }
+
+function M.incoming_text_listener(text)
+    if string.contains(text, "ミッション受けた！") then
+	command.send("ac move rako2hp")
+    end
+end
 
 return M

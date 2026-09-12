@@ -19,17 +19,24 @@ M.routes = {
 	{x=-231,y=360}, {x=-265,y=347}, {x=-291,y=269}, {x=-319,y=191},
 	{x=-327,y=114}, {x=-343,y=103}, {x=-350,y=90},
 	{x=-372,y=68}, {a="dismount"}, {x=-374.5,y=63.3,z=-21.7}, {}
-    }
+    },
+    --
+    ama = {
+	{x=-245.5,y=660,z=-20.6, "アマリリスの塔"},
+	{x=-243,y=660,z=-17.2}, {x=-259,y=660,z=-17.2}, {}
+    },
 }
 
 M.essential_points = {
     book = {x=-14.3,y=315.7,z=-12.8},
     from_win_port = {x=166.5,y=-319,z=0},
+    proto_warp = {x=-245.5,y=660,z=-20.6},
 }
 
 M.automatic_routes = {
     book = { route="gid" },
-    from_win_port = { route="south-tower"}
+    from_win_port = { route="south-tower"},
+    proto_warp = { route="ama" },
 }
 
 return M
