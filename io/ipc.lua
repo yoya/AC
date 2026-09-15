@@ -19,7 +19,7 @@ local pstatus = require 'player_status'
 
 local SIGNATURE = "AC"
 
-function M.send(target, method, arg1, arg2, arg3, arg4)
+function M.send(target, method, arg1, arg2, arg3, arg4, arg5)
     local player = windower.ffxi.get_player()
     if control.debug then
 	print("io/ipc.send", SIGNATURE, target, player.name, method, arg1)
@@ -31,18 +31,18 @@ function M.send(target, method, arg1, arg2, arg3, arg4)
     end
     -- 引数は後ろから順に省略される。途中だけ nil のケースは考えない
     local words = { SIGNATURE, target, name, method }
-    for _, arg in ipairs({ arg1, arg2, arg3, arg4 }) do
+    for _, arg in ipairs({ arg1, arg2, arg3, arg4, arg5 }) do
 	table.insert(words, tostring(arg))
     end
     local command = table.concat(words, ".")
     windower.send_ipc_message(command)
 end
 
-function M.send_all(method, arg1, arg2, arg3, arg4)
-    M.send("*", method, arg1, arg2, arg3, arg4)
+function M.send_all(method, arg1, arg2, arg3, arg4, arg5)
+    M.send("*", method, arg1, arg2, arg3, arg4, arg5)
 end
 
-function M.send_party(method, arg1, arg2, arg3, arg4)
+function M.send_party(method, arg1, arg2, arg3, arg4, arg5)
     -- print("io/ipc.send_party", method, arg)
     local party = windower.ffxi.get_party()
     for _, x in pairs({"p", "a1", "a2"}) do -- アライアンス全員
@@ -53,7 +53,7 @@ function M.send_party(method, arg1, arg2, arg3, arg4)
 		local mob = member.mob
 		if not mob.is_npc then
 		    -- io_chat.print("send_party:", mob.name)
-		    M.send(mob.name, method, arg1, arg2, arg3, arg4)
+		    M.send(mob.name, method, arg1, arg2, arg3, arg4, arg5)
 		    coroutine.sleep(0.2)
 		end
             end
@@ -118,6 +118,7 @@ function M.receive(message)
     local arg2 = words[6]
     local arg3 = words[7]
     local arg4 = words[8]
+    local arg5 = words[9]
     if control.debug then
 	print(target, source, method, arg1)
 	if arg1 == nil then
@@ -126,8 +127,12 @@ function M.receive(message)
 	    io_chat.printf("io/ipc.receive: target:%s source:%s method:%s arg1:%s", target, source, method, arg1)
 	elseif arg3 == nil then
 	    io_chat.printf("io/ipc.receive: target:%s source:%s method:%s arg1:%s arg2:%s", target, source, method, arg1, arg2)
-	else
+	elseif arg4 == nil then
 	    io_chat.printf("io/ipc.receive: target:%s source:%s method:%s arg1:%s arg2:%s arg3:%s", target, source, method, arg1, arg2, arg3)
+	elseif arg5 == nil then
+	    io_chat.printf("io/ipc.receive: target:%s source:%s method:%s arg1:%s arg2:%s arg3:%s arg4:%s", target, source, method, arg1, arg2, arg3, arg4)
+	else
+	    io_chat.printf("io/ipc.receive: target:%s source:%s method:%s arg1:%s arg2:%s arg3:%s arg4:%s arg5:%s", target, source, method, arg1, arg2, arg3, arg4, arg5)
 	end
     end
     local player = windower.ffxi.get_player()
@@ -150,7 +155,7 @@ function M.receive(message)
 	    print("not in Party")
 	end
     elseif method == 'all' then
-	M.receive_all(arg1, arg2, arg3, arg4)
+	M.receive_all(arg1, arg2, arg3, arg4, arg5)
     elseif method == 'build' then
 	if arg1 == 'party' then
 	    if not M.in_party() then
@@ -162,7 +167,7 @@ function M.receive(message)
     elseif method == 'enemy' then
 	ac_party.set_leader_enemy(source, tonumber(arg1), tonumber(arg2))
     elseif method == 'party' then
-	M.receive_party(source, arg1, arg2, arg3, arg4)
+	M.receive_party(source, arg1, arg2, arg3, arg4, arg5)
     elseif method == 'submit' then
 	if arg1 == 'party' then
 	    local c = "input /pcmd add "..source
@@ -200,11 +205,11 @@ function M.warp_with_ring(arg)
     acitem.use_equip_item(slot_right_ring, item_id, item_name, 10)
 end
     
-function M.receive_all(arg1, arg2, arg3, arg4)
+function M.receive_all(arg1, arg2, arg3, arg4, arg5)
     if control.debug then
-	print("io/ipc.receive_all", arg1, arg2, arg3, arg4)
+	print("io/ipc.receive_all", arg1, arg2, arg3, arg4, arg5)
     end
-    M.AC.addon_command_handler(arg1, arg2, arg3, arg4)
+    M.AC.addon_command_handler(arg1, arg2, arg3, arg4, arg5)
 end
 
 function M.in_party()

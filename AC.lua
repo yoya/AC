@@ -555,7 +555,8 @@ windower.register_event('addon command', function(...)
     local arg2 = select(3, ...)
     local arg3 = select(4, ...)
     local arg4 = select(5, ...)
-    M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
+    local arg5 = select(6, ...)
+    M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4, arg5)
 end)
 
 -- ac garden <行き先>: モグガーデンのモーグリ/流木を操作する
@@ -814,7 +815,7 @@ local cmd_timer = function(arg1)
     io_chat.info(">>> Time End <<<", period)
 end
 
-function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
+function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4, arg5)
     local player = windower.ffxi.get_player()
     local me = windower.ffxi.get_mob_by_target("me")
     local zone = windower.ffxi.get_info().zone
@@ -828,9 +829,9 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
     elseif subcommand == 'stop' then
         stop()
     elseif subcommand == 'all' then
-	io_chat.notice("ac all ", arg1, arg2, arg3, arg4)
-	io_ipc.send_all("all", arg1, arg2, arg3, arg4)
-	M.addon_command_handler(arg1, arg2, arg3, arg4)
+	io_chat.notice("ac all ", arg1, arg2, arg3, arg4, arg5)
+	io_ipc.send_all("all", arg1, arg2, arg3, arg4, arg5)
+	M.addon_command_handler(arg1, arg2, arg3, arg4, arg5)
     elseif subcommand == 'attack' or subcommand == 'att' or subcommand == 'at' then
 	local onoff = argument_means_on(arg1)
 	if onoff ~= nil then
@@ -1064,6 +1065,14 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	task.set_task_simple("input /logout", 1, 1)
     elseif subcommand == 'magic' or subcommand == 'magick' then
 	role_Sorcerer.set_magic(arg1)
+    elseif subcommand == 'loop' then
+	local period = tonumber(arg1, 10)
+	io_chat.notice("ac loop", period, ":", arg2, arg3, arg4)
+	control.auto = true
+	while control.auto do
+	    M.addon_command_handler(arg2, arg3, arg4)
+	    coroutine.sleep(period)
+	end
     elseif subcommand == 'move' then
 	local route_table = aczone.get_route_table(zone)
 	pull.base_pos = nil
@@ -1078,8 +1087,8 @@ function M.addon_command_handler(subcommand, arg1, arg2, arg3, arg4)
 	elseif arg1 == 'stop' then
 	    stop_party()
 	else
-	    io_ipc.send_party("party", arg1, arg2, arg3, arg4)
-	    M.addon_command_handler(arg1, arg2, arg3, arg4)
+	    io_ipc.send_party("party", arg1, arg2, arg3, arg4, arg5)
+	    M.addon_command_handler(arg1, arg2, arg3, arg4, arg5)
 	end
     elseif subcommand == 'patrol' or subcommand == 'pat' then
 	cmd_patrol(zone, arg1, arg2)
