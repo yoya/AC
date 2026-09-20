@@ -183,6 +183,7 @@ end
 
 function move_to_action_faith(f)
     if not ac_party.iam_leader() then
+	print("move_to_action_faith not iam_leader")
 	return -- リーダーじゃないとフェイスを呼べないので
     end
     local faith_list = f
@@ -209,6 +210,7 @@ function move_to_action_faith(f)
     windower.ffxi.run(false)
     coroutine.sleep(1)
     local party_count = ac_party.count_member()
+    io_chat.info("party_count", party_count)
     if party_count == 0 then
 	party_count = 1  -- ソロの時
     end
