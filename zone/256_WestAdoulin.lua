@@ -139,7 +139,7 @@ M.routes = {
     },
     mog2unity = {  -- ミスラ
 	{x=7.7,y=-147.1,z=0.7}, {x=15,y=-120},
-	{x=14,y=-114,z=-0.1}, {touch="Nunaarl Bthtrogg"}
+	{x=14,y=-112,z=-0.1}, {touch="Nunaarl Bthtrogg"}
     },
 }
 

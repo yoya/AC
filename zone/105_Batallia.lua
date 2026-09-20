@@ -36,7 +36,8 @@ M.routes = {
 }
 
 M.essential_points = {
-    from_jueno = {x=486.3,y=-163.3,z=8.3},
+    -- x=486.3,y=-163.3...-160,
+    from_jueno = {x=486.3,y=-161.8,z=8.3,d=3},
     book = {x=-67,y=448,z=-1.5},
     from_jugner = {x=-439.4,y=-242.2,z=-8},
     from_eldieme = {x=166.4,y=-603.4,z=24.2},
