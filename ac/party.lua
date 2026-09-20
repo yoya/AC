@@ -158,6 +158,24 @@ function M.update_party_member_info(id, info)
 	info.sub_job = jobs[info.sub_job].ens
     end
     object_assign(M.member_table[id], info)
+
+    -- party メンバーにいない分を削除。member.mob はゾーン外だと nil に
+    -- なるので、mob ではなく member.id (キャラクター id) で判定する
+    local party = windower.ffxi.get_party()
+    local current_ids = {}
+    for _, x in pairs({"p", "a1", "a2"}) do -- アライアンス全員
+        for i = 0, 5 do -- 自分含めて全員
+            local member = party[x..i]
+            if member ~= nil and member.id ~= nil then
+                current_ids[member.id] = true
+            end
+        end
+    end
+    for member_id in pairs(M.member_table) do
+        if not current_ids[member_id] then
+            M.member_table[member_id] = nil
+        end
+    end
 end
 
 -- conf { main_job, name }
