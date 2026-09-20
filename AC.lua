@@ -690,7 +690,7 @@ local cmd_patrol = function(zone, arg1, arg2)
 		end
 		coroutine.sleep(2)
 		command.send('input /logout')
-		coroutine.sleep(5)
+		coroutine.sleep(7)  -- 5 だとたまに間に合わない
 		push_keys({"down"})
 	    end
 	    for i = 1, n do
