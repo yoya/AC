@@ -12,6 +12,7 @@
 
 local M = {}
 
+local control = require 'control'
 local io_net = require 'io/net'
 local io_chat = require 'io/chat'
 local keyboard = require 'keyboard'
@@ -31,8 +32,10 @@ local function current_target()
     return windower.ffxi.get_mob_by_target("t")
 end
 
--- 掴めない時にタゲを落とす。escape はロックごと外れるので、
--- 次に注入した時は通るようになる
+-- 掴めない時の立て直し。<t> が何かを指していればロック残りの疑いが強いので
+-- escape で落とす (ロックごと外れる)。<t> が既に無い時は escape しても
+-- 何も変わらないので、tab で何か (味方でもよい) を掴ませ、注入が反映される
+-- 状態を作る。次の want はそこから正しい mob へ切り替えを試みる
 local function release(mob, t)
     local now = os.time()
     if now - last_warn_time >= WARN_INTERVAL_SEC then
@@ -41,7 +44,11 @@ local function release(mob, t)
 		      tostring(mob.name), t ~= nil and tostring(t.name) or "なし")
     end
     -- 短押し。呼び出し元の tick 予算を食わないように
-    keyboard.longpush_key("escape", 0.05)
+    if t ~= nil then
+	keyboard.longpush_key("escape", 0.05)
+    else
+	keyboard.longpush_key("tab", 0.05)
+    end
     fail_count = 0
 end
 
@@ -64,6 +71,14 @@ function M.want(mob)
 	return true
     end
     fail_count = fail_count + 1
+    if control.debug then
+	local player = windower.ffxi.get_player()
+	io_chat.printf("ac/target.want: %s を掴めない (%d/%d) locked:%s valid_target:%s spawn_type:%s <t>:%s",
+		       mob.name, fail_count, FAIL_MAX,
+		       tostring(player ~= nil and player.target_locked),
+		       tostring(mob.valid_target), tostring(mob.spawn_type),
+		       t ~= nil and tostring(t.name) or "なし")
+    end
     if fail_count >= FAIL_MAX then
 	release(mob, t)
     end
