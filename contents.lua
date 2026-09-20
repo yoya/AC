@@ -41,8 +41,10 @@ M.redeem  = require 'contents/redeem'
 M.wanted  = require 'contents/wanted'
 M.sortie  = require 'contents/sortie'
 M.chocobo = require 'contents/chocobo'
+M.level   = require 'contents/level'
 M.contents_table = {
     -- モードが必要なだけで特別な処理のないcontentsは、ここに追加しない
+    [M.Leveling]    = M.level,
     [M.Ambus]       = M.ambus,
     [M.Trial]       = M.trial,
     [M.Garden]      = M.garden,

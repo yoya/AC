@@ -111,6 +111,9 @@ function M.tick(player)
     if sub_tick ~= nil then
 	sub_tick(player)
     end
+    if contents.type == contents.Leveling then
+	M.dothebest(player)  -- レベル上げの時は定期的に本気を出す
+    end
     if player.status == pstatus.ENGAGED then
 	local food = food_table[player.main_job]
 	local food_list = {food}
