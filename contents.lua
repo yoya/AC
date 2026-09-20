@@ -25,8 +25,9 @@ M.GobMys      = 16  -- ゴブの不思議箱 (Gobbie Mystery Box)
 M.UnityWanted = 17  -- ユニティ・ウォンテッド
 M.Sortie      = 18  -- ソーティ
 M.ChocoboRace = 19  -- チョコボレース
+M.Peculiar    = 20  -- 珍妙なモンスターを討伐せよ
 
-M.all_contents = { M.Idle, M.Leveling, M.Ambus, M.Works, M.Trove,  M.Mission, M.Abyssea, M.Garden, M.Trial, M.Raives, M.WKR, M.LoginPoint, M.Vagary, M.Synergy, M.Redeem, M.GobMys, M.UnityWanted, M.Sortie, M.ChocoboRace }
+M.all_contents = { M.Idle, M.Leveling, M.Ambus, M.Works, M.Trove,  M.Mission, M.Abyssea, M.Garden, M.Trial, M.Raives, M.WKR, M.LoginPoint, M.Vagary, M.Synergy, M.Redeem, M.GobMys, M.UnityWanted, M.Sortie, M.ChocoboRace, M.Peculiar }
 
 M.ambus   = require 'contents/ambus'
 M.trial   = require 'contents/trial'
@@ -90,6 +91,7 @@ M.name_table = {
     [M.UnityWanted] = {'UnityWanted', 'wanted', 'wa'},
     [M.Sortie]      = {'Sortie', 'sort', 'sor', 'so'},
     [M.ChocoboRace] = {'ChocoboRace', 'chocobo', 'choco', 'race'},
+    [M.Peculiar]    = {'Peculiar', 'pecu', 'pec'},
 }
 
 M.incoming_text_listener_id = nil
