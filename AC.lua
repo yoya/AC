@@ -525,6 +525,14 @@ function argument_means_on(s)
 end
 
 function M.warp_with_equip(arg, delay)
+    task.all_clear()
+    local player = windower.ffxi.get_player()
+    if arg == 'warp' then
+	if player.main_job == "BLM" or player.sub_job == "BLM" then
+	    task.set_task_simple('input /ma デジョン <me>', 0, 5)
+	    return
+	end
+    end
     io_chat.print("### 指輪ワープ", arg)
     if arg == 'warp' or
 	arg == 'dim' or arg == 'holla' or arg == 'mea' then
