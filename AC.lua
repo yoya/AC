@@ -660,11 +660,11 @@ local cmd_patrol = function(zone, arg1, arg2)
 		elseif arg2 == "garden" or arg2 == "g" then  -- 栽培
 		    command.send('input /garden')  -- 宅配ポストを開ける
 		    coroutine.sleep(5)
-		    push_keys({"enter"})
-		    coroutine.sleep(3)
-		    push_keys({"enter"})
+		    push_keys({"enter"})  -- モグ金庫
 		    coroutine.sleep(2)
-		    push_keys({"enter"})
+		    push_keys({"enter"})  -- 植木鉢
+		    coroutine.sleep(2)
+		    push_keys({"enter"})  -- 様子を見る
 		    coroutine.sleep(1)
 		    push_keys({"escape"})
 		    coroutine.sleep(1)
