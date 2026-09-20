@@ -17,6 +17,22 @@ M.routes = {
 	{x=33,y=14,z=-2,d=1}, {x=38,y=18,z=-4.1,d=1}, {x=37,y=44,z=-6.1,d=1},
 	{x=42,y=54.5}, {a="opendoor"}, {x=42,y=58}, {x=41.9,y=63.6}
     },
+    nica = {
+	{x=125,y=7,z=8.5,desc="Nicadio(ガード？)"},
+	{x=127,y=0}, {x=141,y=-12}, {touch="Nicadio"}
+    },
+    arg = {
+	{x=125,y=7,z=8.5,desc="Argus(ガード？)"},
+	{x=127,y=0}, {x=128,y=-1}, {touch="Argus"}
+    },
+}
+
+M.essential_points = {
+    hp1 = {x=125,y=7,z=8.5},
+}
+
+M.automatic_routes = {
+    hp1 = { route="arg", contents="Mission" },
 }
 
 return M
