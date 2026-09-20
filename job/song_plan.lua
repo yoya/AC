@@ -54,18 +54,50 @@ function M.max_songs(instrument_id, clarion_call)
 end
 
 -- 維持したい歌の本数。
----  keep_id : 普段着ける楽器の item id (ミラクルチアー)
----  grow_id : 枠を増やす時だけ着ける楽器の item id (ダウルダヴラ)。
----            持っていなければ nil
+---  keep_id      : 普段着ける楽器の item id (ミラクルチアー)
+---  grow_id      : 枠を増やす時だけ着ける楽器の item id (ダウルダヴラ)。
+---                 持っていなければ nil
+---  clarion_call : クラリオンコール中か
+---  held         : 今かかっている歌の本数
 ---
 --- 歌の枠は、今かかっていない曲を歌った瞬間の楽器の歌数まで増える。
 --- どちらの楽器にも持ち替えられるので、維持できるのは多い方の本数。
 ---
---- クラリオンコールは数えない。効果中は1曲多く載せられるが、切れた後は
---- 同じ本数まで増やし直せない。数えると「載せられないのに残り 0 に見える曲」
---- が plan に残り、押し出し合いのまま歌い続ける事になる
-function M.target_songs(keep_id, grow_id)
-    return math.max(M.max_songs(keep_id, false), M.max_songs(grow_id, false))
+--- クラリオンコール中はどちらの楽器でも1曲多い。ダウルダヴラなら5曲目まで
+--- 載る。効果が切れても、かかっている曲の歌い直しは枠を使わないので、
+--- 切らす前に歌い直す限り本数は減らない。切らして枠が減ったら held が
+--- 下がり、楽器で増やし直せる本数に戻る (クラリオンコールはリキャストが
+--- 長いので、一度切らした5曲目はすぐには戻せない)。
+---
+--- held を下限にするのは、クラリオンコールが切れた瞬間に target が
+--- 下がって、今かかっている曲を落としてしまわない為。落とすと誰も残り時間を
+--- 見ないまま切れて、枠が1つ減る。keep_plan も同じ事を見ているが、
+--- target 自体を下げると want_instrument の判断と ac show song の表示が
+--- 実態とずれる。
+---
+--- held は「今かかっている本数」なので、target がここで膨らんでも
+--- keep_plan は乗っていない曲を足さない (held < target にならない)。
+--- 載らない曲が plan に残って歌い続ける事にはならない
+function M.target_songs(keep_id, grow_id, clarion_call, held)
+    local n = math.max(M.max_songs(keep_id, clarion_call),
+		       M.max_songs(grow_id, clarion_call))
+    return math.max(n, held or 0)
+end
+
+-- クラリオンコールを使うか。
+---  held    : 今かかっている歌の本数
+---  keep_id : 普段着ける楽器の item id (ミラクルチアー)
+---  grow_id : 枠を増やす時だけ着ける楽器の item id (ダウルダヴラ)。
+---            持っていなければ nil
+---
+--- 使えば1曲増やせるなら使う。ダウルダヴラ (歌数+2) を持っているなら
+--- 5曲未満、ミラクルチアー (+1) だけなら4曲未満が境目。
+--- 効果は 180 秒あるので、0曲から歌い始めても枠を増やし切る時間はある。
+---
+--- target_songs に held を渡さない。渡すと今かかっている本数がそのまま
+--- 下限に入って必ず「届いている」事になり、二度と使わなくなる
+function M.want_clarion_call(held, keep_id, grow_id)
+    return held < M.target_songs(keep_id, grow_id, true)
 end
 
 -- 楽器の持ち替え。

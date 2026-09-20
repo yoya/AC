@@ -224,9 +224,51 @@ do
     check("ミラクルチアーを持っていない",
 	  song_plan.target_songs(nil, DAURDABLA), 4)
     check("どちらも無い", song_plan.target_songs(nil, nil), 2)
-    -- クラリオンコールは数えない。切れた後に増やし直せないので、
-    -- 数えると押し出し合いのまま歌い続ける事になる
-    check("引数にクラリオンコールは無い", song_plan.target_songs(MIRACLE), 3)
+    -- クラリオンコール中はどちらの楽器でも1曲多い
+    check("ミラクルチアー + クラリオンコール",
+	  song_plan.target_songs(MIRACLE, nil, true), 4)
+    check("ミラクルチアー + ダウルダヴラ + クラリオンコール",
+	  song_plan.target_songs(MIRACLE, DAURDABLA, true), 5)
+    check("ダウルダヴラ + クラリオンコール",
+	  song_plan.target_songs(nil, DAURDABLA, true), 5)
+    check("楽器なし + クラリオンコール",
+	  song_plan.target_songs(nil, nil, true), 3)
+    -- 今かかっている本数は下回らない。クラリオンコールが切れた瞬間に
+    -- target が下がって、乗っている曲を落とさない為
+    check("クラリオンコール切れ後も4曲維持",
+	  song_plan.target_songs(MIRACLE, nil, false, 4), 4)
+    check("クラリオンコール切れ後も5曲維持",
+	  song_plan.target_songs(MIRACLE, DAURDABLA, false, 5), 5)
+    check("切らして枠が減れば戻る",
+	  song_plan.target_songs(MIRACLE, nil, false, 3), 3)
+    check("5曲目を切らせばダウルダヴラの4曲に戻る",
+	  song_plan.target_songs(MIRACLE, DAURDABLA, false, 4), 4)
+    check("かかっている本数が少なければ楽器のまま",
+	  song_plan.target_songs(MIRACLE, DAURDABLA, false, 1), 4)
+    check("held は省略できる", song_plan.target_songs(MIRACLE, nil, false), 3)
+end
+
+print("=== want_clarion_call: クラリオンコールを使うか")
+do
+    local MIRACLE, DAURDABLA = 22249, 18839
+    -- ダウルダヴラを持っているなら5曲まで載る
+    check("ダウルダヴラ持ちの4曲は使う",
+	  song_plan.want_clarion_call(4, MIRACLE, DAURDABLA), true)
+    check("ダウルダヴラ持ちの5曲は使わない",
+	  song_plan.want_clarion_call(5, MIRACLE, DAURDABLA), false)
+    -- ミラクルチアーだけなら4曲
+    check("ミラクルチアーだけの3曲は使う",
+	  song_plan.want_clarion_call(3, MIRACLE, nil), true)
+    check("ミラクルチアーだけの4曲は使わない",
+	  song_plan.want_clarion_call(4, MIRACLE, nil), false)
+    -- 歌が無い所からでも使う。効果 180 秒あれば歌い切れる
+    check("0曲でも使う", song_plan.want_clarion_call(0, MIRACLE, DAURDABLA), true)
+    -- 楽器を持っていなければ素の2曲 + クラリオンコールで3曲
+    check("楽器なしの2曲は使う", song_plan.want_clarion_call(2, nil, nil), true)
+    check("楽器なしの3曲は使わない", song_plan.want_clarion_call(3, nil, nil), false)
+    -- 数え過ぎても使わない (押し出しで本数が多く見えた時)
+    check("数え過ぎたら使わない",
+	  song_plan.want_clarion_call(6, MIRACLE, DAURDABLA), false)
 end
 
 print("=== want_instrument: 楽器の持ち替え")
@@ -240,12 +282,25 @@ do
 	  song_plan.want_instrument(3, MIRACLE_CAP, TARGET), "daurdabla")
     check("4曲でミラクルチアーに戻す",
 	  song_plan.want_instrument(4, MIRACLE_CAP, TARGET), "miracle")
-    -- クラリオンコール中はミラクルチアーのまま4曲目まで載る。
-    -- ここでダウルダヴラに持ち替えると5曲目を歌ってしまう
+    -- ダウルダヴラを持っていない時のクラリオンコール中。目標の4曲は
+    -- ミラクルチアーのまま載るので持ち替えない
     check("クラリオンコール中の3曲はミラクルチアー",
 	  song_plan.want_instrument(3, CLARION_CAP, TARGET), "miracle")
     check("クラリオンコール中の4曲もミラクルチアー",
 	  song_plan.want_instrument(4, CLARION_CAP, TARGET), "miracle")
+    -- ダウルダヴラ + クラリオンコールの5曲。4曲目まではミラクルチアーで
+    -- 載るので、持ち替えるのは5曲目を歌う時だけ
+    local TARGET5 = 5
+    check("5曲目まで3曲はミラクルチアー",
+	  song_plan.want_instrument(3, CLARION_CAP, TARGET5), "miracle")
+    check("4曲でダウルダヴラ (5曲目を歌う)",
+	  song_plan.want_instrument(4, CLARION_CAP, TARGET5), "daurdabla")
+    check("5曲でミラクルチアーに戻す",
+	  song_plan.want_instrument(5, CLARION_CAP, TARGET5), "miracle")
+    -- クラリオンコールが切れた後。5曲乗ったままなら歌い直すだけなので
+    -- ミラクルチアーでよい (かかっている曲の歌い直しは枠を使わない)
+    check("クラリオンコール切れ後の5曲はミラクルチアー",
+	  song_plan.want_instrument(5, MIRACLE_CAP, TARGET5), "miracle")
     check("数え過ぎてもミラクルチアー",
 	  song_plan.want_instrument(6, MIRACLE_CAP, TARGET), "miracle")
     -- ダウルダヴラを持っていなければ目標は3曲。持ち替えようとしない

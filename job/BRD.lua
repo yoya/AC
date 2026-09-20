@@ -6,6 +6,7 @@ local command = require 'command'
 local contents = require 'contents'
 local io_chat = require 'io/chat'
 local task = require 'task'
+local utils = require 'utils'
 local acmob = require 'mob'
 local role_Melee = require 'role/Melee'
 local pstatus = require 'player_status'
@@ -72,8 +73,15 @@ local PENDING_MAX = 30
 -- 出ない歌を待ち続けて他の曲まで切らさない為
 local QUEUE_MAX = 60
 
--- クラリオンコールの status (res/job_abilities.lua)。歌える本数が1曲増える
+-- クラリオンコール (res/job_abilities.lua [332])。歌える本数が1曲増える。
+-- 効果 180 秒。リキャストは recast_id で引く
+local CLARION_CALL_ID = 332
+local CLARION_CALL_RECAST_ID = 254
 local CLARION_CALL_STATUS = 499
+local CLARION_CALL_COMMAND = "input /ja クラリオンコール <me>"
+-- 送ってから効果が乗るまでの間に積み直さない為の間隔。実際のリキャストは
+-- get_ability_recasts で見るので、ここは二重送信を防げるだけでよい
+local CLARION_CALL_PERIOD = 30
 
 -- task が実行する時に呼ばれるコマンド。実体は song_sent
 local SONG_COMMAND = "//brdsong "
@@ -220,28 +228,72 @@ local function grow_instrument_id()
 end
 
 -- 今の楽器まわりの状況。get_items を何度も引かないよう、1 tick に1回作る。
+---  held : 今かかっている歌の本数。target はこれを下回らない
+-- 戻り値:
 --   id       : 今着けている楽器の item id (楽器を持っていなければ nil)
 --   swap     : 持ち替えの対象か。短剣や、自分で選んだ楽器なら false
+--   clarion  : クラリオンコール中か
+--   keep_id  : 持ち替えずに着ける楽器の item id
+--   grow_id  : 枠を増やす時だけ着ける楽器の item id。無ければ nil
 --   keep_cap : 普段の楽器で載る本数。クラリオンコール中は1曲多い
 --   target   : 維持したい歌の本数
 --
 -- target を今着けている楽器で決めないのは、ダウルダヴラに持ち替えている間
--- だけ本数が増えると、その隙に余分な1曲を歌ってしまい (クラリオンコール中
--- なら5曲目)、ミラクルチアーに戻した時にその曲が plan から外れて、誰も
--- 残り時間を見ないまま切れる為
-local function instrument_state(player)
+-- だけ本数が増えると、ミラクルチアーに戻した時に一番下の曲が plan から
+-- 外れて、誰も残り時間を見ないまま切れる為。持ち替え先も込みで決めておけば
+-- 持ち替えても target は動かない
+local function instrument_state(player, held)
     local id = equipped_instrument_id()
     local swap = id ~= nil and SWAP_TARGET[id] ~= nil
+    local clarion = has_clarion_call(player)
+    -- 持ち替えないなら、今着けている楽器だけで決める
+    local keep = swap and MIRACLE_CHEER_ID or id
+    local grow = swap and grow_instrument_id() or nil
     return {
 	id = id,
 	swap = swap,
-	keep_cap = song_plan.max_songs(MIRACLE_CHEER_ID,
-				       has_clarion_call(player)),
-	-- 持ち替えないなら、今の楽器で載る本数がそのまま目標
-	target = swap
-	    and song_plan.target_songs(MIRACLE_CHEER_ID, grow_instrument_id())
-	    or song_plan.max_songs(id, false),
+	clarion = clarion,
+	keep_id = keep,
+	grow_id = grow,
+	keep_cap = song_plan.max_songs(keep, clarion),
+	target = song_plan.target_songs(keep, grow, clarion, held),
     }
+end
+
+-- クラリオンコールを今使えるか。
+-- 覚えていない時も get_ability_recasts は 0 (使える) を返し得るので、
+-- 習得済みかどうかも確かめる
+local function clarion_ready()
+    local abilities = windower.ffxi.get_abilities()
+    if abilities == nil or abilities.job_abilities == nil then
+	return false
+    end
+    if not utils.table.contains(abilities.job_abilities, CLARION_CALL_ID) then
+	return false
+    end
+    local recasts = windower.ffxi.get_ability_recasts()
+    local recast = recasts ~= nil and recasts[CLARION_CALL_RECAST_ID] or nil
+    return recast ~= nil and recast <= 0
+end
+
+-- クラリオンコールを使う。使えば1曲増やせて、リキャストが明けている時だけ。
+-- 歌より先に出したいので PRIORITY_HIGH に積む。
+-- 効果は 180 秒あるので、ここから歌い始めても枠を増やし切る時間はある
+--- filled : 今かかっている歌の本数
+local function clarion_tick(inst, filled)
+    if inst.clarion then
+	return  -- もうかかっている
+    end
+    if not song_plan.want_clarion_call(filled, inst.keep_id, inst.grow_id) then
+	return  -- 使っても増やせない
+    end
+    if not clarion_ready() then
+	return
+    end
+    -- command, delay, duration, period, eachfight
+    task.set_task(task.PRIORITY_HIGH,
+		  task.new_task(CLARION_CALL_COMMAND, 0, 2,
+				CLARION_CALL_PERIOD, false))
 end
 
 -- 着けたい楽器に着替える。
@@ -377,14 +429,6 @@ local function plan_remains(plan)
 				  lacking_status(plan, status_of))
 end
 
--- 今維持する曲と、その残り秒。song_tick と表示で共用する。
--- 優先順の全曲で残りを出してから選ぶ。先に切り詰めると、優先順の下にある
--- 「今かかっている曲」が消えて、誰も歌い直さないまま切れる
-local function current_plan_remains(target)
-    local full = current_plan()
-    return song_plan.keep_plan(full, plan_remains(full), target)
-end
-
 -- 自分が押さえている歌の枠の数。plan の曲で、今かかっているものを数える。
 -- ac_buff には他の詩人 (トラスト含む) の歌も並ぶので、そちらを数えると枠が
 -- 埋まって見えて、ダウルダヴラに持ち替えられず4曲目を足せなくなる。
@@ -397,6 +441,19 @@ local function filled_slots(remains)
 	end
     end
     return n
+end
+
+-- 今の楽器まわりと、維持する曲・その残り秒。song_tick と表示で共用する。
+-- 優先順の全曲で残りを出してから切り詰める。先に切り詰めると、優先順の
+-- 下にある「今かかっている曲」が消えて、誰も歌い直さないまま切れる。
+-- 維持したい本数が今かかっている本数を下回らないので、楽器の状況は
+-- 全曲の残りを出した後でないと作れない
+local function song_state(player)
+    local full = current_plan()
+    local full_remains = plan_remains(full)
+    local inst = instrument_state(player, filled_slots(full_remains))
+    local plan, remains = song_plan.keep_plan(full, full_remains, inst.target)
+    return inst, plan, remains
 end
 
 -- status_id の実測の、本数と一番短い残り。self_remains は降順なので末尾が最短
@@ -508,10 +565,10 @@ local function song_tick(player)
     -- もう一度歌ってしまう
     local waiting = waiting_song()
     local enemy = enemy_near(player)
-    local inst = instrument_state(player)
-    local plan, remains = current_plan_remains(inst.target)
+    local inst, plan, remains = song_state(player)
+    local filled = filled_slots(remains)
     -- 楽器は歌っていない間も見る (着弾したら普段の楽器に戻す為)
-    local want = instrument_tick(inst, filled_slots(remains), enemy)
+    local want = instrument_tick(inst, filled, enemy)
     if waiting then
 	return
     end
@@ -521,6 +578,9 @@ local function song_tick(player)
     if not enemy then
 	return
     end
+    -- 枠を増やせるなら歌う前に使う。歌の着弾を待っている間は使わない
+    -- (その歌には間に合わず、効果時間だけ減る)
+    clarion_tick(inst, filled)
     warn_overflow(plan, remains)
     if not song_plan.should_sing(remains) then
 	return
@@ -573,8 +633,7 @@ end
 -- 判断に使っている値をそのまま出す。USE_MEMBER_LACK を有効にしてよいか、
 -- 換算定数がずれていないかを、実機で確かめる為の窓口でもある
 function M.show_song(player, arg)
-    local inst = instrument_state(player)
-    local plan, remains = current_plan_remains(inst.target)
+    local inst, plan, remains = song_state(player)
     local status_of = get_song_status_by_name()
     local now = os.time()
     io_chat.set_next_color(5)
@@ -595,12 +654,16 @@ function M.show_song(player, arg)
     io_chat.printf("楽器:%s クラリオンコール:%s 維持したい本数:%d (plan %d曲中%d曲)",
 		   inst.id == nil and "なし"
 		       or (res_name.item_ja(inst.id).."("..inst.id..")"),
-		   tostring(has_clarion_call(player)), inst.target,
+		   tostring(inst.clarion), inst.target,
 		   #SONG_PLANS[plan_key], #plan)
     local filled = filled_slots(remains)
     io_chat.printf("押さえている枠:%d 普段の楽器で載る本数:%d 着けたい楽器:%s",
 		   filled, inst.keep_cap,
 		   song_plan.want_instrument(filled, inst.keep_cap, inst.target))
+    io_chat.printf("クラリオンコール 使いたい:%s 今使える:%s",
+		   tostring(song_plan.want_clarion_call(filled, inst.keep_id,
+							inst.grow_id)),
+		   tostring(clarion_ready()))
     -- 他の詩人 (トラスト含む) の歌も混ざる。判断には使っていない
     io_chat.printf("自分に乗っている歌 (他の詩人の分も含む):%s",
 		   tostring(song_count()))
