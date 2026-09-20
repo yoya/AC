@@ -5,11 +5,12 @@ local M = { id = 237 }
 M.routes = {
     -- #1
     naji = { -- 総統府 Naji
-	{x=45,y=-18,z=-14}, {x=64.3,y=-4.3,z=-14}
+	{x=45,y=-18,z=-14}, {x=64.3,y=-4.3,z=-14},
+	{touch="Naji"}
     },
     iron = { -- 総統府 Iron Eater
 	{x=45,y=-18,z=-14}, {x=66,y=-1},
-	{x=90.4,y=1.4,z=-19.5}, {target="Iron Eater"}, {a="touch"}
+	{x=90.4,y=1.4,z=-19.5}, {touch="Iron Eater"}
     },
     cid = {
 	{x=45,y=-18,z=-14}, {x=30.4,y=-16.6}, {x=8,y=-17},
@@ -17,15 +18,24 @@ M.routes = {
 	{x=-39.6,y=-9.6}, {x=-39.7,y=-6}, {x=-38.8,y=-1.9},
 	{x=-37.1,y=-1.8}, {a="f8touch"}, {x=-33.1,y=-1.6},      
 	{x=-23.2,y=-2}, {x=-16.7,y=-4.8}, {x=-14.3,y=-3.5},
-	{x=-13,y=1.1}, {a="f8touch"}
+	{x=-13,y=1.1}, {touch="Cid"}
     },
     win = {
 	{x=45,y=-18,z=-14,desc="ウィンダス領事館"},
 	{x=36,y=0}, {x=25,y=22},
 	{target="Door:Windurstian Consul"}, {a="f8touch"}, {x=24,y=25},
 	{x=18,y=32}, {x=18,y=35},
-	{x=23,y=40,z=-16.4}, {target="Patt-Pott"}, {a="touch"}
+	{x=23,y=40,z=-16.4}, {touch="Patt-Pott"}
     }
 }
+
+M.essential_points = {
+    hp1 = {x=45,y=-18,z=-14},
+}
+
+M.automatic_routes = {
+    -- hp1 = { route="naji", contents="Mission" },
+}
+
 
 return M

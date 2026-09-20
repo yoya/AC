@@ -124,7 +124,7 @@ M.routes = {
     hp2unity = {  -- 子ミスラ
 	{x=31,y=-163,z=0}, {x=23,y=-151}, {x=18,y=-113},
 	{x=15.2,y=-111.3,z=-0.1}, {a="f8"},
-	{target="Nunaarl Bthtrogg"}, {a="f8touch"}
+	{touch="Nunaarl Bthtrogg"},
     },
     def2emi = {  -- エミネンスのガルカ
 	{x=42,y=-117,z=2}, {x=33,y=-121}, {x=16,y=-122,d=1}, {a="f8"},
