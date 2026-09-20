@@ -229,12 +229,15 @@ function move_to_action_faith(f)
     ]]
 end
 
-function M.action_touch(name)
+function M.wait_for_mob_by_name(name)
     local found = false
     local count = 0
     -- ターゲットが見えるまで待つ
     while not found do
 	count = count + 1
+	if count > 10 then
+	    return false
+	end
 	local mob = windower.ffxi.get_mob_by_name(name)
 	if mob == nil or mob.name ~= name then
 	    io_chat.warnf("ac/move.action_touch not found:%s %d/10",
@@ -243,22 +246,27 @@ function M.action_touch(name)
 	else
 	    found = true
 	end
-	if count > 10 then
-	    io_chat.errorf("ac/move.action_touch not found:%s) %d/10",
-			   name, count)
-	    return
-	end
     end
+    return true
+end
+
+function M.action_touch(name)
+    M.wait_for_mob_by_name(name)
     -- ターゲットを合わせる
-    io_net.target_by_mob_name(name)
+    if not io_net.target_by_mob_name(name) then
+	io_chat.errorf("ac/move.action_touch not found:%s)", name)
+	return false
+    end
     coroutine.sleep(0.2)
     utils.target_lockon(true) -- ロックする
+    coroutine.sleep(0.2)
     push_keys({"enter"})  -- 無駄打ち
     coroutine.sleep(0.2)
     push_keys({"enter"})  -- 本打ち
-    coroutine.sleep(0.5)
+    coroutine.sleep(0.2)
     utils.target_lockon(false) -- ロックを外す
     coroutine.sleep(0.5)
+    return true
 end
 
 function move_to_action(p, reverse)
@@ -357,7 +365,9 @@ function move_to_action(p, reverse)
 	utils.target_lockon(p.target_lockon)
     end
     if p.touch ~= nil then
-	M.action_touch(p.touch)
+	if not M.action_touch(p.touch) then
+	    return false
+	end
     end
     if p.w ~= nil then
 	p.wait = p.w
