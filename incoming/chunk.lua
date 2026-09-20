@@ -14,6 +14,7 @@ local ac_party = require('ac/party')
 local ac_stat = require('ac/stat')
 
 local packet_handler = { }
+local res = require 'resources'
 
 -- PC Update (0x0DD と似てる)
 packet_handler[0x00D] = function(packet)
@@ -77,6 +78,7 @@ packet_handler[0x028] = function(packet)
 end
 
 -- Action Message
+-- git/Windower/Resources/resources_data/action_messages.lua
 packet_handler[0x029] = function(packet)
     -- io_chat.print(packet)
     local mesg = packet.Message
@@ -101,15 +103,19 @@ packet_handler[0x029] = function(packet)
 	-- ac_defeated.done() -- set_task で表示しない時に戻せるよう残す
 	-- command, delay, duration, period, eachfight)
 	task.set_task(task.PRIORITY_LOW,
-		     task.new_task("ac defeated", 3, 3, 1, true))
-    elseif mesg == 206 then
-	do end -- (味方の？)強化切れ
+		      task.new_task("ac defeated", 3, 3, 1, true))
+    elseif mesg == 4 then -- 4 敵弱体??
+	do end
+    elseif mesg == 16 then-- 16 詠唱中断
+        do end
+    elseif mesg == 17 then -- 17 味方強化？
+	do end
+    elseif mesg == 206 then -- 強化切れ
+	do end
     else
 	do end
-	-- io_chat.print("XXX 0x029: "..packet.Message)
-	-- 4 敵弱体
-	-- 17 味方強化？
-	-- 18  MB ？
+	--local msg = res.action_messages[mesg]["en"]
+	--io_chat.notice("Action Message(0x029):", mesg, msg)
     end
 end
 
