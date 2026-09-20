@@ -569,15 +569,18 @@ local cmd_garden = function(zone, arg1)
 	arg1 == 'west' or arg1 == 'w' or  -- 西アドゥリン
 	arg1 == 'east' or arg1 == 'e' then  -- 東アドゥリン
 	local moogle = windower.ffxi.get_mob_by_name("Green Thumb Moogle")
-	ac_move.run_to_mob(moogle)
-	coroutine.sleep(1)
 	io_net.target_by_mob(moogle)
-	coroutine.sleep(1)
+	coroutine.sleep(0.2)
+	ac_move.run_to_mob(moogle)
+	utils.target_lockon(true)
+	coroutine.sleep(2)
+	-- ロックオンに失敗した時用にもう一度
+	io_net.target_by_mob(moogle)
+	coroutine.sleep(0.2)
 	utils.target_lockon(true)
 	coroutine.sleep(2)
 	windower.ffxi.run(false)
-	coroutine.sleep(2)
-	push_keys({"enter"})
+	push_keys({"enter", "enter"})  -- 空打ち+本打ち
 	coroutine.sleep(2)
 	-- 別の場所に移動したい
 	push_keys({"right", "right", "up", "enter"})
