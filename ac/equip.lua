@@ -182,6 +182,12 @@ function M.equip_item_by_priority_tree(item_tree)
 	    equiped_item_ids[name] = bag[inv_id].id
 	end
     end
+    -- 着替え前のロック状態。元々ロックしていた時だけ、装備変更で外れた分を
+    -- 復元する (unlock 側は触らない)。「毎回掛ける」は戦闘後にタゲが隣の
+    -- 味方へ移った所で固定される不具合を過去に起こしているので避ける。
+    local player_before = windower.ffxi.get_player()
+    local locked_before = player_before ~= nil and player_before.target_locked
+    local changed = false
     local used_item_ids = {}
     for slot_name, ids in pairs(item_tree) do
 	local slot = equip_slots[slot_name]
@@ -196,6 +202,7 @@ function M.equip_item_by_priority_tree(item_tree)
 		if bag ~= nil then
 		    windower.ffxi.set_equip(inv_id, slot, bag)
 		    used_item_ids[id] = true
+		    changed = true
 		    break
 		end
 	    end
@@ -203,12 +210,12 @@ function M.equip_item_by_priority_tree(item_tree)
     end
     -- 装備を送った後の 1 秒。job/COR.lua がこの sleep を当てにしている
     coroutine.sleep(1)
-    -- ここでロックを掛けない。元は「着替えるとロックが外れるので」入れたが、
-    -- この関数は戦闘開始 (job.battle_start) から毎回呼ばれるようになった。
-    -- 掛けたロックを外す者がいないので、戦闘後にタゲが隣の味方へ移ると
-    -- そこで固定され、io/net の 0x058 注入が通らなくなる。以降ずっと
-    -- 「攻撃対象ではありません」を撃ち続ける。
-    -- ロックが要る所 (モグガーデン、シナジー、works) は自分で掛けている
+    if changed and locked_before then
+	local player_after = windower.ffxi.get_player()
+	if player_after ~= nil and not player_after.target_locked then
+	    utils.target_lockon(true)  -- 着替えで外れた分だけ掛け直す
+	end
+    end
 end
     
 function M.tick(player)
