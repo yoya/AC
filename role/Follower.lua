@@ -14,6 +14,7 @@ local acprob = require 'prob'
 local ac_party = require 'ac/party'
 local pstatus = require 'player_status'
 local ac_target = require 'ac/target'
+local io_chat = require 'io/chat'
 
 local crystal_ids = item_data.crystal_ids -- クリスタル/塊
 local get_mob_position = acmob.get_mob_position
@@ -217,12 +218,20 @@ end
 local can_join_battle = function(item_level)
     -- 100以下は戦闘しない
     if item_level < 100 then
+        if control.debug then
+            io_chat.printf("can_join_battle: item_level=%d < 100", item_level)
+        end
         return false
     end
     -- 119未満は無理しない, 109 は頑張る。潜在外し
     if item_level < 109 then
         local mob = windower.ffxi.get_mob_by_target("bt")
         if mob == nil or mob.hpp > 90 then
+            if control.debug then
+                io_chat.printf("can_join_battle: item_level=%d bt=%s hpp=%s",
+                    item_level, mob ~= nil and mob.name or "nil",
+                    mob ~= nil and tostring(mob.hpp) or "nil")
+            end
             return false  -- 戦闘直後は危ないので、戦いに参加しない
         end
     end
@@ -281,9 +290,20 @@ local leader_enemy = function(leader)
     if index ~= nil then
         local mob = windower.ffxi.get_mob_by_index(index)
         if mob == nil or (id ~= nil and id ~= 0 and mob.id ~= id) then
+            if control.debug then
+                io_chat.printf("leader_enemy: index=%s id=%s mob=%s mob.id=%s (取得不可/id不一致)",
+                    tostring(index), tostring(id),
+                    mob ~= nil and mob.name or "nil",
+                    mob ~= nil and tostring(mob.id) or "nil")
+            end
             return nil  -- ゾーンをまたいで index が別の mob を指している
         end
         if not acmob.is_enemy(mob) then
+            if control.debug then
+                io_chat.printf("leader_enemy: %s is_enemy=false status=%s spawn_type=%s valid_target=%s target_type=%s",
+                    mob.name, tostring(mob.status), tostring(mob.spawn_type),
+                    tostring(mob.valid_target), tostring(mob.target_type))
+            end
             return nil
         end
         return mob
@@ -318,8 +338,13 @@ local search_enemy = function(leader, me_pos)
     if mob ~= nil then
         local dx = mob.x - me_pos.x
         local dy = mob.y - me_pos.y
-        if math.sqrt(dx*dx + dy*dy) <= JOIN_BATTLE_RANGE then
+        local dist = math.sqrt(dx*dx + dy*dy)
+        if dist <= JOIN_BATTLE_RANGE then
             return mob
+        end
+        if control.debug then
+            io_chat.printf("search_enemy: %s dist=%.1f > JOIN_BATTLE_RANGE(%d)",
+                mob.name, dist, JOIN_BATTLE_RANGE)
         end
     end
     -- bt は倒した敵が消えるまで残る。素通しすると死体を交戦相手として
@@ -339,9 +364,16 @@ end
 local attack_enemy = function(mob, item_level)
     ac_move.want_stop()
     if not ac_target.want(mob) then
+        if control.debug then
+            io_chat.printf("attack_enemy: %s ターゲットを掴めない", mob.name)
+        end
         return  -- 掴めていない。撃つと味方を殴りに行く
     end
     if item_level < 119 and mob.hpp >= 100 then
+        if control.debug then
+            io_chat.printf("attack_enemy: %s hpp=%d item_level=%d のため待機",
+                mob.name, mob.hpp, item_level)
+        end
         return  -- 装備が薄いので、リーダーが削るまで待つ
     end
     -- /attack は距離に関係なく通る。近接の間合いまで詰めてから撃っていた頃は、
