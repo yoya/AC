@@ -8,6 +8,10 @@ M.routes = {
 	{x=-84.5,y=-65.5,z=1}, {x=-101.1,y=-18.5,z=2,d=1},
 	{target="Atmacite Refiner"}, {a="touch"}
     },
+    pec = { -- void watch
+	{x=-84.5,y=-65.5,z=1}, {x=-101.1,y=-18.5,z=2,d=1},
+	{touch="Atmacite Refiner"},  -- メニュー選択も
+    },
     mission = {
 	{x=-84.5,y=-65.5,z=1}, {x=-98,y=-50}, {x=-105,y=-41,z=1},
     },
@@ -49,6 +53,7 @@ M.automatic_routes = {
     -- 条件違いを並べるときは配列にする (pick_route が条件付きを優先する)
     hp1_E = {
 	{ route="vw" },
+	{ route="pec", contents="Peculiar" },
 	{ route="mission", contents="mission" },
     },
     hp2_A = { route="sgate" },
