@@ -6,6 +6,7 @@ local command = require 'command'
 local io_chat = require 'io/chat'
 local role_Healer = require 'role/Healer'
 local pstatus = require 'player_status'
+local ac_ability = require 'ac/ability'
 
 M.main_job_prob_table = {
     { 200, 45, 'input /ma フラッシュ <t>', 1 },
@@ -30,10 +31,11 @@ M.sub_job_prob_table = {
 function M.main_tick(player)
     if player.status == pstatus.ENGAGED then -- 戦闘中
 	local hp = player.vitals.hp
-	if hp < 300 then
+	local c_invincible = "input /ja インビンシブル <me>"
+	if hp < 300 and ac_ability.usable(c_invincible) then
 	    io_chat.set_next_color(3)
 	    io_chat.printf("HP: %d < 300 => インビンシブル", hp)
-	    command.send("input /ja インビンシブル <me>")
+	    command.send(c_invincible)
 	end
 	if role_Healer.main_tick ~= nil then
 	    role_Healer.main_tick(player)

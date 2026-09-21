@@ -5,6 +5,7 @@ local M = {}
 local control = require 'control'
 local command = require 'command'
 local ac_record = require 'ac/record'
+local ac_ability = require 'ac/ability'
 local ws = require 'ws'
 
 -- 優先度別、タスク
@@ -211,13 +212,15 @@ M.init = function()
 end
 
 -- 優先順の高い方から、1つだけタスクを取得
-function M.get_task()
+-- ready(command) が false を返すタスクは、キューに残したまま飛ばして次を探す
+-- (再使用タイマーも進めない。使えるようになった tick で取り出される)
+function M.get_task(ready)
     local now = os.time()
     for level = PRIORITY_FIRST, PRIORITY_LAST do
 	for i, task in ipairs(task_table[level]) do
 	    local c = task.command
 	    local p = task_period_table[c]
-	    if p == nil or p.time <= now then
+	    if (p == nil or p.time <= now) and (ready == nil or ready(c)) then
 		task_period_table[c] = { time=now + task.period,
 					 eachfight=task.eachfight }
 		table.remove(task_table[level], i)
@@ -234,7 +237,7 @@ M.tick = function()
     if now < tick_next_time then
 	return
     end
-    local _, task = M.get_task()
+    local _, task = M.get_task(ac_ability.usable)
     if task == nil then
 	return
     end
