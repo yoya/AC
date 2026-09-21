@@ -212,19 +212,28 @@ M.init = function()
 end
 
 -- 優先順の高い方から、1つだけタスクを取得
--- ready(command) が false を返すタスクは、キューに残したまま飛ばして次を探す
--- (再使用タイマーも進めない。使えるようになった tick で取り出される)
+-- 再使用タイマーが明けたタスクのうち ready(command) が false のものは、
+-- キューから捨てて次を探す (再使用タイマーは進めない)。残しておくと、待っている
+-- 間に条件が消えても後で古いタスクが発動するので、まだ要るなら呼ぶ側が積み直す
 function M.get_task(ready)
     local now = os.time()
     for level = PRIORITY_FIRST, PRIORITY_LAST do
-	for i, task in ipairs(task_table[level]) do
+	local tasks = task_table[level]
+	local i = 1
+	while i <= #tasks do
+	    local task = tasks[i]
 	    local c = task.command
 	    local p = task_period_table[c]
-	    if (p == nil or p.time <= now) and (ready == nil or ready(c)) then
-		task_period_table[c] = { time=now + task.period,
-					 eachfight=task.eachfight }
-		table.remove(task_table[level], i)
-		return level, task
+	    if p == nil or p.time <= now then
+		if ready == nil or ready(c) then
+		    task_period_table[c] = { time=now + task.period,
+					     eachfight=task.eachfight }
+		    table.remove(tasks, i)
+		    return level, task
+		end
+		table.remove(tasks, i)
+	    else
+		i = i + 1
 	    end
 	end
     end
