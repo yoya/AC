@@ -322,6 +322,9 @@ function move_to_action(p, reverse)
 	    get_mob_position(pull.base_pos, "me")  -- 帰還地点を更新
 	end
     end
+    if p.command ~= nil then
+	command.send(p.command)
+    end
     if p.enemy_range ~= nil then
 	io_chat.info("enemy_range:"..p.enemy_range)
 	control.enemy_range = p.enemy_range

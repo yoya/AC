@@ -1335,10 +1335,12 @@ windower.register_event('login', function()
     seed_random()  -- load 時に player が nil だった場合の取り直し
     ac_stat.init()
     ac_equip.init()  -- 前のキャラのバッグ内位置で装備し直さない
+    contents.login()
 end)
 
 windower.register_event('logout', function()
     zone_change.logout()  -- 前のキャラのゾーンを次のログインに持ち越さない
+    contents.logout()
     ac_equip.init()
     -- ゾーン由来の上書きは、そのゾーンの zone_out でしか外れない。
     -- ログイン時は zone_out が走らないので、ここで外しておく

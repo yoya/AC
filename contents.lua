@@ -187,11 +187,34 @@ function M.npc_action_handler(zone, mob)
     end
 end
 
+function M.zone_in()
+    local c = M.contents_table[M.type]
+    if c == nil then return end
+    if c.zone_in ~= nil then
+	c.zone_in()
+    end
+end
+
 function M.zone_out()
-    for _, c in pairs(M.contents_table) do
-	if c.zone_out ~= nil then
-	    c.zone_out()
-	end
+    local c = M.contents_table[M.type]
+    if c == nil then return end
+    if c.zone_out ~= nil then
+	c.zone_out()
+    end
+end
+
+function M.login()
+    local c = M.contents_table[M.type]
+    if c == nil then return end
+    if c.login ~= nil then
+	c.login()
+    end
+end
+function M.logout()
+    local c = M.contents_table[M.type]
+    if c == nil then return end
+    if c.logout ~= nil then
+	c.logout()
     end
 end
 

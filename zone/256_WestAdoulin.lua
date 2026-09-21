@@ -35,6 +35,9 @@ M.routes = {
     moogle = {  -- 開始地点が他にマッチしないように
 	{x=0, y=0, z=0}, {x=0, y=0, z=0},
     },
+    logout = {
+	{x=0, y=0, z=0}, {command="ac logout"},
+    },
     -- PIO
     pio = { {x=-105.5,y=-13.5}, {x=-101,y=-11},
 	{x=-96.2,y=15.5}, -- {x=-88.8,y=15}
@@ -110,7 +113,7 @@ M.routes = {
     },
     -- Defliaa から
     def2nuna = {--  Nunaarl(子ミスラ)へ
-	{x=41,y=-117,z=2}, {x=32,y=-121,z=0,d=1},
+	{x=41,y=-117,z=2,d=1}, {x=32,y=-121,z=0,d=1},
 	{x=24,y=-121,d=1}, --{x=15,y=-112,z=-0.1,d=1},
 	{x=16,y=-113,z=0,d=1}, {a="f8"},
 	{target="Nunaarl Bthtrogg"}, {show="bag_empty_epace"},
@@ -155,7 +158,10 @@ M.essential_points = {
 }
 
 M.automatic_routes = {
-    moogle = { route="moogle" }, -- 動かないように
+    moogle = {
+	{ route="moogle" }, -- 動かないように
+	{ route="logout", contents="Redeem"},
+    },
     wp_pio = { route="pio"},
     wp_mum = { route="mum" },
     wp_cou = {

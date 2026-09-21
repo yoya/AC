@@ -24,6 +24,22 @@ function M.contents_in(player)
     M.unity_point_redeem_enable = true
 end
 
+function M.login()
+    print("モグハウスなら西アドゥリンへ移動")
+    coroutine.sleep(16)
+    command.send('ac house west')
+end
+
+function M.logout()
+    print("交換作業:次のキャラへ")
+    coroutine.sleep(7)
+    push_keys({"down"})
+    coroutine.sleep(1)
+    push_keys({"enter"})
+    coroutine.sleep(1)
+    push_keys({"enter"})
+end
+
 function M.incoming_text_handler(text)
     if M.parent.type ~= M.parent.Redeem then
 	return
@@ -55,7 +71,8 @@ function M.incoming_text_handler(text)
 	    command.send("ac move def2nuna")
 	else
 	    -- モグハウスに行く
-	    windower.ffxi.run(26 - me.x, -128 - me.y)
+	    --windower.ffxi.run(26 - me.x, -128 - me.y)
+	    windower.ffxi.run(23 - me.x, -126 - me.y)
 	end
     --elseif string.contains(text, "まいどありにゃ〜") then
     elseif string.contains(text, "まいどありにゃ") then
