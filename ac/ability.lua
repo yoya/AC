@@ -1,14 +1,14 @@
 --- Ability
---- 強化系ジョブアビリティ (自分にかけるバフ) を、使える時だけ使う為の判定。
+--- 自分に使うジョブアビリティ (/ja 名前 <me>) を、使える時だけ使う為の判定。
 ---
 --- 使わない条件:
 ---   1. 覚えていない / リキャストが残っている / リキャストが分からない
----   2. 既にそのバフが自分にかかっている
---- どちらも「待つ」だけで、コマンドは捨てない。呼ぶ側が次の tick でまた聞く。
+---   2. res に status (かかるバフ) がある JA で、既にそのバフが自分にかかっている
 ---
---- 対象は「/ja 名前 <me>」で、res に status (かかるバフ) がある JA だけ。
---- 攻撃系 (ジャンプ等) や他人が対象 (かばう <p1> 等) は素通し。
---- 「A; wait 1; B」のような連結は、対象の JA が 1 つでも使えなければ全体を待つ。
+--- 対象外 (素通し): 対象が <me> 以外 (ジャンプ <t>、かばう <p1> 等)、res に無い名前、
+--- チャージ制の JA (CHARGE_TYPES)。
+--- 「A; wait 1; B」のような連結は、対象の JA が 1 つでも使えなければ全体を使わない。
+--- 使わないと決めたコマンドを捨てるかは呼ぶ側の話 (task.get_task は捨てる)。
 
 local utils = require 'utils'
 
@@ -49,13 +49,13 @@ function M.parse_ja(cmd)
     return list
 end
 
--- 判定の対象になる強化系 JA か。対象外なら nil
-local function self_buff_ability(j)
+-- 判定の対象になる JA か。対象外なら nil
+local function self_ability(j)
     if j.target ~= 'me' then
 	return nil
     end
     local a = ability_by_ja(j.name)
-    if a == nil or a.status == nil or CHARGE_TYPES[a.type] then
+    if a == nil or CHARGE_TYPES[a.type] then
 	return nil
     end
     return a
@@ -75,9 +75,11 @@ local function check(a, player, abilities, recasts)
     if recast > 0 then
 	return false, "リキャスト中"
     end
-    for _, buff_id in ipairs(player.buffs) do
-	if buff_id == a.status then
-	    return false, "効果中"
+    if a.status ~= nil then
+	for _, buff_id in ipairs(player.buffs) do
+	    if buff_id == a.status then
+		return false, "効果中"
+	    end
 	end
     end
     return true
@@ -97,12 +99,12 @@ local function note_wait(cmd, reason)
     end
 end
 
--- cmd を今送ってよいか。強化系 JA が含まれなければ常に true。
+-- cmd を今送ってよいか。判定対象の JA が含まれなければ常に true。
 -- sleep しない (即時)。tick から呼んでよい
 function M.usable(cmd)
     local targets = {}
     for _, j in ipairs(M.parse_ja(cmd)) do
-	local a = self_buff_ability(j)
+	local a = self_ability(j)
 	if a ~= nil then
 	    table.insert(targets, a)
 	end
