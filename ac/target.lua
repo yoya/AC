@@ -33,9 +33,9 @@ local function current_target()
 end
 
 -- 掴めない時の立て直し。<t> が何かを指していればロック残りの疑いが強いので
--- escape で落とす (ロックごと外れる)。<t> が既に無い時は escape しても
--- 何も変わらないので、tab で何か (味方でもよい) を掴ませ、注入が反映される
--- 状態を作る。次の want はそこから正しい mob へ切り替えを試みる
+-- escape で落とす (ロックごと外れる)。<t> が既に無い時は何もしない。
+-- 以前はここで tab を押していたが、フォロワーが「ターゲット選択中は
+-- 使用できません」を出し続けて棒立ちになっていた。tab をやめたら止まった
 local function release(mob, t)
     local now = os.time()
     if now - last_warn_time >= WARN_INTERVAL_SEC then
@@ -43,11 +43,9 @@ local function release(mob, t)
 	io_chat.warnf("%s を掴めないのでタゲを外す (今の <t>: %s)",
 		      tostring(mob.name), t ~= nil and tostring(t.name) or "なし")
     end
-    -- 短押し。呼び出し元の tick 予算を食わないように
     if t ~= nil then
+	-- 短押し。呼び出し元の tick 予算を食わないように
 	keyboard.longpush_key("escape", 0.05)
-    else
-	keyboard.longpush_key("tab", 0.05)
     end
     fail_count = 0
 end
