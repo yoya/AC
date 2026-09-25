@@ -43,6 +43,10 @@ M.routes = {
 	{x=-179.8,y=158.5,z=17}, {a="opendoor"}, {x=-179.8,y=162.5,z=16.9},
 	{x=-172,y=184.1,z=17}
     },
+    -- HP1
+    bc = {
+	{x=-131,y=-303,z=-3}, {x=-135.9,y=-301.4,z=-3.2}, {}
+    },
 }
 
 M.essential_points = {
@@ -52,6 +56,7 @@ M.essential_points = {
 
 M.automatic_routes = {
     entrance = { route="ghoo" },
+    hp_1 = { route="bc" },
 }
 
 return M

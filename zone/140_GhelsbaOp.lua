@@ -37,7 +37,8 @@ M.routes = {
 
 M.essential_points = {
     entrance = {x=100,y=-38,z=0.2},
-    from_fort = {x=125.9,y=181.9,z=-19.8},
+    -- x=(125.9),y=(179.3,181.9),x=(-19.9,-19.8)
+    from_fort = {x=125.9,y=180.6,z=-19.8,dy=3},
 }
 
 M.automatic_routes = {

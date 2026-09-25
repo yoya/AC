@@ -52,6 +52,22 @@ M.routes = {
 	{x=532,y=-58}, {x=537,y=-55}, {x=543,y=-16}, {x=548,y=-9},
 	-- ３つ分かれる広場
     },
+    sand = {
+	{x=464,y=-51,z=0,desc="Cermet Door (サンドリア)"},
+	{route="three"},
+	{x=548,y=-9}, -- 広場
+	--
+	{x=581,y=18}, {x=604,y=27}, {x=612,y=23}, {x=638,y=20,z=16},
+	{target="Cermet Door"}, {a="f8touch"}
+    },
+    bas = {
+	{x=464,y=-51,z=0,desc="Cermet Door (バストゥーク)"},
+	{route="three"},
+	{x=548,y=-9}, -- 広場
+	--
+	{x=566,y=-14}, {x=574,y=-18}, {x=598,y=-20,z=16},
+	{target="Cermet Door"}, {a="f8touch"}
+    },
     win = {
 	{x=464,y=-51,z=0,desc="Cermet Door (ウィンダス)"},
 	{route="three"},
