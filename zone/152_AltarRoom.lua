@@ -4,7 +4,7 @@ local M = { id = 152 }
 
 M.routes = {
     stone = {
-	{x=-248,y=-98.9,desc="魔晶石ミッション"},
+	{x=-248,y=-100.1,z=14.3,desc="魔晶石ミッション"},
 	{x=-341.3,y=-93.3},
 	{x=-338.9,y=24.87}, {x=-345.14, y=43.47},
 	{touch="Magicite"}
@@ -12,7 +12,8 @@ M.routes = {
 }
 
 M.essential_points = {
-    entrance = {x=-248,y=-98.9},
+    -- x={-248},y={-101.1,-98.9},z=14.3
+    entrance = {x=-248,y=-100.1,z=14.3,dy=2},
 }
 
 M.automatic_routes = {

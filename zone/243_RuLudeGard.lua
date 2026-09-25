@@ -16,7 +16,7 @@ M.routes = {
     },
     taiko = {
 	{x=-6,y=-1,z=3,desc="太公の間"}, {x=-3.3,y=2.5}, {x=-1, y=27.9},
-	{x=-1.7,y=34}, {x=-0.3,y=68.6},
+	{x=-1.7,y=34}, {x=-0.3,y=68.6}, {a="f8"},
 	{touch="Door:Audience Chamber"}
     },
     pheri = {
@@ -33,6 +33,7 @@ M.routes = {
 	{x=-6,y=-1,z=3,desc="バストゥーク領事館"},  {x=-2,y=-8},
 	{x=2,y=-32}, {x=6,y=-38}, {x=6,y=-50},
 	{x=4,y=-66}, {touch="Door:Bastokan Emb."}, {x=4,y=-71},
+	{x=4,y=-76,z=9}, {touch="Goggehn"}
     },
     win = {
 	{x=-6,y=-1,z=3,desc="ウィンダス領事館"}, {x=-2,y=-8},
