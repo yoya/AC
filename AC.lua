@@ -528,7 +528,9 @@ function M.warp_with_equip(arg, delay)
     task.all_clear()
     local player = windower.ffxi.get_player()
     if arg == 'warp' then
-	if player.main_job == "BLM" or player.sub_job == "BLM" then
+	if player.main_job == "BLM" or player.sub_job == "BLM" and
+	    100 <= player.vitals.mp then
+	    io_chat.print("### 魔法ワープ", arg)
 	    task.set_task_simple('input /ma デジョン <me>', 0, 5)
 	    return
 	end
