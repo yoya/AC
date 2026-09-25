@@ -45,4 +45,13 @@ function M.sub_tick(player)
     end
 end
 
+M.chaos_equip = {
+    main = {
+	21590,-- ンプガンドリング D137
+	21589,-- ンプガンドリング D130
+	21588,-- ンプガンドリング D124
+	21587,-- ンプガンドリング D117
+    },
+}
+
 return M

@@ -1,6 +1,9 @@
 --- Job 毎の情報
 
 local M = {}
+__AC = __AC or {}
+__AC.job = M
+
 local task = require 'task'
 local utils = require 'utils'
 local aczone = require 'zone'
@@ -136,12 +139,25 @@ function M.battle_start()
     M.set_attack_equip()
 end
 
+function M.chaos_start()
+    M.set_chaos_equip()
+end
+
 function M.set_attack_equip()
     local player = windower.ffxi.get_player()
     local main_job_obj = M.job_table[player.main_job]
     local attack_equip = main_job_obj ~= nil and main_job_obj.attack_equip or nil
     if attack_equip ~= nil then
 	ac_equip.equip_item_by_priority_tree(attack_equip)
+    end
+end
+
+function M.set_chaos_equip()
+    local player = windower.ffxi.get_player()
+    local main_job_obj = M.job_table[player.main_job]
+    local chaos_equip = main_job_obj ~= nil and main_job_obj.chaos_equip or nil
+    if chaos_equip ~= nil then
+	ac_equip.equip_item_by_priority_tree(chaos_equip)
     end
 end
 

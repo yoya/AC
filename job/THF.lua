@@ -96,6 +96,15 @@ M.attack_equip = {
     },
 }
 
+M.chaos_equip = {
+    main = {
+	21590,-- ンプガンドリング D137
+	21589,-- ンプガンドリング D130
+	21588,-- ンプガンドリング D124
+	21587,-- ンプガンドリング D117
+    },
+}
+
 function M.incoming_text_handler(text)
     --if string.contains(text, "インビンシブル") ~= false then
     --end
