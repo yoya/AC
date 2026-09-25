@@ -240,12 +240,14 @@ end
 function M.main_tick(player)
     local magick_rank
     local main_job = player.main_job
-    if main_job == "BLM" or main_job == "SCH" then
+    if main_job == "BLM" then
 	magick_rank = 5
-    elseif main_job == "RDM" then
+    elseif main_job == "RDM" or main_job == "SCH" then
 	magick_rank = 4
-    elseif main_job == "GEO" or main_job == "DRK" then
+    elseif main_job == "GEO" then
 	magick_rank = 3
+    elseif main_job == "DRK" then
+	magick_rank = 2
     else
 	return -- MB しない
     end
