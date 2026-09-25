@@ -26,8 +26,9 @@ M.UnityWanted = 17  -- ユニティ・ウォンテッド
 M.Sortie      = 18  -- ソーティ
 M.ChocoboRace = 19  -- チョコボレース
 M.Peculiar    = 20  -- 珍妙なモンスターを討伐せよ
+M.Chaos       = 21  -- カオス戦、エンブリオ
 
-M.all_contents = { M.Idle, M.Leveling, M.Ambus, M.Works, M.Trove,  M.Mission, M.Abyssea, M.Garden, M.Trial, M.Raives, M.WKR, M.LoginPoint, M.Vagary, M.Synergy, M.Redeem, M.GobMys, M.UnityWanted, M.Sortie, M.ChocoboRace, M.Peculiar }
+M.all_contents = { M.Idle, M.Leveling, M.Ambus, M.Works, M.Trove,  M.Mission, M.Abyssea, M.Garden, M.Trial, M.Raives, M.WKR, M.LoginPoint, M.Vagary, M.Synergy, M.Redeem, M.GobMys, M.UnityWanted, M.Sortie, M.ChocoboRace, M.Peculiar, M.Chaos }
 
 M.ambus   = require 'contents/ambus'
 M.trial   = require 'contents/trial'
@@ -43,6 +44,7 @@ M.wanted  = require 'contents/wanted'
 M.sortie  = require 'contents/sortie'
 M.chocobo = require 'contents/chocobo'
 M.level   = require 'contents/level'
+M.chaos   = require 'contents/chaos'
 M.contents_table = {
     -- モードが必要なだけで特別な処理のないcontentsは、ここに追加しない
     [M.Leveling]    = M.level,
@@ -59,6 +61,7 @@ M.contents_table = {
     [M.UnityWanted] = M.wanted,
     [M.Sortie]      = M.sortie,
     [M.ChocoboRace] = M.chocobo,
+    [M.Chaos]       = M.chaos,
 }
 for c, m in pairs(M.contents_table) do
     m.parent = M
@@ -92,6 +95,7 @@ M.name_table = {
     [M.Sortie]      = {'Sortie', 'sort', 'sor', 'so'},
     [M.ChocoboRace] = {'ChocoboRace', 'chocobo', 'choco', 'race'},
     [M.Peculiar]    = {'Peculiar', 'pecu', 'pec'},
+    [M.Chaos]       = {'Chaos', 'cha'},
 }
 
 M.incoming_text_listener_id = nil
